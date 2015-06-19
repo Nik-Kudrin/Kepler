@@ -1,0 +1,5 @@
+packages/*.*
+**/bin/**/*.*
+**/obj/**/*.*
+TC_Dashboard/App_Data/TC_Dashboard.mdf
+TC_Dashboard/App_Data/TC_Dashboard_log.ldf
