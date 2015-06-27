@@ -185,6 +185,16 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Core\BaseLine.cs" />
+    <Compile Include="Core\Build.cs" />
+    <Compile Include="Core\Common\BuildObject.cs" />
+    <Compile Include="Core\Common\InfoObject.cs" />
+    <Compile Include="Core\Common\ObjectStatus.cs" />
+    <Compile Include="Core\Project.cs" />
+    <Compile Include="Core\ScreenShot.cs" />
+    <Compile Include="Core\TestAssembly.cs" />
+    <Compile Include="Core\TestCase.cs" />
+    <Compile Include="Core\TestSuite.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
