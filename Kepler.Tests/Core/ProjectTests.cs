@@ -21,8 +21,11 @@ namespace Kepler.Tests.Core
             testSuite.TestCases.Add(0, testCase);
 
             var testAssembly = new TestAssembly("TestAssembly_Name");
+        }
 
-            var path = Path.Combine(BasePath, @"Resources\TestData.xml");
+        private void Serialization()
+        {
+            /*var path = Path.Combine(BasePath, @"Resources\TestData.xml");
 
             DataContractSerializer xs = new DataContractSerializer(typeof (TestCase));
 
@@ -35,14 +38,14 @@ namespace Kepler.Tests.Core
             };
 
             var writer = XmlWriter.Create(path, settings);
-            
+
             xs.WriteObject(writer, testCase);
             writer.Flush();
-            writer.Close();
+            writer.Close();*/
 
 
-/*            var serializedConfig = EntityXmlSerializer.Serialize(testCase);
-            File.WriteAllText(Path.Combine(BasePath, @"Resources\TestData.xml"), serializedConfig);*/
+            /*            var serializedConfig = EntityXmlSerializer.Serialize(testCase);
+                        File.WriteAllText(Path.Combine(BasePath, @"Resources\TestData.xml"), serializedConfig);*/
         }
     }
 }
