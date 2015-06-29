@@ -12,9 +12,9 @@ namespace Kepler.Core
         {
         }
 
-        public TestAssembly(string Name) : base(Name)
+/*        public TestAssembly(string Name) : base(Name)
         {
             TestSuites = new Dictionary<long?, TestSuite>();
-        }
+        }*/
     }
 }

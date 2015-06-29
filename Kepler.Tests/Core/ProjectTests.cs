@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Data.Entity;
+using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
@@ -12,7 +15,7 @@ namespace Kepler.Tests.Core
         [Test]
         public void CreateProject()
         {
-            var screenShot = new ScreenShot("ScreenShot_Inside_The_Case_Unique_Name", "some/path/to/screenshot");
+/*            var screenShot = new ScreenShot("ScreenShot_Inside_The_Case_Unique_Name", "some/path/to/screenshot");
 
             var testCase = new TestCase("TestCase_Name");
             testCase.ScreenShots.Add(1, screenShot);
@@ -20,8 +23,36 @@ namespace Kepler.Tests.Core
             var testSuite = new TestSuite("TestSuite_Name");
             testSuite.TestCases.Add(0, testCase);
 
-            var testAssembly = new TestAssembly("TestAssembly_Name");
+            var testAssembly = new TestAssembly("TestAssembly_Name");*/
         }
+
+        private class ProjectContext : DbContext
+        {
+            public DbSet<Project> Projects { get; set; }
+        }
+
+        [Test]
+        public void ReadFromDbTest()
+        {
+            using (var db = new ProjectContext())
+            {
+                var blog = new Project() {Name = "Some project"};
+                db.Projects.Add(blog);
+                db.SaveChanges();
+
+
+                var query = from b in db.Projects
+                    orderby b.Name
+                    select b;
+
+                Console.WriteLine("All blogs in the database:");
+                foreach (var item in query)
+                {
+                    Console.WriteLine(item.Name);
+                }
+            }
+        }
+
 
         private void Serialization()
         {

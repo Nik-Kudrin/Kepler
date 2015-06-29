@@ -11,9 +11,9 @@ namespace Kepler.Core
         {
         }
 
-        public TestCase(string Name) : base(Name)
+/*        public TestCase(string Name) : base(Name)
         {
             ScreenShots = new Dictionary<long?, ScreenShot>();
-        }
+        }*/
     }
 }

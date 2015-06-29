@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 06/29/2015 22:27:35
+-- Date Created: 06/29/2015 22:43:39
 -- Generated from EDMX file: E:\Repo_Kepler\Kepler\KeplerDataModel.edmx
 -- --------------------------------------------------
 
@@ -17,11 +17,47 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[FK_BaseLineScreenShot]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_ScreenShot] DROP CONSTRAINT [FK_BaseLineScreenShot];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ProjectBuild]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_Build] DROP CONSTRAINT [FK_ProjectBuild];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ProjectBaseLine]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_Project] DROP CONSTRAINT [FK_ProjectBaseLine];
+GO
+IF OBJECT_ID(N'[dbo].[FK_BuildTestAssembly]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_TestAssembly] DROP CONSTRAINT [FK_BuildTestAssembly];
+GO
+IF OBJECT_ID(N'[dbo].[FK_TestAssemblyTestSuite]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_TestSuite] DROP CONSTRAINT [FK_TestAssemblyTestSuite];
+GO
+IF OBJECT_ID(N'[dbo].[FK_TestSuiteTestCase]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_TestCase] DROP CONSTRAINT [FK_TestSuiteTestCase];
+GO
+IF OBJECT_ID(N'[dbo].[FK_TestCaseScreenShot]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_ScreenShot] DROP CONSTRAINT [FK_TestCaseScreenShot];
+GO
+IF OBJECT_ID(N'[dbo].[FK_BaseLine_inherits_InfoObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_BaseLine] DROP CONSTRAINT [FK_BaseLine_inherits_InfoObject];
+GO
 IF OBJECT_ID(N'[dbo].[FK_BuildObject_inherits_InfoObject]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[InfoObjects_BuildObject] DROP CONSTRAINT [FK_BuildObject_inherits_InfoObject];
 GO
 IF OBJECT_ID(N'[dbo].[FK_ScreenShot_inherits_BuildObject]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[InfoObjects_ScreenShot] DROP CONSTRAINT [FK_ScreenShot_inherits_BuildObject];
+GO
+IF OBJECT_ID(N'[dbo].[FK_Project_inherits_InfoObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_Project] DROP CONSTRAINT [FK_Project_inherits_InfoObject];
+GO
+IF OBJECT_ID(N'[dbo].[FK_Build_inherits_InfoObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_Build] DROP CONSTRAINT [FK_Build_inherits_InfoObject];
+GO
+IF OBJECT_ID(N'[dbo].[FK_TestAssembly_inherits_BuildObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_TestAssembly] DROP CONSTRAINT [FK_TestAssembly_inherits_BuildObject];
+GO
+IF OBJECT_ID(N'[dbo].[FK_TestSuite_inherits_BuildObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[InfoObjects_TestSuite] DROP CONSTRAINT [FK_TestSuite_inherits_BuildObject];
 GO
 IF OBJECT_ID(N'[dbo].[FK_TestCase_inherits_BuildObject]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[InfoObjects_TestCase] DROP CONSTRAINT [FK_TestCase_inherits_BuildObject];
@@ -34,11 +70,26 @@ GO
 IF OBJECT_ID(N'[dbo].[InfoObjects]', 'U') IS NOT NULL
     DROP TABLE [dbo].[InfoObjects];
 GO
+IF OBJECT_ID(N'[dbo].[InfoObjects_BaseLine]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[InfoObjects_BaseLine];
+GO
 IF OBJECT_ID(N'[dbo].[InfoObjects_BuildObject]', 'U') IS NOT NULL
     DROP TABLE [dbo].[InfoObjects_BuildObject];
 GO
 IF OBJECT_ID(N'[dbo].[InfoObjects_ScreenShot]', 'U') IS NOT NULL
     DROP TABLE [dbo].[InfoObjects_ScreenShot];
+GO
+IF OBJECT_ID(N'[dbo].[InfoObjects_Project]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[InfoObjects_Project];
+GO
+IF OBJECT_ID(N'[dbo].[InfoObjects_Build]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[InfoObjects_Build];
+GO
+IF OBJECT_ID(N'[dbo].[InfoObjects_TestAssembly]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[InfoObjects_TestAssembly];
+GO
+IF OBJECT_ID(N'[dbo].[InfoObjects_TestSuite]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[InfoObjects_TestSuite];
 GO
 IF OBJECT_ID(N'[dbo].[InfoObjects_TestCase]', 'U') IS NOT NULL
     DROP TABLE [dbo].[InfoObjects_TestCase];
@@ -80,8 +131,7 @@ GO
 
 -- Creating table 'InfoObjects_Project'
 CREATE TABLE [dbo].[InfoObjects_Project] (
-    [Id] bigint  NOT NULL,
-    [BaseLine_Id] bigint  NOT NULL
+    [Id] bigint  NOT NULL
 );
 GO
 
@@ -204,21 +254,6 @@ GO
 CREATE INDEX [IX_FK_ProjectBuild]
 ON [dbo].[InfoObjects_Build]
     ([ProjectId]);
-GO
-
--- Creating foreign key on [BaseLine_Id] in table 'InfoObjects_Project'
-ALTER TABLE [dbo].[InfoObjects_Project]
-ADD CONSTRAINT [FK_ProjectBaseLine]
-    FOREIGN KEY ([BaseLine_Id])
-    REFERENCES [dbo].[InfoObjects_BaseLine]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_ProjectBaseLine'
-CREATE INDEX [IX_FK_ProjectBaseLine]
-ON [dbo].[InfoObjects_Project]
-    ([BaseLine_Id]);
 GO
 
 -- Creating foreign key on [BuildId1] in table 'InfoObjects_TestAssembly'

@@ -10,9 +10,9 @@ namespace Kepler.Core
         {
         }
 
-        public ScreenShot(string Name, string ImagePath) : base(Name)
+/*        public ScreenShot(string Name, string ImagePath) : base(Name)
         {
             this.ImagePath = ImagePath;
-        }
+        }*/
     }
 }

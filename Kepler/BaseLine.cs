@@ -21,6 +21,5 @@ namespace Kepler
     
     
         public virtual ICollection<ScreenShot> ScreenShots { get; set; }
-        public virtual Project Project { get; set; }
     }
 }

@@ -21,6 +21,5 @@ namespace Kepler
     
     
         public virtual ICollection<Build> Builds { get; set; }
-        public virtual BaseLine BaseLine { get; set; }
     }
 }

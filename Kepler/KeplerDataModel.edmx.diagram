@@ -20,7 +20,6 @@
         <InheritanceConnector EntityType="KeplerDataModel.BaseLine" />
         <AssociationConnector Association="KeplerDataModel.BaseLineScreenShot" />
         <AssociationConnector Association="KeplerDataModel.ProjectBuild" />
-        <AssociationConnector Association="KeplerDataModel.ProjectBaseLine" />
         <EntityTypeShape EntityType="KeplerDataModel.TestSuite" Width="1.5" PointX="11.875" PointY="4.5" />
         <InheritanceConnector EntityType="KeplerDataModel.TestSuite" />
         <EntityTypeShape EntityType="KeplerDataModel.TestAssembly" Width="1.5" PointX="8.5" PointY="4.75" />

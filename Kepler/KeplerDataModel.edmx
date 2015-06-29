@@ -23,10 +23,6 @@
       <End Role="Project" EntitySet="InfoObjects_Project" />
       <End Role="Build" EntitySet="InfoObjects_Build" />
     </AssociationSet>
-    <AssociationSet Name="ProjectBaseLine" Association="KeplerDataModel.Store.ProjectBaseLine">
-      <End Role="Project" EntitySet="InfoObjects_Project" />
-      <End Role="BaseLine" EntitySet="InfoObjects_BaseLine" />
-    </AssociationSet>
     <AssociationSet Name="BuildTestAssembly" Association="KeplerDataModel.Store.BuildTestAssembly">
       <End Role="Build" EntitySet="InfoObjects_Build" />
       <End Role="TestAssembly" EntitySet="InfoObjects_TestAssembly" />
@@ -111,7 +107,6 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="bigint" Nullable="false" />
-    <Property Name="BaseLine_Id" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="InfoObjects_Build">
     <Key>
@@ -163,18 +158,6 @@
       </Principal>
       <Dependent Role="Build">
         <PropertyRef Name="ProjectId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="ProjectBaseLine">
-    <End Role="Project" Type="KeplerDataModel.Store.InfoObjects_Project" Multiplicity="*" />
-    <End Role="BaseLine" Type="KeplerDataModel.Store.InfoObjects_BaseLine" Multiplicity="1" />
-    <ReferentialConstraint>
-      <Principal Role="BaseLine">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Project">
-        <PropertyRef Name="BaseLine_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -352,10 +335,6 @@
             <End Role="Project" EntitySet="InfoObjects" />
             <End Role="Build" EntitySet="InfoObjects" />
           </AssociationSet>
-          <AssociationSet Name="ProjectBaseLine" Association="KeplerDataModel.ProjectBaseLine">
-            <End Role="Project" EntitySet="InfoObjects" />
-            <End Role="BaseLine" EntitySet="InfoObjects" />
-          </AssociationSet>
           <AssociationSet Name="BuildTestAssembly" Association="KeplerDataModel.BuildTestAssembly">
             <End Role="Build" EntitySet="InfoObjects" />
             <End Role="TestAssembly" EntitySet="InfoObjects" />
@@ -404,11 +383,9 @@
         </EntityType>
         <EntityType Name="Project" BaseType="KeplerDataModel.InfoObject" >
           <NavigationProperty Name="Builds" Relationship="KeplerDataModel.ProjectBuild" FromRole="Project" ToRole="Build" />
-          <NavigationProperty Name="BaseLine" Relationship="KeplerDataModel.ProjectBaseLine" FromRole="Project" ToRole="BaseLine" />
         </EntityType>
         <EntityType Name="BaseLine" BaseType="KeplerDataModel.InfoObject" >
           <NavigationProperty Name="ScreenShots" Relationship="KeplerDataModel.BaseLineScreenShot" FromRole="BaseLine" ToRole="ScreenShot" />
-          <NavigationProperty Name="Project" Relationship="KeplerDataModel.ProjectBaseLine" FromRole="BaseLine" ToRole="Project" />
         </EntityType>
         <Association Name="BaseLineScreenShot">
           <End Type="KeplerDataModel.BaseLine" Role="BaseLine" Multiplicity="1" />
@@ -433,10 +410,6 @@
               <PropertyRef Name="ProjectId" />
             </Dependent>
           </ReferentialConstraint>
-        </Association>
-        <Association Name="ProjectBaseLine">
-          <End Type="KeplerDataModel.Project" Role="Project" Multiplicity="1" />
-          <End Type="KeplerDataModel.BaseLine" Role="BaseLine" Multiplicity="1" />
         </Association>
         <EntityType Name="TestSuite" BaseType="KeplerDataModel.BuildObject" >
           <NavigationProperty Name="TestAssembly" Relationship="KeplerDataModel.TestAssemblyTestSuite" FromRole="TestSuite" ToRole="TestAssembly" />
@@ -560,14 +533,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <AssociationSetMapping Name="ProjectBaseLine" TypeName="KeplerDataModel.ProjectBaseLine" StoreEntitySet="InfoObjects_Project">
-      <EndProperty Name="BaseLine">
-        <ScalarProperty Name="Id" ColumnName="BaseLine_Id" />
-      </EndProperty>
-      <EndProperty Name="Project">
-        <ScalarProperty Name="Id" ColumnName="Id" />
-      </EndProperty>
-    </AssociationSetMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
