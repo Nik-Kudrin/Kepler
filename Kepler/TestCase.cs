@@ -14,5 +14,14 @@ namespace Kepler
     
     public partial class TestCase : BuildObject
     {
+        public TestCase()
+        {
+            this.ScreenShots = new HashSet<ScreenShot>();
+        }
+    
+        public long TestSuiteId { get; set; }
+    
+        public virtual TestSuite TestSuite { get; set; }
+        public virtual ICollection<ScreenShot> ScreenShots { get; set; }
     }
 }

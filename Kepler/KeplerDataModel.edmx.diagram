@@ -4,14 +4,31 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ae1f9d2f488e472f99dfd898784b8fc3" Name="Diagram1" >
-        <EntityTypeShape EntityType="KeplerDataModel.ScreenShot" Width="1.5" PointX="7.375" PointY="3.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="KeplerDataModel.TestCase" Width="1.5" PointX="5.25" PointY="4" />
+      <Diagram DiagramId="ae1f9d2f488e472f99dfd898784b8fc3" Name="Diagram1" ZoomLevel="114" >
+        <EntityTypeShape EntityType="KeplerDataModel.ScreenShot" Width="1.5" PointX="6.375" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="KeplerDataModel.TestCase" Width="1.5" PointX="12.125" PointY="2" />
         <EntityTypeShape EntityType="KeplerDataModel.InfoObject" Width="1.5" PointX="0.5" PointY="0.5" />
-        <EntityTypeShape EntityType="KeplerDataModel.BuildObject" Width="1.5" PointX="3.5" PointY="0.625" />
+        <EntityTypeShape EntityType="KeplerDataModel.BuildObject" Width="1.5" PointX="9.625" PointY="0.5" />
         <InheritanceConnector EntityType="KeplerDataModel.BuildObject" />
         <InheritanceConnector EntityType="KeplerDataModel.ScreenShot" />
         <InheritanceConnector EntityType="KeplerDataModel.TestCase" />
+        <EntityTypeShape EntityType="KeplerDataModel.Build" Width="1.5" PointX="0.5" PointY="4.75" />
+        <InheritanceConnector EntityType="KeplerDataModel.Build" />
+        <EntityTypeShape EntityType="KeplerDataModel.Project" Width="1.5" PointX="3.625" PointY="3.25" />
+        <InheritanceConnector EntityType="KeplerDataModel.Project" />
+        <EntityTypeShape EntityType="KeplerDataModel.BaseLine" Width="1.5" PointX="3.625" PointY="1.125" />
+        <InheritanceConnector EntityType="KeplerDataModel.BaseLine" />
+        <AssociationConnector Association="KeplerDataModel.BaseLineScreenShot" />
+        <AssociationConnector Association="KeplerDataModel.ProjectBuild" />
+        <AssociationConnector Association="KeplerDataModel.ProjectBaseLine" />
+        <EntityTypeShape EntityType="KeplerDataModel.TestSuite" Width="1.5" PointX="11.875" PointY="4.5" />
+        <InheritanceConnector EntityType="KeplerDataModel.TestSuite" />
+        <EntityTypeShape EntityType="KeplerDataModel.TestAssembly" Width="1.5" PointX="8.5" PointY="4.75" />
+        <InheritanceConnector EntityType="KeplerDataModel.TestAssembly" />
+        <AssociationConnector Association="KeplerDataModel.BuildTestAssembly" />
+        <AssociationConnector Association="KeplerDataModel.TestAssemblyTestSuite" />
+        <AssociationConnector Association="KeplerDataModel.TestSuiteTestCase" />
+        <AssociationConnector Association="KeplerDataModel.TestCaseScreenShot" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

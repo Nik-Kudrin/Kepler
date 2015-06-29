@@ -4,22 +4,387 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="KeplerDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
-        <EntityContainer Name="KeplerDataModelTargetContainer" >
-        </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+    <Schema Namespace="KeplerDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="KeplerDataModelStoreContainer">
+    <EntitySet Name="InfoObjects" EntityType="KeplerDataModel.Store.InfoObjects" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InfoObjects_BaseLine" EntityType="KeplerDataModel.Store.InfoObjects_BaseLine" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InfoObjects_BuildObject" EntityType="KeplerDataModel.Store.InfoObjects_BuildObject" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InfoObjects_ScreenShot" EntityType="KeplerDataModel.Store.InfoObjects_ScreenShot" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InfoObjects_Project" EntityType="KeplerDataModel.Store.InfoObjects_Project" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InfoObjects_Build" EntityType="KeplerDataModel.Store.InfoObjects_Build" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InfoObjects_TestAssembly" EntityType="KeplerDataModel.Store.InfoObjects_TestAssembly" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InfoObjects_TestSuite" EntityType="KeplerDataModel.Store.InfoObjects_TestSuite" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InfoObjects_TestCase" EntityType="KeplerDataModel.Store.InfoObjects_TestCase" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="BaseLineScreenShot" Association="KeplerDataModel.Store.BaseLineScreenShot">
+      <End Role="BaseLine" EntitySet="InfoObjects_BaseLine" />
+      <End Role="ScreenShot" EntitySet="InfoObjects_ScreenShot" />
+    </AssociationSet>
+    <AssociationSet Name="ProjectBuild" Association="KeplerDataModel.Store.ProjectBuild">
+      <End Role="Project" EntitySet="InfoObjects_Project" />
+      <End Role="Build" EntitySet="InfoObjects_Build" />
+    </AssociationSet>
+    <AssociationSet Name="ProjectBaseLine" Association="KeplerDataModel.Store.ProjectBaseLine">
+      <End Role="Project" EntitySet="InfoObjects_Project" />
+      <End Role="BaseLine" EntitySet="InfoObjects_BaseLine" />
+    </AssociationSet>
+    <AssociationSet Name="BuildTestAssembly" Association="KeplerDataModel.Store.BuildTestAssembly">
+      <End Role="Build" EntitySet="InfoObjects_Build" />
+      <End Role="TestAssembly" EntitySet="InfoObjects_TestAssembly" />
+    </AssociationSet>
+    <AssociationSet Name="TestAssemblyTestSuite" Association="KeplerDataModel.Store.TestAssemblyTestSuite">
+      <End Role="TestAssembly" EntitySet="InfoObjects_TestAssembly" />
+      <End Role="TestSuite" EntitySet="InfoObjects_TestSuite" />
+    </AssociationSet>
+    <AssociationSet Name="TestSuiteTestCase" Association="KeplerDataModel.Store.TestSuiteTestCase">
+      <End Role="TestSuite" EntitySet="InfoObjects_TestSuite" />
+      <End Role="TestCase" EntitySet="InfoObjects_TestCase" />
+    </AssociationSet>
+    <AssociationSet Name="TestCaseScreenShot" Association="KeplerDataModel.Store.TestCaseScreenShot">
+      <End Role="TestCase" EntitySet="InfoObjects_TestCase" />
+      <End Role="ScreenShot" EntitySet="InfoObjects_ScreenShot" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BaseLine_inherits_InfoObject" Association="KeplerDataModel.Store.FK_BaseLine_inherits_InfoObject">
+      <End Role="InfoObject" EntitySet="InfoObjects" />
+      <End Role="BaseLine" EntitySet="InfoObjects_BaseLine" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BuildObject_inherits_InfoObject" Association="KeplerDataModel.Store.FK_BuildObject_inherits_InfoObject">
+      <End Role="InfoObject" EntitySet="InfoObjects" />
+      <End Role="BuildObject" EntitySet="InfoObjects_BuildObject" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ScreenShot_inherits_BuildObject" Association="KeplerDataModel.Store.FK_ScreenShot_inherits_BuildObject">
+      <End Role="BuildObject" EntitySet="InfoObjects_BuildObject" />
+      <End Role="ScreenShot" EntitySet="InfoObjects_ScreenShot" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Project_inherits_InfoObject" Association="KeplerDataModel.Store.FK_Project_inherits_InfoObject">
+      <End Role="InfoObject" EntitySet="InfoObjects" />
+      <End Role="Project" EntitySet="InfoObjects_Project" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Build_inherits_InfoObject" Association="KeplerDataModel.Store.FK_Build_inherits_InfoObject">
+      <End Role="InfoObject" EntitySet="InfoObjects" />
+      <End Role="Build" EntitySet="InfoObjects_Build" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestAssembly_inherits_BuildObject" Association="KeplerDataModel.Store.FK_TestAssembly_inherits_BuildObject">
+      <End Role="BuildObject" EntitySet="InfoObjects_BuildObject" />
+      <End Role="TestAssembly" EntitySet="InfoObjects_TestAssembly" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestSuite_inherits_BuildObject" Association="KeplerDataModel.Store.FK_TestSuite_inherits_BuildObject">
+      <End Role="BuildObject" EntitySet="InfoObjects_BuildObject" />
+      <End Role="TestSuite" EntitySet="InfoObjects_TestSuite" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestCase_inherits_BuildObject" Association="KeplerDataModel.Store.FK_TestCase_inherits_BuildObject">
+      <End Role="BuildObject" EntitySet="InfoObjects_BuildObject" />
+      <End Role="TestCase" EntitySet="InfoObjects_TestCase" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="InfoObjects">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Status" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InfoObjects_BaseLine">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InfoObjects_BuildObject">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="BuildId" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Id" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InfoObjects_ScreenShot">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="ImagePath" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="BaseLineId" Type="bigint" Nullable="false" />
+    <Property Name="TestCaseId" Type="bigint" Nullable="false" />
+    <Property Name="Id" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InfoObjects_Project">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" />
+    <Property Name="BaseLine_Id" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InfoObjects_Build">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="ProjectId" Type="bigint" Nullable="false" />
+    <Property Name="Config" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Id" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InfoObjects_TestAssembly">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="BuildId1" Type="bigint" Nullable="false" />
+    <Property Name="Id" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InfoObjects_TestSuite">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="TestAssemblyId" Type="bigint" Nullable="false" />
+    <Property Name="Id" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InfoObjects_TestCase">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="TestSuiteId" Type="bigint" Nullable="false" />
+    <Property Name="Id" Type="bigint" Nullable="false" />
+  </EntityType>
+  <Association Name="BaseLineScreenShot">
+    <End Role="BaseLine" Type="KeplerDataModel.Store.InfoObjects_BaseLine" Multiplicity="1" />
+    <End Role="ScreenShot" Type="KeplerDataModel.Store.InfoObjects_ScreenShot" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BaseLine">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ScreenShot">
+        <PropertyRef Name="BaseLineId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ProjectBuild">
+    <End Role="Project" Type="KeplerDataModel.Store.InfoObjects_Project" Multiplicity="1" />
+    <End Role="Build" Type="KeplerDataModel.Store.InfoObjects_Build" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Project">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Build">
+        <PropertyRef Name="ProjectId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ProjectBaseLine">
+    <End Role="Project" Type="KeplerDataModel.Store.InfoObjects_Project" Multiplicity="*" />
+    <End Role="BaseLine" Type="KeplerDataModel.Store.InfoObjects_BaseLine" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="BaseLine">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Project">
+        <PropertyRef Name="BaseLine_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BuildTestAssembly">
+    <End Role="Build" Type="KeplerDataModel.Store.InfoObjects_Build" Multiplicity="1" />
+    <End Role="TestAssembly" Type="KeplerDataModel.Store.InfoObjects_TestAssembly" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Build">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestAssembly">
+        <PropertyRef Name="BuildId1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="TestAssemblyTestSuite">
+    <End Role="TestAssembly" Type="KeplerDataModel.Store.InfoObjects_TestAssembly" Multiplicity="1" />
+    <End Role="TestSuite" Type="KeplerDataModel.Store.InfoObjects_TestSuite" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TestAssembly">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestSuite">
+        <PropertyRef Name="TestAssemblyId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="TestSuiteTestCase">
+    <End Role="TestSuite" Type="KeplerDataModel.Store.InfoObjects_TestSuite" Multiplicity="1" />
+    <End Role="TestCase" Type="KeplerDataModel.Store.InfoObjects_TestCase" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TestSuite">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestCase">
+        <PropertyRef Name="TestSuiteId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="TestCaseScreenShot">
+    <End Role="TestCase" Type="KeplerDataModel.Store.InfoObjects_TestCase" Multiplicity="1" />
+    <End Role="ScreenShot" Type="KeplerDataModel.Store.InfoObjects_ScreenShot" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TestCase">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ScreenShot">
+        <PropertyRef Name="TestCaseId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BaseLine_inherits_InfoObject">
+    <End Role="InfoObject" Type="KeplerDataModel.Store.InfoObjects" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="BaseLine" Type="KeplerDataModel.Store.InfoObjects_BaseLine" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="InfoObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BaseLine">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BuildObject_inherits_InfoObject">
+    <End Role="InfoObject" Type="KeplerDataModel.Store.InfoObjects" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="BuildObject" Type="KeplerDataModel.Store.InfoObjects_BuildObject" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="InfoObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BuildObject">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ScreenShot_inherits_BuildObject">
+    <End Role="BuildObject" Type="KeplerDataModel.Store.InfoObjects_BuildObject" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ScreenShot" Type="KeplerDataModel.Store.InfoObjects_ScreenShot" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="BuildObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ScreenShot">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Project_inherits_InfoObject">
+    <End Role="InfoObject" Type="KeplerDataModel.Store.InfoObjects" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Project" Type="KeplerDataModel.Store.InfoObjects_Project" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="InfoObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Project">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Build_inherits_InfoObject">
+    <End Role="InfoObject" Type="KeplerDataModel.Store.InfoObjects" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Build" Type="KeplerDataModel.Store.InfoObjects_Build" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="InfoObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Build">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestAssembly_inherits_BuildObject">
+    <End Role="BuildObject" Type="KeplerDataModel.Store.InfoObjects_BuildObject" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TestAssembly" Type="KeplerDataModel.Store.InfoObjects_TestAssembly" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="BuildObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestAssembly">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestSuite_inherits_BuildObject">
+    <End Role="BuildObject" Type="KeplerDataModel.Store.InfoObjects_BuildObject" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TestSuite" Type="KeplerDataModel.Store.InfoObjects_TestSuite" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="BuildObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestSuite">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestCase_inherits_BuildObject">
+    <End Role="BuildObject" Type="KeplerDataModel.Store.InfoObjects_BuildObject" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TestCase" Type="KeplerDataModel.Store.InfoObjects_TestCase" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="BuildObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestCase">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="KeplerDataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
         <EntityContainer Name="KeplerDataModelContainer" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="InfoObjects" EntityType="KeplerDataModel.InfoObject" />
+          <AssociationSet Name="BaseLineScreenShot" Association="KeplerDataModel.BaseLineScreenShot">
+            <End Role="BaseLine" EntitySet="InfoObjects" />
+            <End Role="ScreenShot" EntitySet="InfoObjects" />
+          </AssociationSet>
+          <AssociationSet Name="ProjectBuild" Association="KeplerDataModel.ProjectBuild">
+            <End Role="Project" EntitySet="InfoObjects" />
+            <End Role="Build" EntitySet="InfoObjects" />
+          </AssociationSet>
+          <AssociationSet Name="ProjectBaseLine" Association="KeplerDataModel.ProjectBaseLine">
+            <End Role="Project" EntitySet="InfoObjects" />
+            <End Role="BaseLine" EntitySet="InfoObjects" />
+          </AssociationSet>
+          <AssociationSet Name="BuildTestAssembly" Association="KeplerDataModel.BuildTestAssembly">
+            <End Role="Build" EntitySet="InfoObjects" />
+            <End Role="TestAssembly" EntitySet="InfoObjects" />
+          </AssociationSet>
+          <AssociationSet Name="TestAssemblyTestSuite" Association="KeplerDataModel.TestAssemblyTestSuite">
+            <End Role="TestAssembly" EntitySet="InfoObjects" />
+            <End Role="TestSuite" EntitySet="InfoObjects" />
+          </AssociationSet>
+          <AssociationSet Name="TestSuiteTestCase" Association="KeplerDataModel.TestSuiteTestCase">
+            <End Role="TestSuite" EntitySet="InfoObjects" />
+            <End Role="TestCase" EntitySet="InfoObjects" />
+          </AssociationSet>
+          <AssociationSet Name="TestCaseScreenShot" Association="KeplerDataModel.TestCaseScreenShot">
+            <End Role="TestCase" EntitySet="InfoObjects" />
+            <End Role="ScreenShot" EntitySet="InfoObjects" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="ScreenShot" BaseType="KeplerDataModel.BuildObject">
           <Property Name="ImagePath" Type="String" Nullable="false" Unicode="true" />
+          <NavigationProperty Name="BaseLine" Relationship="KeplerDataModel.BaseLineScreenShot" FromRole="ScreenShot" ToRole="BaseLine" />
+          <Property Name="BaseLineId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="TestCase" Relationship="KeplerDataModel.TestCaseScreenShot" FromRole="ScreenShot" ToRole="TestCase" />
+          <Property Name="TestCaseId" Type="Int64" Nullable="false" />
         </EntityType>
         <EntityType Name="TestCase" BaseType="KeplerDataModel.BuildObject">
-          </EntityType>
+          <NavigationProperty Name="TestSuite" Relationship="KeplerDataModel.TestSuiteTestCase" FromRole="TestCase" ToRole="TestSuite" />
+          <Property Name="TestSuiteId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="ScreenShots" Relationship="KeplerDataModel.TestCaseScreenShot" FromRole="TestCase" ToRole="ScreenShot" />
+        </EntityType>
         <EntityType Name="InfoObject">
           <Key>
             <PropertyRef Name="Id" />
@@ -31,17 +396,180 @@
         <EntityType Name="BuildObject" BaseType="KeplerDataModel.InfoObject" >
           <Property Name="BuildId" Type="String" Nullable="false" />
         </EntityType>
+        <EntityType Name="Build" BaseType="KeplerDataModel.InfoObject" >
+          <NavigationProperty Name="Project" Relationship="KeplerDataModel.ProjectBuild" FromRole="Build" ToRole="Project" />
+          <Property Name="ProjectId" Type="Int64" Nullable="false" />
+          <Property Name="Config" Type="String" Nullable="false" Unicode="true" />
+          <NavigationProperty Name="TestAssemblies" Relationship="KeplerDataModel.BuildTestAssembly" FromRole="Build" ToRole="TestAssembly" />
+        </EntityType>
+        <EntityType Name="Project" BaseType="KeplerDataModel.InfoObject" >
+          <NavigationProperty Name="Builds" Relationship="KeplerDataModel.ProjectBuild" FromRole="Project" ToRole="Build" />
+          <NavigationProperty Name="BaseLine" Relationship="KeplerDataModel.ProjectBaseLine" FromRole="Project" ToRole="BaseLine" />
+        </EntityType>
+        <EntityType Name="BaseLine" BaseType="KeplerDataModel.InfoObject" >
+          <NavigationProperty Name="ScreenShots" Relationship="KeplerDataModel.BaseLineScreenShot" FromRole="BaseLine" ToRole="ScreenShot" />
+          <NavigationProperty Name="Project" Relationship="KeplerDataModel.ProjectBaseLine" FromRole="BaseLine" ToRole="Project" />
+        </EntityType>
+        <Association Name="BaseLineScreenShot">
+          <End Type="KeplerDataModel.BaseLine" Role="BaseLine" Multiplicity="1" />
+          <End Type="KeplerDataModel.ScreenShot" Role="ScreenShot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BaseLine">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ScreenShot">
+              <PropertyRef Name="BaseLineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProjectBuild">
+          <End Type="KeplerDataModel.Project" Role="Project" Multiplicity="1" />
+          <End Type="KeplerDataModel.Build" Role="Build" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Build">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProjectBaseLine">
+          <End Type="KeplerDataModel.Project" Role="Project" Multiplicity="1" />
+          <End Type="KeplerDataModel.BaseLine" Role="BaseLine" Multiplicity="1" />
+        </Association>
+        <EntityType Name="TestSuite" BaseType="KeplerDataModel.BuildObject" >
+          <NavigationProperty Name="TestAssembly" Relationship="KeplerDataModel.TestAssemblyTestSuite" FromRole="TestSuite" ToRole="TestAssembly" />
+          <Property Name="TestAssemblyId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="TestCases" Relationship="KeplerDataModel.TestSuiteTestCase" FromRole="TestSuite" ToRole="TestCase" />
+        </EntityType>
+        <EntityType Name="TestAssembly" BaseType="KeplerDataModel.BuildObject" >
+          <NavigationProperty Name="Build" Relationship="KeplerDataModel.BuildTestAssembly" FromRole="TestAssembly" ToRole="Build" />
+          <Property Name="BuildId1" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="TestSuites" Relationship="KeplerDataModel.TestAssemblyTestSuite" FromRole="TestAssembly" ToRole="TestSuite" />
+        </EntityType>
+        <Association Name="BuildTestAssembly">
+          <End Type="KeplerDataModel.Build" Role="Build" Multiplicity="1" />
+          <End Type="KeplerDataModel.TestAssembly" Role="TestAssembly" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Build">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TestAssembly">
+              <PropertyRef Name="BuildId1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TestAssemblyTestSuite">
+          <End Type="KeplerDataModel.TestAssembly" Role="TestAssembly" Multiplicity="1" />
+          <End Type="KeplerDataModel.TestSuite" Role="TestSuite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestAssembly">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TestSuite">
+              <PropertyRef Name="TestAssemblyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TestSuiteTestCase">
+          <End Type="KeplerDataModel.TestSuite" Role="TestSuite" Multiplicity="1" />
+          <End Type="KeplerDataModel.TestCase" Role="TestCase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestSuite">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TestCase">
+              <PropertyRef Name="TestSuiteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TestCaseScreenShot">
+          <End Type="KeplerDataModel.TestCase" Role="TestCase" Multiplicity="1" />
+          <End Type="KeplerDataModel.ScreenShot" Role="ScreenShot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestCase">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ScreenShot">
+              <PropertyRef Name="TestCaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
-        <Alias Key="Model" Value="KeplerDataModel" />
-        <Alias Key="Target" Value="KeplerDataModel.Store" />
-        <EntityContainerMapping CdmEntityContainer="KeplerDataModelContainer" StorageEntityContainer="KeplerDataModelTargetContainer">
-        </EntityContainerMapping>
-      </Mapping>
-    </edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="KeplerDataModelStoreContainer" CdmEntityContainer="KeplerDataModelContainer">
+    <EntitySetMapping Name="InfoObjects">
+      <EntityTypeMapping TypeName="IsTypeOf(KeplerDataModel.InfoObject)">
+        <MappingFragment StoreEntitySet="InfoObjects">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(KeplerDataModel.BaseLine)">
+        <MappingFragment StoreEntitySet="InfoObjects_BaseLine">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(KeplerDataModel.BuildObject)">
+        <MappingFragment StoreEntitySet="InfoObjects_BuildObject">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(KeplerDataModel.ScreenShot)">
+        <MappingFragment StoreEntitySet="InfoObjects_ScreenShot">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
+          <ScalarProperty Name="BaseLineId" ColumnName="BaseLineId" />
+          <ScalarProperty Name="TestCaseId" ColumnName="TestCaseId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(KeplerDataModel.Project)">
+        <MappingFragment StoreEntitySet="InfoObjects_Project">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(KeplerDataModel.Build)">
+        <MappingFragment StoreEntitySet="InfoObjects_Build">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+          <ScalarProperty Name="Config" ColumnName="Config" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(KeplerDataModel.TestAssembly)">
+        <MappingFragment StoreEntitySet="InfoObjects_TestAssembly">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="BuildId1" ColumnName="BuildId1" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(KeplerDataModel.TestSuite)">
+        <MappingFragment StoreEntitySet="InfoObjects_TestSuite">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="TestAssemblyId" ColumnName="TestAssemblyId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(KeplerDataModel.TestCase)">
+        <MappingFragment StoreEntitySet="InfoObjects_TestCase">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="TestSuiteId" ColumnName="TestSuiteId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="ProjectBaseLine" TypeName="KeplerDataModel.ProjectBaseLine" StoreEntitySet="InfoObjects_Project">
+      <EndProperty Name="BaseLine">
+        <ScalarProperty Name="Id" ColumnName="BaseLine_Id" />
+      </EndProperty>
+      <EndProperty Name="Project">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
@@ -55,6 +583,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
       </DesignerInfoPropertySet>
     </edmx:Options>
     <!-- Diagram content (shape and connector positions) -->

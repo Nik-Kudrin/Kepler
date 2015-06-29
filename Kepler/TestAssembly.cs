@@ -12,13 +12,16 @@ namespace Kepler
     using System;
     using System.Collections.Generic;
     
-    public partial class ScreenShot : BuildObject
+    public partial class TestAssembly : BuildObject
     {
-        public string ImagePath { get; set; }
-        public long BaseLineId { get; set; }
-        public long TestCaseId { get; set; }
+        public TestAssembly()
+        {
+            this.TestSuites = new HashSet<TestSuite>();
+        }
     
-        public virtual BaseLine BaseLine { get; set; }
-        public virtual TestCase TestCase { get; set; }
+        public long BuildId1 { get; set; }
+    
+        public virtual Build Build { get; set; }
+        public virtual ICollection<TestSuite> TestSuites { get; set; }
     }
 }
