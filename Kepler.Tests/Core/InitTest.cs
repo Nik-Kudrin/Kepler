@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Kepler.Tests.Core
 {
     [TestFixture]
-    internal class InitTest
+    public class InitTest
     {
         protected static string BasePath { get; set; }
 

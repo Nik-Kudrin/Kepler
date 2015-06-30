@@ -8,6 +8,7 @@ namespace Kepler.Core
         [Key]
         public long Id { get; set; }
 
+        [StringLength(500)] 
         public string Name { get; set; }
         public ObjectStatus Status { get; set; }
 

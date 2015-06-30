@@ -10,6 +10,7 @@ namespace Kepler.Core
 
         public TestAssembly()
         {
+             
         }
 
         public TestAssembly(string Name) : base(Name)
