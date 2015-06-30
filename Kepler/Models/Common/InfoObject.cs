@@ -6,7 +6,8 @@ namespace Kepler.Core
     public class InfoObject
     {
         [Key]
-        public long ID;
+        public long Id { get; set; }
+
         public string Name { get; set; }
         public ObjectStatus Status { get; set; }
 

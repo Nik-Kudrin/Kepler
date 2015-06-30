@@ -10,10 +10,10 @@ namespace Kepler.Core
         public TestSuite()
         {
         }
-/*
+
         public TestSuite(string Name) : base(Name)
         {
             TestCases = new Dictionary<long?, TestCase>();
-        }*/
+        }
     }
 }

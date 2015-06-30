@@ -2,7 +2,7 @@
 {
     public class BuildObject : InfoObject
     {
-        protected long? BuildId;
+        public long? BuildId { get; set; }
 
         public BuildObject()
         {

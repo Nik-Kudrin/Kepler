@@ -27,7 +27,7 @@ namespace Kepler.Tests.Core
         {
             using (var db = new KeplerDataContext())
             {
-                var blog = new Project() {Name = "Some project"};
+                var blog = new Project() { Name = "Some project"};
                 db.Projects.Add(blog);
                 db.SaveChanges();
 

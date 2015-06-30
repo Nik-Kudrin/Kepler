@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity;
 using Kepler.Core;
 
 namespace Kepler.Models
@@ -14,5 +13,4 @@ namespace Kepler.Models
             Builds = new Dictionary<long?, Build>();
         }
     }
-
 }

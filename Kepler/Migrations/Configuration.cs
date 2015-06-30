@@ -1,16 +1,18 @@
-using System.Data.Entity.Migrations;
-using Kepler.Models;
-
 namespace Kepler.Migrations
 {
-    internal sealed class Configuration : DbMigrationsConfiguration<KeplerDataContext>
+    using System;
+    using System.Data.Entity;
+    using System.Data.Entity.Migrations;
+    using System.Linq;
+
+    internal sealed class Configuration : DbMigrationsConfiguration<Kepler.Models.KeplerDataContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(KeplerDataContext context)
+        protected override void Seed(Kepler.Models.KeplerDataContext context)
         {
             //  This method will be called after migrating to the latest version.
 
