@@ -8,7 +8,7 @@ using System.Web.Security;
 
 namespace Kepler.Models
 {
-    public class UsersContext : DbContext
+/*    public class UsersContext : DbContext
     {
         public UsersContext()
             : base("DefaultConnection")
@@ -16,7 +16,7 @@ namespace Kepler.Models
         }
 
         public DbSet<UserProfile> UserProfiles { get; set; }
-    }
+    }*/
 
     [Table("UserProfile")]
     public class UserProfile
@@ -24,6 +24,7 @@ namespace Kepler.Models
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
+
         public string UserName { get; set; }
     }
 

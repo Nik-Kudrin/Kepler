@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Data.Entity;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Xml;
-using Kepler.Core;
+using Kepler.Models;
 using NUnit.Framework;
 
 namespace Kepler.Tests.Core
@@ -26,15 +21,11 @@ namespace Kepler.Tests.Core
             var testAssembly = new TestAssembly("TestAssembly_Name");*/
         }
 
-        private class ProjectContext : DbContext
-        {
-            public DbSet<Project> Projects { get; set; }
-        }
 
         [Test]
         public void ReadFromDbTest()
         {
-            using (var db = new ProjectContext())
+            using (var db = new KeplerDataContext())
             {
                 var blog = new Project() {Name = "Some project"};
                 db.Projects.Add(blog);

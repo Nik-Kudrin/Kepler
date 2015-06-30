@@ -1,10 +1,12 @@
-﻿using Kepler.Core.Common;
+﻿using System.ComponentModel.DataAnnotations;
+using Kepler.Core.Common;
 
 namespace Kepler.Core
 {
     public class InfoObject
     {
-        protected long ID;
+        [Key]
+        public long ID;
         public string Name { get; set; }
         public ObjectStatus Status { get; set; }
 

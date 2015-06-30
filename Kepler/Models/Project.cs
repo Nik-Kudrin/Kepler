@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
+using Kepler.Core;
 
-namespace Kepler.Core
+namespace Kepler.Models
 {
     public class Project : InfoObject
     {
@@ -12,4 +14,5 @@ namespace Kepler.Core
             Builds = new Dictionary<long?, Build>();
         }
     }
+
 }

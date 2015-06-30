@@ -258,7 +258,7 @@ namespace Kepler.Controllers
             {
                 return RedirectToAction("Manage");
             }
-
+/*
             if (ModelState.IsValid)
             {
                 // Insert a new user into the database
@@ -282,7 +282,7 @@ namespace Kepler.Controllers
                         ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
                     }
                 }
-            }
+            }*/
 
             ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(provider).DisplayName;
             ViewBag.ReturnUrl = returnUrl;

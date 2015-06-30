@@ -188,67 +188,27 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="BaseLine.cs">
-      <DependentUpon>KeplerDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Build.cs">
-      <DependentUpon>KeplerDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BuildObject.cs">
-      <DependentUpon>KeplerDataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
-    <Compile Include="Core\BaseLine.cs" />
-    <Compile Include="Core\Build.cs" />
-    <Compile Include="Core\Common\BuildObject.cs" />
-    <Compile Include="Core\Common\InfoObject.cs" />
-    <Compile Include="Core\Common\ObjectStatus.cs" />
-    <Compile Include="Core\Project.cs" />
-    <Compile Include="Core\ScreenShot.cs" />
-    <Compile Include="Core\TestAssembly.cs" />
-    <Compile Include="Core\TestCase.cs" />
-    <Compile Include="Core\TestSuite.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\BaseLine.cs" />
+    <Compile Include="Models\Build.cs" />
+    <Compile Include="Models\Common\BuildObject.cs" />
+    <Compile Include="Models\Common\InfoObject.cs" />
+    <Compile Include="Models\Common\ObjectStatus.cs" />
+    <Compile Include="Models\KeplerDataContext.cs" />
+    <Compile Include="Models\Project.cs" />
+    <Compile Include="Models\ScreenShot.cs" />
+    <Compile Include="Models\TestAssembly.cs" />
+    <Compile Include="Models\TestCase.cs" />
+    <Compile Include="Models\TestSuite.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="InfoObject.cs">
-      <DependentUpon>KeplerDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="KeplerDataModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>KeplerDataModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="KeplerDataModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>KeplerDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="KeplerDataModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>KeplerDataModel.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Project.cs">
-      <DependentUpon>KeplerDataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScreenShot.cs">
-      <DependentUpon>KeplerDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TestAssembly.cs">
-      <DependentUpon>KeplerDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TestCase.cs">
-      <DependentUpon>KeplerDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TestSuite.cs">
-      <DependentUpon>KeplerDataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Util\EntityXmlSerializer.cs" />
     <Compile Include="Util\Utf8StringWriter.cs" />
   </ItemGroup>
@@ -288,23 +248,6 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
-    <EntityDeploy Include="KeplerDataModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>KeplerDataModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="KeplerDataModel.edmx.diagram">
-      <DependentUpon>KeplerDataModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="KeplerDataModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>KeplerDataModel.Context.cs</LastGenOutput>
-      <DependentUpon>KeplerDataModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="KeplerDataModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>KeplerDataModel.cs</LastGenOutput>
-      <DependentUpon>KeplerDataModel.edmx</DependentUpon>
-    </Content>
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Images\demoUpload.jpg" />
     <Content Include="Images\logo-invoice.png" />
@@ -357,7 +300,6 @@
     <Content Include="Images\slideshow\3.jpg" />
     <Content Include="Images\user.gif" />
     <Content Include="Images\user.png" />
-    <Content Include="KeplerDataModel.edmx.sql" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
