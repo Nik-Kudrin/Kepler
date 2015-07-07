@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Kepler.Core;
+﻿using Kepler.Core;
 using Kepler.Models;
 using NUnit.Framework;
 
