@@ -200,6 +200,11 @@
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Core\IRepository.cs" />
     <Compile Include="Core\BaseRepository.cs" />
+    <Compile Include="Core\BuildRepository.cs" />
+    <Compile Include="Core\TestCaseRepository.cs" />
+    <Compile Include="Core\TestSuiteRepository.cs" />
+    <Compile Include="Core\TestAssemblyRepository.cs" />
+    <Compile Include="Core\ScreenShotRepository.cs" />
     <Compile Include="Core\ProjectRepository.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BaseLine.cs" />
@@ -207,7 +212,7 @@
     <Compile Include="Models\Common\BuildObject.cs" />
     <Compile Include="Models\Common\InfoObject.cs" />
     <Compile Include="Models\Common\ObjectStatus.cs" />
-    <Compile Include="Models\KeplerDataContext.cs" />
+    <Compile Include="DB\KeplerDataContext.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\ScreenShot.cs" />
     <Compile Include="Models\TestAssembly.cs" />

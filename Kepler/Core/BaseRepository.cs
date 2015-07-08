@@ -1,21 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Kepler.Models;
 
 namespace Kepler.Core
 {
     public class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : InfoObject
     {
+        private readonly KeplerDataContext _dbContext;
         private readonly DbSet<TEntity> _dbSet;
 
-        public BaseRepository(DbSet<TEntity> dbSet)
+
+        protected BaseRepository(KeplerDataContext dbContext, DbSet<TEntity> dbSet)
         {
+            _dbContext = dbContext;
             _dbSet = dbSet;
         }
 
-        public TEntity Get(long id)
+        public virtual TEntity Get(long id)
         {
             return _dbSet.Where(x => x.Id == id).FirstOrDefault();
+        }
+
+        public void Add(TEntity entity)
+        {
+            _dbSet.Add(entity);
         }
 
         public void Save(TEntity entity)
@@ -23,17 +32,22 @@ namespace Kepler.Core
             _dbSet.Attach(entity);
         }
 
+        public virtual void FlushChanges()
+        {
+            _dbContext.SaveChanges();
+        }
+
         public void Delete(TEntity entity)
         {
             _dbSet.Remove(entity);
         }
 
-        public IEnumerable<TEntity> FindAll()
+        public virtual IEnumerable<TEntity> FindAll()
         {
             return _dbSet.ToList();
         }
 
-        public IEnumerable<TEntity> Find(string name)
+        public virtual IEnumerable<TEntity> Find(string name)
         {
             return _dbSet.Where(x => x.Name == name).ToList();
         }

@@ -9,97 +9,80 @@ namespace Kepler.Tests.Core
         [Test]
         public void CreateScreenShot()
         {
-            using (var db = new KeplerDataContext())
-            {
-                var screenShot = new ScreenShot("ScreenShot_Inside_The_Case_Unique_Name", "some/path/to/screenshot");
-                db.ScreenShots.Add(screenShot);
-                db.SaveChanges();
-            }
+            var repo = ScreenShotRepository.Instance;
+
+            var screenShot = new ScreenShot("ScreenShot_Inside_The_Case_Unique_Name", "some/path/to/screenshot");
+            repo.Add(screenShot);
+            repo.FlushChanges();
         }
 
         [Test]
         public void CreateTestCase()
         {
-            using (var db = new KeplerDataContext())
-            {
-                db.TestCases.Add(new TestCase("Test Case Name"));
-                db.TestCases.Add(new TestCase("Test Case Name 2"));
-                db.SaveChanges();
-            }
+            var repo = TestCaseRepository.Instance;
+
+            repo.Add(new TestCase("Test Case Name"));
+            repo.Add(new TestCase("Test Case Name 2"));
+            repo.FlushChanges();
         }
 
         [Test]
         public void CreateTestSuite()
         {
-            using (var db = new KeplerDataContext())
-            {
-                db.TestSuites.Add(new TestSuite("TestSuite_Name"));
-                db.SaveChanges();
-            }
+            var repo = TestSuiteRepository.Instance;
+
+            repo.Add(new TestSuite("TestSuite_Name"));
+            repo.FlushChanges();
         }
 
         [Test]
         public void CreateTestAssembly()
         {
-            using (var db = new KeplerDataContext())
-            {
-                db.TestAssemblies.Add(new TestAssembly("TestAssembly_Name"));
-                db.SaveChanges();
-            }
+            var repo = TestAssemblyRepository.Instance;
+
+            repo.Add(new TestAssembly("TestAssembly_Name"));
+            repo.FlushChanges();
         }
 
 
         [Test]
         public void CreateProject()
         {
-            using (var db = new KeplerDataContext())
-            {
-                var project = new Project() {Name = "Some project"};
-                db.Projects.Add(project);
-                db.SaveChanges();
+            var repo = ProjectRepository.Instance;
 
-                /*var query = from b in db.Projects
-                    orderby b.Name
-                    select b;
-
-                Console.WriteLine("All blogs in the database:");
-                foreach (var item in query)
-                {
-                    Console.WriteLine(item.Name);
-                }*/
-            }
+            var project = new Project() {Name = "Some project"};
+            repo.Add(project);
+            repo.FlushChanges();
         }
 
         [Test]
         public void CreateProjectBaseLine()
         {
-            using (var db = new KeplerDataContext())
-            {
-                var project = new Project() {Name = "Project name"};
-                project.BaseLine = new BaseLine();
+            var repo = ProjectRepository.Instance;
 
-                db.Projects.Add(project);
-                db.SaveChanges();
-            }
+            var project = new Project() {Name = "Project name"};
+            project.BaseLine = new BaseLine();
+
+            repo.Add(project);
+            repo.FlushChanges();
         }
 
         [Test]
         public void CreateBuild()
         {
-            using (var db = new KeplerDataContext())
-            {
-                var screenShot = new ScreenShot("ScreenShot_Inside_The_Case_Unique_Name", "some/path/to/screenshot");
-            }
+            var repo = BuildRepository.Instance;
+
+            var build = new Build() {Name = "Some build name"};
+
+            repo.Add(build);
+            repo.FlushChanges();
         }
 
 
+        [Ignore]
         [Test]
         public void CreateAllObjectsTree()
         {
-            using (var db = new KeplerDataContext())
-            {
-                var screenShot = new ScreenShot("ScreenShot_Inside_The_Case_Unique_Name", "some/path/to/screenshot");
-            }
         }
 
 
