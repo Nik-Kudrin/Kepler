@@ -11,9 +11,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Kepler.Tests</RootNamespace>
     <AssemblyName>Kepler.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -137,7 +138,6 @@
     <Compile Include="Core\InitTest.cs" />
     <Compile Include="Core\CommonTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controllers\HomeControllerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
@@ -149,9 +149,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Kepler\Kepler.csproj">
+    <ProjectReference Include="..\Kepler.Common\Kepler.Common.csproj">
+      <Project>{6c80a420-6ab0-4172-93e1-c44974187669}</Project>
+      <Name>Kepler.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Kepler.UI\Kepler.UI.csproj">
       <Project>{FCA2B2AB-350C-461D-9703-C8AB54B84DDD}</Project>
-      <Name>Kepler</Name>
+      <Name>Kepler.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
