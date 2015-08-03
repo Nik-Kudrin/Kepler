@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Tests", "Kepler.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Common", "Kepler.Common\Kepler.Common.csproj", "{6C80A420-6AB0-4172-93E1-C44974187669}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Service", "Kepler.Service\Kepler.Service.csproj", "{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.HostService", "Kepler.HostService\Kepler.HostService.csproj", "{FE5BA486-0A42-4B03-B939-97EFAE1A1DF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{6C80A420-6AB0-4172-93E1-C44974187669}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C80A420-6AB0-4172-93E1-C44974187669}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C80A420-6AB0-4172-93E1-C44974187669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE5BA486-0A42-4B03-B939-97EFAE1A1DF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE5BA486-0A42-4B03-B939-97EFAE1A1DF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE5BA486-0A42-4B03-B939-97EFAE1A1DF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE5BA486-0A42-4B03-B939-97EFAE1A1DF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
