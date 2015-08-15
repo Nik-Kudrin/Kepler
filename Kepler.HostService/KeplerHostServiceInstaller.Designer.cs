@@ -1,6 +1,6 @@
 ﻿namespace Kepler.HostService
 {
-    partial class ProjectInstaller
+    partial class KeplerHostServiceInstaller
     {
         /// <summary>
         /// Required designer variable.
