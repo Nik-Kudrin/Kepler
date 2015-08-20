@@ -153,10 +153,6 @@
       <Project>{6c80a420-6ab0-4172-93e1-c44974187669}</Project>
       <Name>Kepler.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Kepler.UI\Kepler.UI.csproj">
-      <Project>{FCA2B2AB-350C-461D-9703-C8AB54B84DDD}</Project>
-      <Name>Kepler.UI</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

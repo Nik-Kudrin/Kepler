@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.UI", "Kepler.UI\Kepler.UI.csproj", "{FCA2B2AB-350C-461D-9703-C8AB54B84DDD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Tests", "Kepler.Tests\Kepler.Tests.csproj", "{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Common", "Kepler.Common\Kepler.Common.csproj", "{6C80A420-6AB0-4172-93E1-C44974187669}"
@@ -13,16 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Service", "Kepler.Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.HostService", "Kepler.HostService\Kepler.HostService.csproj", "{FE5BA486-0A42-4B03-B939-97EFAE1A1DF9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.UI", "Kepler.UI\Kepler.UI\Kepler.UI.csproj", "{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FCA2B2AB-350C-461D-9703-C8AB54B84DDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FCA2B2AB-350C-461D-9703-C8AB54B84DDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FCA2B2AB-350C-461D-9703-C8AB54B84DDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FCA2B2AB-350C-461D-9703-C8AB54B84DDD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{FE5BA486-0A42-4B03-B939-97EFAE1A1DF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE5BA486-0A42-4B03-B939-97EFAE1A1DF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE5BA486-0A42-4B03-B939-97EFAE1A1DF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
