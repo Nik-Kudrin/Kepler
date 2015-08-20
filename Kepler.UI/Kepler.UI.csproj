@@ -219,41 +219,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\css\basic.css" />
-    <Content Include="Content\css\bootstrap-fileupload.min.css" />
-    <Content Include="Content\css\bootstrap-social.css" />
     <Content Include="Content\css\bootstrap.css" />
-    <Content Include="Content\css\custom.css" />
-    <Content Include="Content\css\error.css" />
-    <Content Include="Content\css\font-awesome.css" />
-    <Content Include="Content\css\invoice.css" />
-    <Content Include="Content\css\prettyPhoto.css" />
-    <Content Include="Content\css\pricing.css" />
-    <Content Include="Content\css\wizard\jquery.steps.css" />
-    <Content Include="Content\css\wizard\normalize.css" />
-    <Content Include="Content\css\wizard\wizardMain.css" />
-    <Content Include="Content\fonts\fontawesome-webfont.svg" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\js\bootstrap-fileupload.js" />
+    <Content Include="Content\css\style.css" />
+    <Content Include="Content\css\normalize.css" />
     <Content Include="Content\js\bootstrap.js" />
     <Content Include="Content\js\custom.js" />
-    <Content Include="Content\js\galleryCustom.js" />
-    <Content Include="Content\js\jquery-1.10.2.js" />
+    <Content Include="Content\js\jquery-2.1.4.js" />
+    <Content Include="Content\js\jquery-2.1.4.min.js" />
     <Content Include="Content\js\jquery.metisMenu.js" />
-    <Content Include="Content\js\jquery.mixitup.min.js" />
-    <Content Include="Content\js\jquery.prettyPhoto.js" />
-    <Content Include="Content\js\wizard\jquery.cookie-1.3.1.js" />
-    <Content Include="Content\js\wizard\jquery.steps.js" />
-    <Content Include="Content\js\wizard\modernizr-2.6.2.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\fonts\fontawesome-webfont.eot" />
-    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Content\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\fonts\FontAwesome.otf" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Images\demoUpload.jpg" />
     <Content Include="Images\logo-invoice.png" />
@@ -350,6 +325,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\fonts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

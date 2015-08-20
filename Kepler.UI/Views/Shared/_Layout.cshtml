@@ -3,117 +3,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>@ViewBag.Title</title>
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-    <meta name="viewport" content="width=device-width"/>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
 
-    @Styles.Render("~/Content/css/bootstrap.css")
-    @Styles.Render("~/Content/css/font-awesome.css")
-    @Styles.Render("~/Content/css/basic.css")
-    @Styles.Render("~/Content/css/custom.css")
-
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css"/>
+    @Styles.Render("~/Content/css")
 
 </head>
 <body>
 
-<div id="wrapper">
-    <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            @Html.ActionLink("Kepler", "Index", "Home", htmlAttributes: new {@class = "navbar-brand", @href = "/"})
+    <div id="wrapper">
+        <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Kepler", "Index", "Home", htmlAttributes: new { @class = "navbar-brand", @href = "/" })
 
-        </div>
-
-        <div class="header-right">
-
-            <a href="message-task.html" class="btn btn-info" title="New Message">
-                <b>30 </b><i class="fa fa-envelope-o fa-2x"></i>
-            </a>
-            <a href="message-task.html" class="btn btn-primary" title="New Task">
-                <b>40 </b><i class="fa fa-bars fa-2x"></i>
-            </a>
-            <a href="login.html" class="btn btn-danger" title="Logout">
-                <i class="fa fa-exclamation-circle fa-2x"></i>
-            </a>
-
-
-        </div>
-    </nav>
-    <!-- /. NAV TOP -->
-    <nav class="navbar-default navbar-side" role="navigation">
-        <div class="sidebar-collapse">
-            <ul class="nav" id="main-menu">
-                <li>
-                    <div class="user-img-div">
-                    </div>
-                </li>
-
-                <li>
-                    <a href="#" class="active-menu-top"><i class="fa fa-desktop "></i>ProjectController 1<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level collapse in">
-                        <li>
-                            <a class="active-menu" href="Project"><i class="fa fa-toggle-on"></i>Branch 0</a>
-                        </li>
-                        <li>
-                            <a href="notification.html"><i class="fa fa-bell "></i>Branch 1</a>
-                        </li>
-                        <li>
-                            <a href="progress.html"><i class="fa fa-circle-o "></i>Branch 2</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-yelp "></i>ProjectController 2<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a href="invoice.html"><i class="fa fa-coffee"></i>Branch 1</a>
-                        </li>
-                        <li>
-                            <a href="pricing.html"><i class="fa fa-flash "></i>Branch 2</a>
-                        </li>
-                        <li>
-                            <a href="component.html"><i class="fa fa-key "></i>Branch 3</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-
-        </div>
-
-    </nav>
-    <!-- /. NAV SIDE -->
-    <div id="page-wrapper">
-        <div id="page-inner">
-            <div class="row">
-                <div class="col-md-12">
-                    @*<h1 class="page-head-line">Panels & Tabs</h1>*@
-                    <h1 class="page-subhead-line">@Html.ViewBag.Title</h1>
-                </div>
             </div>
-            <!-- /. ROW -->
-            @RenderBody()
 
+            <div class="header-right">
+
+                <a href="message-task.html" class="btn btn-info" title="New Message">
+                    <b>30 </b><i class="fa fa-envelope-o fa-2x"></i>
+                </a>
+                <a href="message-task.html" class="btn btn-primary" title="New Task">
+                    <b>40 </b><i class="fa fa-bars fa-2x"></i>
+                </a>
+                <a href="login.html" class="btn btn-danger" title="Logout">
+                    <i class="fa fa-exclamation-circle fa-2x"></i>
+                </a>
+
+
+            </div>
+        </nav>
+        <!-- /. NAV TOP -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+                    <li>
+                        <div class="user-img-div">
+                        </div>
+                    </li>
+
+                    <li>
+                        <a href="#" class="active-menu-top"><i class="fa fa-desktop "></i>ProjectController 1<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse in">
+                            <li>
+                                <a class="active-menu" href="Project"><i class="fa fa-toggle-on"></i>Branch 0</a>
+                            </li>
+                            <li>
+                                <a href="notification.html"><i class="fa fa-bell "></i>Branch 1</a>
+                            </li>
+                            <li>
+                                <a href="progress.html"><i class="fa fa-circle-o "></i>Branch 2</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-yelp "></i>ProjectController 2<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="invoice.html"><i class="fa fa-coffee"></i>Branch 1</a>
+                            </li>
+                            <li>
+                                <a href="pricing.html"><i class="fa fa-flash "></i>Branch 2</a>
+                            </li>
+                            <li>
+                                <a href="component.html"><i class="fa fa-key "></i>Branch 3</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+
+        </nav>
+        <!-- /. NAV SIDE -->
+        <div id="page-wrapper">
+            <div id="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                        @*<h1 class="page-head-line">Panels & Tabs</h1>*@
+                        <h1 class="page-subhead-line">@Html.ViewBag.Title</h1>
+                    </div>
+                </div>
+                <!-- /. ROW -->
+                @RenderBody()
+
+            </div>
+            <!-- /. PAGE WRAPPER -->
         </div>
-        <!-- /. PAGE WRAPPER -->
     </div>
-</div>
-<!-- /. WRAPPER -->
-<div id="footer-sec">
-    &copy; 2014 NEON | Design By : <a href="http://www.binarytheme.com/" target="_blank">BinaryTheme.com</a>
-</div>
-<!-- /. FOOTER -->
-<!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
-@Scripts.Render("~/Content/js/jquery-1.10.2.js")
-@Scripts.Render("~/Content/js/bootstrap.js")
-@Scripts.Render("~/Content/js/jquery.metisMenu.js")
-@Scripts.Render("~/Content/js/custom.js")
+    <!-- /. WRAPPER -->
+    <div id="footer-sec">
+        &copy; 2014 NEON | Design By : <a href="http://www.binarytheme.com/" target="_blank">BinaryTheme.com</a>
+    </div>
+    <!-- /. FOOTER -->
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    @Scripts.Render("~/bundles/js")
 
 </body>
 </html>
