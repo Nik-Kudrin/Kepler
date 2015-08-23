@@ -23,9 +23,16 @@ namespace Kepler.UI
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/statico").Include(
+                      "~/Scripts/jquery.metisMenu.js",
+                      "~/Scripts/custom.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/basic.css",
+                      "~/Content/custom.css",
+                      "~/Content/font-awesome.css"));
         }
     }
 }
