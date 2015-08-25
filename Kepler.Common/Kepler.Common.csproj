@@ -44,6 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\BaseRepository.cs" />
+    <Compile Include="Core\BuildRepository.cs" />
+    <Compile Include="Core\IRepository.cs" />
+    <Compile Include="Core\ProjectRepository.cs" />
+    <Compile Include="Core\ScreenShotRepository.cs" />
+    <Compile Include="Core\TestAssemblyRepository.cs" />
+    <Compile Include="Core\TestCaseRepository.cs" />
+    <Compile Include="Core\TestSuiteRepository.cs" />
     <Compile Include="DB\KeplerDataContext.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -61,6 +69,7 @@
     <Compile Include="Util\EntityXmlSerializer.cs" />
     <Compile Include="Util\Utf8StringWriter.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

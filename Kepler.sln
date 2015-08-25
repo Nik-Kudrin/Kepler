@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Service", "Kepler.Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.HostService", "Kepler.HostService\Kepler.HostService.csproj", "{FE5BA486-0A42-4B03-B939-97EFAE1A1DF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.UI", "Kepler.UI\Kepler.UI\Kepler.UI.csproj", "{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.UI", "Kepler.UI\Kepler.UI.csproj", "{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
