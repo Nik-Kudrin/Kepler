@@ -7,7 +7,7 @@
             <a href="#"><i class="fa fa-desktop "></i>Project A<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
                 <li>
-                    <a class="left-nav-link" href="#"><i class="fa fa-toggle-on"></i>Master</a>
+                    <a class="left-nav-link" href="#" linkUrl="@Url.Action("BranchView", new {current_branch = "Develop"})"><i class="fa fa-toggle-on"></i>Master</a>
                 </li>
                 <li>
                     <a class="left-nav-link" href="@Url.Action("BranchView", new {current_branch = "Develop"})"><i class="fa fa-bell "></i>Develop</a>
@@ -34,19 +34,16 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('.left-nav-link').hover(function() {
-            //var $buttonClicked = $(this);
-            //var id = $buttonClicked.attr('data-id');
-            console.log("TEST");
-            @*$.ajax({
-                    url: '@Url.Action("Details")',
+        $('.left-nav-link').click(function () {
+            console.log($(this).attr('linkUrl'));
+            $.ajax({
+                    url: $(this).attr('linkUrl'),
                     type: 'GET',
-                    data: { id: id },
-                    success: function (partialView) {
-                        $('#page-inner').html(partialView);
-                        $('#page-inner').show();
+                    data: "",
+                    success: function (html) {
+                        $('#page-inner').html(html);
                     }
-                });*@
+                });
         });
     });
 </script>
