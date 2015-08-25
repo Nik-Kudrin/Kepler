@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Kepler.Models;
@@ -19,7 +20,7 @@ namespace Kepler.Core
 
         public virtual TEntity Get(long id)
         {
-            return _dbSet.Where(x => x.Id == id).FirstOrDefault();
+            return _dbSet.FirstOrDefault(x => x.Id == id);
         }
 
         public void Add(TEntity entity)

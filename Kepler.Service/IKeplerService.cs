@@ -1,5 +1,7 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.ServiceModel;
+using Kepler.Core;
 
 namespace Kepler.Service
 {
@@ -8,7 +10,10 @@ namespace Kepler.Service
     public interface IKeplerService
     {
         [OperationContract]
-        string GetData(int value);
+        Build GetBuild(long value);
+
+        [OperationContract]
+        IEnumerable<Build> GetBuilds();
 
         [OperationContract]
         CompositeType GetDataUsingDataContract(CompositeType composite);
