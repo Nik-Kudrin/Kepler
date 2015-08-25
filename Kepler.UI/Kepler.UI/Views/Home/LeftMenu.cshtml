@@ -1,5 +1,4 @@
 ﻿@{
-
 }
 
 <div class="sidebar-collapse">
@@ -11,7 +10,7 @@
                     <a class="left-nav-link" href="#"><i class="fa fa-toggle-on"></i>Master</a>
                 </li>
                 <li>
-                    <a class="left-nav-link" href="@Url.Action("BranchView", new { current_branch = "Develop"})"><i class="fa fa-bell "></i>Develop</a>
+                    <a class="left-nav-link" href="@Url.Action("BranchView", new {current_branch = "Develop"})"><i class="fa fa-bell "></i>Develop</a>
                 </li>
                 <li>
                     <a class="left-nav-link" href="progress.html"><i class="fa fa-circle-o "></i>Features</a>
@@ -32,14 +31,14 @@
     </ul>
 </div>
 
-@section Script{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.left-nav-link').click(function () {
-                //var $buttonClicked = $(this);
-                //var id = $buttonClicked.attr('data-id');
-                console.log("TEST");
-                @*$.ajax({
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.left-nav-link').hover(function() {
+            //var $buttonClicked = $(this);
+            //var id = $buttonClicked.attr('data-id');
+            console.log("TEST");
+            @*$.ajax({
                     url: '@Url.Action("Details")',
                     type: 'GET',
                     data: { id: id },
@@ -48,7 +47,6 @@
                         $('#page-inner').show();
                     }
                 });*@
-            });
         });
-    </script>
-}
+    });
+</script>
