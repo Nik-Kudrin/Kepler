@@ -8,13 +8,13 @@
             <a href="#"><i class="fa fa-desktop "></i>Project A<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
                 <li>
-                    <a href="@Url.Action("BranchView", new { current_branch = "Master"})"><i class="fa fa-toggle-on"></i>Master</a>
+                    <a class="left-nav-link" href="#"><i class="fa fa-toggle-on"></i>Master</a>
                 </li>
                 <li>
-                    <a href="@Url.Action("BranchView", new { current_branch = "Develop"})"><i class="fa fa-bell "></i>Develop</a>
+                    <a class="left-nav-link" href="@Url.Action("BranchView", new { current_branch = "Develop"})"><i class="fa fa-bell "></i>Develop</a>
                 </li>
                 <li>
-                    <a href="progress.html"><i class="fa fa-circle-o "></i>Features</a>
+                    <a class="left-nav-link" href="progress.html"><i class="fa fa-circle-o "></i>Features</a>
                 </li>
             </ul>
         </li>
@@ -22,21 +22,33 @@
             <a href="#"><i class="fa fa-yelp "></i>Project B<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
                 <li>
-                    <a href="invoice.html"><i class="fa fa-coffee"></i>Master</a>
+                    <a class="left-nav-link" href="invoice.html"><i class="fa fa-coffee"></i>Master</a>
                 </li>
                 <li>
-                    <a href="pricing.html"><i class="fa fa-flash "></i>Develop</a>
+                    <a class="left-nav-link" href="pricing.html"><i class="fa fa-flash "></i>Develop</a>
                 </li>
             </ul>
         </li>
     </ul>
 </div>
 
-<script type="text/javascript">
-    $(doument).ready(function () {
-        $('.nav a').click(function () {
-            $('#page-inner').load("@Url.Action("BranchView", "Master")");
+@section Script{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.left-nav-link').click(function () {
+                //var $buttonClicked = $(this);
+                //var id = $buttonClicked.attr('data-id');
+                console.log("TEST");
+                @*$.ajax({
+                    url: '@Url.Action("Details")',
+                    type: 'GET',
+                    data: { id: id },
+                    success: function (partialView) {
+                        $('#page-inner').html(partialView);
+                        $('#page-inner').show();
+                    }
+                });*@
+            });
         });
-    });
-</script>
-
+    </script>
+}
