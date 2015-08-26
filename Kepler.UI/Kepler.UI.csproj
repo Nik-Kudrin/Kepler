@@ -255,7 +255,7 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\LeftMenu.cshtml" />
-    <Content Include="Views\Home\BranchView.cshtml" />
+    <Content Include="Views\Home\PartialBranchView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

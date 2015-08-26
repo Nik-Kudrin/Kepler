@@ -7,10 +7,10 @@
             <a href="#"><i class="fa fa-desktop "></i>Project A<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
                 <li>
-                    <a class="left-nav-link" href="#" linkUrl="@Url.Action("BranchView", new {current_branch = "Develop"})"><i class="fa fa-toggle-on"></i>Master</a>
+                    <a class="left-nav-link" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="Master"><i class="fa fa-toggle-on"></i>Master</a>
                 </li>
                 <li>
-                    <a class="left-nav-link" href="@Url.Action("BranchView", new {current_branch = "Develop"})"><i class="fa fa-bell "></i>Develop</a>
+                    <a class="left-nav-link" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="Develop"><i class="fa fa-bell "></i>Develop</a>
                 </li>
                 <li>
                     <a class="left-nav-link" href="progress.html"><i class="fa fa-circle-o "></i>Features</a>
@@ -33,17 +33,19 @@
 
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.left-nav-link').click(function () {
-            console.log($(this).attr('linkUrl'));
+            var linkUrl = $(this).attr('linkUrl');
+            var linkBranch = $(this).attr('linkBranch');
+
             $.ajax({
-                    url: $(this).attr('linkUrl'),
-                    type: 'GET',
-                    data: "",
-                    success: function (html) {
-                        $('#page-inner').html(html);
-                    }
-                });
+                url: linkUrl,
+                type: 'POST',
+                data: linkBranch,
+                success: function (html) {
+                    $('#page-inner').html(html);
+                }
+            });
         });
     });
 </script>

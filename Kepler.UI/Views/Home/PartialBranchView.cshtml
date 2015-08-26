@@ -1,0 +1,15 @@
+﻿PartialBranchView Hi
+
+<script type="text/javascript">
+    $('.left-nav-link').click(function () {
+        console.log($(this).attr('linkUrl'));
+        $.ajax({
+            url: $(this).attr('linkUrl'),
+            type: 'GET',
+            data: "",
+            success: function (html) {
+                $('#page-inner').html(html);
+            }
+        });
+    });
+</script>
