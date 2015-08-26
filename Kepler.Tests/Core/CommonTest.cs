@@ -1,4 +1,5 @@
 ﻿using Kepler.Core;
+using Kepler.Core.Common;
 using Kepler.Models;
 using NUnit.Framework;
 
@@ -73,6 +74,16 @@ namespace Kepler.Tests.Core
             var repo = BuildRepository.Instance;
 
             var build = new Build() {Name = "Some build name"};
+
+            repo.Add(build);
+            repo.FlushChanges();
+        }
+
+        [Test]
+        public void CreateBuildWithSomeStatus()
+        {
+            var repo = BuildRepository.Instance;
+            var build = new Build() {Name = "Build ..", Status = ObjectStatus.InProgress};
 
             repo.Add(build);
             repo.FlushChanges();

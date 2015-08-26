@@ -8,11 +8,14 @@ namespace Kepler.Core
     public class InfoObject
     {
         [Key]
+        [DataMember]
         public long Id { get; set; }
 
         [StringLength(500)]
+        [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
         public ObjectStatus Status { get; set; }
 
         public InfoObject()

@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 
 namespace Kepler.Core
 {
-    [DataContract]
     public class Build : InfoObject
     {
     }

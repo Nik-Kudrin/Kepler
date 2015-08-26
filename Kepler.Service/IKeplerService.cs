@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.ServiceModel;
+using System.ServiceModel.Web;
 using Kepler.Core;
 
 namespace Kepler.Service
@@ -10,13 +10,15 @@ namespace Kepler.Service
     public interface IKeplerService
     {
         [OperationContract]
-        Build GetBuild(long value);
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetBuild/{id}")]
+        Build GetBuild(string id);
 
+/*
         [OperationContract]
         IEnumerable<Build> GetBuilds();
 
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
+        CompositeType GetDataUsingDataContract(CompositeType composite);*/
 
         // TODO: Add your service operations here
     }
@@ -26,8 +28,8 @@ namespace Kepler.Service
     [DataContract]
     public class CompositeType
     {
-        bool boolValue = true;
-        string stringValue = "Hello ";
+        private bool boolValue = true;
+        private string stringValue = "Hello ";
 
         [DataMember]
         public bool BoolValue

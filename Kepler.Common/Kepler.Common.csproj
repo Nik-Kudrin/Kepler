@@ -60,7 +60,6 @@
     <Compile Include="Core\TestSuiteRepository.cs" />
     <Compile Include="DB\KeplerDataContext.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BaseLine.cs" />
     <Compile Include="Models\Build.cs" />
     <Compile Include="Models\Common\BuildObject.cs" />
