@@ -7,6 +7,11 @@ namespace Kepler.Service
     public class KeplerService : IKeplerService
     {
         private BuildRepository buildRepo = BuildRepository.Instance;
+        private TestCaseRepository caseRepo = TestCaseRepository.Instance;
+        private TestAssemblyRepository assemblyRepository = TestAssemblyRepository.Instance;
+        private ProjectRepository projectRepository = ProjectRepository.Instance;
+        private TestSuiteRepository suiteRepo = TestSuiteRepository.Instance;
+        private ScreenShotRepository screenShotRepository = ScreenShotRepository.Instance;
 
         public Build GetBuild(string id)
         {

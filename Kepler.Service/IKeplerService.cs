@@ -45,7 +45,7 @@ namespace Kepler.Service
         #region TestAssembly
 
         [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestAssembly?assemblyId={id}")]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestAssembly?assemblyId={assemblyId}")]
         IEnumerable<Build> GetTestAssembly(string assemblyId);
 
 
