@@ -2,6 +2,7 @@
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Kepler.Core;
+using Kepler.Models;
 
 namespace Kepler.Service
 {
@@ -20,12 +21,12 @@ namespace Kepler.Service
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestCase?testCaseId={id}")]
-        IEnumerable<Build> GetTestCase(string id);
+        TestCase GetTestCase(string id);
 
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestCases?testSuiteId={testSuiteId}")]
-        IEnumerable<Build> GetTestCases(string testSuiteId);
+        IEnumerable<TestCase> GetTestCases(string testSuiteId);
 
         #endregion
 
@@ -33,12 +34,12 @@ namespace Kepler.Service
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestSuite?id={id}")]
-        IEnumerable<Build> GetTestSuite(string id);
+        TestSuite GetTestSuite(string id);
 
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestSuites?assemblyId={assemblyId}")]
-        IEnumerable<Build> GetTestSuites(string assemblyId);
+        IEnumerable<TestSuite> GetTestSuites(string assemblyId);
 
         #endregion
 
@@ -46,12 +47,12 @@ namespace Kepler.Service
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestAssembly?assemblyId={assemblyId}")]
-        IEnumerable<Build> GetTestAssembly(string assemblyId);
+        TestAssembly GetTestAssembly(string assemblyId);
 
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestAssemblies?buildId={buildId}")]
-        IEnumerable<Build> GetTestAssemblies(string buildId);
+        IEnumerable<TestAssembly> GetTestAssemblies(string buildId);
 
         #endregion
 
@@ -59,11 +60,11 @@ namespace Kepler.Service
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetProject?projectId={id}")]
-        IEnumerable<Build> GetProject(string id);
+        Project GetProject(string id);
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetProjects")]
-        IEnumerable<Build> GetProjects();
+        IEnumerable<Project> GetProjects();
 
         #endregion
 
@@ -71,7 +72,7 @@ namespace Kepler.Service
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetBaseline?baseLineId={id}")]
-        IEnumerable<Build> GetBaseline(string id);
+        BaseLine GetBaseline(string id);
 
         #endregion
     }
