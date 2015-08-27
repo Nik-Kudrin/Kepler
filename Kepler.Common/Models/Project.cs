@@ -6,7 +6,10 @@ namespace Kepler.Models
 {
     public class Project : InfoObject
     {
+        [DataMember]
         public BaseLine BaseLine { get; set; }
+
+        [DataMember]
         public Dictionary<long?, Build> Builds { get; set; }
 
         public Project()

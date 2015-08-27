@@ -6,11 +6,11 @@ namespace Kepler.Core
 {
     public class TestAssembly : BuildObject
     {
+        [DataMember]
         public Dictionary<long?, TestSuite> TestSuites { get; set; }
 
         public TestAssembly()
         {
-             
         }
 
         public TestAssembly(string Name) : base(Name)

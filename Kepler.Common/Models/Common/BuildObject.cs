@@ -1,7 +1,10 @@
-﻿namespace Kepler.Core.Common
+﻿using System.Runtime.Serialization;
+
+namespace Kepler.Core.Common
 {
     public class BuildObject : InfoObject
     {
+        [DataMember]
         public long? BuildId { get; set; }
 
         public BuildObject()
