@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\BaseRepository.cs" />
+    <Compile Include="Core\BuildObjectRepository.cs" />
     <Compile Include="Core\BuildRepository.cs" />
     <Compile Include="Core\IRepository.cs" />
     <Compile Include="Core\ProjectRepository.cs" />

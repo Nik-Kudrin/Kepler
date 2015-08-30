@@ -1,8 +1,9 @@
-﻿using Kepler.Models;
+﻿using Kepler.Common.Core;
+using Kepler.Models;
 
 namespace Kepler.Core
 {
-    public class TestAssemblyRepository : BaseRepository<TestAssembly>
+    public class TestAssemblyRepository : BuildObjectRepository<TestAssembly>
     {
         private static TestAssemblyRepository _repoInstance;
 

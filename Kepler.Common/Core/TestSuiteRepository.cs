@@ -1,8 +1,9 @@
-﻿using Kepler.Models;
+﻿using Kepler.Common.Core;
+using Kepler.Models;
 
 namespace Kepler.Core
 {
-    public class TestSuiteRepository : BaseRepository<TestSuite>
+    public class TestSuiteRepository : BuildObjectRepository<TestSuite>
     {
         private static TestSuiteRepository _repoInstance;
 

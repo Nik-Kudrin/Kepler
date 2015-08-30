@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Kepler.Core.Common;
 using Kepler.Models;
 
 namespace Kepler.Core
 {
     public class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : InfoObject
     {
-        private readonly KeplerDataContext _dbContext;
-        private readonly DbSet<TEntity> _dbSet;
+        protected readonly KeplerDataContext _dbContext;
+        protected readonly DbSet<TEntity> _dbSet;
 
 
         protected BaseRepository(KeplerDataContext dbContext, DbSet<TEntity> dbSet)

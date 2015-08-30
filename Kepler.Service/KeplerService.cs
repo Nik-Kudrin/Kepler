@@ -8,10 +8,10 @@ namespace Kepler.Service
     public class KeplerService : IKeplerService
     {
         private BuildRepository buildRepo = BuildRepository.Instance;
-        private TestCaseRepository caseRepo = TestCaseRepository.Instance;
+        private TestCaseRepository testCaseRepo = TestCaseRepository.Instance;
         private TestAssemblyRepository assemblyRepository = TestAssemblyRepository.Instance;
         private ProjectRepository projectRepository = ProjectRepository.Instance;
-        private TestSuiteRepository suiteRepo = TestSuiteRepository.Instance;
+        private TestSuiteRepository testSuiteRepo = TestSuiteRepository.Instance;
         private ScreenShotRepository screenShotRepository = ScreenShotRepository.Instance;
 
         private long ConvertStringToLong(string number)
@@ -29,49 +29,70 @@ namespace Kepler.Service
             return buildRepo.FindAll();
         }
 
+        #region TestCase
+
         public TestCase GetTestCase(string id)
         {
-            return caseRepo.Get(ConvertStringToLong(id));
+            return testCaseRepo.Get(ConvertStringToLong(id));
         }
 
         public IEnumerable<TestCase> GetTestCases(string testSuiteId)
         {
-            throw new NotImplementedException();
+            return testCaseRepo.Find(ConvertStringToLong(testSuiteId));
         }
+
+        #endregion
+
+        #region TestSuite
 
         public TestSuite GetTestSuite(string id)
         {
-            throw new NotImplementedException();
+            return testSuiteRepo.Get(ConvertStringToLong(id));
         }
 
         public IEnumerable<TestSuite> GetTestSuites(string assemblyId)
         {
-            throw new NotImplementedException();
+            return testSuiteRepo.Find(ConvertStringToLong(assemblyId));
         }
+
+        #endregion
+
+        #region TestAssembly
 
         public TestAssembly GetTestAssembly(string assemblyId)
         {
-            throw new NotImplementedException();
+            return assemblyRepository.Get(ConvertStringToLong(assemblyId));
         }
+
 
         public IEnumerable<TestAssembly> GetTestAssemblies(string buildId)
         {
-            throw new NotImplementedException();
+            return assemblyRepository.Find(ConvertStringToLong(buildId));
         }
+
+        #endregion
+
+        #region Project
 
         public Project GetProject(string id)
         {
-            throw new NotImplementedException();
+            return projectRepository.Get(ConvertStringToLong(id));
         }
 
         public IEnumerable<Project> GetProjects()
         {
-            throw new NotImplementedException();
+            return projectRepository.FindAll();
         }
+
+        #endregion
+
+        #region Baseline
 
         public BaseLine GetBaseline(string id)
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 }
