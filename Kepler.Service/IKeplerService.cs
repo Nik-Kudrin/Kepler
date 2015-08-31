@@ -67,13 +67,5 @@ namespace Kepler.Service
         IEnumerable<Project> GetProjects();
 
         #endregion
-
-        #region Baseline
-
-        [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetBaseline?baseLineId={id}")]
-        BaseLine GetBaseline(string id);
-
-        #endregion
     }
 }

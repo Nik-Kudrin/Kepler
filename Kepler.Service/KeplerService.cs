@@ -85,14 +85,5 @@ namespace Kepler.Service
         }
 
         #endregion
-
-        #region Baseline
-
-        public BaseLine GetBaseline(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
     }
 }
