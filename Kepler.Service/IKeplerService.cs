@@ -67,5 +67,9 @@ namespace Kepler.Service
         IEnumerable<Project> GetProjects();
 
         #endregion
+
+        [OperationContract]
+        [WebInvoke(ResponseFormat = WebMessageFormat.Json, UriTemplate = "ImportTestConfig")]
+        void ImportTestConfig();
     }
 }

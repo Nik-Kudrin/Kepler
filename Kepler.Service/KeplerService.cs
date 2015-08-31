@@ -85,5 +85,10 @@ namespace Kepler.Service
         }
 
         #endregion
+
+        public void ImportTestConfig()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

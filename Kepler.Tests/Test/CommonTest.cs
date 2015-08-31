@@ -3,7 +3,7 @@ using Kepler.Core.Common;
 using Kepler.Models;
 using NUnit.Framework;
 
-namespace Kepler.Tests.Core
+namespace Kepler.Tests.Test
 {
     public class CommonTest : InitTest
     {
@@ -94,32 +94,6 @@ namespace Kepler.Tests.Core
         [Test]
         public void CreateAllObjectsTree()
         {
-        }
-
-
-        private void Serialization()
-        {
-            /*var path = Path.Combine(BasePath, @"Resources\TestData.xml");
-
-            DataContractSerializer xs = new DataContractSerializer(typeof (TestCase));
-
-            var settings = new XmlWriterSettings()
-            {
-                Indent = true,
-                Encoding = Encoding.UTF8,
-                CloseOutput = true,
-                NewLineHandling = NewLineHandling.Entitize
-            };
-
-            var writer = XmlWriter.Create(path, settings);
-
-            xs.WriteObject(writer, testCase);
-            writer.Flush();
-            writer.Close();*/
-
-
-            /*            var serializedConfig = EntityXmlSerializer.Serialize(testCase);
-                        File.WriteAllText(Path.Combine(BasePath, @"Resources\TestData.xml"), serializedConfig);*/
         }
     }
 }

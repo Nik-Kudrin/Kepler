@@ -135,15 +135,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\InitTest.cs" />
-    <Compile Include="Core\CommonTest.cs" />
+    <Compile Include="FixtureBuilder\IFixtureBuilder.cs" />
+    <Compile Include="FixtureBuilder\ProjectBuilder.cs" />
+    <Compile Include="FixtureBuilder\ScreenShotBuilder.cs" />
+    <Compile Include="FixtureBuilder\TestAssemblyBuilder.cs" />
+    <Compile Include="FixtureBuilder\TestCaseBuilder.cs" />
+    <Compile Include="FixtureBuilder\TestSuiteBuilder.cs" />
+    <Compile Include="Test\ConfigImportTest.cs" />
+    <Compile Include="Test\InitTest.cs" />
+    <Compile Include="Test\CommonTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
-    <Content Include="Resources\TestExample.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -153,6 +157,9 @@
       <Project>{6c80a420-6ab0-4172-93e1-c44974187669}</Project>
       <Name>Kepler.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
