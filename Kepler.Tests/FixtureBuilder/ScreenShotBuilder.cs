@@ -1,5 +1,6 @@
 ﻿using System;
 using Kepler.Core;
+using Kepler.Core.Common;
 
 namespace Kepler.Tests.FixtureBuilder
 {
@@ -7,7 +8,22 @@ namespace Kepler.Tests.FixtureBuilder
     {
         public ScreenShot BuildValid()
         {
-            throw new NotImplementedException();
+            Id = BaseBuilder.GetRandomId();
+            ImagePath = Guid.NewGuid().ToString();
+            Name = "Screenshot " + ImagePath;
+            Status = ObjectStatus.Undefined;
+
+            AddTestCase();
+
+            return this;
+        }
+
+        public ScreenShotBuilder AddTestCase()
+        {
+            var testCase = new TestCaseBuilder().BuildValid();
+            ParentObjId = testCase.Id;
+
+            return this;
         }
     }
 }

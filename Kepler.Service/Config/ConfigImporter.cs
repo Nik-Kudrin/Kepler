@@ -21,5 +21,9 @@ namespace Kepler.Service
 ]  
 
         */
+
+        // TODO: implement correct bindig between instances (parentObjId)
+
+        // TODO: implement validation after config import and before store it in DB
     }
 }

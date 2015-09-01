@@ -10,7 +10,7 @@ namespace Kepler.Tests.Test
 
         static InitTest()
         {
-            BaseResourcePath = Directory.GetCurrentDirectory();
+            BaseResourcePath = Directory.GetCurrentDirectory() + "/Resources";
         }
     }
 }
