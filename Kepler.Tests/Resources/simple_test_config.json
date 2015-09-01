@@ -1,0 +1,33 @@
+﻿
+{
+  "Projects":  [
+    {      
+      "Name": "Some Project Name",
+		"TestAssemblies": 
+		[
+		  {
+			"Name": "Some TestAssembly Name",
+			"TestSuites": 
+			[
+			  {
+				"Name": "Some test suite Name",
+				"TestCases": [
+				  {
+					"Name": "Test case name",
+					"ScreenShots": [
+					  {
+						"ImagePath": "Path To Image 1",						
+					  },
+					  {
+						"ImagePath": "Path to Image 2",
+					  }
+					]
+				  }
+				]				
+			  }
+			]			
+		  }
+		]	  
+    }
+  ]
+}
