@@ -90,6 +90,22 @@ namespace Kepler.Tests.Test
 
             Console.WriteLine("Screenshots ===============");
             json = JsonConvert.SerializeObject(screenShots, Formatting.Indented);
+            Console.WriteLine(json);
+
+            Console.WriteLine("Test Assembly ===============");
+            json = JsonConvert.SerializeObject(assemblies, Formatting.Indented);
+            Console.WriteLine(json);
+
+            Console.WriteLine("Test Suites ===============");
+            json = JsonConvert.SerializeObject(suites, Formatting.Indented);
+            Console.WriteLine(json);
+
+            Console.WriteLine("Test Cases ===============");
+            json = JsonConvert.SerializeObject(testCases, Formatting.Indented);
+            Console.WriteLine(json);
+
+            Console.WriteLine("Screenshots ===============");
+            json = JsonConvert.SerializeObject(screenShots, Formatting.Indented);
             Console.WriteLine(json);*/
         }
 
