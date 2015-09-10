@@ -36,16 +36,30 @@
     $(document).ready(function () {
         $('.left-nav-link').click(function () {
             var linkUrl = $(this).attr('linkUrl');
-            var linkBranch = $(this).attr('linkBranch');
+            //var linkBranch = $(this).attr('linkBranch');
+
+            //$.ajax({
+            //    url: linkUrl,
+            //    type: 'POST',
+            //    data: linkBranch,
+            //    success: function (html) {
+            //        $('#page-inner').html(html);
+            //    }
+            //});
+
+            var car = { Make: 'Audi', Model: 'A4 Avant', Colour: 'Black', Registered: 2013 };
 
             $.ajax({
+                type: "POST",
                 url: linkUrl,
-                type: 'POST',
-                data: linkBranch,
-                success: function (html) {
+                data: JSON.stringify(car),
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                success: function (data) {
                     $('#page-inner').html(html);
                 }
             });
+
         });
     });
 </script>

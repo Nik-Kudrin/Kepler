@@ -1,15 +1,13 @@
-﻿PartialBranchView Hi
+﻿@{
+    var data = @Html.Raw(Json.Encode(@Model.car));
+}
 
 <script type="text/javascript">
-    $('.left-nav-link').click(function () {
-        console.log($(this).attr('linkUrl'));
-        $.ajax({
-            url: $(this).attr('linkUrl'),
-            type: 'GET',
-            data: "",
-            success: function (html) {
-                $('#page-inner').html(html);
-            }
-        });
+    $(document).ready(function () {
+        console.log(data);
     });
 </script>
+
+PartialBranchView Hi
+
+<div class="request_block"></div>
