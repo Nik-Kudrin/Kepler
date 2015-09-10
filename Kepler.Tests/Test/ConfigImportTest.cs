@@ -119,6 +119,7 @@ namespace Kepler.Tests.Test
             var mappedProject = mapper.GetProjects(deserializedObject.Projects);
             // here we have to find project in DB and assign them ID
 
+
             var assemblies = deserializedObject.Projects.First().TestAssemblies;
             var mappedAssemblies = mapper.GetAssemblies(assemblies);
             // here we have to bind test assemblies with project id (parentObjId) based on Name of Project

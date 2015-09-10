@@ -70,6 +70,6 @@ namespace Kepler.Service
 
         [OperationContract]
         [WebInvoke(ResponseFormat = WebMessageFormat.Json, UriTemplate = "ImportTestConfig")]
-        void ImportTestConfig();
+        void ImportTestConfig(string testConfig);
     }
 }
