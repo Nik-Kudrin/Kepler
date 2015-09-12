@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Kepler.Common.Error;
 using Kepler.Core;
+using Kepler.Core.Common;
 using Kepler.Models;
 using Kepler.Service.Config;
 using Newtonsoft.Json;
@@ -11,12 +12,7 @@ namespace Kepler.Service
 {
     public class ConfigImporter
     {
-        /* private BuildRepository buildRepo = BuildRepository.Instance;
-        private TestCaseRepository testCaseRepo = TestCaseRepository.Instance;
-        private TestAssemblyRepository assemblyRepository = TestAssemblyRepository.Instance;
-        private ProjectRepository projectRepository = ProjectRepository.Instance;
-        private TestSuiteRepository testSuiteRepo = TestSuiteRepository.Instance;
-        private ScreenShotRepository screenShotRepository = ScreenShotRepository.Instance;*/
+        private ConfigMapper mapper = new ConfigMapper();
 
         /// <summary>
         /// Import json config file
@@ -39,7 +35,6 @@ namespace Kepler.Service
             if (validationErrorMessage != "")
                 return validationErrorMessage;
 
-            var mapper = new ConfigMapper();
             var mappedProjects = mapper.GetProjects(importedConfig.Projects).ToList();
 
             try
@@ -51,10 +46,9 @@ namespace Kepler.Service
                 return ex.Message;
             }
 
-            // create new build for each project. save in db
-            // map assemblies
-            // here we have to bind test assemblies with Builds
-            // save test assembly in db
+            var builds = BindImportedProjectWithBuilds(mappedProjects);
+            BindTestAssembliesWithBuilds(importedConfig, mappedProjects);
+
 
             // map suites
             // here we have to bind suites with assemblies 
@@ -105,7 +99,7 @@ namespace Kepler.Service
                         return validationMessage;
 
 
-                    //validate casess
+                    //validate cases
                     foreach (var testSuite in testAssemblyConfig.TestSuites)
                     {
                         var cases = mapper.GetCases(testSuite.TestCases);
@@ -153,13 +147,59 @@ namespace Kepler.Service
             return mappedProjects;
         }
 
-
-       /* private List<TestAssembly> BindTestAssembliesWithBuilds()
+        /// <summary>
+        /// Create new build for each project and save them in DB
+        /// </summary>
+        /// <param name="mappedProjects"></param>
+        /// <returns>List new bounded builds</returns>
+        private List<Build> BindImportedProjectWithBuilds(List<Project> mappedProjects)
         {
-        }
-*/
-        // TODO: implement correct bindig between instances (parentObjId)
+            var builds = new List<Build>();
 
-        // TODO: implement validation after config import and before store it in DB
+            // create new build for each project. save in db
+            foreach (var mappedProject in mappedProjects)
+            {
+                var build = new Build() {Status = ObjectStatus.InQueue};
+
+                build = BuildRepository.Instance.SaveAndFlushChanges(build);
+                mappedProject.Builds.Add(build.Id, build);
+                mappedProject.LatestBuildId = build.Id;
+
+                ProjectRepository.Instance.FlushChanges();
+            }
+
+            return builds;
+        }
+
+        /// <summary>
+        /// Create new test assembly. Bind assembly with corresponding build and project. Save assembly in DB
+        /// </summary>
+        /// <param name="importedConfig"></param>
+        /// <param name="mappedProjects"></param>
+        /// <returns>List of new bounded assemblies</returns>
+        private List<TestAssembly> BindTestAssembliesWithBuilds(TestImportConfig importedConfig, IEnumerable<Project> mappedProjects)
+        {
+            var assemblies = new List<TestAssembly>();
+
+            foreach (var project in importedConfig.Projects)
+            {
+                var mappedAssemblies = mapper.GetAssemblies(project.TestAssemblies).ToList();
+
+                for (int index = 0; index < mappedAssemblies.Count(); index++)
+                {
+                    var mappedAssembly = mappedAssemblies[0];
+                    var assemblyProject = mappedProjects.FirstOrDefault(proj => proj.Name == project.Name);
+                    mappedAssembly.ParentObjId = assemblyProject.Id;
+                    mappedAssembly.BuildId = assemblyProject.LatestBuildId;
+                    mappedAssembly.Status = ObjectStatus.InQueue;
+
+                    mappedAssembly = TestAssemblyRepository.Instance.SaveAndFlushChanges(mappedAssembly);
+                }
+
+                assemblies.AddRange(mappedAssemblies);
+            }
+
+            return assemblies;
+        }
     }
 }

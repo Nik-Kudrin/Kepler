@@ -6,6 +6,9 @@ using Kepler.Models;
 
 namespace Kepler.Service.Config
 {
+    /// <summary>
+    /// Validate imported JSON config
+    /// </summary>
     public static class ConfigValidator
     {
         private static string NameValidator<T>(ErrorMessage.ErorCode errorCode, List<T> configObjects) where T : InfoObject
@@ -17,6 +20,11 @@ namespace Kepler.Service.Config
                     Code = errorCode,
                     ExceptionMessage = ""
                 }.ToString());
+            }
+
+            if (configObjects.Distinct().Count() != configObjects.Count)
+            {
+                return $"There are duplicated names in config for {typeof (T).Name}";
             }
 
             return "";

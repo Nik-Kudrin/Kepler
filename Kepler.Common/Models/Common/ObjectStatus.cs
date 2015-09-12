@@ -8,6 +8,7 @@ namespace Kepler.Core.Common
         Skipped,
         Pending,
         InProgress,
+        InQueue,
         Passed,
         Failed
     }

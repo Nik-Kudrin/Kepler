@@ -15,6 +15,9 @@ namespace Kepler.Core
         public TimeSpan? Duration { get; set; }
 
         [DataMember]
+        public long? ProjectId { get; set; }
+
+        [DataMember]
         public long TestCount { get; set; }
 
         [DataMember]

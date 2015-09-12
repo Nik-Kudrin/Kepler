@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using Kepler.Core.Common;
 using Kepler.Models;
 
 namespace Kepler.Core
@@ -32,6 +30,14 @@ namespace Kepler.Core
         public void Save(TEntity entity)
         {
             _dbSet.Attach(entity);
+        }
+
+        public TEntity SaveAndFlushChanges(TEntity entity)
+        {
+            _dbSet.Attach(entity);
+            FlushChanges();
+
+            return Find(entity.Name).FirstOrDefault();
         }
 
         public virtual void FlushChanges()
