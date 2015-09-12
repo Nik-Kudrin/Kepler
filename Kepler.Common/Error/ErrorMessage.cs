@@ -7,7 +7,12 @@ namespace Kepler.Common.Error
         public enum ErorCode
         {
             ParsingFileError,
-            ProjectDontHaveAName
+            ProjectDontHaveAName,
+            AssemblyDontHaveAName,
+            SuiteDontHaveAName,
+            CaseDontHaveAName,
+            ScreenShotHasEmptyFilePath,
+            ObjectNotFoundInDb
         }
 
         public ErorCode Code { get; set; }
@@ -15,23 +20,34 @@ namespace Kepler.Common.Error
 
         public override string ToString()
         {
-            var codeMeassage = string.Empty;
+            var codeMessage = string.Empty;
 
             switch (Code)
             {
                 case ErorCode.ParsingFileError:
-                    codeMeassage = "Config file parsing error.";
+                    codeMessage = "Config file parsing error.";
                     break;
-
                 case ErorCode.ProjectDontHaveAName:
-                    codeMeassage = "Project don't have a name";
+                    codeMessage = "Project don't have a name";
+                    break;
+                case ErorCode.AssemblyDontHaveAName:
+                    codeMessage = "TestAssembly don't have a name";
+                    break;
+                case ErorCode.SuiteDontHaveAName:
+                    codeMessage = "TestSuite don't have a name";
+                    break;
+                case ErorCode.CaseDontHaveAName:
+                    codeMessage = "TestCase don't have a name";
+                    break;
+                case ErorCode.ScreenShotHasEmptyFilePath:
+                    codeMessage = "Screenshot has empty file path";
                     break;
 
                 default:
                     throw new NotImplementedException("");
             }
 
-            return $"Error: {codeMeassage}. Exception: {ExceptionMessage}";
+            return $"Error: {codeMessage}. Exception: {ExceptionMessage}";
         }
     }
 }
