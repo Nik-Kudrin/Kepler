@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Kepler.Common.Error;
 using Kepler.Core;
 using Kepler.Core.Common;
@@ -47,12 +48,9 @@ namespace Kepler.Service
             }
 
             var builds = BindImportedProjectWithBuilds(mappedProjects);
-            BindTestAssembliesWithBuilds(importedConfig, mappedProjects);
+            var assemblies = BindTestAssembliesWithBuilds(importedConfig, mappedProjects);
+            assemblies = BindTestSuitesWithAssemblies(importedConfig, builds, assemblies);
 
-
-            // map suites
-            // here we have to bind suites with assemblies 
-            // save suites in db
 
             // map cases
             // bind cases with suites
@@ -65,6 +63,7 @@ namespace Kepler.Service
 
             return "";
         }
+
 
         private string ValidateImportedConfigObjects(TestImportConfig importedConfig)
         {
@@ -197,6 +196,42 @@ namespace Kepler.Service
                 }
 
                 assemblies.AddRange(mappedAssemblies);
+            }
+
+            return assemblies;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="importedConfig"></param>
+        /// <param name="builds"></param>
+        /// <param name="assemblies"></param>
+        /// <returns></returns>
+        private List<TestAssembly> BindTestSuitesWithAssemblies(TestImportConfig importedConfig, List<Build> builds, List<TestAssembly> assemblies)
+        {
+            // map suites
+            // here we have to bind suites with assemblies 
+            // save suites in db
+
+            foreach (var projectConfig in importedConfig.Projects)
+            {
+                foreach (var testConfigAssembly in projectConfig.TestAssemblies)
+                {
+                    var mappedSuites = mapper.GetSuites(testConfigAssembly.TestSuites).ToList();
+                    var currentAssembly = assemblies.Find(item => item.Name == testConfigAssembly.Name);
+
+                    for (int index = 0; index < mappedSuites.Count(); index ++)
+                    {
+                        var suite = mappedSuites[index];
+
+                        suite.BuildId = currentAssembly.BuildId;
+                        suite.ParentObjId = currentAssembly.Id;
+                        suite.Status = ObjectStatus.InQueue;
+                    }
+
+                    currentAssembly.TestSuites = mappedSuites.ToDictionary(item => item.Id, item => item);
+                }
             }
 
             return assemblies;
