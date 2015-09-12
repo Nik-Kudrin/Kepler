@@ -1,5 +1,6 @@
 ﻿@{
-    var data = @Html.Raw(Json.Encode(@Model.car));
+    var data = Request["Model"];
+  //  Json.Write(data, Response.Output);
 }
 
 <script type="text/javascript">
