@@ -7,13 +7,10 @@
             <a href="#"><i class="fa fa-desktop "></i>Project A<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
                 <li>
-                    <a class="left-nav-link" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="Master"><i class="fa fa-toggle-on"></i>Master</a>
+                    <a class="left-nav-link" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="master"><i class="fa fa-toggle-on"></i>Master</a>
                 </li>
                 <li>
-                    <a class="left-nav-link" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="Develop"><i class="fa fa-bell "></i>Develop</a>
-                </li>
-                <li>
-                    <a class="left-nav-link" href="progress.html"><i class="fa fa-circle-o "></i>Features</a>
+                    <a class="left-nav-link" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="develop"><i class="fa fa-bell "></i>Develop</a>
                 </li>
             </ul>
         </li>
@@ -48,6 +45,7 @@
                     $('#page-inner').html(data);
                 },
                 complete: function (data) {
+                    document.location.hash = $('.left-nav-link.current').attr("linkBranch") + "_branch"; //set HASH to url - e.g. #Develop_branch etc.
                     $('.panel-heading h3').text($('.left-nav-link.current').attr("linkBranch"));
                 }
             });

@@ -13,11 +13,16 @@
             float: left;
             margin: 0px;
             line-height: 34px;
+            text-transform: capitalize;
         }
 
         .panel-default .panel-heading div button {
             float: right;
         }
+
+.panel-default .panel-body {
+    padding: 0px;
+}
 
 .panel-default .table-responsive {
     overflow: visible;
