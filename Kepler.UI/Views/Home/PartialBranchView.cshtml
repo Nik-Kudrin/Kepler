@@ -1,8 +1,4 @@
-﻿@{
-
-}
-
-<div class="panel panel-default">
+﻿<div class="panel panel-default">
     <div class="panel-heading">
         <div>
             <h3>Hover Rows</h3>
@@ -21,12 +17,11 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>1238</td>
+                        <td><a class="build-list-item" href="#" linkUrl="@Url.Action("PartialBuildView")">1238</a></td>
                         <td><img alt="Queued" title="Queued" src="~/img/progress_blue.gif" /></td>
                         <td>
                             <div class="btn-group">
-                                <button class="btn">Action</button>
-                                <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
                                     <li><a href="#">Stop</a></li>
                                     <li><a href="#">Run</a></li>
@@ -38,12 +33,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>1230</td>
+                        <td><a class="build-list-item" href="#" linkUrl="@Url.Action("PartialBuildView")">1230</a></td>
                         <td><img alt="Passed" title="Passed" src="~/img/progress_green.png" /></td>
                         <td>
                             <div class="btn-group">
-                                <button class="btn">Action</button>
-                                <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
                                     <li><a href="#">Stop</a></li>
                                     <li><a href="#">Run</a></li>
@@ -55,12 +49,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>1223</td>
+                        <td><a class="build-list-item" href="#" linkUrl="@Url.Action("PartialBuildView")">1223</a></td>
                         <td><img alt="Failed" title="Failed" src="~/img/progress_red.png" /></td>
                         <td>
                             <div class="btn-group">
-                                <button class="btn">Action</button>
-                                <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
                                     <li><a href="#">Stop</a></li>
                                     <li><a href="#">Run</a></li>
@@ -76,3 +69,17 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('.build-list-item').click(function () {
+        var linkUrl = $(this).attr('linkUrl');
+
+        $.ajax({
+            url: linkUrl,
+            type: 'GET',
+            success: function (data) {
+                $('#page-inner').html(data);
+            }
+        });
+    });
+</script>

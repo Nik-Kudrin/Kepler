@@ -1,5 +1,10 @@
-﻿/*BUILD LIST PAGE START*/
+﻿/*GLOBAL START*/
+h3 {
+    margin: 0px;
+}
+/*GLOBAL END*/
 
+/*BUILD LIST PAGE START*/
 .panel-default .panel-heading {
     padding-bottom: 0px;
 }
@@ -11,7 +16,6 @@
 
         .panel-default .panel-heading div h3 {
             float: left;
-            margin: 0px;
             line-height: 34px;
             text-transform: capitalize;
         }
@@ -32,4 +36,19 @@
         margin-bottom: 0px;
     }
 
+    .panel-default .table-responsive .btn .caret {
+        margin-left: 5px;
+    }
 /*BUILD LIST PAGE END*/
+
+/*BUILD PAGE START*/
+.icon-build-info {
+    color: #337AB7;
+    font-size: 21px;
+    cursor: pointer;
+}
+
+.build-info-popup {
+    padding-left: 10px;
+}
+/*BUILD PAGE END*/
