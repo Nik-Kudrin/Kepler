@@ -1,14 +1,78 @@
 ﻿@{
-    var data = Request["Model"];
-  //  Json.Write(data, Response.Output);
+
 }
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        console.log(data);
-    });
-</script>
-
-PartialBranchView Hi
-
-<div class="request_block"></div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div>
+            <h3>Hover Rows</h3>
+            <button type="button" class="btn btn-success">Create build</button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Build</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1238</td>
+                        <td><img alt="Queued" title="Queued" src="~/img/progress_blue.gif" /></td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn">Action</button>
+                                <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Stop</a></li>
+                                    <li><a href="#">Run</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Set passed</a></li>
+                                    <li><a href="#">Set failed</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1230</td>
+                        <td><img alt="Passed" title="Passed" src="~/img/progress_green.png" /></td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn">Action</button>
+                                <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Stop</a></li>
+                                    <li><a href="#">Run</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Set passed</a></li>
+                                    <li><a href="#">Set failed</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1223</td>
+                        <td><img alt="Failed" title="Failed" src="~/img/progress_red.png" /></td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn">Action</button>
+                                <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Stop</a></li>
+                                    <li><a href="#">Run</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Set passed</a></li>
+                                    <li><a href="#">Set failed</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,1 +1,30 @@
-﻿
+﻿/*BUILD LIST PAGE START*/
+
+.panel-default .panel-heading {
+    padding-bottom: 0px;
+}
+
+    .panel-default .panel-heading div {
+        width: 100%;
+        display: inline-block;
+    }
+
+        .panel-default .panel-heading div h3 {
+            float: left;
+            margin: 0px;
+            line-height: 34px;
+        }
+
+        .panel-default .panel-heading div button {
+            float: right;
+        }
+
+.panel-default .table-responsive {
+    overflow: visible;
+}
+
+    .panel-default .table-responsive .table-hover {
+        margin-bottom: 0px;
+    }
+
+/*BUILD LIST PAGE END*/
