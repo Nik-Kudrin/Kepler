@@ -16,8 +16,7 @@ namespace Kepler.Core
 
         [DataMember]
         public ObjectStatus Status { get; set; }
-
-        [DataMember]
+        
         public Dictionary<long?, ScreenShot> ScreenShots { get; set; }
     }
 }

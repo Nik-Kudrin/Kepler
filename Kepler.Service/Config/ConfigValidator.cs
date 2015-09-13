@@ -15,11 +15,11 @@ namespace Kepler.Service.Config
         {
             if (configObjects.Select(item => item.Name.Trim()).Any(itemName => itemName == ""))
             {
-                return (new ErrorMessage()
+                return new ErrorMessage()
                 {
                     Code = errorCode,
                     ExceptionMessage = ""
-                }.ToString());
+                }.ToString();
             }
 
             if (configObjects.Distinct().Count() != configObjects.Count)
@@ -30,29 +30,63 @@ namespace Kepler.Service.Config
             return "";
         }
 
+        private static string EmptyListValidator<T>(ErrorMessage.ErorCode errorCode, List<T> configObjects) where T : InfoObject
+        {
+            if (configObjects == null || configObjects.Count == 0)
+            {
+                return new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.EmptyListOfObjects,
+                    ExceptionMessage = $"Object list of '{typeof (T).Name}' is empty"
+                }.ToString();
+            }
+
+            return "";
+        }
+
 
         public static string ValidateProjects(List<Project> projects)
         {
-            return NameValidator<Project>(ErrorMessage.ErorCode.ProjectDontHaveAName, projects);
+            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.ProjectDontHaveAName, projects);
+            if (validationMessage != "")
+                return validationMessage;
+
+            return NameValidator(ErrorMessage.ErorCode.ProjectDontHaveAName, projects);
         }
 
         public static string ValidateTestAssemblies(List<TestAssembly> assemblies)
         {
-            return NameValidator<TestAssembly>(ErrorMessage.ErorCode.AssemblyDontHaveAName, assemblies);
+            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.AssemblyDontHaveAName, assemblies);
+            if (validationMessage != "")
+                return validationMessage;
+
+            return NameValidator(ErrorMessage.ErorCode.AssemblyDontHaveAName, assemblies);
         }
 
         public static string ValidateTestSuites(List<TestSuite> suites)
         {
-            return NameValidator<TestSuite>(ErrorMessage.ErorCode.SuiteDontHaveAName, suites);
+            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.SuiteDontHaveAName, suites);
+            if (validationMessage != "")
+                return validationMessage;
+
+            return NameValidator(ErrorMessage.ErorCode.SuiteDontHaveAName, suites);
         }
 
         public static string ValidateTestCases(List<TestCase> cases)
         {
-            return NameValidator<TestCase>(ErrorMessage.ErorCode.CaseDontHaveAName, cases);
+            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.CaseDontHaveAName, cases);
+            if (validationMessage != "")
+                return validationMessage;
+
+            return NameValidator(ErrorMessage.ErorCode.CaseDontHaveAName, cases);
         }
 
         public static string ValidateScreenshots(List<ScreenShot> screenShots)
         {
+            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.ProjectDontHaveAName, screenShots);
+            if (validationMessage != "")
+                return validationMessage;
+
             if (screenShots.Select(item => item.ImagePath.Trim()).Any(screenShotPath => screenShotPath == ""))
             {
                 return (new ErrorMessage()

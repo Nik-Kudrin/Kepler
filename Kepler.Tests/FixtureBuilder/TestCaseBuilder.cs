@@ -18,7 +18,7 @@ namespace Kepler.Tests.FixtureBuilder
             Build();
 
             Name = Guid.NewGuid().ToString();
-            ScreenShots = new Dictionary<long?, ScreenShot>();
+            ScreenShots = new Dictionary<long, ScreenShot>();
 
 
             return this;

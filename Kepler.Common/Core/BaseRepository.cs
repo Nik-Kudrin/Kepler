@@ -27,17 +27,16 @@ namespace Kepler.Core
             _dbSet.Add(entity);
         }
 
-        public void Save(TEntity entity)
+        public void Update(TEntity entity)
         {
             _dbSet.Attach(entity);
+            _dbContext.Entry(entity).State = EntityState.Modified;
         }
 
-        public TEntity SaveAndFlushChanges(TEntity entity)
+        public void Insert(TEntity entity)
         {
-            _dbSet.Attach(entity);
+            Add(entity);
             FlushChanges();
-
-            return Find(entity.Name).FirstOrDefault();
         }
 
         public virtual void FlushChanges()
@@ -45,8 +44,13 @@ namespace Kepler.Core
             _dbContext.SaveChanges();
         }
 
-        public void Delete(TEntity entity)
+        public void Remove(TEntity entity)
         {
+            if (_dbContext.Entry(entity).State == EntityState.Detached)
+            {
+                _dbSet.Attach(entity);
+            }
+
             _dbSet.Remove(entity);
         }
 

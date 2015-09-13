@@ -9,7 +9,7 @@ namespace Kepler.Core
     {
         [Key]
         [DataMember]
-        public long? Id { get; set; }
+        public long Id { get; set; }
 
         [StringLength(500)]
         [DataMember]

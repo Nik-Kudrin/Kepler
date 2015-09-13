@@ -12,7 +12,8 @@ namespace Kepler.Common.Error
             SuiteDontHaveAName,
             CaseDontHaveAName,
             ScreenShotHasEmptyFilePath,
-            ObjectNotFoundInDb
+            ObjectNotFoundInDb,
+            EmptyListOfObjects
         }
 
         public ErorCode Code { get; set; }
@@ -25,7 +26,7 @@ namespace Kepler.Common.Error
             switch (Code)
             {
                 case ErorCode.ParsingFileError:
-                    codeMessage = "Config file parsing error.";
+                    codeMessage = "Config file parsing error";
                     break;
                 case ErorCode.ProjectDontHaveAName:
                     codeMessage = "Project don't have a name";
@@ -42,12 +43,18 @@ namespace Kepler.Common.Error
                 case ErorCode.ScreenShotHasEmptyFilePath:
                     codeMessage = "Screenshot has empty file path";
                     break;
+                case ErorCode.ObjectNotFoundInDb:
+                    codeMessage = "Object wasn't found in Database";
+                    break;
+                case ErorCode.EmptyListOfObjects:
+                    codeMessage = "List of objects is empty";
+                    break;
 
                 default:
-                    throw new NotImplementedException("");
+                    throw new NotImplementedException("Detaileds text about this type of error code isn't written");
             }
 
-            return $"Error: {codeMessage}. Exception: {ExceptionMessage}";
+            return $"Error: {codeMessage}. {ExceptionMessage}";
         }
     }
 }

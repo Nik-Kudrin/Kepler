@@ -20,7 +20,8 @@ namespace Kepler.Service.Config
                 .ForMember(dest => dest.BaseLine, opt => opt.Ignore())
                 .ForMember(dest => dest.Builds, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.Status, opt => opt.Ignore());
+                .ForMember(dest => dest.Status, opt => opt.Ignore())
+                .ForMember(dest => dest.LatestBuildId, opt => opt.Ignore());
 
 
             Mapper.AssertConfigurationIsValid();

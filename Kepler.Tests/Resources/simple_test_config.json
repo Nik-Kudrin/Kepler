@@ -1,5 +1,4 @@
-﻿
-{
+﻿{
   "Projects":  [
     {      
       "Name": "Some Project Name",
@@ -16,10 +15,10 @@
 					"Name": "Test case name",
 					"ScreenShots": [
 					  {
-						"ImagePath": "Path To Image 1",						
+						"ImagePath": "Path To Image 1"						
 					  },
 					  {
-						"ImagePath": "Path to Image 2",
+						"ImagePath": "Path to Image 2"
 					  }
 					]
 				  }

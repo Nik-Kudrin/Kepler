@@ -129,10 +129,10 @@ namespace Kepler.Service
                     throw new Exception(new ErrorMessage()
                     {
                         Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
-                        ExceptionMessage = $"Project {projectName} wasn't found in database (or it's more than 1 of them)"
+                        ExceptionMessage = $"Project '{projectName}' wasn't found in database (or there are more than 1 of them)"
                     }.ToString());
 
-                project = projectsFromDb.FirstOrDefault();
+                mappedProjects[index] = projectsFromDb.FirstOrDefault();
             }
 
             return mappedProjects;
@@ -148,14 +148,19 @@ namespace Kepler.Service
             var builds = new List<Build>();
 
             // create new build for each project. save in db
+
+            //  for (int index = 0; index < mappedProjects.Count; index ++)
             foreach (var mappedProject in mappedProjects)
             {
-                var build = new Build() {Status = ObjectStatus.InQueue};
+                var build = new Build() {Status = ObjectStatus.InQueue, ProjectId = mappedProject.Id};
 
-                build = BuildRepository.Instance.SaveAndFlushChanges(build);
+                BuildRepository.Instance.Insert(build);
+                builds.Add(build);
+
                 mappedProject.Builds.Add(build.Id, build);
                 mappedProject.LatestBuildId = build.Id;
 
+                ProjectRepository.Instance.Update(mappedProject);
                 ProjectRepository.Instance.FlushChanges();
             }
 
@@ -184,7 +189,7 @@ namespace Kepler.Service
                     mappedAssembly.BuildId = assemblyProject.LatestBuildId;
                     mappedAssembly.Status = ObjectStatus.InQueue;
 
-                    mappedAssembly = TestAssemblyRepository.Instance.SaveAndFlushChanges(mappedAssembly);
+                    TestAssemblyRepository.Instance.Insert(mappedAssembly);
                 }
 
                 assemblies.AddRange(mappedAssemblies);
@@ -217,7 +222,7 @@ namespace Kepler.Service
                         suite.ParentObjId = currentAssembly.Id;
                         suite.Status = ObjectStatus.InQueue;
 
-                        suite = TestSuiteRepository.Instance.SaveAndFlushChanges(suite);
+                        TestSuiteRepository.Instance.Insert(suite);
                     }
 
                     currentAssembly.TestSuites = mappedSuites.ToDictionary(item => item.Id, item => item);
@@ -258,7 +263,7 @@ namespace Kepler.Service
                             testCase.BuildId = currentAssembly.BuildId;
                             testCase.ParentObjId = currentSuite.Key;
 
-                            testCase = TestCaseRepository.Instance.SaveAndFlushChanges(testCase);
+                            TestCaseRepository.Instance.Insert(testCase);
                         }
 
                         currentSuite.Value.TestCases = mappedCases.ToDictionary(item => item.Id, item => item);
@@ -269,7 +274,7 @@ namespace Kepler.Service
         }
 
         /// <summary>
-        /// 
+        /// Create new screenshots. Bind each screenshot with corresponding build, suite. Save test case in DB
         /// </summary>
         /// <param name="importedConfig"></param>
         /// <param name="assemblies"></param>
@@ -278,6 +283,37 @@ namespace Kepler.Service
             // map screenshots
             // bind screenshots with cases
             // save cases in db
+
+            foreach (var projectConfig in importedConfig.Projects)
+            {
+                foreach (var testConfigAssembly in projectConfig.TestAssemblies)
+                {
+                    foreach (var testSuiteConfig in testConfigAssembly.TestSuites)
+                    {
+                        foreach (var testCaseConfig in testSuiteConfig.TestCases)
+                        {
+                            var currentAssembly = assemblies.Find(item => item.Name == testConfigAssembly.Name);
+                            var currentSuite = currentAssembly.TestSuites.ToList().Find(item => item.Value.Name == testSuiteConfig.Name);
+                            var currentCase = currentSuite.Value.TestCases.ToList().Find(item => item.Value.Name == testCaseConfig.Name);
+
+                            var screenShots = testCaseConfig.ScreenShots;
+
+                            for (int index = 0; index < screenShots.Count; index++)
+                            {
+                                var screenShot = screenShots[index];
+                                screenShot.BuildId = currentCase.Value.BuildId;
+                                screenShot.ParentObjId = currentCase.Key;
+                                screenShot.Status = ObjectStatus.InQueue;
+
+                                ScreenShotRepository.Instance.Insert(screenShot);
+                            }
+
+                            currentCase.Value.ScreenShots = screenShots.ToDictionary(item => item.Id, item => item);
+                            TestCaseRepository.Instance.FlushChanges();
+                        }
+                    }
+                }
+            }
         }
     }
 }

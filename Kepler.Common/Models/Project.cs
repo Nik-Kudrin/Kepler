@@ -12,7 +12,6 @@ namespace Kepler.Models
         [DataMember]
         public long? LatestBuildId { get; set; }
 
-        [DataMember]
         public Dictionary<long?, Build> Builds { get; set; }
 
         public Project()

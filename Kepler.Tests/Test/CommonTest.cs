@@ -13,8 +13,7 @@ namespace Kepler.Tests.Test
             var repo = ScreenShotRepository.Instance;
 
             var screenShot = new ScreenShot("ScreenShot_Inside_The_Case_Unique_Name", "some/path/to/screenshot");
-            repo.Add(screenShot);
-            repo.FlushChanges();
+            repo.Insert(screenShot);
         }
 
         [Test]
@@ -22,9 +21,8 @@ namespace Kepler.Tests.Test
         {
             var repo = TestCaseRepository.Instance;
 
-            repo.Add(new TestCase("Test Case Name"));
-            repo.Add(new TestCase("Test Case Name 2"));
-            repo.FlushChanges();
+            repo.Insert(new TestCase("Test Case Name"));
+            repo.Insert(new TestCase("Test Case Name 2"));
         }
 
         [Test]
@@ -32,8 +30,7 @@ namespace Kepler.Tests.Test
         {
             var repo = TestSuiteRepository.Instance;
 
-            repo.Add(new TestSuite("TestSuite_Name"));
-            repo.FlushChanges();
+            repo.Insert(new TestSuite("TestSuite_Name"));
         }
 
         [Test]
@@ -41,8 +38,7 @@ namespace Kepler.Tests.Test
         {
             var repo = TestAssemblyRepository.Instance;
 
-            repo.Add(new TestAssembly("TestAssembly_Name"));
-            repo.FlushChanges();
+            repo.Insert(new TestAssembly("TestAssembly_Name"));
         }
 
 
@@ -51,9 +47,8 @@ namespace Kepler.Tests.Test
         {
             var repo = ProjectRepository.Instance;
 
-            var project = new Project() {Name = "Some project"};
-            repo.Add(project);
-            repo.FlushChanges();
+            var project = new Project() {Name = "Some Project Name"};
+            repo.Insert(project);
         }
 
         [Test]
@@ -64,8 +59,7 @@ namespace Kepler.Tests.Test
             var project = new Project() {Name = "Project name"};
             project.BaseLine = new BaseLine();
 
-            repo.Add(project);
-            repo.FlushChanges();
+            repo.Insert(project);
         }
 
         [Test]
@@ -75,8 +69,7 @@ namespace Kepler.Tests.Test
 
             var build = new Build() {Name = "Some build name"};
 
-            repo.Add(build);
-            repo.FlushChanges();
+            repo.Insert(build);
         }
 
         [Test]
@@ -85,8 +78,7 @@ namespace Kepler.Tests.Test
             var repo = BuildRepository.Instance;
             var build = new Build() {Name = "Build ..", Status = ObjectStatus.InProgress};
 
-            repo.Add(build);
-            repo.FlushChanges();
+            repo.Insert(build);
         }
 
 
