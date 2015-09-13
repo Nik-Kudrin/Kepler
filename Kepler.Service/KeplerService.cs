@@ -86,9 +86,10 @@ namespace Kepler.Service
 
         #endregion
 
-        public void ImportTestConfig(string testConfig)
+        public string ImportTestConfig(string testConfig)
         {
-            throw new NotImplementedException();
+            var configImporter = new ConfigImporter();
+            return configImporter.ImportConfig(testConfig);
         }
     }
 }
