@@ -50,16 +50,8 @@ namespace Kepler.Service
             var builds = BindImportedProjectWithBuilds(mappedProjects);
             var assemblies = BindTestAssembliesWithBuilds(importedConfig, mappedProjects);
             assemblies = BindTestSuitesWithAssemblies(importedConfig, builds, assemblies);
-
-
-            // map cases
-            // bind cases with suites
-            // save cases in db
-
-            // map screenshots
-            // bind screenshots with cases
-            // save cases in db
-
+            BindTestCasesWithSuites(importedConfig, assemblies);
+            BindScreenshotsWithTestCases(importedConfig, assemblies);
 
             return "";
         }
@@ -171,7 +163,7 @@ namespace Kepler.Service
         }
 
         /// <summary>
-        /// Create new test assembly. Bind assembly with corresponding build and project. Save assembly in DB
+        /// Create new test assemblies. Bind each assembly with corresponding build and project. Save assembly in DB
         /// </summary>
         /// <param name="importedConfig"></param>
         /// <param name="mappedProjects"></param>
@@ -202,18 +194,14 @@ namespace Kepler.Service
         }
 
         /// <summary>
-        /// 
+        /// Create new test suites. Bind each suite with corresponding build and assembly. Save suite in DB
         /// </summary>
         /// <param name="importedConfig"></param>
         /// <param name="builds"></param>
         /// <param name="assemblies"></param>
-        /// <returns></returns>
+        /// <returns>Return updated test assemblies (bounded with suites)</returns>
         private List<TestAssembly> BindTestSuitesWithAssemblies(TestImportConfig importedConfig, List<Build> builds, List<TestAssembly> assemblies)
         {
-            // map suites
-            // here we have to bind suites with assemblies 
-            // save suites in db
-
             foreach (var projectConfig in importedConfig.Projects)
             {
                 foreach (var testConfigAssembly in projectConfig.TestAssemblies)
@@ -228,13 +216,68 @@ namespace Kepler.Service
                         suite.BuildId = currentAssembly.BuildId;
                         suite.ParentObjId = currentAssembly.Id;
                         suite.Status = ObjectStatus.InQueue;
+
+                        suite = TestSuiteRepository.Instance.SaveAndFlushChanges(suite);
                     }
 
                     currentAssembly.TestSuites = mappedSuites.ToDictionary(item => item.Id, item => item);
+                    TestAssemblyRepository.Instance.FlushChanges();
                 }
             }
 
             return assemblies;
+        }
+
+        /// <summary>
+        /// Create new test cases. Bind each test case with corresponding build, suite. Save test case in DB
+        /// </summary>
+        /// <param name="importedConfig"></param>
+        /// <param name="assemblies"></param>
+        /// <returns></returns>
+        private void BindTestCasesWithSuites(TestImportConfig importedConfig, List<TestAssembly> assemblies)
+        {
+            // map cases
+            // bind cases with suites
+            // save cases in db
+
+            foreach (var projectConfig in importedConfig.Projects)
+            {
+                foreach (var testConfigAssembly in projectConfig.TestAssemblies)
+                {
+                    foreach (var testSuiteConfig in testConfigAssembly.TestSuites)
+                    {
+                        var currentAssembly = assemblies.Find(item => item.Name == testConfigAssembly.Name);
+                        var currentSuite = currentAssembly.TestSuites.ToList().Find(item => item.Value.Name == testSuiteConfig.Name);
+
+                        var mappedCases = mapper.GetCases(testSuiteConfig.TestCases).ToList();
+
+                        for (int index = 0; index < mappedCases.Count; index++)
+                        {
+                            var testCase = mappedCases[index];
+                            testCase.Status = ObjectStatus.InQueue;
+                            testCase.BuildId = currentAssembly.BuildId;
+                            testCase.ParentObjId = currentSuite.Key;
+
+                            testCase = TestCaseRepository.Instance.SaveAndFlushChanges(testCase);
+                        }
+
+                        currentSuite.Value.TestCases = mappedCases.ToDictionary(item => item.Id, item => item);
+                        TestSuiteRepository.Instance.FlushChanges();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="importedConfig"></param>
+        /// <param name="assemblies"></param>
+        private void BindScreenshotsWithTestCases(TestImportConfig importedConfig, List<TestAssembly> assemblies)
+        {
+            // map screenshots
+            // bind screenshots with cases
+            // save cases in db
         }
     }
 }
