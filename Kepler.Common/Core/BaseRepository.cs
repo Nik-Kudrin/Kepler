@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Kepler.Models;
@@ -62,6 +63,11 @@ namespace Kepler.Core
         public virtual IEnumerable<TEntity> Find(string name)
         {
             return _dbSet.Where(x => x.Name == name).ToList();
+        }
+
+        public virtual IEnumerable<TEntity> Find(Func<TEntity, bool> filterCondition)
+        {
+            return _dbSet.Where(filterCondition).ToList();
         }
     }
 }
