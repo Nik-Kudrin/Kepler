@@ -12,6 +12,7 @@ On Machines with ImageProcessor
 * Visual C++ Redistributable for Visual Studio 2012 (.NET 4.0)
 * ImageMagick
 
+----
 
 * Summary of set up
 * Configuration
