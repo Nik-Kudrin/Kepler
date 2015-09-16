@@ -68,8 +68,18 @@ namespace Kepler.Service
 
         #endregion
 
+        /// <summary>
+        /// Import test config
+        /// </summary>
+        /// <param name="testConfig"></param>
+        /// <returns>Return emtpy string, if import was OK. Otherwise return string with error message</returns>
         [OperationContract]
         [WebInvoke(ResponseFormat = WebMessageFormat.Json, UriTemplate = "ImportTestConfig")]
         string ImportTestConfig(string testConfig);
+
+
+        [OperationContract]
+        [WebInvoke(UriTemplate = "RegisterImageWorker")]
+        void RegisterImageWorker(string imageWorkerServiceUrl);
     }
 }

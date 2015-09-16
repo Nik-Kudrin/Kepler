@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Kepler.Common.Core;
+using Kepler.Common.Models;
 using Kepler.Core;
 using Kepler.Models;
 
@@ -13,6 +16,7 @@ namespace Kepler.Service
         private ProjectRepository projectRepository = ProjectRepository.Instance;
         private TestSuiteRepository testSuiteRepo = TestSuiteRepository.Instance;
         private ScreenShotRepository screenShotRepository = ScreenShotRepository.Instance;
+        private ImageWorkerRepository workerRepository = ImageWorkerRepository.Instance;
 
         private long ConvertStringToLong(string number)
         {
@@ -90,6 +94,12 @@ namespace Kepler.Service
         {
             var configImporter = new ConfigImporter();
             return configImporter.ImportConfig(testConfig);
+        }
+
+        public void RegisterImageWorker(string imageWorkerServiceUrl)
+        {
+            if (workerRepository.Find(imageWorkerServiceUrl).Count() == 0)
+                workerRepository.Insert(new ImageWorker() {WorkerServiceUrl = imageWorkerServiceUrl});
         }
     }
 }
