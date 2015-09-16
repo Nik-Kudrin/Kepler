@@ -2,6 +2,24 @@
 h3 {
     margin: 0px;
 }
+
+.status-failed, .status-passed, .status-queued {
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+.status-failed {
+    background: url("../img/progress_red.png");
+}
+
+.status-passed {
+    background: url("../img/progress_green.png");
+}
+
+.status-queued {
+    background: url("../img/progress_blue.gif");
+}
 /*GLOBAL END*/
 
 /*BUILD LIST PAGE START*/
