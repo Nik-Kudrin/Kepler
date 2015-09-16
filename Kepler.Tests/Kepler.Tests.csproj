@@ -151,6 +151,7 @@
     <Compile Include="FixtureBuilder\TestCaseBuilder.cs" />
     <Compile Include="FixtureBuilder\TestSuiteBuilder.cs" />
     <Compile Include="Test\ConfigImportTest.cs" />
+    <Compile Include="Test\ImageTest.cs" />
     <Compile Include="Test\InitTest.cs" />
     <Compile Include="Test\CommonTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -172,6 +173,10 @@
     <ProjectReference Include="..\Kepler.Service\Kepler.Service.csproj">
       <Project>{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}</Project>
       <Name>Kepler.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KeplerImageProcessorService\KeplerImageProcessorService.csproj">
+      <Project>{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}</Project>
+      <Name>KeplerImageProcessorService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
