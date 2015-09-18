@@ -1,4 +1,6 @@
-﻿namespace Kepler.Core.Common
+﻿using System.Runtime.Serialization;
+
+namespace Kepler.Core.Common
 {
     public enum ObjectStatus
     {
@@ -6,6 +8,7 @@
         Skipped,
         Pending,
         InProgress,
+        InQueue,
         Passed,
         Failed
     }

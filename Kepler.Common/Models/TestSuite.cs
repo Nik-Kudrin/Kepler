@@ -5,7 +5,7 @@ namespace Kepler.Core
 {
     public class TestSuite : BuildObject
     {
-        public Dictionary<long?, TestCase> TestCases { get; set; }
+        public Dictionary<long, TestCase> TestCases { get; set; }
 
         public TestSuite()
         {
@@ -13,7 +13,7 @@ namespace Kepler.Core
 
         public TestSuite(string Name) : base(Name)
         {
-            TestCases = new Dictionary<long?, TestCase>();
+            TestCases = new Dictionary<long, TestCase>();
         }
     }
 }

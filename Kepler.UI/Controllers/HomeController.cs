@@ -1,35 +1,27 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 
-namespace Kepler.Controllers
+namespace Kepler.UI.Controllers
 {
     public class HomeController : Controller
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Kepler";
-
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult PartialBranchView()
         {
-            ViewBag.Message = "Your app description page.";
-
-            return View();
+            return PartialView();
         }
 
-        public ActionResult Contact()
+        public ActionResult PartialBuildView()
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return PartialView();
         }
 
-        public ActionResult Status()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }

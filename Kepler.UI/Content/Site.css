@@ -1,0 +1,151 @@
+﻿/*GLOBAL START*/
+h3 {
+    margin: 0px;
+}
+
+.status-failed, .status-passed, .status-queued {
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+.status-failed {
+    background: url("../img/progress_red.png");
+}
+
+.status-passed {
+    background: url("../img/progress_green.png");
+}
+
+.status-queued {
+    background: url("../img/progress_blue.gif");
+}
+/*GLOBAL END*/
+
+/*BUILD LIST PAGE START*/
+.panel-default .panel-heading {
+    padding-bottom: 0px;
+}
+
+    .panel-default .panel-heading div {
+        width: 100%;
+        display: inline-block;
+    }
+
+        .panel-default .panel-heading div h3 {
+            float: left;
+            line-height: 34px;
+            text-transform: capitalize;
+        }
+
+        .panel-default .panel-heading div button {
+            float: right;
+        }
+
+.panel-default .panel-body {
+    padding: 0px;
+}
+
+.panel-default .table-responsive {
+    overflow: visible;
+}
+
+    .panel-default .table-responsive .table-hover {
+        margin-bottom: 0px;
+    }
+
+    .panel-default .table-responsive .btn .caret {
+        margin-left: 5px;
+    }
+/*BUILD LIST PAGE END*/
+
+/*BUILD PAGE START*/
+.icon-build-info {
+    color: #337AB7;
+    font-size: 21px;
+    cursor: pointer;
+}
+
+.build-info-popup {
+    padding-left: 10px;
+}
+
+
+
+.build-panel {
+    margin: 20px 0px;
+    border: none;
+    background: none;
+}
+
+.panel .panel-default {
+    border: none;
+}
+
+.assembly_group .panel-default,
+.test_suite_group .panel-default,
+.test_case_group .panel-default {
+    padding: 10px 10px 5px 10px;
+}
+
+.assembly_group .panel-default {
+    background: #337AB7;
+}
+
+.test_suite_group .panel-default {
+    background: #449AE2;
+}
+
+.test_case_group .panel-default {
+    background: #A3D5FF;
+}
+
+.test_case_group .panel-body {
+    padding: 0px 15px;
+}
+
+.assembly_group .panel-body,
+.test_suite_group .panel-body,
+.test_case_group .panel-body {
+    padding: 10px 0px 5px 15px;
+}
+
+.panel-group {
+    margin-bottom: 0px;
+}
+
+    .panel-group .panel-heading + .panel-collapse > .panel-body, .panel-group .panel-heading + .panel-collapse > .list-group {
+        border-top: none;
+    }
+
+.panel-title {
+    margin-bottom: 10px;
+}
+
+    .panel-title a {
+        background: #FFF;
+        padding: 5px;
+        border-radius: 3px;
+    }
+
+        .panel-title a:hover {
+            text-decoration: none;
+            background: #EAEAEA;
+        }
+
+.panel-default .panel-heading {
+    border: none;
+    background: none;
+}
+
+.panel-title a.collapsed i.fa:before {
+    content: "\f01a";
+    color: #337AB7;
+}
+
+.panel-title a i.fa:before {
+    content: "\f01b";
+    color: #a94442;
+}
+
+/*BUILD PAGE END*/

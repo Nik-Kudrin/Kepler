@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace Kepler
+namespace Kepler.UI
 {
     public class FilterConfig
     {
