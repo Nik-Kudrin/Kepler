@@ -13,9 +13,14 @@ namespace Kepler.UI.Controllers
             return View();
         }
 
-        public ActionResult BranchView()
+        public ActionResult PartialBranchView()
         {
-            return View();
+            return PartialView();
+        }
+
+        public ActionResult PartialBuildView()
+        {
+            return PartialView();
         }
 
     }

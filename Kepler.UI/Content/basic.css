@@ -33,7 +33,6 @@ body {
 #page-inner {
     width: 100%;
     margin: 10px 20px 10px 0px;
-    background-color: #fff!important;
     padding: 10px;
     min-height: 1200px;
 }
@@ -226,7 +225,7 @@ body {
         color:#fff;
     }
     #footer-sec a:hover,a:focus {
-        color:#fff;
+        color:#000;
         text-decoration:none;
     }
 /*==============================================
