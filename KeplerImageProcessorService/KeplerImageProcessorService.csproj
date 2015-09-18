@@ -56,13 +56,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IKeplerImageProcessorService.cs" />
-    <Compile Include="ImageProcessor\ImageProcessor.cs" />
+    <Compile Include="ImgProcessor\ImageProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KeplerImageProcessorService.cs" />
+    <Compile Include="TaskManager\ImageTaskGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kepler.Common\Kepler.Common.csproj">
+      <Project>{6C80A420-6AB0-4172-93E1-C44974187669}</Project>
+      <Name>Kepler.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
