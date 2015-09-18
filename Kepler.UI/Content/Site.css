@@ -9,6 +9,11 @@ h3 {
     width: 16px;
 }
 
+.build-panel .status-failed, .build-panel .status-passed, .build-panel .status-queued {
+    width: 16px;
+    vertical-align: text-bottom;
+}
+
 .status-failed {
     background: url("../img/progress_red.png");
 }
@@ -20,6 +25,23 @@ h3 {
 .status-queued {
     background: url("../img/progress_blue.gif");
 }
+
+.btn {
+    border: 1px solid #ccc;
+    padding: 3px 12px;
+    vertical-align: baseline;
+}
+
+.dropdown-btn {
+    position: relative;
+    display: inline-block;
+    float: right;
+}
+
+.dropdown-menu {
+    right: 0px;
+    left: auto;
+}
 /*GLOBAL END*/
 
 /*BUILD LIST PAGE START*/
@@ -27,20 +49,15 @@ h3 {
     padding-bottom: 0px;
 }
 
-    .panel-default .panel-heading div {
-        width: 100%;
-        display: inline-block;
+    .panel-default .panel-heading div h3 {
+        float: left;
+        line-height: 34px;
+        text-transform: capitalize;
     }
 
-        .panel-default .panel-heading div h3 {
-            float: left;
-            line-height: 34px;
-            text-transform: capitalize;
-        }
-
-        .panel-default .panel-heading div button {
-            float: right;
-        }
+    .panel-default .panel-heading div button {
+        float: right;
+    }
 
 .panel-default .panel-body {
     padding: 0px;
@@ -70,8 +87,6 @@ h3 {
     padding-left: 10px;
 }
 
-
-
 .build-panel {
     margin: 20px 0px;
     border: none;
@@ -85,7 +100,7 @@ h3 {
 .assembly_group .panel-default,
 .test_suite_group .panel-default,
 .test_case_group .panel-default {
-    padding: 10px 10px 5px 10px;
+    padding: 10px 10px 10px 10px;
 }
 
 .assembly_group .panel-default {
@@ -118,14 +133,20 @@ h3 {
         border-top: none;
     }
 
+.build-panel .panel-heading {
+    padding: 0px;
+}
+
 .panel-title {
     margin-bottom: 10px;
+    display: inline;
 }
 
     .panel-title a {
         background: #FFF;
         padding: 5px;
         border-radius: 3px;
+        vertical-align: middle;
     }
 
         .panel-title a:hover {
