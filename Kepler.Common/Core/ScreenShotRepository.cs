@@ -1,8 +1,9 @@
-﻿using Kepler.Models;
+﻿using Kepler.Common.Core;
+using Kepler.Models;
 
 namespace Kepler.Core
 {
-    public class ScreenShotRepository : BaseRepository<ScreenShot>
+    public class ScreenShotRepository : BuildObjectRepository<ScreenShot>
     {
         private static ScreenShotRepository _repoInstance;
 

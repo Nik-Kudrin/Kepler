@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Kepler.HostService")]
+[assembly: AssemblyTitle("KeplerImageProcessorService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Kepler.HostService")]
+[assembly: AssemblyProduct("KeplerImageProcessorService")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("fe5ba486-0a42-4b03-b939-97efae1a1df9")]
+[assembly: Guid("cbffd8af-ceed-4f04-b7e0-aadc854906d4")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -1,8 +1,9 @@
-﻿using Kepler.Models;
+﻿using Kepler.Common.Core;
+using Kepler.Models;
 
 namespace Kepler.Core
 {
-    public class TestCaseRepository : BaseRepository<TestCase>
+    public class TestCaseRepository : BuildObjectRepository<TestCase>
     {
         private static TestCaseRepository _repoInstance;
 
