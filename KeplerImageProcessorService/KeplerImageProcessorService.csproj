@@ -59,7 +59,8 @@
     <Compile Include="ImgProcessor\ImageProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KeplerImageProcessorService.cs" />
-    <Compile Include="TaskManager\ImageTaskGenerator.cs" />
+    <Compile Include="TaskManager\ImageTaskWorker.cs" />
+    <Compile Include="TaskManager\TaskGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,32 +1,39 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Kepler.Common.Models;
 using KeplerImageProcessorService.ImgProcessor;
 
 namespace KeplerImageProcessorService.TaskManager
 {
-    public class ImageTaskGenerator
+    public class ImageTaskWorker
     {
         public static int MaxImagesPerTask { get; }
         public int CountAvailableTask { get; }
-        private ConcurrentBag<ImageInfo> imagesToProcess;
-        private ConcurrentBag<ImageInfo> processedImages;
+        private ConcurrentBag<ImageInfo> imagesToProcess = new ConcurrentBag<ImageInfo>();
+        private ConcurrentBag<ImageInfo> processedImages = new ConcurrentBag<ImageInfo>();
 
-        static ImageTaskGenerator()
+        static ImageTaskWorker()
         {
             MaxImagesPerTask = 30;
         }
 
-        public ImageTaskGenerator(IEnumerable<ImageInfo> images)
+        public ImageTaskWorker()
         {
             CountAvailableTask = MaxImagesPerTask;
-
-            this.imagesToProcess = new ConcurrentBag<ImageInfo>(images);
         }
 
-       /* private void TaskGenerator()
+        public void AddImagesForProcessing(IEnumerable<ImageInfo> images)
+        {
+            images.ToList().ForEach(imagesToProcess.Add);
+        }
+
+        // TODO: Tasks should be run always. And go sleep, when list of image for processing is empty
+
+
+        private void TaskProcessor()
         {
             while (imagesToProcess.Count > 0)
             {
@@ -46,8 +53,8 @@ namespace KeplerImageProcessorService.TaskManager
                 /* if (imagesToProcess.TryTake())
 
                 imageProcessor.ImageInfo = imageInfo;
-                yield return imageProcessor.GetCompositeImageDiff();#1#
+                yield return imageProcessor.GetCompositeImageDiff();*/
             }
-        }*/
+        }
     }
 }
