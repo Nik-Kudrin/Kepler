@@ -21,7 +21,8 @@ namespace Kepler.UI
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+                      "~/Scripts/respond.js",
+                      "~/Scripts/ekko-lightbox.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/statico").Include(
                       "~/Scripts/jquery.metisMenu.js",

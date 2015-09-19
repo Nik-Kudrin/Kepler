@@ -93,6 +93,10 @@ h3 {
     background: none;
 }
 
+    .build-panel textarea.form-control {
+        resize: vertical;
+    }
+
 .panel .panel-default {
     border: none;
 }
@@ -101,28 +105,69 @@ h3 {
 .test_suite_group .panel-default,
 .test_case_group .panel-default {
     padding: 10px 10px 10px 10px;
+    background: none;
+    
 }
 
 .assembly_group .panel-default {
-    background: #337AB7;
+    border: 1px dotted #777;
 }
 
 .test_suite_group .panel-default {
-    background: #449AE2;
+    border: 1px dotted #999;
 }
 
 .test_case_group .panel-default {
-    background: #A3D5FF;
+    border: 1px dotted #CCC;
 }
 
-.test_case_group .panel-body {
-    padding: 0px 15px;
+.build-panel-one-page-link {
+    font-size: 18px;
+    float: right;
 }
 
 .assembly_group .panel-body,
 .test_suite_group .panel-body,
 .test_case_group .panel-body {
     padding: 10px 0px 5px 15px;
+}
+
+.test_case_group .panel-body {
+    padding: 10px 0px;
+}
+
+.build-panel-one-page-header {
+    margin-bottom: 20px;
+}
+
+.build-panel-one-page-header span {
+    background: #DDD;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin-bottom: 5px;
+    display: inline;
+}
+
+.build-panel-screen-base, .build-panel-screen-dif, .build-panel-screen-curr {
+    height: 96px;
+    background: url("../img/no_image_icon.png") no-repeat center;
+    background-size: 117px 95px;
+    text-align: center;
+}
+
+.build-panel-screen-base img, .build-panel-screen-dif img, .build-panel-screen-curr img {
+    width: 118px;
+    height: 96px;
+    display: inline;
+}
+
+.build-panel-error-log {
+    padding-top: 20px;
+}
+
+.build-panel-splitter hr {
+    border-top: 1px dotted #CCC;
 }
 
 .panel-group {
@@ -132,6 +177,10 @@ h3 {
     .panel-group .panel-heading + .panel-collapse > .panel-body, .panel-group .panel-heading + .panel-collapse > .list-group {
         border-top: none;
     }
+
+.panel-collapse {
+    clear: both;
+}
 
 .build-panel .panel-heading {
     padding: 0px;
@@ -143,7 +192,7 @@ h3 {
 }
 
     .panel-title a {
-        background: #FFF;
+        background: none;
         padding: 5px;
         border-radius: 3px;
         vertical-align: middle;
@@ -151,7 +200,7 @@ h3 {
 
         .panel-title a:hover {
             text-decoration: none;
-            background: #EAEAEA;
+            background: none;
         }
 
 .panel-default .panel-heading {
