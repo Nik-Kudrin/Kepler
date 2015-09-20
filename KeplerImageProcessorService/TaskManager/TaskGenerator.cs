@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Timers;
 using Kepler.Common.Models;
@@ -27,8 +29,15 @@ namespace KeplerImageProcessorService.TaskManager
 
         private TaskGenerator()
         {
-            //_timer
             InitTaskWorkers();
+
+            _timer = new Timer();
+            _timer.Interval = 10000; //every 10sec
+            _timer.Elapsed += new ElapsedEventHandler(this.RunWorkers);
+            _timer.Elapsed += new ElapsedEventHandler(this.SendProcessedImagesToKeplerService);
+            _timer.AutoReset = true;
+
+            _timer.Enabled = true;
         }
 
         private void InitTaskWorkers()
@@ -40,13 +49,22 @@ namespace KeplerImageProcessorService.TaskManager
         }
 
 
-        private void RunWorkers()
+        private void RunWorkers(Object sender, ElapsedEventArgs eventArgs)
         {
             for (int index = 0; index < MaxCountWorkers; index++)
             {
-                var task = Task.Factory.StartNew(_taskWorkers[index].ProcessImages);
+                var currentWorker = _taskWorkers[index];
 
-                task.Start();
+                if (currentWorker.AssignedTask == null || currentWorker.AssignedTask.IsCompleted)
+                {
+                    var task = Task.Factory.StartNew(currentWorker.ProcessImages);
+                    currentWorker.AssignedTask = task;
+                    task.Start();
+                }
+                else if (currentWorker.AssignedTask.IsFaulted || currentWorker.AssignedTask.IsCanceled)
+                {
+                    currentWorker.AssignedTask = null;
+                }
             }
         }
 
@@ -79,6 +97,14 @@ namespace KeplerImageProcessorService.TaskManager
             }
 
             return processedImages;
+        }
+
+        private void SendProcessedImagesToKeplerService(Object sender, ElapsedEventArgs eventArgs)
+        {
+            // TODO: write...
+            Console.WriteLine(" >>> Stub . Send processed images to kepler service");
+            // If there are no one processed images - do not call rest service
+            throw new NotImplementedException();
         }
     }
 }
