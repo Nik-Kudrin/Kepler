@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using FluentAssertions;
 using Kepler.Common.Models;
 using KeplerImageProcessorService.ImgProcessor;
@@ -22,14 +24,14 @@ namespace Kepler.Tests.Test
 
             for (int index = 0; index < fileNames.Length - 3;)
             {
-                var imageInfo = new ImageInfo()
+                var imageInfo = new ImageComparisonInfo()
                 {
                     FirstImagePath = fileNames[index],
                     SecondImagePath = fileNames[index + 1],
                     DiffImgPathToSave = outputFile + "_" + index + ".png"
                 };
 
-                imageProcessor.ImageInfo = imageInfo;
+                imageProcessor.ImageComparisonInfo = imageInfo;
 
                 var isImageDifferent = imageProcessor.GetCompositeImageDiff();
                 index += 2;
@@ -45,8 +47,8 @@ namespace Kepler.Tests.Test
             imageWorker.ProcessImages();
             imageWorker.GetProcessedImages().Should().BeEmpty();
 
-            var imagesForProcessing = new List<ImageInfo>();
-            imagesForProcessing.Add(new ImageInfo()
+            var imagesForProcessing = new List<ImageComparisonInfo>();
+            imagesForProcessing.Add(new ImageComparisonInfo()
             {
                 DiffImgPathToSave = outputFile + "_diff_ImageTaskWorkerTest.png",
                 FirstImagePath = @"e:\Temp\ScreenShot_Samples\ElementFinder_2015-07-29_15-51-00.png",
@@ -65,6 +67,43 @@ namespace Kepler.Tests.Test
         [Test]
         public void TaskGeneratorImage()
         {
+            var imageTaskGenerator = TaskGenerator.GetTaskGenerator;
+
+            var fileNames = Directory.GetFiles(@"e:\Temp\Screen\");
+            var images = new List<ImageComparisonInfo>();
+
+            for (int index = 0; index < 300; index += 2)
+            {
+                var imageInfo = new ImageComparisonInfo()
+                {
+                    FirstImagePath = fileNames[index],
+                    SecondImagePath = fileNames[index + 1],
+                    DiffImgPathToSave = outputFile + "_" + index + ".png"
+                };
+
+                images.Add(imageInfo);
+            }
+            var countImages = images.Count;
+
+            var startDate = DateTime.Now;
+            Console.WriteLine("Start Date: " + startDate);
+
+            imageTaskGenerator.AddImagesToProcess(images);
+
+            Console.WriteLine("Max images count " + countImages);
+
+            var processedImagesCount = 0;
+            do
+            {
+                Thread.Sleep(5000);
+
+                processedImagesCount += imageTaskGenerator.GetProcessedImages().Count();
+                Console.WriteLine("Processed images: " + processedImagesCount);
+            } while (processedImagesCount < countImages);
+
+            var finishDate = DateTime.Now;
+            Console.WriteLine("Finish Date: " + finishDate);
+            Console.WriteLine("Test duration: " + (finishDate - startDate));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace KeplerImageProcessorService.TaskManager
             MaxCountWorkers = 1; // TODO: license should be placed here
         }
 
-        public static TaskGenerator TaskContainer
+        public static TaskGenerator GetTaskGenerator
         {
             get { return _taskGenerator ?? new TaskGenerator(); }
         }
@@ -32,11 +32,9 @@ namespace KeplerImageProcessorService.TaskManager
             InitTaskWorkers();
 
             _timer = new Timer();
-            _timer.Interval = 10000; //every 10sec
+            _timer.Interval = 10000; //every 10 sec
             _timer.Elapsed += new ElapsedEventHandler(this.RunWorkers);
             _timer.Elapsed += new ElapsedEventHandler(this.SendProcessedImagesToKeplerService);
-            _timer.AutoReset = true;
-
             _timer.Enabled = true;
         }
 
@@ -59,7 +57,6 @@ namespace KeplerImageProcessorService.TaskManager
                 {
                     var task = Task.Factory.StartNew(currentWorker.ProcessImages);
                     currentWorker.AssignedTask = task;
-                    task.Start();
                 }
                 else if (currentWorker.AssignedTask.IsFaulted || currentWorker.AssignedTask.IsCanceled)
                 {
@@ -68,9 +65,8 @@ namespace KeplerImageProcessorService.TaskManager
             }
         }
 
-        // TODO: Tasks should be run always. And go sleep, when list of image for processing is empty
 
-        public void AddImagesToProcess(List<ImageInfo> images)
+        public void AddImagesToProcess(List<ImageComparisonInfo> images)
         {
             var imagesPerWorker = images.Count()/MaxCountWorkers;
             if (imagesPerWorker == 0)
@@ -80,16 +76,22 @@ namespace KeplerImageProcessorService.TaskManager
             while (images.Count > 0)
             {
                 _taskWorkers[workerIndex++].AddImagesForProcessing(images.Take(imagesPerWorker));
-                images.RemoveRange(0, imagesPerWorker);
+
+                if (imagesPerWorker < images.Count)
+                    images.RemoveRange(0, imagesPerWorker);
+                else
+                {
+                    images.Clear();
+                }
 
                 if (workerIndex >= MaxCountWorkers)
                     workerIndex = 0;
             }
         }
 
-        public IEnumerable<ImageInfo> GetProcessedImages()
+        public IEnumerable<ImageComparisonInfo> GetProcessedImages()
         {
-            var processedImages = new List<ImageInfo>();
+            var processedImages = new List<ImageComparisonInfo>();
 
             foreach (var imageTaskWorker in _taskWorkers)
             {
@@ -101,10 +103,10 @@ namespace KeplerImageProcessorService.TaskManager
 
         private void SendProcessedImagesToKeplerService(Object sender, ElapsedEventArgs eventArgs)
         {
-            // TODO: write...
+            // TODO: implement the code
             Console.WriteLine(" >>> Stub . Send processed images to kepler service");
             // If there are no one processed images - do not call rest service
-            throw new NotImplementedException();
+//            throw new NotImplementedException();
         }
     }
 }

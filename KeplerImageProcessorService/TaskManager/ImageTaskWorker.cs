@@ -11,10 +11,10 @@ namespace KeplerImageProcessorService.TaskManager
     public class ImageTaskWorker
     {
         public Task AssignedTask { get; set; }
-        private ConcurrentBag<ImageInfo> _imagesToProcess = new ConcurrentBag<ImageInfo>();
-        private ConcurrentBag<ImageInfo> _processedImages = new ConcurrentBag<ImageInfo>();
+        private ConcurrentBag<ImageComparisonInfo> _imagesToProcess = new ConcurrentBag<ImageComparisonInfo>();
+        private List<ImageComparisonInfo> _processedImages = new List<ImageComparisonInfo>();
 
-        public void AddImagesForProcessing(IEnumerable<ImageInfo> images)
+        public void AddImagesForProcessing(IEnumerable<ImageComparisonInfo> images)
         {
             images.ToList().ForEach(_imagesToProcess.Add);
         }
@@ -25,7 +25,7 @@ namespace KeplerImageProcessorService.TaskManager
 
             for (int index = 0; index < _imagesToProcess.Count; index++)
             {
-                ImageInfo currentImageToProcess;
+                ImageComparisonInfo currentImageToProcess;
 
                 var attemptTakeImage = 0;
                 do
@@ -40,14 +40,19 @@ namespace KeplerImageProcessorService.TaskManager
                     }
                 } while (attemptTakeImage < 3);
 
-                imageComparator.ImageInfo = currentImageToProcess;
-                _processedImages.Add(GetImageDiff(imageComparator));
+                imageComparator.ImageComparisonInfo = currentImageToProcess;
+
+                var imageDiff = GetImageDiff(imageComparator);
+                lock (_processedImages)
+                {
+                    _processedImages.Add(imageDiff);
+                }
             }
         }
 
-        private ImageInfo GetImageDiff(ImageComparator imageComparator)
+        private ImageComparisonInfo GetImageDiff(ImageComparator imageComparator)
         {
-            ImageInfo diffImage;
+            ImageComparisonInfo diffImage;
 
             try
             {
@@ -55,22 +60,22 @@ namespace KeplerImageProcessorService.TaskManager
             }
             catch (Exception ex)
             {
-                diffImage = new ImageInfo()
+                diffImage = new ImageComparisonInfo()
                 {
                     ErrorMessage = ex.Message,
-                    ScreenShotId = imageComparator.ImageInfo.ScreenShotId
+                    ScreenShotId = imageComparator.ImageComparisonInfo.ScreenShotId
                 };
             }
 
             return diffImage;
         }
 
-        public IEnumerable<ImageInfo> GetProcessedImages()
+        public IEnumerable<ImageComparisonInfo> GetProcessedImages()
         {
             lock (_processedImages)
             {
-                var imagesToReturn = new List<ImageInfo>(_processedImages.ToArray());
-                _processedImages = new ConcurrentBag<ImageInfo>();
+                var imagesToReturn = new List<ImageComparisonInfo>(_processedImages.ToArray());
+                _processedImages.Clear();
 
                 return imagesToReturn;
             }
