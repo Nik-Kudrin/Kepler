@@ -1,12 +1,13 @@
 ﻿using System;
+using KeplerImageProcessorService.TaskManager;
 
 namespace KeplerImageProcessorService
 {
     public class KeplerImageProcessorService : IKeplerImageProcessorService
     {
-        public int GetCountAvailableWorkers()
+        public int GetMaxCountWorkers()
         {
-            throw new NotImplementedException();
+            return TaskGenerator.GetMaxCountWorkers();
         }
     }
 }

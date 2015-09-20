@@ -12,9 +12,8 @@ namespace KeplerImageProcessorService.TaskManager
     {
         private static TaskGenerator _taskGenerator;
         private List<ImageTaskWorker> _taskWorkers = new List<ImageTaskWorker>();
-        public static int MaxCountWorkers;
+        private static int MaxCountWorkers;
         private Timer _timer;
-
 
         static TaskGenerator()
         {
@@ -26,6 +25,10 @@ namespace KeplerImageProcessorService.TaskManager
             get { return _taskGenerator ?? new TaskGenerator(); }
         }
 
+        public static int GetMaxCountWorkers()
+        {
+            return MaxCountWorkers;
+        }
 
         private TaskGenerator()
         {

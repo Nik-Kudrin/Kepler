@@ -4,7 +4,7 @@ using Kepler.Core.Common;
 
 namespace Kepler.Service.Core
 {
-    public class TaskGenerator
+    public class ScreenShotProcessor
     {
         public IEnumerable<Build> GetInQueueBuilds()
         {
