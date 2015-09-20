@@ -3,15 +3,15 @@ using Kepler.Common.Models;
 
 namespace KeplerImageProcessorService.ImgProcessor
 {
-    public class ImageProcessor
+    public class ImageComparator
     {
         public ImageInfo ImageInfo { get; set; }
 
-        public ImageProcessor()
+        public ImageComparator()
         {
         }
 
-        public ImageProcessor(ImageInfo imageInfo)
+        public ImageComparator(ImageInfo imageInfo)
         {
             this.ImageInfo = imageInfo;
         }

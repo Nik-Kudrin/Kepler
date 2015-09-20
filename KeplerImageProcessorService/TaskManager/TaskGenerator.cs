@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Timers;
 using Kepler.Common.Models;
 
 namespace KeplerImageProcessorService.TaskManager
@@ -9,6 +11,8 @@ namespace KeplerImageProcessorService.TaskManager
         private static TaskGenerator _taskGenerator;
         private List<ImageTaskWorker> _taskWorkers = new List<ImageTaskWorker>();
         public static int MaxCountWorkers;
+        private Timer _timer;
+
 
         static TaskGenerator()
         {
@@ -20,6 +24,13 @@ namespace KeplerImageProcessorService.TaskManager
             get { return _taskGenerator ?? new TaskGenerator(); }
         }
 
+
+        private TaskGenerator()
+        {
+            //_timer
+            InitTaskWorkers();
+        }
+
         private void InitTaskWorkers()
         {
             for (int index = 0; index < MaxCountWorkers; index++)
@@ -27,6 +38,19 @@ namespace KeplerImageProcessorService.TaskManager
                 _taskWorkers.Add(new ImageTaskWorker());
             }
         }
+
+
+        private void RunWorkers()
+        {
+            for (int index = 0; index < MaxCountWorkers; index++)
+            {
+                var task = Task.Factory.StartNew(_taskWorkers[index].ProcessImages);
+
+                task.Start();
+            }
+        }
+
+        // TODO: Tasks should be run always. And go sleep, when list of image for processing is empty
 
         public void AddImagesToProcess(List<ImageInfo> images)
         {
@@ -45,8 +69,16 @@ namespace KeplerImageProcessorService.TaskManager
             }
         }
 
-        public IEnumerable<ImageInfo> GetProcessImages()
+        public IEnumerable<ImageInfo> GetProcessedImages()
         {
+            var processedImages = new List<ImageInfo>();
+
+            foreach (var imageTaskWorker in _taskWorkers)
+            {
+                processedImages.AddRange(imageTaskWorker.GetProcessedImages());
+            }
+
+            return processedImages;
         }
     }
 }

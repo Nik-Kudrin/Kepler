@@ -32,7 +32,7 @@ namespace Kepler.Tests.Test
                 "https://cdn3.vox-cdn.com/thumbor/JVYydIGH4ZyY4sb2rzXcxqKP6UI=/cdn0.vox-cdn.com/uploads/chorus_asset/file/3870858/google-doodle.0.gif"*/
             };
             var outputFile = @"e:\Temp\ScreenCompareResult\result";
-            var imageProcessor = new ImageProcessor();
+            var imageProcessor = new ImageComparator();
 
 
             var fileNames = Directory.GetFiles(@"e:\Temp\Screen\");

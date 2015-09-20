@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IKeplerImageProcessorService.cs" />
-    <Compile Include="ImgProcessor\ImageProcessor.cs" />
+    <Compile Include="ImgProcessor\ImageComparator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KeplerImageProcessorService.cs" />
     <Compile Include="TaskManager\ImageTaskWorker.cs" />
