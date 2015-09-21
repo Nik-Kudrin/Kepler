@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Kepler.Common.Core;
 using Kepler.Common.Models;
@@ -30,7 +31,15 @@ namespace Kepler.Service
 
         public IEnumerable<Build> GetBuilds()
         {
-            return buildRepo.FindAll();
+            try
+            {
+                return buildRepo.FindAll();
+            }
+            catch (Exception ex)
+            {
+                EventLog.WriteEntry("Kepler fail", ex.Message + " ||||||||| " + ex.StackTrace);
+            }
+            return null;
         }
 
         #region TestCase

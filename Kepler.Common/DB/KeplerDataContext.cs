@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Configuration;
+using System.Data.Entity;
 using Kepler.Common.Models;
 using Kepler.Core;
 
@@ -16,9 +17,7 @@ namespace Kepler.Models
 
         public DbSet<ImageWorker> ImageWorkers { get; set; }
 
-
-        public KeplerDataContext()
-            : base("Kepler")
+        public KeplerDataContext() : base("name=Kepler")
         {
         }
     }

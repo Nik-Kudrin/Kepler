@@ -29,7 +29,7 @@ namespace KeplerServiceInstaller
                         break;
 
                     default:
-                        Console.WriteLine("Provide parameter to .exe file. Eg. Kepler.HostService.exe -install (or -uninstall for deinstallation)");
+                        Console.WriteLine("Provide parameter to .exe file. Eg. KeplerServiceInstaller.exe -install (or -uninstall for deinstallation)");
                         break;
                 }
             }
@@ -38,7 +38,7 @@ namespace KeplerServiceInstaller
                 ServiceBase[] ServicesToRun;
                 ServicesToRun = new ServiceBase[]
                 {
-                    new KeplerServiceHost(),
+                    new KeplerServiceHost()
                 };
                 ServiceBase.Run(ServicesToRun);
             }
