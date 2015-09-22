@@ -1,19 +1,24 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Configuration.Install;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ServiceProcess;
 
 namespace KeplerImageProcessorInstaller
 {
     [RunInstaller(true)]
-    public partial class ProjectInstaller : System.Configuration.Install.Installer
+    public partial class ProjectInstaller : Installer
     {
         public ProjectInstaller()
         {
-            InitializeComponent();
+            // InitializeComponent();
+            serviceProcessInstaller = new ServiceProcessInstaller();
+            serviceProcessInstaller.Account = ServiceAccount.LocalSystem;
+            serviceInstaller = new ServiceInstaller();
+            serviceInstaller.ServiceName = "KeplerImageProcessorService";
+            serviceInstaller.DisplayName = "KeplerImageProcessorService";
+            serviceInstaller.Description = "Kepler Image Processor API Service";
+            serviceInstaller.StartType = ServiceStartMode.Automatic;
+            Installers.Add(serviceProcessInstaller);
+            Installers.Add(serviceInstaller);
         }
     }
 }

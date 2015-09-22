@@ -1,25 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
+using KeplerServiceInstaller;
 
 namespace KeplerImageProcessorInstaller
 {
-    static class Program
+    public static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        static void Main()
+        private static void Main(string[] args)
         {
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
+            if (args != null && args.Length == 1 && args[0].Length > 1
+                && (args[0][0] == '-' || args[0][0] == '/'))
             {
-                new Service1()
-            };
-            ServiceBase.Run(ServicesToRun);
+                switch (args[0].Substring(1).ToLower())
+                {
+                    case "install":
+                    case "i":
+                        SelfInstaller.InstallMe();
+                        break;
+                    case "uninstall":
+                    case "u":
+                        SelfInstaller.UninstallMe();
+                        break;
+
+                    default:
+                        Console.WriteLine("Provide parameter to .exe file. Eg. KeplerServiceInstaller.exe -install (or -uninstall for deinstallation)");
+                        break;
+                }
+            }
+            else
+            {
+                ServiceBase[] ServicesToRun;
+                ServicesToRun = new ServiceBase[]
+                {
+                    new KeplerImageProcessorHost(),
+                };
+                ServiceBase.Run(ServicesToRun);
+            }
         }
     }
 }

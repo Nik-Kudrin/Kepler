@@ -1,14 +1,13 @@
 ﻿using System.ServiceModel;
 using System.ServiceProcess;
-using Kepler.Service;
 
-namespace KeplerServiceInstaller
+namespace KeplerImageProcessorInstaller
 {
-    public partial class KeplerServiceHost : ServiceBase
+    public partial class KeplerImageProcessorHost : ServiceBase
     {
         private ServiceHost serviceHost = null;
 
-        public KeplerServiceHost()
+        public KeplerImageProcessorHost()
         {
             InitializeComponent();
         }
@@ -17,7 +16,7 @@ namespace KeplerServiceInstaller
         {
             if (serviceHost != null) serviceHost.Close();
 
-            serviceHost = new ServiceHost(typeof (KeplerService));
+            serviceHost = new ServiceHost(typeof (KeplerImageProcessorService.KeplerImageProcessorService));
             serviceHost.Open();
         }
 
