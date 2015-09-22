@@ -22,7 +22,11 @@ namespace KeplerImageProcessorService.TaskManager
 
         public static TaskGenerator GetTaskGenerator
         {
-            get { return _taskGenerator ?? new TaskGenerator(); }
+            get
+            {
+                _taskGenerator = _taskGenerator ?? new TaskGenerator();
+                return _taskGenerator;
+            }
         }
 
         public static int GetMaxCountWorkers()

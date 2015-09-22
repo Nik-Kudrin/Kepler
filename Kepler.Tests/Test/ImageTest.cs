@@ -72,7 +72,7 @@ namespace Kepler.Tests.Test
             var fileNames = Directory.GetFiles(@"e:\Temp\Screen\");
             var images = new List<ImageComparisonInfo>();
 
-            for (int index = 0; index < 300; index += 2)
+            for (int index = 0; index < 7; index += 2)
             {
                 var imageInfo = new ImageComparisonInfo()
                 {
