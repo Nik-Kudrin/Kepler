@@ -79,8 +79,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y $(SolutionDir)Kepler.ImageProcessor.Service\bin\$(ConfigurationName)\*  $(TargetDir)
-xcopy /Y /S /E $(TargetDir)* $(SolutionDir)_Build\$(ProjectName)\</PostBuildEvent>
+    <PostBuildEvent>if "$(ConfigurationName)" ==  "Release" (
+xcopy /Y $(SolutionDir)Kepler.ImageProcessor.Service\bin\$(ConfigurationName)\*  $(TargetDir)
+xcopy /Y /S /E $(TargetDir)* $(SolutionDir)_Build\$(ProjectName)\ )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
