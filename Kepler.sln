@@ -11,11 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Service", "Kepler.Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.UI", "Kepler.UI\Kepler.UI.csproj", "{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeplerImageProcessorService", "KeplerImageProcessorService\KeplerImageProcessorService.csproj", "{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.ImageProcessor.Service", "Kepler.ImageProcessor.Service\Kepler.ImageProcessor.Service.csproj", "{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeplerServiceInstaller", "KeplerServiceInstaller\KeplerServiceInstaller.csproj", "{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.ServiceInstaller", "Kepler.ServiceInstaller\Kepler.ServiceInstaller.csproj", "{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeplerImageProcessorInstaller", "KeplerImageProcessorInstaller\KeplerImageProcessorInstaller.csproj", "{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.ImageProcessor.Installer", "Kepler.ImageProcessor.Installer\Kepler.ImageProcessor.Installer.csproj", "{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

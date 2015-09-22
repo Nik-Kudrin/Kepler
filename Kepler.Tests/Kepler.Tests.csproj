@@ -174,9 +174,9 @@
       <Project>{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}</Project>
       <Name>Kepler.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KeplerImageProcessorService\KeplerImageProcessorService.csproj">
+    <ProjectReference Include="..\Kepler.ImageProcessor.Service\Kepler.ImageProcessor.Service.csproj">
       <Project>{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}</Project>
-      <Name>KeplerImageProcessorService</Name>
+      <Name>Kepler.ImageProcessor.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
