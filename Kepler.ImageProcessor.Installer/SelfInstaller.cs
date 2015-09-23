@@ -1,7 +1,7 @@
 ﻿using System.Configuration.Install;
 using System.Reflection;
 
-namespace KeplerServiceInstaller
+namespace Kepler.ImageProcessor.Installer
 {
     public static class SelfInstaller
     {

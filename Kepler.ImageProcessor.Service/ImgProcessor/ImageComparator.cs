@@ -1,7 +1,7 @@
 ﻿using ImageMagick;
 using Kepler.Common.Models;
 
-namespace KeplerImageProcessorService.ImgProcessor
+namespace Kepler.ImageProcessor.Service.ImgProcessor
 {
     public class ImageComparator
     {

@@ -13,7 +13,9 @@ namespace Kepler.Common.Error
             CaseDontHaveAName,
             ScreenShotHasEmptyFilePath,
             ObjectNotFoundInDb,
-            EmptyListOfObjects
+            EmptyListOfObjects,
+
+            AddTaskToImageWorkerError
         }
 
         public ErorCode Code { get; set; }
@@ -48,6 +50,9 @@ namespace Kepler.Common.Error
                     break;
                 case ErorCode.EmptyListOfObjects:
                     codeMessage = "List of objects is empty";
+                    break;
+                case ErorCode.AddTaskToImageWorkerError:
+                    codeMessage = "Error happend in process to add images for diff comparison";
                     break;
 
                 default:

@@ -2,7 +2,7 @@
 using System.ServiceProcess;
 using Kepler.Service;
 
-namespace KeplerServiceInstaller
+namespace Kepler.ServiceInstaller
 {
     public partial class KeplerServiceHost : ServiceBase
     {

@@ -1,4 +1,4 @@
-﻿namespace KeplerServiceInstaller
+﻿namespace Kepler.ServiceInstaller
 {
     partial class ProjectInstaller
     {

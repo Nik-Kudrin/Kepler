@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Kepler.Common.Models;
-using KeplerImageProcessorService.ImgProcessor;
+using Kepler.ImageProcessor.Service.ImgProcessor;
 
-namespace KeplerImageProcessorService.TaskManager
+namespace Kepler.ImageProcessor.Service.TaskManager
 {
     public class ImageTaskWorker
     {

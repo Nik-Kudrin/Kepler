@@ -1,4 +1,4 @@
-﻿namespace KeplerImageProcessorInstaller
+﻿namespace Kepler.ImageProcessor.Installer
 {
     partial class KeplerImageProcessorHost
     {
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            this.ServiceName = "KeplerImageProcessorService";
+            this.ServiceName = "Kepler.ImageProcessor.Service";
         }
 
         #endregion

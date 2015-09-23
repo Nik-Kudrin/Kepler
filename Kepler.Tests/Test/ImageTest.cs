@@ -4,10 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
+using Kepler.Common.CommunicationTypes;
 using Kepler.Common.Models;
-using KeplerImageProcessorService.ImgProcessor;
-using KeplerImageProcessorService.TaskManager;
+using Kepler.ImageProcessor.Service.ImgProcessor;
+using Kepler.ImageProcessor.Service.TaskManager;
 using NUnit.Framework;
+using RestSharp;
 
 namespace Kepler.Tests.Test
 {
@@ -88,7 +90,7 @@ namespace Kepler.Tests.Test
             var startDate = DateTime.Now;
             Console.WriteLine("Start Date: " + startDate);
 
-            imageTaskGenerator.AddImagesToProcess(images);
+            imageTaskGenerator.AddImagesForProcessing(images);
 
             Console.WriteLine("Max images count " + countImages);
 
@@ -104,6 +106,42 @@ namespace Kepler.Tests.Test
             var finishDate = DateTime.Now;
             Console.WriteLine("Finish Date: " + finishDate);
             Console.WriteLine("Test duration: " + (finishDate - startDate));
+        }
+
+
+        [Test]
+        public void GenerateJsonListOfImageComparison()
+        {
+            var message = new ImageComparisonMessage()
+            {
+                ImageComparisonList = new List<ImageComparisonInfo>()
+            };
+
+            var fileNames = Directory.GetFiles(@"e:\Temp\Screen\");
+            var images = new List<ImageComparisonInfo>();
+
+            for (int index = 0; index < 10; index += 2)
+            {
+                var imageInfo = new ImageComparisonInfo()
+                {
+                    ScreenShotId = index,
+                    FirstImagePath = fileNames[index],
+                    SecondImagePath = fileNames[index + 1],
+                    DiffImgPathToSave = outputFile + "_" + index + ".png"
+                };
+
+                images.Add(imageInfo);
+            }
+
+            message.ImageComparisonList.AddRange(images);
+
+            var client = new RestClient("http://localhost:8900/KeplerImageProcessorService/");
+            var request = new RestRequest("AddImagesForDiffGeneration", Method.POST);
+            
+            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(message);
+
+            client.Execute(request);
         }
     }
 }

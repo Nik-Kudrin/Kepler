@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel;
-using System.Configuration.Install;
 using System.ServiceProcess;
 
-namespace KeplerImageProcessorInstaller
+namespace Kepler.ImageProcessor.Installer
 {
     [RunInstaller(true)]
-    public partial class ProjectInstaller : Installer
+    public partial class ProjectInstaller : System.Configuration.Install.Installer
     {
         public ProjectInstaller()
         {
@@ -13,8 +12,8 @@ namespace KeplerImageProcessorInstaller
             serviceProcessInstaller = new ServiceProcessInstaller();
             serviceProcessInstaller.Account = ServiceAccount.LocalSystem;
             serviceInstaller = new ServiceInstaller();
-            serviceInstaller.ServiceName = "KeplerImageProcessorService";
-            serviceInstaller.DisplayName = "KeplerImageProcessorService";
+            serviceInstaller.ServiceName = "Kepler.ImageProcessor.Service";
+            serviceInstaller.DisplayName = "Kepler.ImageProcessor.Service";
             serviceInstaller.Description = "Kepler Image Processor API Service";
             serviceInstaller.StartType = ServiceStartMode.Automatic;
             Installers.Add(serviceProcessInstaller);

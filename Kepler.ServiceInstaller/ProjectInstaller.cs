@@ -2,7 +2,7 @@
 using System.Configuration.Install;
 using System.ServiceProcess;
 
-namespace KeplerServiceInstaller
+namespace Kepler.ServiceInstaller
 {
     [RunInstaller(true)]
     public partial class ProjectInstaller : System.Configuration.Install.Installer
@@ -12,9 +12,9 @@ namespace KeplerServiceInstaller
             // InitializeComponent();
             serviceProcessInstaller = new ServiceProcessInstaller();
             serviceProcessInstaller.Account = ServiceAccount.LocalSystem;
-            serviceInstaller = new ServiceInstaller();
-            serviceInstaller.ServiceName = "KeplerService";
-            serviceInstaller.DisplayName = "KeplerService";
+            serviceInstaller = new System.ServiceProcess.ServiceInstaller();
+            serviceInstaller.ServiceName = "Kepler.Service";
+            serviceInstaller.DisplayName = "Kepler.Service";
             serviceInstaller.Description = "Kepler API Service";
             serviceInstaller.StartType = ServiceStartMode.Automatic;
             Installers.Add(serviceProcessInstaller);

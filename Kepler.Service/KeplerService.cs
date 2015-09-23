@@ -37,7 +37,7 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                EventLog.WriteEntry("Kepler fail", ex.Message + " ||||||||| " + ex.StackTrace);
+                EventLog.WriteEntry("Kepler.Service", $"Build error message: {ex.Message}. StackTrace: {ex.StackTrace}");
             }
             return null;
         }

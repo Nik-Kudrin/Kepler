@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ServiceProcess;
-using KeplerServiceInstaller;
 
-namespace KeplerImageProcessorInstaller
+namespace Kepler.ImageProcessor.Installer
 {
     public static class Program
     {

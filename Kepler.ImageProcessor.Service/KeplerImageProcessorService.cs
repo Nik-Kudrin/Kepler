@@ -1,9 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
 using Kepler.Common.CommunicationTypes;
-using KeplerImageProcessorService.TaskManager;
-using Newtonsoft.Json;
+using Kepler.Common.Error;
+using Kepler.ImageProcessor.Service.TaskManager;
 
-namespace KeplerImageProcessorService
+namespace Kepler.ImageProcessor.Service
 {
     public class KeplerImageProcessorService : IKeplerImageProcessorService
     {
@@ -12,13 +12,18 @@ namespace KeplerImageProcessorService
             return TaskGenerator.GetMaxCountWorkers();
         }
 
-        public void AddImagesForDiffGeneration(string jsonImagesToProcess)
+        public string AddImagesForDiffGeneration(ImageComparisonMessage imagesToProcess)
         {
-            var transferMessage = JsonConvert.DeserializeObject<ImageComparisonMessage>(jsonImagesToProcess);
+            try
+            {
+                TaskGenerator.GetTaskGenerator.AddImagesForProcessing(imagesToProcess.ImageComparisonList);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorMessage() {Code = ErrorMessage.ErorCode.AddTaskToImageWorkerError, ExceptionMessage = ex.Message}.ToString();
+            }
 
-            EventLog.WriteEntry("image processor test", string.Join(", ", transferMessage.ImageComparisonList));
-
-            //   TaskGenerator.GetTaskGenerator.AddImagesToProcess(transferMessage.ImageComparisonList);
+            return "";
         }
     }
 }

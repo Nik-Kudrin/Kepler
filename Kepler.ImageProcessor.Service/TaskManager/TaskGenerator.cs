@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Timers;
 using Kepler.Common.Models;
 
-namespace KeplerImageProcessorService.TaskManager
+namespace Kepler.ImageProcessor.Service.TaskManager
 {
     public class TaskGenerator
     {
@@ -73,7 +72,7 @@ namespace KeplerImageProcessorService.TaskManager
         }
 
 
-        public void AddImagesToProcess(List<ImageComparisonInfo> images)
+        public void AddImagesForProcessing(List<ImageComparisonInfo> images)
         {
             var imagesPerWorker = images.Count()/MaxCountWorkers;
             if (imagesPerWorker == 0)

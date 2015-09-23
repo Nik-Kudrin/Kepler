@@ -1,4 +1,4 @@
-﻿namespace KeplerImageProcessorInstaller
+﻿namespace Kepler.ImageProcessor.Installer
 {
     partial class ProjectInstaller
     {
