@@ -80,6 +80,7 @@
     <Compile Include="Models\TestSuite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\EntityXmlSerializer.cs" />
+    <Compile Include="Util\RestClient.cs" />
     <Compile Include="Util\Utf8StringWriter.cs" />
   </ItemGroup>
   <ItemGroup>

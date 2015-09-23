@@ -39,8 +39,8 @@ namespace Kepler.ImageProcessor.Service.TaskManager
 
             _timer = new Timer();
             _timer.Interval = 10000; //every 10 sec
-            _timer.Elapsed += new ElapsedEventHandler(this.RunWorkers);
-            _timer.Elapsed += new ElapsedEventHandler(this.SendProcessedImagesToKeplerService);
+            _timer.Elapsed += RunWorkers;
+            _timer.Elapsed += SendProcessedImagesToKeplerService;
             _timer.Enabled = true;
         }
 
