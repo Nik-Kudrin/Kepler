@@ -1,13 +1,12 @@
-﻿@{
-}
-
-<div class="sidebar-collapse">
+﻿<div class="sidebar-collapse">
     <ul class="nav" id="main-menu">
         <li>
             <a href="#"><i class="fa fa-desktop "></i>Project A<span class="fa arrow"></span></a>
+            <i class="fa fa-cog" data-toggle="modal" data-target="#crud-modal"></i>
             <ul class="nav nav-second-level">
                 <li>
                     <a class="left-nav-link" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="master"><i class="fa fa-toggle-on"></i>Master</a>
+                    <i class="fa fa-cog" data-toggle="modal" data-target="#crud-modal"></i>
                 </li>
                 <li>
                     <a class="left-nav-link" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="develop"><i class="fa fa-bell "></i>Develop</a>
@@ -27,7 +26,6 @@
         </li>
     </ul>
 </div>
-
 
 <script type="text/javascript">
     $(document).ready(function () {

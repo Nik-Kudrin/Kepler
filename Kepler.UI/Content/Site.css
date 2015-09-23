@@ -44,6 +44,22 @@ h3 {
 }
 /*GLOBAL END*/
 
+/*NAVBAR LEFT START*/
+.navbar-side .fa-cog {
+    font-size: 18px;
+    cursor: pointer;
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    color: #FFF;
+}
+
+.navbar-side .fa.arrow {
+    line-height: 26px;
+    width: 9px;
+}
+/*NAVBAR LEFT END*/
+
 /*BUILD LIST PAGE START*/
 .panel-default .panel-heading {
     padding-bottom: 0px;
@@ -106,7 +122,6 @@ h3 {
 .test_case_group .panel-default {
     padding: 10px 10px 10px 10px;
     background: none;
-    
 }
 
 .assembly_group .panel-default {
@@ -140,14 +155,14 @@ h3 {
     margin-bottom: 20px;
 }
 
-.build-panel-one-page-header span {
-    background: #DDD;
-    padding: 5px;
-    border-radius: 4px;
-    font-size: 11px;
-    margin-bottom: 5px;
-    display: inline;
-}
+    .build-panel-one-page-header span {
+        background: #DDD;
+        padding: 5px;
+        border-radius: 4px;
+        font-size: 11px;
+        margin-bottom: 5px;
+        display: inline;
+    }
 
 .build-panel-screen-base, .build-panel-screen-dif, .build-panel-screen-curr {
     height: 96px;
@@ -156,11 +171,11 @@ h3 {
     text-align: center;
 }
 
-.build-panel-screen-base img, .build-panel-screen-dif img, .build-panel-screen-curr img {
-    width: 118px;
-    height: 96px;
-    display: inline;
-}
+    .build-panel-screen-base img, .build-panel-screen-dif img, .build-panel-screen-curr img {
+        width: 118px;
+        height: 96px;
+        display: inline;
+    }
 
 .build-panel-error-log {
     padding-top: 20px;
