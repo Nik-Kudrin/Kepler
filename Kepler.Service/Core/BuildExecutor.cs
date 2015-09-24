@@ -59,7 +59,11 @@ namespace Kepler.Service.Core
             }
         }
 
-
+        /// <summary>
+        /// Iterate through all newly imported screenshots and create for them image comparison info object (for future diff processing)
+        /// </summary>
+        /// <param name="newScreenShots"></param>
+        /// <returns>List of image comparison info, that will be used in diff processing service</returns>
         public IEnumerable<ImageComparisonInfo> ConvertScreenShotsToImageComparison(IEnumerable<ScreenShot> newScreenShots)
         {
             // select all screenshot for current baseline ID in status = Success
@@ -107,11 +111,12 @@ namespace Kepler.Service.Core
         private IEnumerable<ImageComparisonInfo> GenerateImageComparison(List<ScreenShot> newScreenShotsForProcessing,
             List<ScreenShot> oldPassedBaselineScreenShots)
         {
-            var imagesForComparison = new List<ImageComparisonInfo>();
+            var resultImagesForComparison = new List<ImageComparisonInfo>();
 
             foreach (var newScreenShot in newScreenShotsForProcessing)
             {
                 var oldScreenShot = oldPassedBaselineScreenShots.Find(oldScreen => oldScreen.Name == newScreenShot.Name);
+
                 if (oldScreenShot == null)
                 {
                     newScreenShot.Status = ObjectStatus.Passed;
@@ -127,13 +132,13 @@ namespace Kepler.Service.Core
                         ScreenShotId = newScreenShot.Id,
                     };
 
-                    imagesForComparison.Add(imageComparison);
+                    resultImagesForComparison.Add(imageComparison);
                 }
             }
 
             ScreenShotRepository.Instance.FlushChanges();
 
-            return imagesForComparison;
+            return resultImagesForComparison;
         }
 
 
