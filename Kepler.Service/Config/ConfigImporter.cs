@@ -50,7 +50,7 @@ namespace Kepler.Service
             var assemblies = BindTestAssembliesWithBuilds(importedConfig, mappedProjects);
             assemblies = BindTestSuitesWithAssemblies(importedConfig, builds, assemblies);
             BindTestCasesWithSuites(importedConfig, assemblies);
-            BindScreenshotsWithTestCases(importedConfig, assemblies);
+            BindScreenshotsWithTestCases(importedConfig, mappedProjects, assemblies);
 
             return "";
         }
@@ -248,11 +248,10 @@ namespace Kepler.Service
             {
                 foreach (var testConfigAssembly in projectConfig.TestAssemblies)
                 {
+                    var currentAssembly = assemblies.Find(item => item.Name == testConfigAssembly.Name);
                     foreach (var testSuiteConfig in testConfigAssembly.TestSuites)
                     {
-                        var currentAssembly = assemblies.Find(item => item.Name == testConfigAssembly.Name);
                         var currentSuite = currentAssembly.TestSuites.ToList().Find(item => item.Value.Name == testSuiteConfig.Name);
-
                         var mappedCases = mapper.GetCases(testSuiteConfig.TestCases).ToList();
 
                         for (int index = 0; index < mappedCases.Count; index++)
@@ -276,8 +275,9 @@ namespace Kepler.Service
         /// Create new screenshots. Bind each screenshot with corresponding build, suite. Save test case in DB
         /// </summary>
         /// <param name="importedConfig"></param>
+        /// <param name="mappedProjects"></param>
         /// <param name="assemblies"></param>
-        private void BindScreenshotsWithTestCases(TestImportConfig importedConfig, List<TestAssembly> assemblies)
+        private void BindScreenshotsWithTestCases(TestImportConfig importedConfig, List<Project> mappedProjects, List<TestAssembly> assemblies)
         {
             // map screenshots
             // bind screenshots with cases
@@ -285,16 +285,17 @@ namespace Kepler.Service
 
             foreach (var projectConfig in importedConfig.Projects)
             {
+                var currentProject = mappedProjects.Find(item => item.Name == projectConfig.Name);
+
                 foreach (var testConfigAssembly in projectConfig.TestAssemblies)
                 {
+                    var currentAssembly = assemblies.Find(item => item.Name == testConfigAssembly.Name);
                     foreach (var testSuiteConfig in testConfigAssembly.TestSuites)
                     {
+                        var currentSuite = currentAssembly.TestSuites.ToList().Find(item => item.Value.Name == testSuiteConfig.Name);
                         foreach (var testCaseConfig in testSuiteConfig.TestCases)
                         {
-                            var currentAssembly = assemblies.Find(item => item.Name == testConfigAssembly.Name);
-                            var currentSuite = currentAssembly.TestSuites.ToList().Find(item => item.Value.Name == testSuiteConfig.Name);
                             var currentCase = currentSuite.Value.TestCases.ToList().Find(item => item.Value.Name == testCaseConfig.Name);
-
                             var screenShots = testCaseConfig.ScreenShots;
 
                             for (int index = 0; index < screenShots.Count; index++)
@@ -302,6 +303,7 @@ namespace Kepler.Service
                                 var screenShot = screenShots[index];
                                 screenShot.BuildId = currentCase.Value.BuildId;
                                 screenShot.ParentObjId = currentCase.Key;
+                                screenShot.BaseLineId = currentProject.BaseLine.Id;
                                 screenShot.Status = ObjectStatus.InQueue;
 
                                 ScreenShotRepository.Instance.Insert(screenShot);

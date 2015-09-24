@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Kepler.Common.Models;
 
-namespace Kepler.Common.CommunicationTypes
+namespace Kepler.Common.CommunicationContracts
 {
-    public class ImageComparisonMessage
+    public class ImageComparisonContract
     {
         public List<ImageComparisonInfo> ImageComparisonList { get; set; }
     }

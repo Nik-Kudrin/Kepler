@@ -1,6 +1,6 @@
 ﻿using System.ServiceModel;
 using System.ServiceModel.Web;
-using Kepler.Common.CommunicationTypes;
+using Kepler.Common.CommunicationContracts;
 
 namespace Kepler.ImageProcessor.Service
 {
@@ -19,6 +19,6 @@ namespace Kepler.ImageProcessor.Service
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "/AddImagesForDiffGeneration")]
-        string AddImagesForDiffGeneration(ImageComparisonMessage imagesToProcess);
+        string AddImagesForDiffGeneration(ImageComparisonContract imagesToProcess);
     }
 }

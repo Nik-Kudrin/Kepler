@@ -1,5 +1,5 @@
 ﻿using System;
-using Kepler.Common.CommunicationTypes;
+using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Error;
 using Kepler.ImageProcessor.Service.TaskManager;
 
@@ -12,7 +12,7 @@ namespace Kepler.ImageProcessor.Service
             return TaskGenerator.GetMaxCountWorkers();
         }
 
-        public string AddImagesForDiffGeneration(ImageComparisonMessage imagesToProcess)
+        public string AddImagesForDiffGeneration(ImageComparisonContract imagesToProcess)
         {
             try
             {

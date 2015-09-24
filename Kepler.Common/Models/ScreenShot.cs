@@ -10,6 +10,9 @@ namespace Kepler.Core
         [StringLength(500)]
         public string ImagePath { get; set; }
 
+        [DataMember]
+        public long BaseLineId { get; set; }
+
         public ScreenShot()
         {
         }

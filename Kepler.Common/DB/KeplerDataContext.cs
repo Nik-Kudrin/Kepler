@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using Kepler.Common.Models;
 using Kepler.Core;
 
@@ -16,6 +15,7 @@ namespace Kepler.Models
         public DbSet<TestAssembly> TestAssemblies { get; set; }
 
         public DbSet<ImageWorker> ImageWorkers { get; set; }
+        public DbSet<KeplerSystemConfig> KeplerSystemConfig { get; set; }
 
         public KeplerDataContext() : base("name=Kepler")
         {

@@ -19,6 +19,7 @@ namespace Kepler.Service
         private ScreenShotRepository screenShotRepository = ScreenShotRepository.Instance;
         private ImageWorkerRepository workerRepository = ImageWorkerRepository.Instance;
 
+
         private long ConvertStringToLong(string number)
         {
             return Convert.ToInt64(number);
@@ -110,5 +111,29 @@ namespace Kepler.Service
             if (workerRepository.Find(imageWorkerServiceUrl).Count() == 0)
                 workerRepository.Insert(new ImageWorker() {WorkerServiceUrl = imageWorkerServiceUrl});
         }
+
+        #region Kepler Configs
+
+        public string GetDiffImageSavingPath()
+        {
+            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImgPathToSave");
+            return diffImgPathToSaveProperty == null ? "" : diffImgPathToSaveProperty.Value;
+        }
+
+        public void SetDiffImageSavingPath(string diffImageSavingPath)
+        {
+            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImgPathToSave");
+
+            if (diffImgPathToSaveProperty == null)
+                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("DiffImgPathToSave", diffImageSavingPath));
+            else
+            {
+                diffImgPathToSaveProperty.Value = diffImageSavingPath;
+                KeplerSystemConfigRepository.Instance.Update(diffImgPathToSaveProperty);
+                KeplerSystemConfigRepository.Instance.FlushChanges();
+            }
+        }
+
+        #endregion
     }
 }

@@ -79,7 +79,21 @@ namespace Kepler.Service
 
 
         [OperationContract]
-        [WebInvoke(UriTemplate = "RegisterImageWorker")]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "RegisterImageWorker")]
         void RegisterImageWorker(string imageWorkerServiceUrl);
+
+        #region Project
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetDiffImageSavingPath")]
+        string GetDiffImageSavingPath();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "SetDiffImageSavingPath")]
+        void SetDiffImageSavingPath(string diffImageSavingPath);
+
+        #endregion
     }
 }

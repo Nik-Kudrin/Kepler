@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
-using Kepler.Common.CommunicationTypes;
+using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Models;
 using Kepler.ImageProcessor.Service.ImgProcessor;
 using Kepler.ImageProcessor.Service.TaskManager;
@@ -112,7 +112,7 @@ namespace Kepler.Tests.Test
         [Test]
         public void GenerateJsonListOfImageComparison()
         {
-            var message = new ImageComparisonMessage()
+            var message = new ImageComparisonContract()
             {
                 ImageComparisonList = new List<ImageComparisonInfo>()
             };
