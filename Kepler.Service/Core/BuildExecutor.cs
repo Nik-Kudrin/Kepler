@@ -39,7 +39,7 @@ namespace Kepler.Service.Core
 
         private void SendComparisonInfoToWorkers(object sender, ElapsedEventArgs eventArgs)
         {
-            var workers = ImageWorkerRepository.Instance.FindAll()
+            /*var workers = ImageWorkerRepository.Instance.FindAll()
                 .Where(worker => worker.Status == ImageWorker.WorkerStatus.Available);
 
             var screenShots = GetAllInQueueScreenShots();
@@ -56,8 +56,9 @@ namespace Kepler.Service.Core
                 request.AddJsonBody(message);
 
                 client.Execute(request);
-            }
+            }*/
         }
+
 
         /// <summary>
         /// Iterate through all newly imported screenshots and create for them image comparison info object (for future diff processing)
@@ -66,18 +67,12 @@ namespace Kepler.Service.Core
         /// <returns>List of image comparison info, that will be used in diff processing service</returns>
         public IEnumerable<ImageComparisonInfo> ConvertScreenShotsToImageComparison(IEnumerable<ScreenShot> newScreenShots)
         {
-            // select all screenshot for current baseline ID in status = Success
-            // find the screenshot with the same name and the same baseline
-
-            // if no one screenshot for baseline in status = Success, then assign current screenshot status = Success
-            //(and do not send them for image processing)
-
-
             var imagesComparisonContainer = new List<ImageComparisonInfo>();
 
             // group all screenshots by baseline
             var groupedNewScreenShots = newScreenShots.GroupBy(item => item.BaseLineId);
 
+            // Iterate through each group of baseline
             foreach (var newBaselineScreenShot in groupedNewScreenShots)
             {
                 var oldPassedBaselineScreenShots = ScreenShotRepository.Instance

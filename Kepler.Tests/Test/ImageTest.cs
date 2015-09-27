@@ -6,8 +6,10 @@ using System.Threading;
 using FluentAssertions;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Models;
+using Kepler.Core;
 using Kepler.ImageProcessor.Service.ImgProcessor;
 using Kepler.ImageProcessor.Service.TaskManager;
+using NLog.Web.Targets.Wrappers;
 using NUnit.Framework;
 using RestSharp;
 
@@ -137,11 +139,55 @@ namespace Kepler.Tests.Test
 
             var client = new RestClient("http://localhost:8900/KeplerImageProcessorService/");
             var request = new RestRequest("AddImagesForDiffGeneration", Method.POST);
-            
+
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(message);
 
             client.Execute(request);
+        }
+
+        [Test]
+        public void CorrectScreenShotSelectionTest()
+        {
+            var newScreenShots = new List<ScreenShot>();
+            newScreenShots.AddRange(
+                new[]
+                {
+                    new ScreenShot()
+                    {
+                        Name = "1",
+                        BaseLineId = 1
+                    },
+                    new ScreenShot()
+                    {
+                        Name = "2",
+                        BaseLineId = 3
+                    },
+                    new ScreenShot()
+                    {
+                        Name = "3",
+                        BaseLineId = 3
+                    },
+                    new ScreenShot()
+                    {
+                        Name = "4",
+                        BaseLineId = 5
+                    },
+                });
+
+            var imagesComparisonContainer = new List<ImageComparisonInfo>();
+
+            // group all screenshots by baseline
+            var groupedNewScreenShots = newScreenShots.GroupBy(item => item.BaseLineId);
+
+            foreach (var newBaselineScreenShot in groupedNewScreenShots)
+            {
+                Console.WriteLine(">>>>>> Group: " + newBaselineScreenShot.Key);
+
+                var newScreenShotsForProcessing = newBaselineScreenShot.AsEnumerable().ToList();
+                newScreenShotsForProcessing.ForEach(
+                    item => Console.WriteLine(string.Format("screen: name={0}; baseline={1}", item.Name, item.BaseLineId)));
+            }
         }
     }
 }
