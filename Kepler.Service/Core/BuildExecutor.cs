@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
+using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Core;
 using Kepler.Common.Models;
 using Kepler.Core;
@@ -65,7 +66,8 @@ namespace Kepler.Service.Core
         /// </summary>
         /// <param name="newScreenShots"></param>
         /// <returns>List of image comparison info, that will be used in diff processing service</returns>
-        public IEnumerable<ImageComparisonInfo> ConvertScreenShotsToImageComparison(IEnumerable<ScreenShot> newScreenShots)
+        public IEnumerable<ImageComparisonInfo> ConvertScreenShotsToImageComparison(
+            IEnumerable<ScreenShot> newScreenShots)
         {
             var imagesComparisonContainer = new List<ImageComparisonInfo>();
 
@@ -75,9 +77,8 @@ namespace Kepler.Service.Core
             // Iterate through each group of baseline
             foreach (var newBaselineScreenShot in groupedNewScreenShots)
             {
-                var oldPassedBaselineScreenShots = ScreenShotRepository.Instance
-                    .Find(item => item.BaseLineId == newBaselineScreenShot.Key &&
-                                  item.Status == ObjectStatus.Passed);
+                var oldPassedBaselineScreenShots =
+                    ScreenShotRepository.Instance.GetBaselineScreenShots(newBaselineScreenShot.Key);
 
                 var newScreenShotsForProcessing = newBaselineScreenShot.AsEnumerable().ToList();
 
@@ -90,7 +91,8 @@ namespace Kepler.Service.Core
                 }
                 else
                 {
-                    imagesComparisonContainer.AddRange(GenerateImageComparison(newScreenShotsForProcessing, oldPassedBaselineScreenShots.ToList()));
+                    imagesComparisonContainer.AddRange(GenerateImageComparison(newScreenShotsForProcessing,
+                        oldPassedBaselineScreenShots.ToList()));
                 }
             }
 
@@ -134,23 +136,6 @@ namespace Kepler.Service.Core
             ScreenShotRepository.Instance.FlushChanges();
 
             return resultImagesForComparison;
-        }
-
-
-        public IEnumerable<Build> GetInQueueBuilds()
-        {
-            return BuildRepository.Instance.Find(build => build.Status == ObjectStatus.InQueue);
-        }
-
-        public IEnumerable<ScreenShot> GetInQueueScreenShotsForBuild(long buildId)
-        {
-            return ScreenShotRepository.Instance.Find(screenShot => screenShot.BuildId == buildId &&
-                                                                    screenShot.Status == ObjectStatus.InQueue);
-        }
-
-        public IEnumerable<ScreenShot> GetAllInQueueScreenShots()
-        {
-            return ScreenShotRepository.Instance.Find(screenShot => screenShot.Status == ObjectStatus.InQueue);
         }
     }
 }

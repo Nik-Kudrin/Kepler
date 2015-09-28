@@ -51,16 +51,6 @@ namespace Kepler.Tests.Test
             repo.Insert(project);
         }
 
-        [Test]
-        public void CreateProjectBaseLine()
-        {
-            var repo = ProjectRepository.Instance;
-
-            var project = new Project() {Name = "Project name"};
-            project.BaseLine = new BaseLine();
-
-            repo.Insert(project);
-        }
 
         [Test]
         public void CreateBuild()

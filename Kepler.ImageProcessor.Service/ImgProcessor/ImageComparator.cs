@@ -1,4 +1,5 @@
 ﻿using ImageMagick;
+using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Models;
 
 namespace Kepler.ImageProcessor.Service.ImgProcessor

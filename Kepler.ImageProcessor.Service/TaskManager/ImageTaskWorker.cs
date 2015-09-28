@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Models;
 using Kepler.ImageProcessor.Service.ImgProcessor;
 

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Kepler.Common.Error;
+using Kepler.Common.Models;
 using Kepler.Core;
 using Kepler.Core.Common;
 using Kepler.Models;
@@ -28,7 +30,9 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                return new ErrorMessage() {Code = ErrorMessage.ErorCode.ParsingFileError, ExceptionMessage = ex.Message}.ToString();
+                return
+                    new ErrorMessage() {Code = ErrorMessage.ErorCode.ParsingFileError, ExceptionMessage = ex.Message}
+                        .ToString();
             }
 
             var validationErrorMessage = ValidateImportedConfigObjects(importedConfig);
@@ -46,7 +50,10 @@ namespace Kepler.Service
                 return ex.Message;
             }
 
-            var builds = BindImportedProjectWithBuilds(mappedProjects);
+
+            var branches = BindBranchesWithProjects(importedConfig, mappedProjects);
+
+            var builds = BindImportedBranchesWithBuilds(branches);
             var assemblies = BindTestAssembliesWithBuilds(importedConfig, mappedProjects);
             assemblies = BindTestSuitesWithAssemblies(importedConfig, builds, assemblies);
             BindTestCasesWithSuites(importedConfig, assemblies);
@@ -128,7 +135,8 @@ namespace Kepler.Service
                     throw new Exception(new ErrorMessage()
                     {
                         Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
-                        ExceptionMessage = $"Project '{projectName}' wasn't found in database (or there are more than 1 of them)"
+                        ExceptionMessage =
+                            $"Project '{projectName}' wasn't found in database (or there are more than 1 of them)"
                     }.ToString());
 
                 mappedProjects[index] = projectsFromDb.FirstOrDefault();
@@ -137,21 +145,88 @@ namespace Kepler.Service
             return mappedProjects;
         }
 
+        private List<Branch> BindBranchesWithProjects(TestImportConfig importedConfig, List<Project> mappedProjects)
+        {
+            var branches = new List<Branch>();
+
+            foreach (var mappedProject in mappedProjects)
+            {
+                if (!mappedProject.MainBranchId.HasValue)
+                    throw new Exception(new ErrorMessage()
+                    {
+                        Code = ErrorMessage.ErorCode.ProjectDontHaveMainBranch,
+                        ExceptionMessage =
+                            $"Project '{mappedProject.Name}' don't have main branch. Please, manually specify for project which branch should be considered as main."
+                    }.ToString());
+
+
+                var storedBranches = BranchRepository.Instance.Find(item => item.ProjectId == mappedProject.Id);
+                var importedBranches = mapper.GetBranches(importedConfig.Projects
+                    .First(project => project.Name == mappedProject.Name).Branches).ToList();
+
+                var mainBranch = BranchRepository.Instance.Get(mappedProject.MainBranchId.Value);
+                var mainBranchBaselineScreenShots =
+                    ScreenShotRepository.Instance.GetBaselineScreenShots(mainBranch.BaseLine.Id);
+
+                for (int index = 0; index < importedBranches.Count; index++)
+                {
+                    var importedBranch = importedBranches[index];
+                    var storedBranchEqualWithImporedBranch =
+                        storedBranches.First(branch => branch.Name == importedBranch.Name);
+
+                    if (storedBranchEqualWithImporedBranch != null)
+                    {
+                        importedBranch = storedBranchEqualWithImporedBranch;
+                    }
+                    else
+                    {
+                        importedBranch.ProjectId = mappedProject.Id;
+                        BranchRepository.Instance.Insert(importedBranch);
+
+                        var baseline = new BaseLine() {BranchId = importedBranch.Id};
+                        BaseLineRepository.Instance.Insert(baseline);
+
+                        importedBranch.BaseLine = baseline;
+                        BranchRepository.Instance.Update(importedBranch);
+                        BranchRepository.Instance.FlushChanges();
+
+                        CopyScreenShotsFromMainBranchBaseline(baseline, mainBranchBaselineScreenShots);
+                    }
+                }
+            }
+
+            return branches;
+        }
+
+
+        private void CopyScreenShotsFromMainBranchBaseline(BaseLine newBaseLine,
+            IEnumerable<ScreenShot> mainBranchBaselineScreenShots)
+        {
+            foreach (var mainBaselineScreenShot in mainBranchBaselineScreenShots)
+            {
+                var newBaselineScreenShot = new ScreenShot()
+                {
+                    BaseLineId = newBaseLine.Id,
+                    ImagePath = mainBaselineScreenShot.ImagePath,
+                    Name = mainBaselineScreenShot.Name,
+                };
+
+                ScreenShotRepository.Instance.Insert(newBaselineScreenShot);
+            }
+        }
+
         /// <summary>
         /// Create new build for each project and save them in DB
         /// </summary>
         /// <param name="mappedProjects"></param>
         /// <returns>List new bounded builds</returns>
-        private List<Build> BindImportedProjectWithBuilds(List<Project> mappedProjects)
+        private List<Build> BindImportedBranchesWithBuilds(List<Project> mappedProjects)
         {
             var builds = new List<Build>();
 
-            // create new build for each project. save in db
-
-            //  for (int index = 0; index < mappedProjects.Count; index ++)
             foreach (var mappedProject in mappedProjects)
             {
-                var build = new Build() {Status = ObjectStatus.InQueue, ProjectId = mappedProject.Id};
+                var build = new Build() {Status = ObjectStatus.InQueue, BranchId = mappedProject.Id};
 
                 BuildRepository.Instance.Insert(build);
                 builds.Add(build);
@@ -172,7 +247,8 @@ namespace Kepler.Service
         /// <param name="importedConfig"></param>
         /// <param name="mappedProjects"></param>
         /// <returns>List of new bounded assemblies</returns>
-        private List<TestAssembly> BindTestAssembliesWithBuilds(TestImportConfig importedConfig, IEnumerable<Project> mappedProjects)
+        private List<TestAssembly> BindTestAssembliesWithBuilds(TestImportConfig importedConfig,
+            IEnumerable<Project> mappedProjects)
         {
             var assemblies = new List<TestAssembly>();
 
@@ -204,7 +280,8 @@ namespace Kepler.Service
         /// <param name="builds"></param>
         /// <param name="assemblies"></param>
         /// <returns>Return updated test assemblies (bounded with suites)</returns>
-        private List<TestAssembly> BindTestSuitesWithAssemblies(TestImportConfig importedConfig, List<Build> builds, List<TestAssembly> assemblies)
+        private List<TestAssembly> BindTestSuitesWithAssemblies(TestImportConfig importedConfig, List<Build> builds,
+            List<TestAssembly> assemblies)
         {
             foreach (var projectConfig in importedConfig.Projects)
             {
@@ -213,7 +290,7 @@ namespace Kepler.Service
                     var mappedSuites = mapper.GetSuites(testConfigAssembly.TestSuites).ToList();
                     var currentAssembly = assemblies.Find(item => item.Name == testConfigAssembly.Name);
 
-                    for (int index = 0; index < mappedSuites.Count(); index ++)
+                    for (int index = 0; index < mappedSuites.Count(); index++)
                     {
                         var suite = mappedSuites[index];
 
@@ -251,7 +328,8 @@ namespace Kepler.Service
                     var currentAssembly = assemblies.Find(item => item.Name == testConfigAssembly.Name);
                     foreach (var testSuiteConfig in testConfigAssembly.TestSuites)
                     {
-                        var currentSuite = currentAssembly.TestSuites.ToList().Find(item => item.Value.Name == testSuiteConfig.Name);
+                        var currentSuite =
+                            currentAssembly.TestSuites.ToList().Find(item => item.Value.Name == testSuiteConfig.Name);
                         var mappedCases = mapper.GetCases(testSuiteConfig.TestCases).ToList();
 
                         for (int index = 0; index < mappedCases.Count; index++)
@@ -277,7 +355,8 @@ namespace Kepler.Service
         /// <param name="importedConfig"></param>
         /// <param name="mappedProjects"></param>
         /// <param name="assemblies"></param>
-        private void BindScreenshotsWithTestCases(TestImportConfig importedConfig, List<Project> mappedProjects, List<TestAssembly> assemblies)
+        private void BindScreenshotsWithTestCases(TestImportConfig importedConfig, List<Project> mappedProjects,
+            List<TestAssembly> assemblies)
         {
             // map screenshots
             // bind screenshots with cases
@@ -292,10 +371,13 @@ namespace Kepler.Service
                     var currentAssembly = assemblies.Find(item => item.Name == testConfigAssembly.Name);
                     foreach (var testSuiteConfig in testConfigAssembly.TestSuites)
                     {
-                        var currentSuite = currentAssembly.TestSuites.ToList().Find(item => item.Value.Name == testSuiteConfig.Name);
+                        var currentSuite =
+                            currentAssembly.TestSuites.ToList().Find(item => item.Value.Name == testSuiteConfig.Name);
                         foreach (var testCaseConfig in testSuiteConfig.TestCases)
                         {
-                            var currentCase = currentSuite.Value.TestCases.ToList().Find(item => item.Value.Name == testCaseConfig.Name);
+                            var currentCase =
+                                currentSuite.Value.TestCases.ToList()
+                                    .Find(item => item.Value.Name == testCaseConfig.Name);
                             var screenShots = testCaseConfig.ScreenShots;
 
                             for (int index = 0; index < screenShots.Count; index++)

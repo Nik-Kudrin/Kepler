@@ -1,4 +1,6 @@
-﻿using Kepler.Models;
+﻿using System.Collections.Generic;
+using Kepler.Core.Common;
+using Kepler.Models;
 
 namespace Kepler.Core
 {
@@ -23,6 +25,11 @@ namespace Kepler.Core
 
         private BuildRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.Builds)
         {
+        }
+
+        public IEnumerable<Build> GetInQueueBuilds()
+        {
+            return Find(build => build.Status == ObjectStatus.InQueue);
         }
     }
 }

@@ -8,12 +8,14 @@ namespace Kepler.Common.Error
         {
             ParsingFileError,
             ProjectDontHaveAName,
+            BranchDontHaveAName,
             AssemblyDontHaveAName,
             SuiteDontHaveAName,
             CaseDontHaveAName,
             ScreenShotHasEmptyFilePath,
             ObjectNotFoundInDb,
             EmptyListOfObjects,
+            ProjectDontHaveMainBranch,
 
             AddTaskToImageWorkerError
         }
@@ -32,6 +34,12 @@ namespace Kepler.Common.Error
                     break;
                 case ErorCode.ProjectDontHaveAName:
                     codeMessage = "Project don't have a name";
+                    break;
+                case ErorCode.BranchDontHaveAName:
+                    codeMessage = "Branch don't have a name";
+                    break;
+                case ErorCode.ProjectDontHaveMainBranch:
+                    codeMessage = "Project don't have main branch";
                     break;
                 case ErorCode.AssemblyDontHaveAName:
                     codeMessage = "TestAssembly don't have a name";

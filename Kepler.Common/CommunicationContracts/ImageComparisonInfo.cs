@@ -1,4 +1,4 @@
-﻿namespace Kepler.Common.Models
+﻿namespace Kepler.Common.CommunicationContracts
 {
     public class ImageComparisonInfo
     {

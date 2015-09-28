@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Kepler.Models;
 
-namespace Kepler.Common.Models
+namespace Kepler.Common.CommunicationContracts
 {
     public class TestImportConfig
     {

@@ -146,13 +146,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FixtureBuilder\BaseBuilder.cs" />
-    <Compile Include="FixtureBuilder\IFixtureBuilder.cs" />
-    <Compile Include="FixtureBuilder\ProjectBuilder.cs" />
-    <Compile Include="FixtureBuilder\ScreenShotBuilder.cs" />
-    <Compile Include="FixtureBuilder\TestAssemblyBuilder.cs" />
-    <Compile Include="FixtureBuilder\TestCaseBuilder.cs" />
-    <Compile Include="FixtureBuilder\TestSuiteBuilder.cs" />
     <Compile Include="Test\ConfigImportTest.cs" />
     <Compile Include="Test\ImageTest.cs" />
     <Compile Include="Test\InitTest.cs" />
