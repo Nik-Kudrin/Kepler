@@ -45,12 +45,15 @@ h3 {
 /*GLOBAL END*/
 
 /*NAVBAR LEFT START*/
-.navbar-side .fa-cog {
-    font-size: 18px;
-    cursor: pointer;
+.main-menu-conf {
     position: absolute;
     right: 30px;
     top: 20px;
+}
+
+.navbar-side .fa-cog {
+    font-size: 18px;
+    cursor: pointer;
     color: #FFF;
 }
 

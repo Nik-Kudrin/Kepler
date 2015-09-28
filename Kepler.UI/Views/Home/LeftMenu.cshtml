@@ -2,11 +2,25 @@
     <ul class="nav" id="main-menu">
         <li>
             <a href="#"><i class="fa fa-desktop "></i>Project A<span class="fa arrow"></span></a>
-            <i class="fa fa-cog" data-toggle="modal" data-target="#crud-modal"></i>
+            <div class="main-menu-conf">
+                <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-target="#crud-modal">Create</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#crud-modal">Edit</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#crud-modal">Delete</a></li>
+                </ul>
+            </div>
             <ul class="nav nav-second-level">
                 <li>
                     <a class="left-nav-link" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="master"><i class="fa fa-toggle-on"></i>Master</a>
-                    <i class="fa fa-cog" data-toggle="modal" data-target="#crud-modal"></i>
+                    <div class="main-menu-conf">
+                        <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" data-toggle="modal" data-target="#crud-modal">Create</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#crud-modal">Edit</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#crud-modal">Delete</a></li>
+                        </ul>
+                    </div>
                 </li>
                 <li>
                     <a class="left-nav-link" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="develop"><i class="fa fa-bell "></i>Develop</a>
@@ -48,6 +62,12 @@
                 }
             });
         });
+
+        $('.main-menu-conf a').click(function () {
+            $('.main-menu-conf a').removeClass("current");
+            $(this).addClass("current");
+        });
+
     });
 
 </script>
