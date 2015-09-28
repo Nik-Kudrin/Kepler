@@ -192,6 +192,8 @@ namespace Kepler.Service
 
                         CopyScreenShotsFromMainBranchBaseline(baseline, mainBranchBaselineScreenShots);
                     }
+
+                    branches.Add(importedBranch);
                 }
             }
 
