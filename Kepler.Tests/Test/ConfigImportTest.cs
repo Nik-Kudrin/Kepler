@@ -61,7 +61,6 @@ namespace Kepler.Tests.Test
         public void ImportSimpleConfig()
         {
 //            new CommonTest().CreateProject();
-
             var config = File.ReadAllText(Path.Combine(BaseResourcePath, "simple_test_config.json"));
 
             var configImporter = new ConfigImporter();

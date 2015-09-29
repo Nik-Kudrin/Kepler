@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using Kepler.Common.Models;
 using Kepler.Core;
+using Kepler.Core.Common;
 using Kepler.Models;
 
 namespace Kepler.Service.Config
@@ -19,6 +20,7 @@ namespace Kepler.Service.Config
             Mapper.CreateMap<TestImportConfig.ProjectConfig, Project>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Branches, opt => opt.Ignore())
+                .ForMember(dest => dest.MainBranchId, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Status, opt => opt.Ignore());
 
@@ -41,7 +43,7 @@ namespace Kepler.Service.Config
 
             Mapper.CreateMap<TestImportConfig.BranchConfig, Branch>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.BaseLine, opt => opt.Ignore())
+                .ForMember(dest => dest.BaseLineId, opt => opt.Ignore())
                 .ForMember(dest => dest.Builds, opt => opt.Ignore())
                 .ForMember(dest => dest.IsMainBranch, opt => opt.Ignore())
                 .ForMember(dest => dest.LatestBuildId, opt => opt.Ignore())

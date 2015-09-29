@@ -7,7 +7,7 @@ namespace Kepler.Common.Models
     public class Branch : InfoObject
     {
         [DataMember]
-        public BaseLine BaseLine { get; set; }
+        public long? BaseLineId { get; set; }
 
         [DataMember]
         public long? LatestBuildId { get; set; }

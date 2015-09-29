@@ -1,4 +1,5 @@
-﻿using Kepler.Core;
+﻿using Kepler.Common.Models;
+using Kepler.Core;
 using Kepler.Core.Common;
 using Kepler.Models;
 using NUnit.Framework;
@@ -47,8 +48,22 @@ namespace Kepler.Tests.Test
         {
             var repo = ProjectRepository.Instance;
 
-            var project = new Project() {Name = "Some Project Name"};
+            var baseline = new BaseLine();
+            BaseLineRepository.Instance.Insert(baseline);
+
+            var branch = new Branch() {BaseLineId = baseline.Id, IsMainBranch = true, Name = "Master"};
+            BranchRepository.Instance.Insert(branch);
+
+            var project = new Project() {Name = "Some Project Name", MainBranchId = branch.Id};
             repo.Insert(project);
+
+            baseline.BranchId = branch.Id;
+            BaseLineRepository.Instance.Update(baseline);
+            BaseLineRepository.Instance.FlushChanges();
+
+            branch.ProjectId = project.Id;
+            BranchRepository.Instance.Update(branch);
+            BranchRepository.Instance.FlushChanges();
         }
 
 
