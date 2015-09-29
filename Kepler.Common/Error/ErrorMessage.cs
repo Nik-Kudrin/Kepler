@@ -7,15 +7,20 @@ namespace Kepler.Common.Error
         public enum ErorCode
         {
             ParsingFileError,
+
             ProjectDontHaveAName,
+            ProjectDontHaveMainBranch,
+
             BranchDontHaveAName,
             AssemblyDontHaveAName,
             SuiteDontHaveAName,
             CaseDontHaveAName,
             ScreenShotHasEmptyFilePath,
-            ObjectNotFoundInDb,
             EmptyListOfObjects,
-            ProjectDontHaveMainBranch,
+            
+            UndefinedError,
+            ObjectNotFoundInDb,
+            NotUniqueObjects,
 
             AddTaskToImageWorkerError
         }
@@ -55,6 +60,9 @@ namespace Kepler.Common.Error
                     break;
                 case ErorCode.ObjectNotFoundInDb:
                     codeMessage = "Object wasn't found in Database";
+                    break;
+                case ErorCode.NotUniqueObjects:
+                    codeMessage = "Object is not unique in Database";
                     break;
                 case ErorCode.EmptyListOfObjects:
                     codeMessage = "List of objects is empty";

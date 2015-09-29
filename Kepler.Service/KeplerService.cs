@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Kepler.Common.Core;
+using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Core;
 using Kepler.Models;
@@ -98,6 +99,32 @@ namespace Kepler.Service
             return projectRepository.FindAll();
         }
 
+        public string CreateProject(string projectName)
+        {
+            if (projectRepository.Find(projectName).Any())
+                return new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
+                    ExceptionMessage = $"Project with name {projectName} already exist"
+                }.ToString();
+
+            try
+            {
+                var project = new Project() {Name = projectName};
+                projectRepository.Insert(project);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.UndefinedError,
+                    ExceptionMessage = $"Something bad happend. Exception: {ex.Message} {ex.StackTrace}"
+                }.ToString();
+            }
+
+            return string.Empty;
+        }
+
         #endregion
 
         public string ImportTestConfig(string testConfig)
@@ -125,7 +152,8 @@ namespace Kepler.Service
             var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImgPathToSave");
 
             if (diffImgPathToSaveProperty == null)
-                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("DiffImgPathToSave", diffImageSavingPath));
+                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("DiffImgPathToSave",
+                    diffImageSavingPath));
             else
             {
                 diffImgPathToSaveProperty.Value = diffImageSavingPath;

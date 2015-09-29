@@ -5,11 +5,9 @@ using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using Kepler.Common.CommunicationContracts;
-using Kepler.Common.Models;
 using Kepler.Core;
 using Kepler.ImageProcessor.Service.ImgProcessor;
 using Kepler.ImageProcessor.Service.TaskManager;
-using NLog.Web.Targets.Wrappers;
 using NUnit.Framework;
 using RestSharp;
 

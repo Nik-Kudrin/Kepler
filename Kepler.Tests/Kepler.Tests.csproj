@@ -146,6 +146,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Test\ApiTest.cs" />
     <Compile Include="Test\ConfigImportTest.cs" />
     <Compile Include="Test\ImageTest.cs" />
     <Compile Include="Test\InitTest.cs" />

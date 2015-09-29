@@ -66,6 +66,20 @@ namespace Kepler.Service
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetProjects")]
         IEnumerable<Project> GetProjects();
 
+        /// <summary>
+        /// Create project
+        /// </summary>
+        /// <param name="projectName"></param>
+        /// <returns>Return empty string if operation was OK. Otherwis - error message</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "CreateProject")]
+        string CreateProject(string projectName);
+
+        #endregion
+
+        #region Branch
+
         #endregion
 
         /// <summary>
