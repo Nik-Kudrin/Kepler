@@ -171,21 +171,16 @@ namespace Kepler.Service
 
         private string ValidateBranchBeforeCreation(string branchName, long projectId)
         {
-            if (BranchRepository.Instance.Find(branchName).Any())
-            {
-                return new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
-                    ExceptionMessage = $"Branch with name {branchName} already exist"
-                }.ToString();
-            }
+            var branchExistMessage = IsBranchAlreadyExist(branchName);
+            if (branchExistMessage != "")
+                return branchExistMessage;
 
             var project = ProjectRepository.Instance.Get(projectId);
             if (project == null)
             {
                 return new ErrorMessage()
                 {
-                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
+                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
                     ExceptionMessage = $"Project with specified projectID {projectId} doesn't exist"
                 }.ToString();
             }
@@ -197,6 +192,55 @@ namespace Kepler.Service
                     ExceptionMessage =
                         $"Project '{project.Name}' don't have main branch. Please, manually specify for project which branch should be considered as main."
                 }.ToString();
+
+            return string.Empty;
+        }
+
+        private string IsBranchAlreadyExist(string branchName)
+        {
+            if (BranchRepository.Instance.Find(branchName).Any())
+            {
+                return new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
+                    ExceptionMessage = $"Branch with name {branchName} already exist"
+                }.ToString();
+            }
+
+            return string.Empty;
+        }
+
+        public string UpdateBranch(string name, string newName, bool isMainBranch)
+        {
+            var branchExistMessage = IsBranchAlreadyExist(newName);
+            if (branchExistMessage != "")
+                return branchExistMessage;
+
+            var branch = BranchRepository.Instance.Find(name).FirstOrDefault();
+
+            if (branch == null)
+            {
+                return new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
+                    ExceptionMessage = $"Branch with name {name} doesn't exist"
+                }.ToString();
+            }
+
+            if (isMainBranch)
+            {
+                var allProjectBranches =
+                    BranchRepository.Instance.Find(item => item.ProjectId == branch.ProjectId).ToList();
+
+                allProjectBranches.ForEach(item => item.IsMainBranch = false);
+                BranchRepository.Instance.Update(allProjectBranches);
+            }
+
+            branch.Name = newName;
+            branch.IsMainBranch = isMainBranch;
+            BranchRepository.Instance.Update(branch);
+
+            BranchRepository.Instance.FlushChanges();
 
             return string.Empty;
         }

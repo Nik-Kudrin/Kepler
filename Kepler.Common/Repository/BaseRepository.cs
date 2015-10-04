@@ -34,6 +34,15 @@ namespace Kepler.Core
             _dbContext.Entry(entity).State = EntityState.Modified;
         }
 
+        public void Update(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                _dbSet.Attach(entity);
+                _dbContext.Entry(entity).State = EntityState.Modified;
+            }
+        }
+
         public void Insert(TEntity entity)
         {
             Add(entity);
