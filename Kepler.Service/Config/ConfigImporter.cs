@@ -196,7 +196,7 @@ namespace Kepler.Service
                         BranchRepository.Instance.Update(importedBranch);
                         BranchRepository.Instance.FlushChanges();
 
-                        CopyScreenShotsFromMainBranchBaseline(baseline, mainBranchBaselineScreenShots);
+                        CopyScreenShotsFromMainBranchBaselineToNewBaseline(baseline, mainBranchBaselineScreenShots);
                     }
 
                     branches.Add(importedBranch);
@@ -207,7 +207,7 @@ namespace Kepler.Service
         }
 
 
-        private void CopyScreenShotsFromMainBranchBaseline(BaseLine newBaseLine,
+        public static void CopyScreenShotsFromMainBranchBaselineToNewBaseline(BaseLine newBaseLine,
             IEnumerable<ScreenShot> mainBranchBaselineScreenShots)
         {
             foreach (var mainBaselineScreenShot in mainBranchBaselineScreenShots)

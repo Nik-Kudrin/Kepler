@@ -69,16 +69,26 @@ namespace Kepler.Service
         /// <summary>
         /// Create project
         /// </summary>
-        /// <param name="projectName"></param>
+        /// <param name="name"></param>
         /// <returns>Return empty string if operation was OK. Otherwis - error message</returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "CreateProject")]
-        string CreateProject(string projectName);
+        string CreateProject(string name);
 
         #endregion
 
         #region Branch
+
+        /// <summary>
+        /// Create Branch
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Return empty string if operation was OK. Otherwis - error message</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "CreateBranch?name={name}&projectId={projectId}")]
+        string CreateBranch(string name, long projectId);
 
         #endregion
 

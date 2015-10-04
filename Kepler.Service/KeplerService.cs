@@ -99,18 +99,18 @@ namespace Kepler.Service
             return projectRepository.FindAll();
         }
 
-        public string CreateProject(string projectName)
+        public string CreateProject(string name)
         {
-            if (projectRepository.Find(projectName).Any())
+            if (projectRepository.Find(name).Any())
                 return new ErrorMessage()
                 {
                     Code = ErrorMessage.ErorCode.NotUniqueObjects,
-                    ExceptionMessage = $"Project with name {projectName} already exist"
+                    ExceptionMessage = $"Project with name {name} already exist"
                 }.ToString();
 
             try
             {
-                var project = new Project() {Name = projectName};
+                var project = new Project() {Name = name};
                 projectRepository.Insert(project);
             }
             catch (Exception ex)
@@ -121,6 +121,82 @@ namespace Kepler.Service
                     ExceptionMessage = $"Something bad happend. Exception: {ex.Message} {ex.StackTrace}"
                 }.ToString();
             }
+
+            return string.Empty;
+        }
+
+        #endregion
+
+        #region Branch
+
+        public string CreateBranch(string name, long projectId)
+        {
+            var validationMessage = ValidateBranchBeforeCreation(name, projectId);
+            if (validationMessage != "")
+                return validationMessage;
+
+            var project = ProjectRepository.Instance.Get(projectId);
+            try
+            {
+                var baseline = new BaseLine();
+                BaseLineRepository.Instance.Insert(baseline);
+
+                var branch = new Branch() {Name = name, BaseLineId = baseline.Id, ProjectId = projectId};
+                BranchRepository.Instance.Insert(branch);
+
+                baseline.BranchId = branch.Id;
+                BaseLineRepository.Instance.Update(baseline);
+                BaseLineRepository.Instance.FlushChanges();
+
+
+                var mainBaseLineId = BranchRepository.Instance.Get(project.MainBranchId.Value).BaseLineId.Value;
+                var mainBranchBaselineScreenShots =
+                    ScreenShotRepository.Instance.GetBaselineScreenShots(mainBaseLineId);
+
+                ConfigImporter.CopyScreenShotsFromMainBranchBaselineToNewBaseline(baseline,
+                    mainBranchBaselineScreenShots);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.UndefinedError,
+                    ExceptionMessage = $"Something bad happend. Exception: {ex.Message} {ex.StackTrace}"
+                }.ToString();
+            }
+
+            return string.Empty;
+        }
+
+
+        private string ValidateBranchBeforeCreation(string branchName, long projectId)
+        {
+            if (BranchRepository.Instance.Find(branchName).Any())
+            {
+                return new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
+                    ExceptionMessage = $"Branch with name {branchName} already exist"
+                }.ToString();
+            }
+
+            var project = ProjectRepository.Instance.Get(projectId);
+            if (project == null)
+            {
+                return new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
+                    ExceptionMessage = $"Project with specified projectID {projectId} doesn't exist"
+                }.ToString();
+            }
+
+            if (!project.MainBranchId.HasValue)
+                return new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.ProjectDontHaveMainBranch,
+                    ExceptionMessage =
+                        $"Project '{project.Name}' don't have main branch. Please, manually specify for project which branch should be considered as main."
+                }.ToString();
 
             return string.Empty;
         }
