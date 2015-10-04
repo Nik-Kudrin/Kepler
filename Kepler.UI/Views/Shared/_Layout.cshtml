@@ -46,22 +46,37 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="myModalLabel">Title text</h4>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
                 </div>
                 <div class="modal-body">
-                    Inner text
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Button text</button>
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('.modal-title').text($('.main-menu-conf a.current').text());
-            });
-        </script>
     </div>
+
+    <script type="text/javascript">
+        function loadModalWin(modalWinObj, modalWinAction) {
+            switch (modalWinAction) {
+                case 'create':
+                    $('.modal-title').text('Create');
+                    $('.modal-body').empty().append('<div class="form-group"><input class="form-control" type="text"></div>');
+                    $('.modal-footer').empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
+                    break;
+                case 'edit':
+                    $('.modal-title').text('Edit');
+                    $('.modal-body').empty().append('<div class="form-group"><input class="form-control" type="text" value="' + modalWinObj + '"></div>');
+                    $('.modal-footer').empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
+                    break;
+                case 'delete':
+                    $('.modal-title').text('Delete');
+                    $('.modal-body').empty().append('Are you sure want to delete ' + modalWinObj + '?');
+                    $('.modal-footer').empty().append('<button type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>');
+                    break;
+            }
+        }
+    </script>
 
 </body>
 </html>
