@@ -7,6 +7,7 @@ using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Core;
 using Kepler.Models;
+using Kepler.Service.Core;
 
 namespace Kepler.Service
 {
@@ -20,6 +21,10 @@ namespace Kepler.Service
         private ScreenShotRepository screenShotRepository = ScreenShotRepository.Instance;
         private ImageWorkerRepository workerRepository = ImageWorkerRepository.Instance;
 
+        static KeplerService()
+        {
+            BuildExecutor.GetExecutor();
+        }
 
         private long ConvertStringToLong(string number)
         {

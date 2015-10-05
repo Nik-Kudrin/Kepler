@@ -40,24 +40,47 @@ namespace Kepler.Service.Core
 
         private void SendComparisonInfoToWorkers(object sender, ElapsedEventArgs eventArgs)
         {
-            /*var workers = ImageWorkerRepository.Instance.FindAll()
-                .Where(worker => worker.Status == ImageWorker.WorkerStatus.Available);
+            var workers = ImageWorkerRepository.Instance.FindAll()
+                .Where(worker => worker.Status == ImageWorker.WorkerStatus.Available).ToList();
 
-            var screenShots = GetAllInQueueScreenShots();
-            var imageComparisonContainers = ConvertScreenShotsToImageComparison(screenShots);
+            var screenShots = ScreenShotRepository.Instance.GetAllInQueueScreenShots();
+            var imageComparisonContainers = ConvertScreenShotsToImageComparison(screenShots).ToList();
 
-            // TODO: split all screenshots for comparison uniformly for all workers
+            if (workers.Count == 0)
+                return;
 
-            foreach (var imageWorker in workers)
+            // split all screenshots for comparison uniformly for all workers
+            var imgComparisonPerWorker = imageComparisonContainers.Count()/workers.Count();
+            if (imgComparisonPerWorker == 0)
+                imgComparisonPerWorker = imageComparisonContainers.Count();
+
+
+            int workerIndex = 0;
+            while (imageComparisonContainers.Any())
             {
-                var client = new RestClient("http://localhost:8900/KeplerImageProcessorService/");
+                var jsonMessage = new ImageComparisonContract()
+                {
+                    ImageComparisonList = imageComparisonContainers.Take(imgComparisonPerWorker).ToList()
+                };
+
+                if (imageComparisonContainers.Count() < imgComparisonPerWorker)
+                    imageComparisonContainers.Clear();
+                else
+                {
+                    imageComparisonContainers.RemoveRange(0, imgComparisonPerWorker);
+                }
+
+                var client = new RestClient(workers[workerIndex++].WorkerServiceUrl);
                 var request = new RestRequest("AddImagesForDiffGeneration", Method.POST);
 
                 request.RequestFormat = DataFormat.Json;
-                request.AddJsonBody(message);
+                request.AddJsonBody(jsonMessage);
 
                 client.Execute(request);
-            }*/
+
+                if (workerIndex == workers.Count)
+                    workerIndex = 0;
+            }
         }
 
 
@@ -82,18 +105,22 @@ namespace Kepler.Service.Core
 
                 var newScreenShotsForProcessing = newBaselineScreenShot.AsEnumerable().ToList();
 
+                // if baseline is "empty" - just set screenshots as "passed"
                 if (oldPassedBaselineScreenShots == null || !oldPassedBaselineScreenShots.Any())
                 {
                     newScreenShotsForProcessing.ForEach(item => item.Status = ObjectStatus.Passed);
-                    newScreenShotsForProcessing.ForEach(ScreenShotRepository.Instance.Update);
-
-                    ScreenShotRepository.Instance.FlushChanges();
+                    ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
                 }
                 else
                 {
+                    newScreenShotsForProcessing.ForEach(item => item.Status = ObjectStatus.InProgress);
+                    ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
+
                     imagesComparisonContainer.AddRange(GenerateImageComparison(newScreenShotsForProcessing,
                         oldPassedBaselineScreenShots.ToList()));
                 }
+
+                ScreenShotRepository.Instance.FlushChanges();
             }
 
             return imagesComparisonContainer;
