@@ -23,6 +23,7 @@ namespace Kepler.Service.Core
             DiffImageSavingPath = new KeplerService().GetDiffImageSavingPath();
         }
 
+
         public static BuildExecutor GetExecutor()
         {
             _executor = _executor ?? new BuildExecutor();

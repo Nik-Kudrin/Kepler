@@ -17,6 +17,9 @@ namespace Kepler.Common.Models
         [DataMember]
         public string Value { get; set; }
 
+        public KeplerSystemConfig()
+        {
+        }
 
         public KeplerSystemConfig(string name, string value)
         {

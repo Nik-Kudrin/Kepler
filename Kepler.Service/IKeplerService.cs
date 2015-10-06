@@ -92,7 +92,8 @@ namespace Kepler.Service
 
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "UpdateBranch?name={name}&newName={newName}&isMainBranch={isMainBranch}")]
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "UpdateBranch?name={name}&newName={newName}&isMainBranch={isMainBranch}")]
         string UpdateBranch(string name, string newName, bool isMainBranch);
 
         #endregion

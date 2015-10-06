@@ -20,11 +20,8 @@ namespace Kepler.Service
         private TestSuiteRepository testSuiteRepo = TestSuiteRepository.Instance;
         private ScreenShotRepository screenShotRepository = ScreenShotRepository.Instance;
         private ImageWorkerRepository workerRepository = ImageWorkerRepository.Instance;
+        private static BuildExecutor _executor = BuildExecutor.GetExecutor();
 
-        static KeplerService()
-        {
-            BuildExecutor.GetExecutor();
-        }
 
         private long ConvertStringToLong(string number)
         {
