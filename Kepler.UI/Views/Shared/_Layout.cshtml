@@ -59,20 +59,26 @@
     <script type="text/javascript">
         function loadModalWin(modalWinObj, modalWinAction) {
             switch (modalWinAction) {
-                case 'create':
+                case 'create_proj':
                     $('.modal-title').text('Create');
                     $('.modal-body').empty().append('<div class="form-group"><input class="form-control" type="text"></div>');
                     $('.modal-footer').empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
                     break;
-                case 'edit':
+                case 'edit_proj':
                     $('.modal-title').text('Edit');
                     $('.modal-body').empty().append('<div class="form-group"><input class="form-control" type="text" value="' + modalWinObj + '"></div>');
                     $('.modal-footer').empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
                     break;
-                case 'delete':
+                case 'delete_proj':
                     $('.modal-title').text('Delete');
                     $('.modal-body').empty().append('Are you sure want to delete ' + modalWinObj + '?');
                     $('.modal-footer').empty().append('<button type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>');
+                    break;
+                case 'create_config':
+                    console.log("kgh");
+                    $('.modal-title').text('Create config');
+                    $('.modal-body').empty().append('<div class="fileupload fileupload-new" data-provides="fileupload"><span class="btn btn-file btn-default"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file"></span><span class="fileupload-preview"></span><a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a></div>');
+                    $('.modal-footer').hide();
                     break;
             }
         }
