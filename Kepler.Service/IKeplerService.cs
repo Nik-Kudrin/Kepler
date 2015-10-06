@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using Kepler.Common.Models;
 using Kepler.Core;
 using Kepler.Models;
 
@@ -107,11 +109,25 @@ namespace Kepler.Service
         [WebInvoke(ResponseFormat = WebMessageFormat.Json, UriTemplate = "ImportTestConfig")]
         string ImportTestConfig(string testConfig);
 
+        #region ImageWorkers
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetImageWorkers")]
+        IEnumerable<ImageWorker> GetImageWorkers();
 
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "RegisterImageWorker")]
-        void RegisterImageWorker(string imageWorkerServiceUrl);
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "RegisterImageWorker?name={name}&imageWorkerServiceUrl={imageWorkerServiceUrl}")]
+        string RegisterImageWorker(string name, string imageWorkerServiceUrl);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "UpdateImageWorker?name={name}&newName={newName}&newWorkerServiceUrl={newWorkerServiceUrl}")]
+        string UpdateImageWorker(string name, string newName, string newWorkerServiceUrl);
+
+        #endregion
 
         #region Project
 

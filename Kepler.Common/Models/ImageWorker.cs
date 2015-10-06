@@ -4,7 +4,6 @@ using Kepler.Core;
 
 namespace Kepler.Common.Models
 {
-    [DataContract]
     public class ImageWorker : InfoObject
     {
         [StringLength(600)]
@@ -12,9 +11,9 @@ namespace Kepler.Common.Models
         public string WorkerServiceUrl { get; set; }
 
         [DataMember]
-        public WorkerStatus Status { get; set; }
+        public StatusOfWorker WorkerStatus { get; set; }
 
-        public enum WorkerStatus
+        public enum StatusOfWorker
         {
             Available,
             Offline
@@ -22,7 +21,7 @@ namespace Kepler.Common.Models
 
         public ImageWorker()
         {
-            Status = WorkerStatus.Available;
+            WorkerStatus = StatusOfWorker.Available;
         }
     }
 }

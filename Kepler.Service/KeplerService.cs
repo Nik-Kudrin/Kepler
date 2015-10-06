@@ -255,11 +255,61 @@ namespace Kepler.Service
             return configImporter.ImportConfig(testConfig);
         }
 
-        public void RegisterImageWorker(string imageWorkerServiceUrl)
+        #region ImageWorkers
+
+        public IEnumerable<ImageWorker> GetImageWorkers()
         {
-            if (workerRepository.Find(imageWorkerServiceUrl).Count() == 0)
-                workerRepository.Insert(new ImageWorker() {WorkerServiceUrl = imageWorkerServiceUrl});
+            return workerRepository.FindAll();
         }
+
+
+        public string RegisterImageWorker(string name, string imageWorkerServiceUrl)
+        {
+            if (!workerRepository.Find(imageWorkerServiceUrl).Any())
+            {
+                workerRepository.Insert(new ImageWorker()
+                {
+                    Name = name,
+                    WorkerServiceUrl = imageWorkerServiceUrl
+                });
+            }
+            else
+            {
+                return new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
+                    ExceptionMessage = $"Image worker with the same URL {imageWorkerServiceUrl} already exist"
+                }.ToString();
+            }
+
+            return string.Empty;
+        }
+
+        public string UpdateImageWorker(string name, string newName, string newWorkerServiceUrl)
+        {
+            var worker = workerRepository.Find(item => item.Name == name).FirstOrDefault();
+
+            if (worker == null)
+            {
+                return new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
+                    ExceptionMessage = $"Image worker with name {name} not found"
+                }.ToString();
+            }
+            else
+            {
+                worker.Name = newName;
+                worker.WorkerServiceUrl = newWorkerServiceUrl;
+
+                workerRepository.Update(worker);
+                workerRepository.FlushChanges();
+            }
+
+            return string.Empty;
+        }
+
+        #endregion
 
         #region Kepler Configs
 

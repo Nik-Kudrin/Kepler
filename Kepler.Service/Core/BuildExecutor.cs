@@ -42,7 +42,7 @@ namespace Kepler.Service.Core
         private void SendComparisonInfoToWorkers(object sender, ElapsedEventArgs eventArgs)
         {
             var workers = ImageWorkerRepository.Instance.FindAll()
-                .Where(worker => worker.Status == ImageWorker.WorkerStatus.Available).ToList();
+                .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
 
             var screenShots = ScreenShotRepository.Instance.GetAllInQueueScreenShots();
             var imageComparisonContainers = ConvertScreenShotsToImageComparison(screenShots).ToList();
