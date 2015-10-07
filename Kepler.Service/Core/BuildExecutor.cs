@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Timers;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Core;
@@ -8,6 +10,7 @@ using Kepler.Common.Models;
 using Kepler.Core;
 using Kepler.Core.Common;
 using RestSharp;
+using Timer = System.Timers.Timer;
 
 namespace Kepler.Service.Core
 {
@@ -39,6 +42,7 @@ namespace Kepler.Service.Core
         }
 
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private void SendComparisonInfoToWorkers(object sender, ElapsedEventArgs eventArgs)
         {
             var workers = ImageWorkerRepository.Instance.FindAll()

@@ -193,8 +193,7 @@ namespace Kepler.Service
                         BaseLineRepository.Instance.Insert(baseline);
 
                         importedBranch.BaseLineId = baseline.Id;
-                        BranchRepository.Instance.Update(importedBranch);
-                        BranchRepository.Instance.FlushChanges();
+                        BranchRepository.Instance.UpdateAndFlashChanges(importedBranch);
 
                         CopyScreenShotsFromMainBranchBaselineToNewBaseline(baseline, mainBranchBaselineScreenShots);
                     }
@@ -243,8 +242,7 @@ namespace Kepler.Service
                 branch.Builds.Add(build.Id, build);
                 branch.LatestBuildId = build.Id;
 
-                BranchRepository.Instance.Update(branch);
-                BranchRepository.Instance.FlushChanges();
+                BranchRepository.Instance.UpdateAndFlashChanges(branch);
             }
 
             return builds;

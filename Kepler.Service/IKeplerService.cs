@@ -106,7 +106,8 @@ namespace Kepler.Service
         /// <param name="testConfig"></param>
         /// <returns>Return emtpy string, if import was OK. Otherwise return string with error message</returns>
         [OperationContract]
-        [WebInvoke(ResponseFormat = WebMessageFormat.Json, UriTemplate = "ImportTestConfig")]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "ImportTestConfig")]
         string ImportTestConfig(string testConfig);
 
         #region ImageWorkers

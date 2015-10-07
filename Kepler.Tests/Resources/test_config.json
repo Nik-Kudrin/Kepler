@@ -1,0 +1,45 @@
+﻿{
+    "Projects": [
+        {
+            "Name": "Demo Project",
+            "Branches": [
+                {
+                    "Name": "Develop",
+                    "TestAssemblies": [
+                        {
+                            "Name": "TestAssembly Name",
+                            "TestSuites": [
+                                {
+                                    "Name": "Test suite Name",
+                                    "TestCases": [
+                                        {
+                                            "Name": "Test case name",
+                                            "ScreenShots": [
+                                                {
+                                                    "ImagePath": "c:\\Users\\neon\\Pictures\\2015-10-07 22_29_33.png",
+                                                     "Name": "ScreenName_1"
+                                                },
+                                                {
+                                                    "ImagePath": "c:\\Users\\neon\\Pictures\\2015-10-07 22_29_45.png",
+                                                    "Name": "ScreenName_2"
+                                                },
+                                                {
+                                                    "ImagePath": "c:\\Users\\neon\\Pictures\\2015-10-07 22_29_56.png",
+                                                     "Name": "ScreenName_3"
+                                                },
+                                                {
+                                                    "ImagePath": "c:\\Users\\neon\\Pictures\\2015-10-07 22_29_59.png",
+                                                     "Name": "ScreenName_4"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

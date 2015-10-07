@@ -158,6 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\test_config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\simple_test_config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

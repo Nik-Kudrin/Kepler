@@ -58,12 +58,10 @@ namespace Kepler.Tests.Test
             repo.Insert(project);
 
             baseline.BranchId = branch.Id;
-            BaseLineRepository.Instance.Update(baseline);
-            BaseLineRepository.Instance.FlushChanges();
+            BaseLineRepository.Instance.UpdateAndFlashChanges(baseline);
 
             branch.ProjectId = project.Id;
-            BranchRepository.Instance.Update(branch);
-            BranchRepository.Instance.FlushChanges();
+            BranchRepository.Instance.UpdateAndFlashChanges(branch);
         }
 
 

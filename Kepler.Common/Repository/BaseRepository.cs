@@ -43,6 +43,18 @@ namespace Kepler.Core
             }
         }
 
+        public void UpdateAndFlashChanges(TEntity entity)
+        {
+            Update(entity);
+            FlushChanges();
+        }
+
+        public void UpdateAndFlashChanges(IEnumerable<TEntity> entities)
+        {
+            Update(entities);
+            FlushChanges();
+        }
+
         public void Insert(TEntity entity)
         {
             Add(entity);

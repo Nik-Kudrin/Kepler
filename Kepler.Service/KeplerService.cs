@@ -147,11 +147,19 @@ namespace Kepler.Service
                 BranchRepository.Instance.Insert(branch);
 
                 baseline.BranchId = branch.Id;
-                BaseLineRepository.Instance.Update(baseline);
-                BaseLineRepository.Instance.FlushChanges();
+                BaseLineRepository.Instance.UpdateAndFlashChanges(baseline);
 
+                long mainBaseLineId;
 
-                var mainBaseLineId = BranchRepository.Instance.Get(project.MainBranchId.Value).BaseLineId.Value;
+                if (!project.MainBranchId.HasValue)
+                {
+                    mainBaseLineId = baseline.Id;
+                }
+                else
+                {
+                    mainBaseLineId = BranchRepository.Instance.Get(project.MainBranchId.Value).BaseLineId.Value;
+                }
+
                 var mainBranchBaselineScreenShots =
                     ScreenShotRepository.Instance.GetBaselineScreenShots(mainBaseLineId);
 
@@ -187,13 +195,17 @@ namespace Kepler.Service
                 }.ToString();
             }
 
-            if (!project.MainBranchId.HasValue)
+
+            if (!project.MainBranchId.HasValue &&
+                BranchRepository.Instance.Find(branch => branch.ProjectId == project.Id).Any())
+            {
                 return new ErrorMessage()
                 {
                     Code = ErrorMessage.ErorCode.ProjectDontHaveMainBranch,
                     ExceptionMessage =
                         $"Project '{project.Name}' don't have main branch. Please, manually specify for project which branch should be considered as main."
                 }.ToString();
+            }
 
             return string.Empty;
         }
@@ -214,9 +226,12 @@ namespace Kepler.Service
 
         public string UpdateBranch(string name, string newName, bool isMainBranch)
         {
-            var branchExistMessage = IsBranchAlreadyExist(newName);
-            if (branchExistMessage != "")
-                return branchExistMessage;
+            if (name != newName)
+            {
+                var branchExistMessage = IsBranchAlreadyExist(newName);
+                if (branchExistMessage != "")
+                    return branchExistMessage;
+            }
 
             var branch = BranchRepository.Instance.Find(name).FirstOrDefault();
 
@@ -236,13 +251,15 @@ namespace Kepler.Service
 
                 allProjectBranches.ForEach(item => item.IsMainBranch = false);
                 BranchRepository.Instance.Update(allProjectBranches);
+
+                var project = ProjectRepository.Instance.Get(branch.ProjectId.Value);
+                project.MainBranchId = branch.Id;
+                ProjectRepository.Instance.UpdateAndFlashChanges(project);
             }
 
             branch.Name = newName;
             branch.IsMainBranch = isMainBranch;
-            BranchRepository.Instance.Update(branch);
-
-            BranchRepository.Instance.FlushChanges();
+            BranchRepository.Instance.UpdateAndFlashChanges(branch);
 
             return string.Empty;
         }
@@ -302,8 +319,7 @@ namespace Kepler.Service
                 worker.Name = newName;
                 worker.WorkerServiceUrl = newWorkerServiceUrl;
 
-                workerRepository.Update(worker);
-                workerRepository.FlushChanges();
+                workerRepository.UpdateAndFlashChanges(worker);
             }
 
             return string.Empty;

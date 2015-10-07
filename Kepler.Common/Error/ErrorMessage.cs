@@ -17,7 +17,7 @@ namespace Kepler.Common.Error
             CaseDontHaveAName,
             ScreenShotHasEmptyFilePath,
             EmptyListOfObjects,
-            
+
             UndefinedError,
             ObjectNotFoundInDb,
             NotUniqueObjects,
@@ -70,6 +70,10 @@ namespace Kepler.Common.Error
                 case ErorCode.AddTaskToImageWorkerError:
                     codeMessage = "Error happend in process to add images for diff comparison";
                     break;
+                case ErorCode.UndefinedError:
+                    codeMessage = "Undefined error";
+                    break;
+
 
                 default:
                     throw new NotImplementedException("Detaileds text about this type of error code isn't written");
