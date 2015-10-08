@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Models;
+using Timer = System.Timers.Timer;
 
 namespace Kepler.ImageProcessor.Service.TaskManager
 {
@@ -53,7 +56,7 @@ namespace Kepler.ImageProcessor.Service.TaskManager
             }
         }
 
-
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private void RunWorkers(Object sender, ElapsedEventArgs eventArgs)
         {
             for (int index = 0; index < MaxCountWorkers; index++)

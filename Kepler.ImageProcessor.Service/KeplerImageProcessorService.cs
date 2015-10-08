@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Error;
 using Kepler.ImageProcessor.Service.TaskManager;
@@ -20,7 +21,12 @@ namespace Kepler.ImageProcessor.Service
             }
             catch (Exception ex)
             {
-                return new ErrorMessage() {Code = ErrorMessage.ErorCode.AddTaskToImageWorkerError, ExceptionMessage = ex.Message}.ToString();
+                return
+                    new ErrorMessage()
+                    {
+                        Code = ErrorMessage.ErorCode.AddTaskToImageWorkerError,
+                        ExceptionMessage = ex.Message
+                    }.ToString();
             }
 
             return "";
