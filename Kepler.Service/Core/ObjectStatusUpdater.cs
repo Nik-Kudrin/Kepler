@@ -4,7 +4,7 @@ namespace Kepler.Service.Core
 {
     public class ObjectStatusUpdater
     {
-        public static void UpdateRecursivelyObjectStatuses()
+        public static void UpdateAllObjectStatusesRecursively()
         {
             UpdateTestCasesStatuses();
             UpdateTestSuitesStatuses();

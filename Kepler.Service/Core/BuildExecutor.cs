@@ -15,7 +15,8 @@ namespace Kepler.Service.Core
     public class BuildExecutor
     {
         private static BuildExecutor _executor;
-        private static Timer _timer;
+        private static Timer _sendScreenShotsForProcessingTimer;
+        private static Timer _updateObjectStatusesTimer;
         private static string DiffImageSavingPath;
 
         static BuildExecutor()
@@ -33,10 +34,15 @@ namespace Kepler.Service.Core
 
         private BuildExecutor()
         {
-            _timer = new Timer();
-            _timer.Interval = 10000; //every 10 sec
-            _timer.Elapsed += SendComparisonInfoToWorkers;
-            _timer.Enabled = true;
+            _sendScreenShotsForProcessingTimer = new Timer();
+            _sendScreenShotsForProcessingTimer.Interval = 10000; //every 10 sec
+            _sendScreenShotsForProcessingTimer.Elapsed += SendComparisonInfoToWorkers;
+            _sendScreenShotsForProcessingTimer.Enabled = true;
+
+            _updateObjectStatusesTimer = new Timer();
+            _updateObjectStatusesTimer.Interval = 30000; //every 10 sec
+            _updateObjectStatusesTimer.Elapsed += UpdateObjectsStatuses;
+            _updateObjectStatusesTimer.Enabled = true;
 
             UpdateKeplerServiceUrlOnWorkers();
         }
@@ -59,6 +65,11 @@ namespace Kepler.Service.Core
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void UpdateObjectsStatuses(object sender, ElapsedEventArgs eventArgs)
+        {
+            ObjectStatusUpdater.UpdateAllObjectStatusesRecursively();
+        }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void SendComparisonInfoToWorkers(object sender, ElapsedEventArgs eventArgs)
