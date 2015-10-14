@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Models;
 using Kepler.Core;
 using Kepler.Models;
@@ -109,6 +109,12 @@ namespace Kepler.Service
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "ImportTestConfig")]
         string ImportTestConfig(string testConfig);
+
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "UpdateScreenShots")]
+        void UpdateScreenShots(ImageComparisonContract imageComparisonContract);
 
         #region ImageWorkers
 

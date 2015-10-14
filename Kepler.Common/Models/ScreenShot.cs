@@ -11,6 +11,10 @@ namespace Kepler.Core
         public string ImagePath { get; set; }
 
         [DataMember]
+        [StringLength(500)]
+        public string DiffImagePath { get; set; }
+
+        [DataMember]
         public long BaseLineId { get; set; }
 
         public ScreenShot()

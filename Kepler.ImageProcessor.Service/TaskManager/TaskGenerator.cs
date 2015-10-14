@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Kepler.Common.CommunicationContracts;
-using Kepler.Common.Models;
+using RestSharp;
 using Timer = System.Timers.Timer;
 
 namespace Kepler.ImageProcessor.Service.TaskManager
 {
     public class TaskGenerator
     {
+        private static string KeplerServiceUrl;
         private static TaskGenerator _taskGenerator;
         private List<ImageTaskWorker> _taskWorkers = new List<ImageTaskWorker>();
         private static int MaxCountWorkers;
@@ -35,6 +36,11 @@ namespace Kepler.ImageProcessor.Service.TaskManager
         public static int GetMaxCountWorkers()
         {
             return MaxCountWorkers;
+        }
+
+        public void SetKeplerServiceUrl(string url)
+        {
+            KeplerServiceUrl = url;
         }
 
         private TaskGenerator()
@@ -111,12 +117,29 @@ namespace Kepler.ImageProcessor.Service.TaskManager
             return processedImages;
         }
 
-        private void SendProcessedImagesToKeplerService(Object sender, ElapsedEventArgs eventArgs)
+        private void SendProcessedImagesToKeplerService(object sender, ElapsedEventArgs eventArgs)
         {
-            // TODO: implement the code
-            Console.WriteLine(" >>> Stub . Send processed images to kepler service");
-            // If there are no one processed images - do not call rest service
-//            throw new NotImplementedException();
+            var processedImages = GetProcessedImages().ToList();
+
+            if (processedImages.Count > 0)
+            {
+                try
+                {
+                    var client = new RestClient(KeplerServiceUrl);
+                    var request = new RestRequest("UpdateScreenShots", Method.POST);
+
+                    var imageComparisonContract = new ImageComparisonContract() {ImageComparisonList = processedImages};
+
+                    request.RequestFormat = DataFormat.Json;
+                    request.AddJsonBody(imageComparisonContract);
+
+                    client.Execute(request);
+                }
+                catch (Exception ex)
+                {
+                    EventLog.WriteEntry("Kepler.ImageProcessor.Service", ex.Message);
+                }
+            }
         }
     }
 }

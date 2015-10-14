@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Core;
 using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Core;
+using Kepler.Core.Common;
 using Kepler.Models;
 using Kepler.Service.Core;
 
@@ -270,6 +272,23 @@ namespace Kepler.Service
         {
             var configImporter = new ConfigImporter();
             return configImporter.ImportConfig(testConfig);
+        }
+
+        public void UpdateScreenShots(ImageComparisonContract imageComparisonContract)
+        {
+            foreach (var imageComparisonInfo in imageComparisonContract.ImageComparisonList)
+            {
+                var screenShot = ScreenShotRepository.Instance.Get(imageComparisonInfo.ScreenShotId);
+
+                screenShot.Status = imageComparisonInfo.IsImagesDifferent == true
+                    ? ObjectStatus.Failed
+                    : ObjectStatus.Passed;
+
+                screenShot.DiffImagePath = imageComparisonInfo.DiffImgPathToSave;
+                ScreenShotRepository.Instance.Update(screenShot);
+            }
+
+            ScreenShotRepository.Instance.FlushChanges();
         }
 
         #region ImageWorkers

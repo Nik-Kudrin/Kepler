@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Timers;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Core;
@@ -40,6 +37,26 @@ namespace Kepler.Service.Core
             _timer.Interval = 10000; //every 10 sec
             _timer.Elapsed += SendComparisonInfoToWorkers;
             _timer.Enabled = true;
+
+            UpdateKeplerServiceUrlOnWorkers();
+        }
+
+        private void UpdateKeplerServiceUrlOnWorkers()
+        {
+            var workers = ImageWorkerRepository.Instance.FindAll()
+                .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
+
+            foreach (var imageWorker in workers)
+            {
+                var client = new RestClient(imageWorker.WorkerServiceUrl);
+                var request = new RestRequest("SetKeplerServiceUrl", Method.GET);
+
+                request.RequestFormat = DataFormat.Json;
+
+                var url = System.ServiceModel.OperationContext.Current.Host.BaseAddresses[0];
+                request.AddQueryParameter("url", url.AbsoluteUri);
+                client.Execute(request);
+            }
         }
 
 
@@ -156,8 +173,8 @@ namespace Kepler.Service.Core
                 {
                     var imageComparison = new ImageComparisonInfo()
                     {
-                        FirstImagePath = newScreenShot.ImagePath,
-                        SecondImagePath = oldScreenShot.ImagePath,
+                        FirstImagePath = oldScreenShot.ImagePath,
+                        SecondImagePath = newScreenShot.ImagePath,
                         DiffImgPathToSave = DiffImageSavingPath,
                         ScreenShotId = newScreenShot.Id,
                     };

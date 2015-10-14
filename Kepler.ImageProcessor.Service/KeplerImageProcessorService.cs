@@ -31,5 +31,10 @@ namespace Kepler.ImageProcessor.Service
 
             return "";
         }
+
+        public void SetKeplerServiceUrl(string url)
+        {
+            TaskGenerator.GetTaskGenerator.SetKeplerServiceUrl(url);
+        }
     }
 }
