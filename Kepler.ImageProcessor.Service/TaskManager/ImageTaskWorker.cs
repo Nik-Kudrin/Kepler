@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Kepler.Common.CommunicationContracts;
-using Kepler.Common.Models;
 using Kepler.ImageProcessor.Service.ImgProcessor;
 
 namespace Kepler.ImageProcessor.Service.TaskManager

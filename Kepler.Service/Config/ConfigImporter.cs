@@ -50,8 +50,15 @@ namespace Kepler.Service
                 return ex.Message;
             }
 
-
-            var branches = BindBranchesWithProjects(importedConfig, mappedProjects);
+            List<Branch> branches = null;
+            try
+            {
+                branches = BindBranchesWithProjects(importedConfig, mappedProjects);
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
 
             var builds = BindImportedBranchesWithBuilds(branches);
             var assemblies = BindTestAssembliesWithBuilds(importedConfig, branches);

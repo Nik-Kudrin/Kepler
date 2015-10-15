@@ -26,17 +26,18 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
             using (var secondImage = new MagickImage(ImageComparisonInfo.SecondImagePath))
             {
                 ImageComparisonInfo.IsImagesDifferent = false;
-                var diffImgPathToSave = Path.Combine(ImageComparisonInfo.DiffImgPathToSave,
+                ImageComparisonInfo.DiffImgPathToSave = Path.Combine(ImageComparisonInfo.DiffImgPathToSave,
                     Guid.NewGuid().ToString() + ".png");
 
                 if (firstImage.GetHashCode() == secondImage.GetHashCode())
                 {
-                    firstImage.Write(diffImgPathToSave); // because images are equal, just save first image
+                    // because images are equal, just save first image
+                    firstImage.Write(ImageComparisonInfo.DiffImgPathToSave);
                     return ImageComparisonInfo;
                 }
 
                 firstImage.Composite(secondImage, CompositeOperator.Difference);
-                firstImage.Write(diffImgPathToSave);
+                firstImage.Write(ImageComparisonInfo.DiffImgPathToSave);
                 ImageComparisonInfo.IsImagesDifferent = true;
                 return ImageComparisonInfo;
             }

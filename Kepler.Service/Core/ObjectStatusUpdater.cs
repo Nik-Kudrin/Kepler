@@ -14,7 +14,7 @@ namespace Kepler.Service.Core
 
         public static void UpdateTestCasesStatuses()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
 
             // select all In progress, In queue Test Cases
             // select In queue, In progress screenshots
