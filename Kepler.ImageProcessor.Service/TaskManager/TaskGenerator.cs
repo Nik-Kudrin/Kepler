@@ -63,7 +63,7 @@ namespace Kepler.ImageProcessor.Service.TaskManager
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private void RunWorkers(Object sender, ElapsedEventArgs eventArgs)
+        private void RunWorkers(object sender, ElapsedEventArgs eventArgs)
         {
             for (int index = 0; index < MaxCountWorkers; index++)
             {

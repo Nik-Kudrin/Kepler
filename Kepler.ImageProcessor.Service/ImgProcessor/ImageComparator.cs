@@ -2,6 +2,7 @@
 using System.IO;
 using ImageMagick;
 using Kepler.Common.CommunicationContracts;
+using Kepler.Common.Error;
 using Kepler.Common.Models;
 
 namespace Kepler.ImageProcessor.Service.ImgProcessor
@@ -26,6 +27,14 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
             using (var secondImage = new MagickImage(ImageComparisonInfo.SecondImagePath))
             {
                 ImageComparisonInfo.IsImagesDifferent = false;
+
+                if (!Directory.Exists(ImageComparisonInfo.DiffImgPathToSave))
+                {
+                    ImageComparisonInfo.ErrorMessage =
+                        $"Path for saving screenshots '{ImageComparisonInfo.DiffImgPathToSave}' doesn't exist";
+                    return ImageComparisonInfo;
+                }
+
                 ImageComparisonInfo.DiffImgPathToSave = Path.Combine(ImageComparisonInfo.DiffImgPathToSave,
                     Guid.NewGuid().ToString() + ".png");
 
@@ -37,7 +46,17 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
                 }
 
                 firstImage.Composite(secondImage, CompositeOperator.Difference);
-                firstImage.Write(ImageComparisonInfo.DiffImgPathToSave);
+                try
+                {
+                    firstImage.Write(ImageComparisonInfo.DiffImgPathToSave);
+                }
+                catch (Exception ex)
+                {
+                    ImageComparisonInfo.ErrorMessage =
+                        $"Something bad happend in attempt to write file with diff screenshot '{ImageComparisonInfo.DiffImgPathToSave}'";
+                    return ImageComparisonInfo;
+                }
+
                 ImageComparisonInfo.IsImagesDifferent = true;
                 return ImageComparisonInfo;
             }

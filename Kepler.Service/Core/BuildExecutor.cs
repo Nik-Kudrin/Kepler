@@ -7,6 +7,7 @@ using Kepler.Common.Core;
 using Kepler.Common.Models;
 using Kepler.Core;
 using Kepler.Core.Common;
+using Kepler.Service.RestWorkerClient;
 using RestSharp;
 using Timer = System.Timers.Timer;
 
@@ -17,7 +18,7 @@ namespace Kepler.Service.Core
         private static BuildExecutor _executor;
         private static Timer _sendScreenShotsForProcessingTimer;
         private static Timer _updateObjectStatusesTimer;
-        private static string DiffImageSavingPath;
+        public static string DiffImageSavingPath { get; set; }
 
         static BuildExecutor()
         {
@@ -47,21 +48,15 @@ namespace Kepler.Service.Core
             UpdateKeplerServiceUrlOnWorkers();
         }
 
-        private void UpdateKeplerServiceUrlOnWorkers()
+        public void UpdateKeplerServiceUrlOnWorkers()
         {
             var workers = ImageWorkerRepository.Instance.FindAll()
                 .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
 
             foreach (var imageWorker in workers)
             {
-                var client = new RestClient(imageWorker.WorkerServiceUrl);
-                var request = new RestRequest("SetKeplerServiceUrl", Method.GET);
-
-                request.RequestFormat = DataFormat.Json;
-
-                var url = System.ServiceModel.OperationContext.Current.Host.BaseAddresses[0];
-                request.AddQueryParameter("url", url.AbsoluteUri);
-                client.Execute(request);
+                var restImageProcessorClient = new RestImageProcessorClient(imageWorker.WorkerServiceUrl);
+                restImageProcessorClient.SetDiffImagePath();
             }
         }
 
@@ -142,7 +137,11 @@ namespace Kepler.Service.Core
                 // if baseline is "empty" - just set screenshots as "passed"
                 if (oldPassedBaselineScreenShots == null || !oldPassedBaselineScreenShots.Any())
                 {
-                    newScreenShotsForProcessing.ForEach(item => item.Status = ObjectStatus.Passed);
+                    newScreenShotsForProcessing.ForEach(item =>
+                    {
+                        item.Status = ObjectStatus.Passed;
+                        item.IsLastPassed = true;
+                    });
                     ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
                 }
                 else
@@ -178,12 +177,14 @@ namespace Kepler.Service.Core
                 if (oldScreenShot == null)
                 {
                     newScreenShot.Status = ObjectStatus.Passed;
+                    newScreenShot.IsLastPassed = true;
                     ScreenShotRepository.Instance.Update(newScreenShot);
                 }
                 else
                 {
                     var imageComparison = new ImageComparisonInfo()
                     {
+                        LastPassedScreenShotId = oldScreenShot.Id,
                         FirstImagePath = oldScreenShot.ImagePath,
                         SecondImagePath = newScreenShot.ImagePath,
                         DiffImgPathToSave = DiffImageSavingPath,

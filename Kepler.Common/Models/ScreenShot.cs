@@ -17,6 +17,12 @@ namespace Kepler.Core
         [DataMember]
         public long BaseLineId { get; set; }
 
+        [DataMember]
+        public bool IsLastPassed { get; set; }
+
+        [DataMember]
+        public string ErrorMessage { get; set; }
+
         public ScreenShot()
         {
         }

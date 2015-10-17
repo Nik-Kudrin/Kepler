@@ -40,7 +40,7 @@ namespace Kepler.Core
 
         public IEnumerable<ScreenShot> GetBaselineScreenShots(long baselineId)
         {
-            return Find(item => item.BaseLineId == baselineId && item.Status == ObjectStatus.Passed);
+            return Find(item => item.BaseLineId == baselineId && item.IsLastPassed);
         }
     }
 }

@@ -10,6 +10,7 @@ using Kepler.Core;
 using Kepler.Core.Common;
 using Kepler.Models;
 using Kepler.Service.Core;
+using Kepler.Service.RestWorkerClient;
 
 namespace Kepler.Service
 {
@@ -280,9 +281,24 @@ namespace Kepler.Service
             {
                 var screenShot = ScreenShotRepository.Instance.Get(imageComparisonInfo.ScreenShotId);
 
-                screenShot.Status = imageComparisonInfo.IsImagesDifferent == true
-                    ? ObjectStatus.Failed
-                    : ObjectStatus.Passed;
+                if (imageComparisonInfo.IsImagesDifferent || imageComparisonInfo.ErrorMessage != "")
+                {
+                    screenShot.Status = ObjectStatus.Failed;
+                    screenShot.ErrorMessage = imageComparisonInfo.ErrorMessage;
+                }
+                else
+                {
+                    screenShot.Status = ObjectStatus.Passed;
+                    screenShot.IsLastPassed = true;
+
+                    if (imageComparisonInfo.LastPassedScreenShotId.HasValue)
+                    {
+                        var oldPassedScreenShot =
+                            ScreenShotRepository.Instance.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
+                        oldPassedScreenShot.IsLastPassed = false;
+                        ScreenShotRepository.Instance.Update(oldPassedScreenShot);
+                    }
+                }
 
                 screenShot.DiffImagePath = imageComparisonInfo.DiffImgPathToSave;
                 ScreenShotRepository.Instance.Update(screenShot);
@@ -308,6 +324,9 @@ namespace Kepler.Service
                     Name = name,
                     WorkerServiceUrl = imageWorkerServiceUrl
                 });
+
+                var restImageWorkerClient = new RestImageProcessorClient(imageWorkerServiceUrl);
+                restImageWorkerClient.SetDiffImagePath();
             }
             else
             {
@@ -367,6 +386,9 @@ namespace Kepler.Service
                 KeplerSystemConfigRepository.Instance.Update(diffImgPathToSaveProperty);
                 KeplerSystemConfigRepository.Instance.FlushChanges();
             }
+
+            BuildExecutor.DiffImageSavingPath = diffImageSavingPath;
+            BuildExecutor.GetExecutor().UpdateKeplerServiceUrlOnWorkers();
         }
 
         #endregion
