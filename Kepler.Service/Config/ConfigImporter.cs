@@ -277,7 +277,7 @@ namespace Kepler.Service
                     {
                         var mappedAssembly = mappedAssemblies[0];
 
-                        mappedAssembly.ParentObjId = assemblyBranch.Id;
+                        mappedAssembly.ParentObjId = assemblyBranch.LatestBuildId;
                         mappedAssembly.BuildId = assemblyBranch.LatestBuildId;
                         mappedAssembly.Status = ObjectStatus.InQueue;
 

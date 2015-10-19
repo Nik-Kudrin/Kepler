@@ -36,12 +36,12 @@ namespace Kepler.Service.Core
         private BuildExecutor()
         {
             _sendScreenShotsForProcessingTimer = new Timer();
-            _sendScreenShotsForProcessingTimer.Interval = 10000; //every 10 sec
+            _sendScreenShotsForProcessingTimer.Interval = 5000; //every 10 sec
             _sendScreenShotsForProcessingTimer.Elapsed += SendComparisonInfoToWorkers;
             _sendScreenShotsForProcessingTimer.Enabled = true;
 
             _updateObjectStatusesTimer = new Timer();
-            _updateObjectStatusesTimer.Interval = 30000; //every 10 sec
+            _updateObjectStatusesTimer.Interval = 15000; //every 30 sec
             _updateObjectStatusesTimer.Elapsed += UpdateObjectsStatuses;
             _updateObjectStatusesTimer.Enabled = true;
 
