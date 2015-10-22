@@ -50,23 +50,23 @@ namespace Kepler.Tests.Test
             var client = new RestClient("http://localhost:8733/Kepler.Service/");
 
             // Set diff image path
-            var request = new RestRequest("SetDiffImageSavingPath", Method.POST);
+            var request = new RestRequest("SetDiffImageSavingPath", Method.GET);
             request.RequestFormat = DataFormat.Json;
-            request.AddBody("e:\\Temp\\ScreenCompareResult\\");
+            request.AddQueryParameter("diffImageSavingPath", "e:\\Temp\\ScreenCompareResult\\");
 
             var response = client.Execute(request);
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
 
             // Create project
-            request = new RestRequest("CreateProject", Method.POST);
+            request = new RestRequest("CreateProject", Method.GET);
             request.RequestFormat = DataFormat.Json;
-            request.AddBody("Demo Project");
+            request.AddQueryParameter("name", "Demo Project");
 
             response = client.Execute(request);
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
 
             // Create branch
-            request = new RestRequest("CreateBranch", Method.POST);
+            request = new RestRequest("CreateBranch", Method.GET);
             request.RequestFormat = DataFormat.Json;
             request.AddQueryParameter("name", "Develop");
             request.AddQueryParameter("projectId", "1");
@@ -75,7 +75,7 @@ namespace Kepler.Tests.Test
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
 
             // Set branch as main
-            request = new RestRequest("UpdateBranch", Method.POST);
+            request = new RestRequest("UpdateBranch", Method.GET);
             request.RequestFormat = DataFormat.Json;
             request.AddQueryParameter("name", "Develop");
             request.AddQueryParameter("newName", "Develop");
@@ -85,7 +85,7 @@ namespace Kepler.Tests.Test
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
 
             // Register image worker
-            request = new RestRequest("RegisterImageWorker", Method.POST);
+            request = new RestRequest("RegisterImageWorker", Method.GET);
             request.RequestFormat = DataFormat.Json;
             request.AddQueryParameter("name", "FirstWorker");
             request.AddQueryParameter("imageWorkerServiceUrl", "http://localhost:8900/Kepler.ImageProcessor.Service/");
