@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using Kepler.Core.Common;
+using Kepler.Common.Models.Common;
 
-namespace Kepler.Core
+namespace Kepler.Common.Models
 {
     public class ScreenShot : BuildObject
     {

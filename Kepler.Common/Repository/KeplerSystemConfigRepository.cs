@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Kepler.Common.DB;
 using Kepler.Common.Models;
-using Kepler.Models;
 
-namespace Kepler.Core
+namespace Kepler.Common.Repository
 {
     public class KeplerSystemConfigRepository
     {

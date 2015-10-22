@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Kepler.Models;
 
-namespace Kepler.Core
+namespace Kepler.Common.Repository
 {
     public interface IRepository<TEntity, in TKey> where TEntity : class
     {

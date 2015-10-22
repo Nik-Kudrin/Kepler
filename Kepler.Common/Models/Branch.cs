@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Kepler.Core;
+using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Models
 {

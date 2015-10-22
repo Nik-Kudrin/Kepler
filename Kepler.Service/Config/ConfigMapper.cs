@@ -2,9 +2,6 @@
 using System.Linq;
 using AutoMapper;
 using Kepler.Common.Models;
-using Kepler.Core;
-using Kepler.Core.Common;
-using Kepler.Models;
 
 namespace Kepler.Service.Config
 {

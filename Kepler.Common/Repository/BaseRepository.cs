@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using Kepler.Models;
+using Kepler.Common.DB;
+using Kepler.Common.Models.Common;
 
-namespace Kepler.Core
+namespace Kepler.Common.Repository
 {
     public class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : InfoObject
     {

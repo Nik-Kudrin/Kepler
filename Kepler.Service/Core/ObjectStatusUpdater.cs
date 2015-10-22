@@ -1,19 +1,17 @@
-﻿using System;
-using System.Linq;
-using Kepler.Common.Core;
-using Kepler.Core;
-using Kepler.Core.Common;
+﻿using System.Linq;
+using Kepler.Common.Models.Common;
+using Kepler.Common.Repository;
 
 namespace Kepler.Service.Core
 {
     public class ObjectStatusUpdater
     {
-        public static void UpdateAllObjectStatusesRecursively()
+        public static void UpdateAllObjectStatusesToActual()
         {
-            UpdateTestCasesStatuses();
-            UpdateTestSuitesStatuses();
-            UpdateTestAssembliesStatuses();
-            UpdateBuildStatuses();
+            UpdateTestCasesStatuseToActual();
+            UpdateTestSuitesStatusToActual();
+            UpdateTestAssembliesStatusToActual();
+            UpdateBuildsStatusToActual();
         }
 
         // select all In progress, In queue Test Cases
@@ -23,7 +21,7 @@ namespace Kepler.Service.Core
 
         // if at least 1 screenshot failed - set status = Failed
         // if all screenshots passed - set status Passed
-        public static void UpdateTestCasesStatuses()
+        public static void UpdateTestCasesStatuseToActual()
         {
             var cases = TestCaseRepository.Instance.Find(
                 item => item.Status == ObjectStatus.InQueue || item.Status == ObjectStatus.InProgress);
@@ -64,7 +62,7 @@ namespace Kepler.Service.Core
 
         // if at least 1 test case failed - set status = Failed
         // if all cases passed - set status Passed
-        public static void UpdateTestSuitesStatuses()
+        public static void UpdateTestSuitesStatusToActual()
         {
             var suites = TestSuiteRepository.Instance.Find(
                 item => item.Status == ObjectStatus.InQueue || item.Status == ObjectStatus.InProgress);
@@ -104,7 +102,7 @@ namespace Kepler.Service.Core
 
         // if at least 1 suite failed - set status = Failed
         // if all suites passed - set status Passed
-        public static void UpdateTestAssembliesStatuses()
+        public static void UpdateTestAssembliesStatusToActual()
         {
             var assemblies = TestAssemblyRepository.Instance.Find(
                 item => item.Status == ObjectStatus.InQueue || item.Status == ObjectStatus.InProgress);
@@ -145,7 +143,7 @@ namespace Kepler.Service.Core
 
         // if at least 1 assembly failed - set status = Failed
         // if all assemblies passed - set status Passed
-        public static void UpdateBuildStatuses()
+        public static void UpdateBuildsStatusToActual()
         {
             var builds = BuildRepository.Instance.Find(
                 item => item.Status == ObjectStatus.InQueue || item.Status == ObjectStatus.InProgress);
@@ -175,6 +173,43 @@ namespace Kepler.Service.Core
             }
 
             BuildRepository.Instance.FlushChanges();
+        }
+
+
+        private void UpdateObjectStatusToActual<T, M, TEntity>(T baseObjectRepository, M childObjectRepository)
+            where T : BaseRepository<TEntity>
+            where M : BaseRepository<TEntity>
+            where TEntity : BuildObject
+        {
+            var baseItems =
+                baseObjectRepository.Find(item => item.Status == ObjectStatus.InQueue ||
+                                                  item.Status == ObjectStatus.InProgress);
+
+            foreach (var baseItem in baseItems)
+            {
+                var childItems = childObjectRepository.Find(item => item.ParentObjId == baseItem.Id);
+
+                if (childItems.Any(item => item.Status == ObjectStatus.Failed))
+                {
+                    baseItem.Status = ObjectStatus.Failed;
+                    continue;
+                }
+
+                if (childItems.Any(item => item.Status == ObjectStatus.InProgress))
+                {
+                    baseItem.Status = ObjectStatus.InProgress;
+                    continue;
+                }
+
+                if (childItems.All(item => item.Status == ObjectStatus.Passed))
+                {
+                    baseItem.Status = ObjectStatus.Passed;
+                }
+
+                baseObjectRepository.Update(baseItem);
+            }
+
+            baseObjectRepository.FlushChanges();
         }
     }
 }

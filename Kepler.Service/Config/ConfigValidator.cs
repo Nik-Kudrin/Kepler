@@ -2,8 +2,7 @@
 using System.Linq;
 using Kepler.Common.Error;
 using Kepler.Common.Models;
-using Kepler.Core;
-using Kepler.Models;
+using Kepler.Common.Models.Common;
 
 namespace Kepler.Service.Config
 {

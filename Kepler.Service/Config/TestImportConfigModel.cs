@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Kepler.Core;
+using Kepler.Common.Models;
 
 
 namespace Kepler.Service

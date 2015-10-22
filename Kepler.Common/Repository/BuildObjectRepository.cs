@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using Kepler.Core;
-using Kepler.Core.Common;
-using Kepler.Models;
+using Kepler.Common.DB;
+using Kepler.Common.Models.Common;
 
-namespace Kepler.Common.Core
+namespace Kepler.Common.Repository
 {
     public class BuildObjectRepository<TBuildObjEntity> : BaseRepository<TBuildObjEntity> where TBuildObjEntity : BuildObject
     {

@@ -1,7 +1,6 @@
 ﻿using Kepler.Common.Models;
-using Kepler.Core;
-using Kepler.Core.Common;
-using Kepler.Models;
+using Kepler.Common.Models.Common;
+using Kepler.Common.Repository;
 using NUnit.Framework;
 
 namespace Kepler.Tests.Test

@@ -1,6 +1,7 @@
-﻿using Kepler.Models;
+﻿using Kepler.Common.DB;
+using Kepler.Common.Models;
 
-namespace Kepler.Core
+namespace Kepler.Common.Repository
 {
     public class BaseLineRepository : BaseRepository<BaseLine>
     {

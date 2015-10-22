@@ -3,10 +3,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Timers;
 using Kepler.Common.CommunicationContracts;
-using Kepler.Common.Core;
 using Kepler.Common.Models;
-using Kepler.Core;
-using Kepler.Core.Common;
+using Kepler.Common.Models.Common;
+using Kepler.Common.Repository;
 using Kepler.Service.RestWorkerClient;
 using RestSharp;
 using Timer = System.Timers.Timer;
@@ -63,7 +62,7 @@ namespace Kepler.Service.Core
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void UpdateObjectsStatuses(object sender, ElapsedEventArgs eventArgs)
         {
-            ObjectStatusUpdater.UpdateAllObjectStatusesRecursively();
+            ObjectStatusUpdater.UpdateAllObjectStatusesToActual();
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]

@@ -53,7 +53,7 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
                 catch (Exception ex)
                 {
                     ImageComparisonInfo.ErrorMessage =
-                        $"Something bad happend in attempt to write file with diff screenshot '{ImageComparisonInfo.DiffImgPathToSave}'";
+                        $"Something bad happend in attempt to write file with diff screenshot '{ImageComparisonInfo.DiffImgPathToSave}'. {ex.Message}";
                     return ImageComparisonInfo;
                 }
 

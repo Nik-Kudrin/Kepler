@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Kepler.Core;
-using Kepler.Models;
+using Kepler.Common.Models;
 using Kepler.Service;
 using NUnit.Framework;
 

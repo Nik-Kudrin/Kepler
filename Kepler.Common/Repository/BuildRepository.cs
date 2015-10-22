@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using Kepler.Core.Common;
-using Kepler.Models;
+using Kepler.Common.DB;
+using Kepler.Common.Models;
+using Kepler.Common.Models.Common;
 
-namespace Kepler.Core
+namespace Kepler.Common.Repository
 {
     public class BuildRepository : BaseRepository<Build>
     {

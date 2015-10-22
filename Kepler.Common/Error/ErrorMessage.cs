@@ -74,9 +74,8 @@ namespace Kepler.Common.Error
                     codeMessage = "Undefined error";
                     break;
 
-
                 default:
-                    throw new NotImplementedException("Detaileds text about this type of error code isn't written");
+                    return "Detailed text about this type of error isn't written";
             }
 
             return $"Error: {codeMessage}. {ExceptionMessage}";

@@ -1,8 +1,7 @@
 ﻿using System.Data.Entity;
 using Kepler.Common.Models;
-using Kepler.Core;
 
-namespace Kepler.Models
+namespace Kepler.Common.DB
 {
     public class KeplerDataContext : DbContext
     {

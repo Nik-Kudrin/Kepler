@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Kepler.Core.Common
+namespace Kepler.Common.Models.Common
 {
     public class BuildObject : InfoObject
     {

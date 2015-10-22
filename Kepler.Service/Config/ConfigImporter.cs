@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Kepler.Common.Error;
 using Kepler.Common.Models;
-using Kepler.Core;
-using Kepler.Core.Common;
-using Kepler.Models;
+using Kepler.Common.Models.Common;
+using Kepler.Common.Repository;
 using Kepler.Service.Config;
 using Newtonsoft.Json;
 

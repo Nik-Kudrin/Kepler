@@ -1,7 +1,7 @@
-﻿using Kepler.Common.Models;
-using Kepler.Models;
+﻿using Kepler.Common.DB;
+using Kepler.Common.Models;
 
-namespace Kepler.Core
+namespace Kepler.Common.Repository
 {
     public class BranchRepository : BaseRepository<Branch>
     {

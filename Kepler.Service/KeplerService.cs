@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Kepler.Common.CommunicationContracts;
-using Kepler.Common.Core;
 using Kepler.Common.Error;
 using Kepler.Common.Models;
-using Kepler.Core;
-using Kepler.Core.Common;
-using Kepler.Models;
+using Kepler.Common.Models.Common;
+using Kepler.Common.Repository;
 using Kepler.Service.Core;
 using Kepler.Service.RestWorkerClient;
 
@@ -29,6 +27,50 @@ namespace Kepler.Service
         private long ConvertStringToLong(string number)
         {
             return Convert.ToInt64(number);
+        }
+
+        public string RunOperation(string typeName, string operationName)
+        {
+            switch (typeName.ToLowerInvariant())
+            {
+                case "build":
+                    break;
+                case "testCase":
+                    break;
+
+                case "testSuite":
+                    break;
+                case "testAssembly":
+                    break;
+                case "screenShot":
+                    break;
+
+
+                default:
+                    return
+                        $"TypeName {typeName} is not recognized. Possible values: build, testCase, testSuite, testAssembly, screenShot";
+            }
+
+
+            switch (operationName.ToLowerInvariant())
+            {
+                case "run":
+                    break;
+                case "stop":
+                    break;
+
+
+                default:
+                    return
+                        $"OperationName {operationName} is not recognized. Possible values: run, stop";
+            }
+
+            return "";
+        }
+
+        public string SetStatus(string typeName, string status)
+        {
+            throw new NotImplementedException();
         }
 
         public Build GetBuild(string id)

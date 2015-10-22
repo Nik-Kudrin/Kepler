@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Kepler.Common.Models;
-using Kepler.Core;
+using Kepler.Common.Models.Common;
 
-namespace Kepler.Models
+namespace Kepler.Common.Models
 {
     public class Project : InfoObject
     {

@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Kepler.Common.DB;
 using Kepler.Common.Models;
-using Kepler.Core;
-using Kepler.Models;
 
-namespace Kepler.Common.Core
+namespace Kepler.Common.Repository
 {
     public class ImageWorkerRepository : BaseRepository<ImageWorker>
     {

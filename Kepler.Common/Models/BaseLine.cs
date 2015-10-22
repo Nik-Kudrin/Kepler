@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Kepler.Common.Models.Common;
 
-namespace Kepler.Core
+namespace Kepler.Common.Models
 {
     public class BaseLine : InfoObject
     {

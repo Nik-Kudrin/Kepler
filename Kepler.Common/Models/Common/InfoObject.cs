@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using Kepler.Core.Common;
 
-namespace Kepler.Core
+namespace Kepler.Common.Models.Common
 {
     [DataContract]
     public class InfoObject

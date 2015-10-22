@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Kepler.Util
+namespace Kepler.Common.Util
 {
     public static class EntityXmlSerializer
     {

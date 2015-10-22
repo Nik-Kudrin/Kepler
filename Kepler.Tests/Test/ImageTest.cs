@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using Kepler.Common.CommunicationContracts;
-using Kepler.Core;
+using Kepler.Common.Models;
 using Kepler.ImageProcessor.Service.ImgProcessor;
 using Kepler.ImageProcessor.Service.TaskManager;
 using NUnit.Framework;
