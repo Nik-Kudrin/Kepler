@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
@@ -71,6 +73,87 @@ namespace Kepler.Service.Core
             }
 
             baseObjectRepository.FlushChanges();
+        }
+
+        public static void RecursiveSetObjectsStatus<TEntityBase>(long objectId, ObjectStatus newStatus,
+            bool updateParentObj = true)
+            where TEntityBase : BuildObject
+        {
+            if (typeof (TEntityBase) == typeof (Build))
+            {
+                if (updateParentObj)
+                {
+                    SetParentObjStatus<BuildRepository, Build>(BuildRepository.Instance, objectId, newStatus);
+                }
+                var childObjects =
+                    SetChildObjStatuses<TestAssemblyRepository, TestAssembly>(TestAssemblyRepository.Instance,
+                        objectId, newStatus);
+
+                childObjects.ForEach(item => RecursiveSetObjectsStatus<TestAssembly>(item.Id, newStatus, false));
+            }
+            else if (typeof (TEntityBase) == typeof (TestAssembly))
+            {
+                if (updateParentObj)
+                {
+                    SetParentObjStatus<TestAssemblyRepository, TestAssembly>(TestAssemblyRepository.Instance, objectId,
+                        newStatus);
+                }
+                var childObjects = SetChildObjStatuses<TestSuiteRepository, TestSuite>(TestSuiteRepository.Instance,
+                    objectId, newStatus);
+
+                childObjects.ForEach(item => RecursiveSetObjectsStatus<TestSuite>(item.Id, newStatus, false));
+            }
+            else if (typeof (TEntityBase) == typeof (TestSuite))
+            {
+                if (updateParentObj)
+                {
+                    SetParentObjStatus<TestSuiteRepository, TestSuite>(TestSuiteRepository.Instance, objectId, newStatus);
+                }
+                var childObjects = SetChildObjStatuses<TestCaseRepository, TestCase>(TestCaseRepository.Instance,
+                    objectId, newStatus);
+
+                childObjects.ForEach(item => RecursiveSetObjectsStatus<TestCase>(item.Id, newStatus, false));
+            }
+            else if (typeof (TEntityBase) == typeof (TestCase))
+            {
+                if (updateParentObj)
+                {
+                    SetParentObjStatus<TestCaseRepository, TestCase>(TestCaseRepository.Instance, objectId, newStatus);
+                }
+                SetChildObjStatuses<ScreenShotRepository, ScreenShot>(ScreenShotRepository.Instance, objectId, newStatus);
+            }
+            else if (typeof (TEntityBase) == typeof (ScreenShot))
+            {
+                SetParentObjStatus<ScreenShotRepository, ScreenShot>(ScreenShotRepository.Instance, objectId, newStatus);
+            }
+        }
+
+        private static void SetParentObjStatus<T, TEntity>(T objectRepository, long objectId,
+            ObjectStatus newStatus)
+            where T : BaseRepository<TEntity>
+            where TEntity : BuildObject
+        {
+            var item = objectRepository.Get(objectId);
+
+            if (item == null) return;
+
+            item.Status = newStatus;
+            objectRepository.UpdateAndFlashChanges(item);
+        }
+
+
+        private static List<TEntityChild> SetChildObjStatuses<T, TEntityChild>(T childObjectRepository,
+            long parentObjId,
+            ObjectStatus newStatus)
+            where T : BaseRepository<TEntityChild>
+            where TEntityChild : BuildObject
+        {
+            var childItems = childObjectRepository.Find(item => item.ParentObjId == parentObjId).ToList();
+
+            childItems.ForEach(item => item.Status = newStatus);
+            childObjectRepository.UpdateAndFlashChanges(childItems);
+
+            return childItems.ToList();
         }
     }
 }

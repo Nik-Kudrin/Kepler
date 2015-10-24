@@ -19,47 +19,40 @@ namespace Kepler.Service
         private TestAssemblyRepository assemblyRepository = TestAssemblyRepository.Instance;
         private ProjectRepository projectRepository = ProjectRepository.Instance;
         private TestSuiteRepository testSuiteRepo = TestSuiteRepository.Instance;
-        private ScreenShotRepository screenShotRepository = ScreenShotRepository.Instance;
         private ImageWorkerRepository workerRepository = ImageWorkerRepository.Instance;
+
+        // do not remove this field (used for build executor init)
         private static BuildExecutor _executor = BuildExecutor.GetExecutor();
 
+        #region Common Actions
 
         private long ConvertStringToLong(string number)
         {
             return Convert.ToInt64(number);
         }
 
-        public string RunOperation(string typeName, string operationName)
+        public string RunOperation(string typeName, long objId, string operationName)
         {
-            switch (typeName.ToLowerInvariant())
-            {
-                case "build":
-                    break;
-                case "testCase":
-                    break;
-
-                case "testSuite":
-                    break;
-                case "testAssembly":
-                    break;
-                case "screenShot":
-                    break;
-
-
-                default:
-                    return
-                        $"TypeName {typeName} is not recognized. Possible values: build, testCase, testSuite, testAssembly, screenShot";
-            }
-
+            string exceptionMessage;
 
             switch (operationName.ToLowerInvariant())
             {
                 case "run":
+                    exceptionMessage = SetStatus(typeName, objId, ObjectStatus.InQueue);
+                    if (exceptionMessage != "")
+                        return exceptionMessage;
+
                     break;
                 case "stop":
+                    exceptionMessage = SetStatus(typeName, objId, ObjectStatus.Stopped);
+                    if (exceptionMessage != "")
+                        return exceptionMessage;
+
+
+                    // TODO: implement 'Stop' method on image processor
+                    // TODO: add logic inside 'UpdateScreenshots' method (if current status = Stopped , then just update diff image path field)
+
                     break;
-
-
                 default:
                     return
                         $"OperationName {operationName} is not recognized. Possible values: run, stop";
@@ -68,10 +61,54 @@ namespace Kepler.Service
             return "";
         }
 
-        public string SetStatus(string typeName, string status)
+        private string SetStatus(string typeName, long objId, ObjectStatus newStatus)
         {
-            throw new NotImplementedException();
+            switch (typeName.ToLowerInvariant())
+            {
+                case "build":
+                    ObjectStatusUpdater.RecursiveSetObjectsStatus<Build>(objId, newStatus);
+                    break;
+                case "testAssembly":
+                    ObjectStatusUpdater.RecursiveSetObjectsStatus<TestAssembly>(objId, newStatus);
+                    break;
+                case "testSuite":
+                    ObjectStatusUpdater.RecursiveSetObjectsStatus<TestSuite>(objId, newStatus);
+                    break;
+                case "testCase":
+                    ObjectStatusUpdater.RecursiveSetObjectsStatus<TestCase>(objId, newStatus);
+                    break;
+                case "screenShot":
+                    ObjectStatusUpdater.RecursiveSetObjectsStatus<ScreenShot>(objId, newStatus);
+                    break;
+
+                default:
+                    return
+                        $"TypeName {typeName} is not recognized. Possible values: build, testCase, testSuite, testAssembly, screenShot";
+            }
+
+            return "";
         }
+
+        public string SetStatus(string typeName, long objId, string newStatus)
+        {
+            ObjectStatus status;
+            switch (newStatus.ToLowerInvariant())
+            {
+                case "failed":
+                    status = ObjectStatus.Failed;
+                    break;
+                case "passed":
+                    status = ObjectStatus.Passed;
+                    break;
+                default:
+                    return
+                        $"Status {newStatus} is not recognized. Possible values: failed, passed";
+            }
+
+            return SetStatus(typeName, objId, status);
+        }
+
+        #endregion
 
         public Build GetBuild(string id)
         {

@@ -1,6 +1,7 @@
 ﻿using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
+using Kepler.Service.Core;
 using NUnit.Framework;
 
 namespace Kepler.Tests.Test
@@ -84,10 +85,10 @@ namespace Kepler.Tests.Test
         }
 
 
-        [Ignore]
         [Test]
-        public void CreateAllObjectsTree()
+        public void UpdateObjectsTypeTests()
         {
+            ObjectStatusUpdater.RecursiveSetObjectsStatus<Build>(2, ObjectStatus.Stopped);
         }
     }
 }

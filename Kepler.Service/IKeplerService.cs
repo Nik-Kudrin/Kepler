@@ -9,31 +9,32 @@ namespace Kepler.Service
     [ServiceContract]
     public interface IKeplerService
     {
-        #region Common Methods
+        #region Common Actions
 
         /// <summary>
         /// Run / Stop operation recursively on Build, TestCase ...
         /// </summary>
         /// <param name="typeName">Possible values: build, testCase, testSuite, testAssembly, screenShot</param>
+        /// <param name="objId"></param>
         /// <param name="operationName">Possible values: run, stop</param>
         /// <returns></returns>
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json,
-            UriTemplate = "RunOperation?typeName={typeName}&operationName={operationName}")
+            UriTemplate = "RunOperation?typeName={typeName}&objId={objId}&operationName={operationName}")
         ]
-        string RunOperation(string typeName, string operationName);
+        string RunOperation(string typeName, long objId, string operationName);
 
         /// <summary>
-        /// Set new status for objects recursively
+        /// Set new newStatus for objects recursively
         /// </summary>
         /// <param name="typeName">Possible values: build, testCase, testSuite, testAssembly, screenShot</param>
-        /// <param name="status">Possible values: failed, passed</param>
+        /// <param name="newStatus">Possible values: failed, passed</param>
         /// <returns></returns>
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json,
-            UriTemplate = "SetStatus?typeName={typeName}&status={status}")
+            UriTemplate = "SetStatus?typeName={typeName}&objId={objId}&newStatus={newStatus}")
         ]
-        string SetStatus(string typeName, string status);
+        string SetStatus(string typeName, long objId, string newStatus);
 
         #endregion
 

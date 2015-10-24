@@ -8,6 +8,7 @@
         InProgress,
         InQueue,
         Passed,
-        Failed
+        Failed,
+        Stopped
     }
 }
