@@ -98,6 +98,21 @@
                     $('.modal-body').empty().append('<div class="form-group"><input class="form-control" type="text"></div>');
                     $('.modal-footer').show().empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
                     break;
+                case 'add_image_worker':
+                    $('.modal-title').text('Add image worker');
+                    $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" type="text"></div><div class="form-group"><label>Url</label><input class="form-control" type="text"></div>');
+                    $('.modal-footer').show().empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
+                    break;
+                case 'edit_image_worker':
+                    $('.modal-title').text('Edit image worker');
+                    $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" type="text"></div><div class="form-group"><label>Url</label><input class="form-control" type="text"></div>');
+                    $('.modal-footer').show().empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
+                    break;
+                case 'remove_image_worker':
+                    $('.modal-title').text('Remove image worker');
+                    $('.modal-body').empty().append('Are you sure want to delete it?');
+                    $('.modal-footer').show().empty().append('<button type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>');
+                    break;
             }
         }
     </script>
