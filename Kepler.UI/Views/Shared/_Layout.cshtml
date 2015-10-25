@@ -18,11 +18,25 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="/">KEPLER</a>
             </div>
+
+            <div class="header-right">
+                <a class="btn btn-default" href="/admin">Admin</a>
+            </div>
         </nav>
         <!-- /. NAV TOP -->
 
         <nav class="navbar-default navbar-side" role="navigation">
-            @RenderPage("~/Views/Home/LeftMenu.cshtml")
+
+            @if (Request.Url.GetLeftPart(UriPartial.Path).Contains("admin"))
+            {
+                @RenderPage("~/Views/Admin/LeftMenu.cshtml")
+            }
+            else
+            {
+                @RenderPage("~/Views/Home/LeftMenu.cshtml")
+            }
+
+
         </nav>
         <!-- /. NAV SIDE -->
 
@@ -62,23 +76,27 @@
                 case 'create_proj':
                     $('.modal-title').text('Create');
                     $('.modal-body').empty().append('<div class="form-group"><input class="form-control" type="text"></div>');
-                    $('.modal-footer').empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
+                    $('.modal-footer').show().empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
                     break;
                 case 'edit_proj':
                     $('.modal-title').text('Edit');
                     $('.modal-body').empty().append('<div class="form-group"><input class="form-control" type="text" value="' + modalWinObj + '"></div>');
-                    $('.modal-footer').empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
+                    $('.modal-footer').show().empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
                     break;
                 case 'delete_proj':
                     $('.modal-title').text('Delete');
                     $('.modal-body').empty().append('Are you sure want to delete ' + modalWinObj + '?');
-                    $('.modal-footer').empty().append('<button type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>');
+                    $('.modal-footer').show().empty().append('<button type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>');
                     break;
                 case 'create_config':
-                    console.log("kgh");
                     $('.modal-title').text('Create config');
                     $('.modal-body').empty().append('<div class="fileupload fileupload-new" data-provides="fileupload"><span class="btn btn-file btn-default"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file"></span><span class="fileupload-preview"></span><a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a></div><div class="alert alert-warning">Error AZAZA!!!</div>');
                     $('.modal-footer').hide();
+                    break;
+                case 'diff_path_edit':
+                    $('.modal-title').text('Edit diff image path');
+                    $('.modal-body').empty().append('<div class="form-group"><input class="form-control" type="text"></div>');
+                    $('.modal-footer').show().empty().append('<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>');
                     break;
             }
         }

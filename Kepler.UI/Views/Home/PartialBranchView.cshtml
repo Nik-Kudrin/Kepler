@@ -83,9 +83,7 @@
         });
     });
 
-    $(document).ready(function () {
-        $('.btn-success').click(function () {
-            loadModalWin('', $(this).attr('data-content'));
-        });
+    $('button:not([data-content=""])').click(function () {
+        loadModalWin('', $(this).attr('data-content'));
     });
 </script>
