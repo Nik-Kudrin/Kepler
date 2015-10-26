@@ -32,9 +32,9 @@ namespace Kepler.Service
         /// <returns></returns>
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json,
-            UriTemplate = "SetStatus?typeName={typeName}&objId={objId}&newStatus={newStatus}")
+            UriTemplate = "SetObjectsStatus?typeName={typeName}&objId={objId}&newStatus={newStatus}")
         ]
-        string SetStatus(string typeName, long objId, string newStatus);
+        string SetObjectsStatus(string typeName, long objId, string newStatus);
 
         #endregion
 

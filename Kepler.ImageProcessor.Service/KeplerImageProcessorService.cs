@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Error;
 using Kepler.ImageProcessor.Service.TaskManager;
@@ -35,6 +34,11 @@ namespace Kepler.ImageProcessor.Service
         public void SetKeplerServiceUrl(string url)
         {
             TaskGenerator.GetTaskGenerator.SetKeplerServiceUrl(url);
+        }
+
+        public void StopDiffGeneration(ImageComparisonContract imagesToStopProcessing)
+        {
+            TaskGenerator.GetTaskGenerator.RemoveImagesFromProcessing(imagesToStopProcessing.ImageComparisonList);
         }
     }
 }

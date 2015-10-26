@@ -80,5 +80,15 @@ namespace Kepler.ImageProcessor.Service.TaskManager
                 return imagesToReturn;
             }
         }
+
+        public void RemoveImagesFromProcessing(List<ImageComparisonInfo> imageComparisonList)
+        {
+            var idsScreenShotsToRemove = imageComparisonList.Select(item => item.ScreenShotId);
+
+            var updatedImagesCollection = _imagesToProcess.ToList();
+            updatedImagesCollection.RemoveAll(item => idsScreenShotsToRemove.Contains(item.ScreenShotId));
+
+            _imagesToProcess = new ConcurrentBag<ImageComparisonInfo>(updatedImagesCollection);
+        }
     }
 }

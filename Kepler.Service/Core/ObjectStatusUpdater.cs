@@ -75,10 +75,21 @@ namespace Kepler.Service.Core
             baseObjectRepository.FlushChanges();
         }
 
-        public static void RecursiveSetObjectsStatus<TEntityBase>(long objectId, ObjectStatus newStatus,
+        /// <summary>
+        /// Set status for all objects in sub tree of element with provided ObjectId and Type
+        /// </summary>
+        /// <typeparam name="TEntityBase"></typeparam>
+        /// <param name="objectId"></param>
+        /// <param name="newStatus"></param>
+        /// <param name="updateParentObj"></param>
+        /// <returns>Collection of affected screenshots, status of which were updated</returns>
+        public static List<ScreenShot> RecursiveSetObjectsStatus<TEntityBase>(long objectId,
+            ObjectStatus newStatus,
             bool updateParentObj = true)
             where TEntityBase : BuildObject
         {
+            List<ScreenShot> affectedScreenShots = null;
+
             if (typeof (TEntityBase) == typeof (Build))
             {
                 if (updateParentObj)
@@ -89,7 +100,10 @@ namespace Kepler.Service.Core
                     SetChildObjStatuses<TestAssemblyRepository, TestAssembly>(TestAssemblyRepository.Instance,
                         objectId, newStatus);
 
-                childObjects.ForEach(item => RecursiveSetObjectsStatus<TestAssembly>(item.Id, newStatus, false));
+                foreach (var child in childObjects)
+                {
+                    affectedScreenShots.AddRange(RecursiveSetObjectsStatus<TestAssembly>(child.Id, newStatus, false));
+                }
             }
             else if (typeof (TEntityBase) == typeof (TestAssembly))
             {
@@ -101,7 +115,10 @@ namespace Kepler.Service.Core
                 var childObjects = SetChildObjStatuses<TestSuiteRepository, TestSuite>(TestSuiteRepository.Instance,
                     objectId, newStatus);
 
-                childObjects.ForEach(item => RecursiveSetObjectsStatus<TestSuite>(item.Id, newStatus, false));
+                foreach (var child in childObjects)
+                {
+                    affectedScreenShots.AddRange(RecursiveSetObjectsStatus<TestSuite>(child.Id, newStatus, false));
+                }
             }
             else if (typeof (TEntityBase) == typeof (TestSuite))
             {
@@ -112,7 +129,10 @@ namespace Kepler.Service.Core
                 var childObjects = SetChildObjStatuses<TestCaseRepository, TestCase>(TestCaseRepository.Instance,
                     objectId, newStatus);
 
-                childObjects.ForEach(item => RecursiveSetObjectsStatus<TestCase>(item.Id, newStatus, false));
+                foreach (var child in childObjects)
+                {
+                    affectedScreenShots.AddRange(RecursiveSetObjectsStatus<TestCase>(child.Id, newStatus, false));
+                }
             }
             else if (typeof (TEntityBase) == typeof (TestCase))
             {
@@ -120,12 +140,18 @@ namespace Kepler.Service.Core
                 {
                     SetParentObjStatus<TestCaseRepository, TestCase>(TestCaseRepository.Instance, objectId, newStatus);
                 }
-                SetChildObjStatuses<ScreenShotRepository, ScreenShot>(ScreenShotRepository.Instance, objectId, newStatus);
+
+                return SetChildObjStatuses<ScreenShotRepository, ScreenShot>(ScreenShotRepository.Instance, objectId,
+                    newStatus);
             }
             else if (typeof (TEntityBase) == typeof (ScreenShot))
             {
                 SetParentObjStatus<ScreenShotRepository, ScreenShot>(ScreenShotRepository.Instance, objectId, newStatus);
+
+                return new List<ScreenShot>() {ScreenShotRepository.Instance.Get(objectId)};
             }
+
+            return new List<ScreenShot>();
         }
 
         private static void SetParentObjStatus<T, TEntity>(T objectRepository, long objectId,
@@ -154,6 +180,30 @@ namespace Kepler.Service.Core
             childObjectRepository.UpdateAndFlashChanges(childItems);
 
             return childItems.ToList();
+        }
+
+
+        public static List<ScreenShot> SetObjectsStatus(string typeName, long objId, ObjectStatus newStatus)
+        {
+            switch (typeName.ToLowerInvariant())
+            {
+                case "build":
+                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<Build>(objId, newStatus);
+                case "testAssembly":
+                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<TestAssembly>(objId, newStatus);
+                case "testSuite":
+                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<TestSuite>(objId, newStatus);
+                case "testCase":
+                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<TestCase>(objId, newStatus);
+                case "screenShot":
+                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<ScreenShot>(objId, newStatus);
+
+                default:
+                    throw new ArgumentException(
+                        $"TypeName {typeName} is not recognized. Possible values: build, testCase, testSuite, testAssembly, screenShot");
+            }
+
+            return null;
         }
     }
 }

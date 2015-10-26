@@ -25,5 +25,10 @@ namespace Kepler.ImageProcessor.Service
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "SetKeplerServiceUrl?url={url}")]
         void SetKeplerServiceUrl(string url);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "/StopDiffGeneration")]
+        void StopDiffGeneration(ImageComparisonContract imagesToStopProcessing);
     }
 }

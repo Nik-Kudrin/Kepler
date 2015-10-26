@@ -141,5 +141,13 @@ namespace Kepler.ImageProcessor.Service.TaskManager
                 }
             }
         }
+
+        public void RemoveImagesFromProcessing(List<ImageComparisonInfo> imageComparisonList)
+        {
+            foreach (var imageTaskWorker in _taskWorkers)
+            {
+                imageTaskWorker.RemoveImagesFromProcessing(imageComparisonList);
+            }
+        }
     }
 }

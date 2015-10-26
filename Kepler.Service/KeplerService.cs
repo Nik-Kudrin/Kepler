@@ -33,25 +33,38 @@ namespace Kepler.Service
 
         public string RunOperation(string typeName, long objId, string operationName)
         {
-            string exceptionMessage;
-
             switch (operationName.ToLowerInvariant())
             {
                 case "run":
-                    exceptionMessage = SetStatus(typeName, objId, ObjectStatus.InQueue);
-                    if (exceptionMessage != "")
-                        return exceptionMessage;
-
+                    try
+                    {
+                        ObjectStatusUpdater.SetObjectsStatus(typeName, objId, ObjectStatus.InQueue);
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message;
+                    }
                     break;
                 case "stop":
-                    exceptionMessage = SetStatus(typeName, objId, ObjectStatus.Stopped);
-                    if (exceptionMessage != "")
-                        return exceptionMessage;
+                    List<ScreenShot> affectedScreenShots;
 
+                    try
+                    {
+                        affectedScreenShots = ObjectStatusUpdater.SetObjectsStatus(typeName, objId, ObjectStatus.Stopped);
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message;
+                    }
 
-                    // TODO: implement 'Stop' method on image processor
-                    // TODO: add logic inside 'UpdateScreenshots' method (if current status = Stopped , then just update diff image path field)
+                    var workers = ImageWorkerRepository.Instance.FindAll()
+                        .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
 
+                    foreach (var imageWorker in workers)
+                    {
+                        var restImageProcessorClient = new RestImageProcessorClient(imageWorker.WorkerServiceUrl);
+                        restImageProcessorClient.StopStopDiffGeneration(affectedScreenShots);
+                    }
                     break;
                 default:
                     return
@@ -61,35 +74,8 @@ namespace Kepler.Service
             return "";
         }
 
-        private string SetStatus(string typeName, long objId, ObjectStatus newStatus)
-        {
-            switch (typeName.ToLowerInvariant())
-            {
-                case "build":
-                    ObjectStatusUpdater.RecursiveSetObjectsStatus<Build>(objId, newStatus);
-                    break;
-                case "testAssembly":
-                    ObjectStatusUpdater.RecursiveSetObjectsStatus<TestAssembly>(objId, newStatus);
-                    break;
-                case "testSuite":
-                    ObjectStatusUpdater.RecursiveSetObjectsStatus<TestSuite>(objId, newStatus);
-                    break;
-                case "testCase":
-                    ObjectStatusUpdater.RecursiveSetObjectsStatus<TestCase>(objId, newStatus);
-                    break;
-                case "screenShot":
-                    ObjectStatusUpdater.RecursiveSetObjectsStatus<ScreenShot>(objId, newStatus);
-                    break;
 
-                default:
-                    return
-                        $"TypeName {typeName} is not recognized. Possible values: build, testCase, testSuite, testAssembly, screenShot";
-            }
-
-            return "";
-        }
-
-        public string SetStatus(string typeName, long objId, string newStatus)
+        public string SetObjectsStatus(string typeName, long objId, string newStatus)
         {
             ObjectStatus status;
             switch (newStatus.ToLowerInvariant())
@@ -105,7 +91,16 @@ namespace Kepler.Service
                         $"Status {newStatus} is not recognized. Possible values: failed, passed";
             }
 
-            return SetStatus(typeName, objId, status);
+            try
+            {
+                ObjectStatusUpdater.SetObjectsStatus(typeName, objId, status);
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+            return "";
         }
 
         #endregion
@@ -359,6 +354,14 @@ namespace Kepler.Service
             foreach (var imageComparisonInfo in imageComparisonContract.ImageComparisonList)
             {
                 var screenShot = ScreenShotRepository.Instance.Get(imageComparisonInfo.ScreenShotId);
+
+                // if current screenshot status = Stopped, then just update diff image path field
+                if (screenShot.Status == ObjectStatus.Stopped)
+                {
+                    screenShot.DiffImagePath = imageComparisonInfo.DiffImgPathToSave;
+                    ScreenShotRepository.Instance.Update(screenShot);
+                    continue;
+                }
 
                 if (imageComparisonInfo.IsImagesDifferent || imageComparisonInfo.ErrorMessage != "")
                 {
