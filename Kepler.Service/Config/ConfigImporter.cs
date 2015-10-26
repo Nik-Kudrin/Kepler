@@ -5,10 +5,9 @@ using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
-using Kepler.Service.Config;
 using Newtonsoft.Json;
 
-namespace Kepler.Service
+namespace Kepler.Service.Config
 {
     public class ConfigImporter
     {
@@ -21,10 +20,10 @@ namespace Kepler.Service
         /// <returns>Return empty string, if import was 'Ok', otherwise - error message</returns>
         public string ImportConfig(string jsonConfig)
         {
-            TestImportConfig importedConfig;
+            ImportConfigModel importedConfig;
             try
             {
-                importedConfig = JsonConvert.DeserializeObject<TestImportConfig>(jsonConfig);
+                importedConfig = JsonConvert.DeserializeObject<ImportConfigModel>(jsonConfig);
             }
             catch (Exception ex)
             {
@@ -68,7 +67,7 @@ namespace Kepler.Service
         }
 
 
-        private string ValidateImportedConfigObjects(TestImportConfig importedConfig)
+        private string ValidateImportedConfigObjects(ImportConfigModel importedConfig)
         {
             var mapper = new ConfigMapper();
             var mappedProjects = mapper.GetProjects(importedConfig.Projects).ToList();
@@ -156,7 +155,7 @@ namespace Kepler.Service
             return mappedProjects;
         }
 
-        private List<Branch> BindBranchesWithProjects(TestImportConfig importedConfig, List<Project> mappedProjects)
+        private List<Branch> BindBranchesWithProjects(ImportConfigModel importedConfig, List<Project> mappedProjects)
         {
             var branches = new List<Branch>();
 
@@ -259,7 +258,7 @@ namespace Kepler.Service
         /// <param name="importedConfig"></param>
         /// <param name="branches"></param>
         /// <returns>List of new bounded assemblies</returns>
-        private List<TestAssembly> BindTestAssembliesWithBuilds(TestImportConfig importedConfig,
+        private List<TestAssembly> BindTestAssembliesWithBuilds(ImportConfigModel importedConfig,
             IEnumerable<Branch> branches)
         {
             var assemblies = new List<TestAssembly>();
@@ -295,7 +294,7 @@ namespace Kepler.Service
         /// <param name="importedConfig"></param>
         /// <param name="assemblies"></param>
         /// <returns>Return updated test assemblies (bounded with suites)</returns>
-        private List<TestAssembly> BindTestSuitesWithAssemblies(TestImportConfig importedConfig,
+        private List<TestAssembly> BindTestSuitesWithAssemblies(ImportConfigModel importedConfig,
             List<TestAssembly> assemblies)
         {
             foreach (var projectConfig in importedConfig.Projects)
@@ -333,7 +332,7 @@ namespace Kepler.Service
         /// <param name="importedConfig"></param>
         /// <param name="assemblies"></param>
         /// <returns></returns>
-        private void BindTestCasesWithSuites(TestImportConfig importedConfig, List<TestAssembly> assemblies)
+        private void BindTestCasesWithSuites(ImportConfigModel importedConfig, List<TestAssembly> assemblies)
         {
             // map cases
             // bind cases with suites
@@ -377,7 +376,7 @@ namespace Kepler.Service
         /// <param name="importedConfig"></param>
         /// <param name="branches"></param>
         /// <param name="assemblies"></param>
-        private void BindScreenshotsWithTestCases(TestImportConfig importedConfig, List<Branch> branches,
+        private void BindScreenshotsWithTestCases(ImportConfigModel importedConfig, List<Branch> branches,
             List<TestAssembly> assemblies)
         {
             foreach (var projectConfig in importedConfig.Projects)

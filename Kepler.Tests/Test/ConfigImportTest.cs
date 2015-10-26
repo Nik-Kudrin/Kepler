@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Kepler.Common.Models;
 using Kepler.Service;
+using Kepler.Service.Config;
 using NUnit.Framework;
 
 namespace Kepler.Tests.Test

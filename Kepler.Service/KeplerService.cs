@@ -7,6 +7,7 @@ using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
+using Kepler.Service.Config;
 using Kepler.Service.Core;
 using Kepler.Service.RestWorkerClient;
 

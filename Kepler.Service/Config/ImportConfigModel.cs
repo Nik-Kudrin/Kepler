@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using Kepler.Common.Models;
 
-
-namespace Kepler.Service
+namespace Kepler.Service.Config
 {
-    public class TestImportConfig
+    public class ImportConfigModel
     {
         public List<ProjectConfig> Projects { get; set; }
 

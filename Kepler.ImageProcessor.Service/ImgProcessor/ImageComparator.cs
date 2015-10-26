@@ -2,8 +2,6 @@
 using System.IO;
 using ImageMagick;
 using Kepler.Common.CommunicationContracts;
-using Kepler.Common.Error;
-using Kepler.Common.Models;
 
 namespace Kepler.ImageProcessor.Service.ImgProcessor
 {
