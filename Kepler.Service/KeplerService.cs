@@ -27,11 +27,6 @@ namespace Kepler.Service
 
         #region Common Actions
 
-        private long ConvertStringToLong(string number)
-        {
-            return Convert.ToInt64(number);
-        }
-
         public string RunOperation(string typeName, long objId, string operationName)
         {
             switch (operationName.ToLowerInvariant())
@@ -106,9 +101,9 @@ namespace Kepler.Service
 
         #endregion
 
-        public Build GetBuild(string id)
+        public Build GetBuild(long id)
         {
-            return buildRepo.Get(ConvertStringToLong(id));
+            return buildRepo.Get(id);
         }
 
         public IEnumerable<Build> GetBuilds()
@@ -124,54 +119,78 @@ namespace Kepler.Service
             return null;
         }
 
-        #region TestCase
+        #region ScreenShot
 
-        public TestCase GetTestCase(string id)
+        public ScreenShot GetScreenShot(long id)
         {
-            return testCaseRepo.Get(ConvertStringToLong(id));
+            return ScreenShotRepository.Instance.Get(id);
         }
 
-        public IEnumerable<TestCase> GetTestCases(string testSuiteId)
+        public IEnumerable<ScreenShot> GetScreenShots(long testCaseId)
         {
-            return testCaseRepo.Find(ConvertStringToLong(testSuiteId));
+            return ScreenShotRepository.Instance.Find(item => item.ParentObjId == testCaseId);
+        }
+
+        public ImageComparisonInfo GetImageComparisonObj(long screenShotId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ImageComparisonContract GetImageComparisonObjects(long testCaseId)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region TestCase
+
+        public TestCase GetTestCase(long id)
+        {
+            return testCaseRepo.Get(id);
+        }
+
+        public IEnumerable<TestCase> GetTestCases(long testSuiteId)
+        {
+            return testCaseRepo.Find(testSuiteId);
         }
 
         #endregion
 
         #region TestSuite
 
-        public TestSuite GetTestSuite(string id)
+        public TestSuite GetTestSuite(long id)
         {
-            return testSuiteRepo.Get(ConvertStringToLong(id));
+            return testSuiteRepo.Get(id);
         }
 
-        public IEnumerable<TestSuite> GetTestSuites(string assemblyId)
+        public IEnumerable<TestSuite> GetTestSuites(long assemblyId)
         {
-            return testSuiteRepo.Find(ConvertStringToLong(assemblyId));
+            return testSuiteRepo.Find(assemblyId);
         }
 
         #endregion
 
         #region TestAssembly
 
-        public TestAssembly GetTestAssembly(string assemblyId)
+        public TestAssembly GetTestAssembly(long assemblyId)
         {
-            return assemblyRepository.Get(ConvertStringToLong(assemblyId));
+            return assemblyRepository.Get(assemblyId);
         }
 
 
-        public IEnumerable<TestAssembly> GetTestAssemblies(string buildId)
+        public IEnumerable<TestAssembly> GetTestAssemblies(long buildId)
         {
-            return assemblyRepository.Find(ConvertStringToLong(buildId));
+            return assemblyRepository.Find(buildId);
         }
 
         #endregion
 
         #region Project
 
-        public Project GetProject(string id)
+        public Project GetProject(long id)
         {
-            return projectRepository.Get(ConvertStringToLong(id));
+            return projectRepository.Get(id);
         }
 
         public IEnumerable<Project> GetProjects()

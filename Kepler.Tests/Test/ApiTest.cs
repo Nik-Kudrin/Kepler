@@ -2,6 +2,7 @@
 using System.IO;
 using FluentAssertions;
 using Newtonsoft.Json;
+using NLog.Fluent;
 using NUnit.Framework;
 using RestSharp;
 
@@ -33,6 +34,8 @@ namespace Kepler.Tests.Test
         public void ImportTestConfig()
         {
             var buildConfigFile = File.ReadAllText(Path.Combine(BaseResourcePath, "test_config.json"));
+
+//            Console.WriteLine(JsonConvert.SerializeObject(buildConfigFile));
 
             var client = new RestClient("http://localhost:8733/Kepler.Service/");
             var request = new RestRequest("ImportTestConfig", Method.POST);

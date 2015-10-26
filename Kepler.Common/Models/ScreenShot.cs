@@ -15,6 +15,10 @@ namespace Kepler.Common.Models
         public string DiffImagePath { get; set; }
 
         [DataMember]
+        [StringLength(500)]
+        public string Url { get; set; }
+
+        [DataMember]
         public long BaseLineId { get; set; }
 
         [DataMember]

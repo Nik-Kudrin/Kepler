@@ -202,8 +202,6 @@ namespace Kepler.Service.Core
                     throw new ArgumentException(
                         $"TypeName {typeName} is not recognized. Possible values: build, testCase, testSuite, testAssembly, screenShot");
             }
-
-            return null;
         }
     }
 }

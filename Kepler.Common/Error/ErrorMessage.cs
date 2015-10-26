@@ -22,7 +22,8 @@ namespace Kepler.Common.Error
             ObjectNotFoundInDb,
             NotUniqueObjects,
 
-            AddTaskToImageWorkerError
+            AddTaskToImageWorkerError,
+            ScreenShotDoesntHaveAName
         }
 
         public ErorCode Code { get; set; }
@@ -38,22 +39,25 @@ namespace Kepler.Common.Error
                     codeMessage = "Config file parsing error";
                     break;
                 case ErorCode.ProjectDontHaveAName:
-                    codeMessage = "Project don't have a name";
+                    codeMessage = "Project doesn't have a name";
                     break;
                 case ErorCode.BranchDontHaveAName:
-                    codeMessage = "Branch don't have a name";
+                    codeMessage = "Branch doesn't have a name";
                     break;
                 case ErorCode.ProjectDontHaveMainBranch:
-                    codeMessage = "Project don't have main branch";
+                    codeMessage = "Project doesn't have main branch";
                     break;
                 case ErorCode.AssemblyDontHaveAName:
-                    codeMessage = "TestAssembly don't have a name";
+                    codeMessage = "TestAssembly doesn't have a name";
                     break;
                 case ErorCode.SuiteDontHaveAName:
-                    codeMessage = "TestSuite don't have a name";
+                    codeMessage = "TestSuite doesn't have a name";
                     break;
                 case ErorCode.CaseDontHaveAName:
-                    codeMessage = "TestCase don't have a name";
+                    codeMessage = "TestCase doesn't have a name";
+                    break;
+                case ErorCode.ScreenShotDoesntHaveAName:
+                    codeMessage = "ScreenShot doesn't have a name";
                     break;
                 case ErorCode.ScreenShotHasEmptyFilePath:
                     codeMessage = "Screenshot has empty file path";

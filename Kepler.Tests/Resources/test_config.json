@@ -17,11 +17,12 @@
                                             "ScreenShots": [
                                                 {
                                                     "ImagePath": "c:\\Users\\neon\\Pictures\\ElementFinder_2015-07-29_15-51-21.png",
-                                                     "Name": "ScreenName_1"
+                                                    "Name": "ScreenName_1",
+                                                    "Url": "https://trello.com/c/fBpszhrM/33-api-add-in-screenshot-object-field-url"
                                                 },
                                                 {
                                                     "ImagePath": "c:\\Users\\neon\\Pictures\\ElementFinder_2015-07-29_15-51-00.png",
-                                                    "Name": "ScreenName_2"
+                                                     "Name": "ScreenName_2",
                                                 }                                              
                                             ]
                                         }

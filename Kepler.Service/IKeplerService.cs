@@ -38,23 +38,48 @@ namespace Kepler.Service
 
         #endregion
 
+        #region Build
+
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetBuild?id={id}")]
-        Build GetBuild(string id);
+        Build GetBuild(long id);
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetBuilds")]
         IEnumerable<Build> GetBuilds();
 
+        #endregion
+
+        #region ScreenShot
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetScreenShot?id={id}")]
+        ScreenShot GetScreenShot(long id);
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetScreenShots?testCaseId={testCaseId}")]
+        IEnumerable<ScreenShot> GetScreenShots(long testCaseId);
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetImageComparisonObj?screenShotId={screenShotId}")]
+        ImageComparisonInfo GetImageComparisonObj(long screenShotId);
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "GetImageComparisonObjects?testCaseId={testCaseId}")]
+        ImageComparisonContract GetImageComparisonObjects(long testCaseId);
+
+        #endregion
+
         #region TestCase
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestCase?testCaseId={id}")]
-        TestCase GetTestCase(string id);
+        TestCase GetTestCase(long id);
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestCases?testSuiteId={testSuiteId}")]
-        IEnumerable<TestCase> GetTestCases(string testSuiteId);
+        IEnumerable<TestCase> GetTestCases(long testSuiteId);
 
         #endregion
 
@@ -62,11 +87,11 @@ namespace Kepler.Service
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestSuite?id={id}")]
-        TestSuite GetTestSuite(string id);
+        TestSuite GetTestSuite(long id);
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestSuites?assemblyId={assemblyId}")]
-        IEnumerable<TestSuite> GetTestSuites(string assemblyId);
+        IEnumerable<TestSuite> GetTestSuites(long assemblyId);
 
         #endregion
 
@@ -74,11 +99,11 @@ namespace Kepler.Service
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestAssembly?assemblyId={assemblyId}")]
-        TestAssembly GetTestAssembly(string assemblyId);
+        TestAssembly GetTestAssembly(long assemblyId);
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestAssemblies?buildId={buildId}")]
-        IEnumerable<TestAssembly> GetTestAssemblies(string buildId);
+        IEnumerable<TestAssembly> GetTestAssemblies(long buildId);
 
         #endregion
 
@@ -86,7 +111,7 @@ namespace Kepler.Service
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetProject?projectId={id}")]
-        Project GetProject(string id);
+        Project GetProject(long id);
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetProjects")]

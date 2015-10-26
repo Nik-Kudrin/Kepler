@@ -403,10 +403,13 @@ namespace Kepler.Service.Config
                                 for (int index = 0; index < screenShots.Count; index++)
                                 {
                                     var screenShot = screenShots[index];
+
                                     screenShot.BuildId = currentCase.Value.BuildId;
                                     screenShot.ParentObjId = currentCase.Key;
                                     screenShot.BaseLineId = currentBranch.BaseLineId.Value;
                                     screenShot.Status = ObjectStatus.InQueue;
+                                    screenShot.Name = string.Format("{0}_{1}_{2}_{3}", currentAssembly.Name,
+                                        currentSuite.Value.Name, currentCase.Value.Name, screenShot.Name);
 
                                     ScreenShotRepository.Instance.Insert(screenShot);
                                 }
