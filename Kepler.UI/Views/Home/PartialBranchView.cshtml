@@ -1,8 +1,8 @@
 ﻿<div class="panel panel-default">
     <div class="panel-heading">
         <div>
-            <h3>Hover Rows</h3>
-            <button type="button" class="btn btn-success">Create build</button>
+            <h3></h3>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#crud-modal" data-content="create_config">Create build</button>
         </div>
     </div>
     <div class="panel-body">
@@ -81,5 +81,9 @@
                 $('#page-inner').html(data);
             }
         });
+    });
+
+    $('button:not([data-content=""])').click(function () {
+        loadModalWin('', $(this).attr('data-content'));
     });
 </script>
