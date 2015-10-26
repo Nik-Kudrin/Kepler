@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Kepler.Core;
-using Kepler.Models;
+using Kepler.Common.Models;
 using Kepler.Service;
 using NUnit.Framework;
 
@@ -61,7 +60,6 @@ namespace Kepler.Tests.Test
         public void ImportSimpleConfig()
         {
 //            new CommonTest().CreateProject();
-
             var config = File.ReadAllText(Path.Combine(BaseResourcePath, "simple_test_config.json"));
 
             var configImporter = new ConfigImporter();

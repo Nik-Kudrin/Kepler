@@ -1,0 +1,17 @@
+﻿<div class="col-md-12">
+    <div class="col-md-10">
+        <div class="form-group">
+            <input class="form-control" type="text" readonly>
+            <p class="help-block">Diff image path</p>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <button type="button" class="btn btn-lg" data-toggle="modal" data-target="#crud-modal" data-content="diff_path_edit">Edit</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('button:not([data-content=""])').click(function () {
+        loadModalWin('', $(this).attr('data-content'));
+    });
+</script>

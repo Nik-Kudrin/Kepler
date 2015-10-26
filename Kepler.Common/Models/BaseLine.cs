@@ -1,22 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using Kepler.Core.Common;
+using Kepler.Common.Models.Common;
 
-namespace Kepler.Core
+namespace Kepler.Common.Models
 {
-    public class BaseLine
+    public class BaseLine : InfoObject
     {
-        [Key]
         [DataMember]
-        public long Id { get; set; }
+        public long BranchId { get; set; }
 
-        [DataMember]
-        public long ProjectId { get; set; }
-
-        [DataMember]
-        public ObjectStatus Status { get; set; }
-        
         public Dictionary<long?, ScreenShot> ScreenShots { get; set; }
     }
 }

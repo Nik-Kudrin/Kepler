@@ -7,13 +7,22 @@ namespace Kepler.Common.Error
         public enum ErorCode
         {
             ParsingFileError,
+
             ProjectDontHaveAName,
+            ProjectDontHaveMainBranch,
+
+            BranchDontHaveAName,
             AssemblyDontHaveAName,
             SuiteDontHaveAName,
             CaseDontHaveAName,
             ScreenShotHasEmptyFilePath,
+            EmptyListOfObjects,
+
+            UndefinedError,
             ObjectNotFoundInDb,
-            EmptyListOfObjects
+            NotUniqueObjects,
+
+            AddTaskToImageWorkerError
         }
 
         public ErorCode Code { get; set; }
@@ -31,6 +40,12 @@ namespace Kepler.Common.Error
                 case ErorCode.ProjectDontHaveAName:
                     codeMessage = "Project don't have a name";
                     break;
+                case ErorCode.BranchDontHaveAName:
+                    codeMessage = "Branch don't have a name";
+                    break;
+                case ErorCode.ProjectDontHaveMainBranch:
+                    codeMessage = "Project don't have main branch";
+                    break;
                 case ErorCode.AssemblyDontHaveAName:
                     codeMessage = "TestAssembly don't have a name";
                     break;
@@ -46,12 +61,21 @@ namespace Kepler.Common.Error
                 case ErorCode.ObjectNotFoundInDb:
                     codeMessage = "Object wasn't found in Database";
                     break;
+                case ErorCode.NotUniqueObjects:
+                    codeMessage = "Object is not unique in Database";
+                    break;
                 case ErorCode.EmptyListOfObjects:
                     codeMessage = "List of objects is empty";
                     break;
+                case ErorCode.AddTaskToImageWorkerError:
+                    codeMessage = "Error happend in process to add images for diff comparison";
+                    break;
+                case ErorCode.UndefinedError:
+                    codeMessage = "Undefined error";
+                    break;
 
                 default:
-                    throw new NotImplementedException("Detaileds text about this type of error code isn't written");
+                    return "Detailed text about this type of error isn't written";
             }
 
             return $"Error: {codeMessage}. {ExceptionMessage}";

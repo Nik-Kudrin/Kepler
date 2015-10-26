@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Kepler.Core.Common;
+using Kepler.Common.Models.Common;
 
-namespace Kepler.Core
+namespace Kepler.Common.Models
 {
     public class TestAssembly : BuildObject
     {

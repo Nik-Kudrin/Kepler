@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace Kepler.Util
+namespace Kepler.Common.Util
 {
     public class Utf8StringWriter : StringWriter
     {

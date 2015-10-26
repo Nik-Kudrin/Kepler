@@ -1,0 +1,44 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        <div>
+            <h3>Image workers</h3>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#crud-modal" data-content="add_image_worker">Add</button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Url</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Worker name</td>
+                        <td>http://...</td>
+                        <td>
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_image_worker">Edit</a></li>
+                                    <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="remove_image_worker">Delete</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('button:not([data-content=""]), a:not([data-content=""])').click(function () {
+        loadModalWin('', $(this).attr('data-content'));
+    });
+</script>

@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
@@ -50,16 +51,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\BaseRepository.cs" />
-    <Compile Include="Core\BuildObjectRepository.cs" />
-    <Compile Include="Core\BuildRepository.cs" />
-    <Compile Include="Core\ImageWorkerRepository.cs" />
-    <Compile Include="Core\IRepository.cs" />
-    <Compile Include="Core\ProjectRepository.cs" />
-    <Compile Include="Core\ScreenShotRepository.cs" />
-    <Compile Include="Core\TestAssemblyRepository.cs" />
-    <Compile Include="Core\TestCaseRepository.cs" />
-    <Compile Include="Core\TestSuiteRepository.cs" />
+    <Compile Include="CommunicationContracts\ImageComparisonContract.cs" />
+    <Compile Include="Models\Branch.cs" />
+    <Compile Include="Models\KeplerSystemConfig.cs" />
+    <Compile Include="Repository\BaseRepository.cs" />
+    <Compile Include="Repository\BaseLineRepository.cs" />
+    <Compile Include="Repository\BuildObjectRepository.cs" />
+    <Compile Include="Repository\KeplerSystemConfigRepository.cs" />
+    <Compile Include="Repository\BuildRepository.cs" />
+    <Compile Include="Repository\ImageWorkerRepository.cs" />
+    <Compile Include="Repository\IRepository.cs" />
+    <Compile Include="Repository\BranchRepository.cs" />
+    <Compile Include="Repository\ProjectRepository.cs" />
+    <Compile Include="Repository\ScreenShotRepository.cs" />
+    <Compile Include="Repository\TestAssemblyRepository.cs" />
+    <Compile Include="Repository\TestCaseRepository.cs" />
+    <Compile Include="Repository\TestSuiteRepository.cs" />
     <Compile Include="DB\KeplerDataContext.cs" />
     <Compile Include="Error\ErrorMessage.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -68,10 +75,10 @@
     <Compile Include="Models\Common\BuildObject.cs" />
     <Compile Include="Models\Common\InfoObject.cs" />
     <Compile Include="Models\Common\ObjectStatus.cs" />
-    <Compile Include="Models\ImageInfo.cs" />
+    <Compile Include="CommunicationContracts\ImageComparisonInfo.cs" />
     <Compile Include="Models\ImageWorker.cs" />
     <Compile Include="Models\Project.cs" />
-    <Compile Include="Models\TestImportConfig.cs" />
+    <Compile Include="CommunicationContracts\TestImportConfig.cs" />
     <Compile Include="Models\ScreenShot.cs" />
     <Compile Include="Models\TestAssembly.cs" />
     <Compile Include="Models\TestCase.cs" />

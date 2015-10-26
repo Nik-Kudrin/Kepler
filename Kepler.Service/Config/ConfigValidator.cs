@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Kepler.Common.Error;
-using Kepler.Core;
-using Kepler.Models;
+using Kepler.Common.Models;
+using Kepler.Common.Models.Common;
 
 namespace Kepler.Service.Config
 {
@@ -11,7 +11,8 @@ namespace Kepler.Service.Config
     /// </summary>
     public static class ConfigValidator
     {
-        private static string NameValidator<T>(ErrorMessage.ErorCode errorCode, List<T> configObjects) where T : InfoObject
+        private static string NameValidator<T>(ErrorMessage.ErorCode errorCode, List<T> configObjects)
+            where T : InfoObject
         {
             if (configObjects.Select(item => item.Name.Trim()).Any(itemName => itemName == ""))
             {
@@ -30,7 +31,8 @@ namespace Kepler.Service.Config
             return "";
         }
 
-        private static string EmptyListValidator<T>(ErrorMessage.ErorCode errorCode, List<T> configObjects) where T : InfoObject
+        private static string EmptyListValidator<T>(ErrorMessage.ErorCode errorCode, List<T> configObjects)
+            where T : InfoObject
         {
             if (configObjects == null || configObjects.Count == 0)
             {
@@ -52,6 +54,15 @@ namespace Kepler.Service.Config
                 return validationMessage;
 
             return NameValidator(ErrorMessage.ErorCode.ProjectDontHaveAName, projects);
+        }
+
+        public static string ValidateBranches(List<Branch> branches)
+        {
+            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.BranchDontHaveAName, branches);
+            if (validationMessage != "")
+                return validationMessage;
+
+            return NameValidator(ErrorMessage.ErorCode.BranchDontHaveAName, branches);
         }
 
         public static string ValidateTestAssemblies(List<TestAssembly> assemblies)

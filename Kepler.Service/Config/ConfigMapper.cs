@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using Kepler.Core;
-using Kepler.Models;
+using Kepler.Common.Models;
 
 namespace Kepler.Service.Config
 {
@@ -17,12 +16,10 @@ namespace Kepler.Service.Config
 
             Mapper.CreateMap<TestImportConfig.ProjectConfig, Project>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.BaseLine, opt => opt.Ignore())
-                .ForMember(dest => dest.Builds, opt => opt.Ignore())
+                .ForMember(dest => dest.Branches, opt => opt.Ignore())
+                .ForMember(dest => dest.MainBranchId, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.Status, opt => opt.Ignore())
-                .ForMember(dest => dest.LatestBuildId, opt => opt.Ignore());
-
+                .ForMember(dest => dest.Status, opt => opt.Ignore());
 
             Mapper.AssertConfigurationIsValid();
 
@@ -34,6 +31,32 @@ namespace Kepler.Service.Config
             return projectsConfig.Select(config => GetProject(config));
         }
 
+        public Branch GetBranch(TestImportConfig.BranchConfig branchConfig)
+        {
+            Mapper.Reset();
+
+            Mapper.Configuration.AllowNullCollections = true;
+            Mapper.Configuration.AllowNullDestinationValues = true;
+
+            Mapper.CreateMap<TestImportConfig.BranchConfig, Branch>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.BaseLineId, opt => opt.Ignore())
+                .ForMember(dest => dest.Builds, opt => opt.Ignore())
+                .ForMember(dest => dest.IsMainBranch, opt => opt.Ignore())
+                .ForMember(dest => dest.LatestBuildId, opt => opt.Ignore())
+                .ForMember(dest => dest.ProjectId, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Status, opt => opt.Ignore());
+
+            Mapper.AssertConfigurationIsValid();
+
+            return Mapper.Map<TestImportConfig.BranchConfig, Branch>(branchConfig);
+        }
+
+        public IEnumerable<Branch> GetBranches(IEnumerable<TestImportConfig.BranchConfig> branchesConfig)
+        {
+            return branchesConfig.Select(config => GetBranch(config));
+        }
 
         public TestAssembly GetAssembly(TestImportConfig.TestAssemblyConfig assemblyConfig)
         {
@@ -56,7 +79,8 @@ namespace Kepler.Service.Config
             return Mapper.Map<TestImportConfig.TestAssemblyConfig, TestAssembly>(assemblyConfig);
         }
 
-        public IEnumerable<TestAssembly> GetAssemblies(IEnumerable<TestImportConfig.TestAssemblyConfig> testAssemblyConfigs)
+        public IEnumerable<TestAssembly> GetAssemblies(
+            IEnumerable<TestImportConfig.TestAssemblyConfig> testAssemblyConfigs)
         {
             return testAssemblyConfigs.Select(config => GetAssembly(config));
         }

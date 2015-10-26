@@ -59,8 +59,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -78,11 +83,13 @@
     <Compile Include="Config\ConfigImporter.cs" />
     <Compile Include="Config\ConfigMapper.cs" />
     <Compile Include="Config\ConfigValidator.cs" />
-    <Compile Include="Core\TaskGenerator.cs" />
+    <Compile Include="Core\BuildExecutor.cs" />
+    <Compile Include="Core\ObjectStatusUpdater.cs" />
     <Compile Include="IKeplerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KeplerService.cs" />
     <Compile Include="Config\TestImportConfigModel.cs" />
+    <Compile Include="RestWorkerClient\RestImageProcessorClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

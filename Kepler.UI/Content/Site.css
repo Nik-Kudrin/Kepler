@@ -9,6 +9,11 @@ h3 {
     width: 16px;
 }
 
+.build-panel .status-failed, .build-panel .status-passed, .build-panel .status-queued {
+    width: 16px;
+    vertical-align: text-bottom;
+}
+
 .status-failed {
     background: url("../img/progress_red.png");
 }
@@ -20,27 +25,72 @@ h3 {
 .status-queued {
     background: url("../img/progress_blue.gif");
 }
+
+.btn {
+    border: 1px solid #ccc;
+    padding: 3px 12px;
+    vertical-align: baseline;
+}
+
+.dropdown-btn {
+    position: relative;
+    display: inline-block;
+    float: right;
+}
+
+.dropdown-menu {
+    right: 0px;
+    left: auto;
+}
+
+span.fileupload-preview {
+    padding: 0px 10px;
+}
+
+input.form-control.error {
+    border: 1px solid #CA2F00;
+}
+
+label.error {
+    color: #CA2F00;
+    font-size: 12px;
+    font-weight: normal;
+}
 /*GLOBAL END*/
+
+/*NAVBAR LEFT START*/
+.main-menu-conf {
+    position: absolute;
+    right: 30px;
+    top: 20px;
+}
+
+.navbar-side .fa-cog {
+    font-size: 18px;
+    cursor: pointer;
+    color: #FFF;
+}
+
+.navbar-side .fa.arrow {
+    line-height: 26px;
+    width: 9px;
+}
+/*NAVBAR LEFT END*/
 
 /*BUILD LIST PAGE START*/
 .panel-default .panel-heading {
     padding-bottom: 0px;
 }
 
-    .panel-default .panel-heading div {
-        width: 100%;
-        display: inline-block;
+    .panel-default .panel-heading div h3 {
+        float: left;
+        line-height: 34px;
+        text-transform: capitalize;
     }
 
-        .panel-default .panel-heading div h3 {
-            float: left;
-            line-height: 34px;
-            text-transform: capitalize;
-        }
-
-        .panel-default .panel-heading div button {
-            float: right;
-        }
+    .panel-default .panel-heading div button {
+        float: right;
+    }
 
 .panel-default .panel-body {
     padding: 0px;
@@ -70,13 +120,15 @@ h3 {
     padding-left: 10px;
 }
 
-
-
 .build-panel {
     margin: 20px 0px;
     border: none;
     background: none;
 }
+
+    .build-panel textarea.form-control {
+        resize: vertical;
+    }
 
 .panel .panel-default {
     border: none;
@@ -85,29 +137,69 @@ h3 {
 .assembly_group .panel-default,
 .test_suite_group .panel-default,
 .test_case_group .panel-default {
-    padding: 10px 10px 5px 10px;
+    padding: 10px 10px 10px 10px;
+    background: none;
 }
 
 .assembly_group .panel-default {
-    background: #337AB7;
+    border: 1px dotted #777;
 }
 
 .test_suite_group .panel-default {
-    background: #449AE2;
+    border: 1px dotted #999;
 }
 
 .test_case_group .panel-default {
-    background: #A3D5FF;
+    border: 1px dotted #CCC;
 }
 
-.test_case_group .panel-body {
-    padding: 0px 15px;
+.build-panel-one-page-link {
+    font-size: 18px;
+    float: right;
 }
 
 .assembly_group .panel-body,
 .test_suite_group .panel-body,
 .test_case_group .panel-body {
     padding: 10px 0px 5px 15px;
+}
+
+.test_case_group .panel-body {
+    padding: 10px 0px;
+}
+
+.build-panel-one-page-header {
+    margin-bottom: 20px;
+}
+
+    .build-panel-one-page-header span {
+        background: #DDD;
+        padding: 5px;
+        border-radius: 4px;
+        font-size: 11px;
+        margin-bottom: 5px;
+        display: inline;
+    }
+
+.build-panel-screen-base, .build-panel-screen-dif, .build-panel-screen-curr {
+    height: 96px;
+    background: url("../img/no_image_icon.png") no-repeat center;
+    background-size: 117px 95px;
+    text-align: center;
+}
+
+    .build-panel-screen-base img, .build-panel-screen-dif img, .build-panel-screen-curr img {
+        width: 118px;
+        height: 96px;
+        display: inline;
+    }
+
+.build-panel-error-log {
+    padding-top: 20px;
+}
+
+.build-panel-splitter hr {
+    border-top: 1px dotted #CCC;
 }
 
 .panel-group {
@@ -118,19 +210,29 @@ h3 {
         border-top: none;
     }
 
+.panel-collapse {
+    clear: both;
+}
+
+.build-panel .panel-heading {
+    padding: 0px;
+}
+
 .panel-title {
     margin-bottom: 10px;
+    display: inline;
 }
 
     .panel-title a {
-        background: #FFF;
+        background: none;
         padding: 5px;
         border-radius: 3px;
+        vertical-align: middle;
     }
 
         .panel-title a:hover {
             text-decoration: none;
-            background: #EAEAEA;
+            background: none;
         }
 
 .panel-default .panel-heading {

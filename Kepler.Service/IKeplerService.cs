@@ -1,14 +1,43 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using Kepler.Core;
-using Kepler.Models;
+using Kepler.Common.CommunicationContracts;
+using Kepler.Common.Models;
 
 namespace Kepler.Service
 {
     [ServiceContract]
     public interface IKeplerService
     {
+        #region Common Actions
+
+        /// <summary>
+        /// Run / Stop operation recursively on Build, TestCase ...
+        /// </summary>
+        /// <param name="typeName">Possible values: build, testCase, testSuite, testAssembly, screenShot</param>
+        /// <param name="objId"></param>
+        /// <param name="operationName">Possible values: run, stop</param>
+        /// <returns></returns>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "RunOperation?typeName={typeName}&objId={objId}&operationName={operationName}")
+        ]
+        string RunOperation(string typeName, long objId, string operationName);
+
+        /// <summary>
+        /// Set new newStatus for objects recursively
+        /// </summary>
+        /// <param name="typeName">Possible values: build, testCase, testSuite, testAssembly, screenShot</param>
+        /// <param name="newStatus">Possible values: failed, passed</param>
+        /// <returns></returns>
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "SetObjectsStatus?typeName={typeName}&objId={objId}&newStatus={newStatus}")
+        ]
+        string SetObjectsStatus(string typeName, long objId, string newStatus);
+
+        #endregion
+
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetBuild?id={id}")]
         Build GetBuild(string id);
@@ -23,7 +52,6 @@ namespace Kepler.Service
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestCase?testCaseId={id}")]
         TestCase GetTestCase(string id);
 
-
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestCases?testSuiteId={testSuiteId}")]
         IEnumerable<TestCase> GetTestCases(string testSuiteId);
@@ -36,7 +64,6 @@ namespace Kepler.Service
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestSuite?id={id}")]
         TestSuite GetTestSuite(string id);
 
-
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestSuites?assemblyId={assemblyId}")]
         IEnumerable<TestSuite> GetTestSuites(string assemblyId);
@@ -48,7 +75,6 @@ namespace Kepler.Service
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestAssembly?assemblyId={assemblyId}")]
         TestAssembly GetTestAssembly(string assemblyId);
-
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestAssemblies?buildId={buildId}")]
@@ -66,6 +92,36 @@ namespace Kepler.Service
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetProjects")]
         IEnumerable<Project> GetProjects();
 
+        /// <summary>
+        /// Create project
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Return empty string if operation was OK. Otherwis - error message</returns>
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "CreateProject?name={name}")]
+        string CreateProject(string name);
+
+        #endregion
+
+        #region Branch
+
+        /// <summary>
+        /// Create Branch
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Return empty string if operation was OK. Otherwis - error message</returns>
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "CreateBranch?name={name}&projectId={projectId}")]
+        string CreateBranch(string name, long projectId);
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "UpdateBranch?name={name}&newName={newName}&isMainBranch={isMainBranch}")]
+        string UpdateBranch(string name, string newName, bool isMainBranch);
+
         #endregion
 
         /// <summary>
@@ -74,12 +130,48 @@ namespace Kepler.Service
         /// <param name="testConfig"></param>
         /// <returns>Return emtpy string, if import was OK. Otherwise return string with error message</returns>
         [OperationContract]
-        [WebInvoke(ResponseFormat = WebMessageFormat.Json, UriTemplate = "ImportTestConfig")]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "ImportTestConfig")]
         string ImportTestConfig(string testConfig);
 
 
         [OperationContract]
-        [WebInvoke(UriTemplate = "RegisterImageWorker")]
-        void RegisterImageWorker(string imageWorkerServiceUrl);
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "UpdateScreenShots")]
+        void UpdateScreenShots(ImageComparisonContract imageComparisonContract);
+
+        #region ImageWorkers
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetImageWorkers")]
+        IEnumerable<ImageWorker> GetImageWorkers();
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "RegisterImageWorker?name={name}&imageWorkerServiceUrl={imageWorkerServiceUrl}")]
+        string RegisterImageWorker(string name, string imageWorkerServiceUrl);
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "UpdateImageWorker?name={name}&newName={newName}&newWorkerServiceUrl={newWorkerServiceUrl}")]
+        string UpdateImageWorker(string name, string newName, string newWorkerServiceUrl);
+
+        #endregion
+
+        #region Project
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetDiffImageSavingPath")]
+        string GetDiffImageSavingPath();
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "SetDiffImageSavingPath?diffImageSavingPath={diffImageSavingPath}")]
+        void SetDiffImageSavingPath(string diffImageSavingPath);
+
+        #endregion
     }
 }

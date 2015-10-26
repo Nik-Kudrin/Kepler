@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using Kepler.Core;
+using Kepler.Common.Models;
+
 
 namespace Kepler.Service
 {
@@ -14,8 +15,14 @@ namespace Kepler.Service
 
         public class ProjectConfig : BaseConfig
         {
+            public List<BranchConfig> Branches { get; set; }
+        }
+
+        public class BranchConfig : BaseConfig
+        {
             public List<TestAssemblyConfig> TestAssemblies { get; set; }
         }
+
 
         public class TestAssemblyConfig : BaseConfig
         {

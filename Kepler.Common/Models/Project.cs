@@ -1,22 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Kepler.Core;
+using Kepler.Common.Models.Common;
 
-namespace Kepler.Models
+namespace Kepler.Common.Models
 {
     public class Project : InfoObject
     {
-        [DataMember]
-        public BaseLine BaseLine { get; set; }
+        public Dictionary<long?, Branch> Branches { get; set; }
 
         [DataMember]
-        public long? LatestBuildId { get; set; }
-
-        public Dictionary<long?, Build> Builds { get; set; }
+        public long? MainBranchId { get; set; }
 
         public Project()
         {
-            Builds = new Dictionary<long?, Build>();
+            Branches = new Dictionary<long?, Branch>();
         }
     }
 }

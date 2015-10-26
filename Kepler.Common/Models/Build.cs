@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using Kepler.Common.Models.Common;
 
-namespace Kepler.Core
+namespace Kepler.Common.Models
 {
-    public class Build : InfoObject
+    public class Build : BuildObject
     {
         [DataMember]
         [DataType(DataType.DateTime)]
@@ -15,7 +16,7 @@ namespace Kepler.Core
         public TimeSpan? Duration { get; set; }
 
         [DataMember]
-        public long? ProjectId { get; set; }
+        public long? BranchId { get; set; }
 
         [DataMember]
         public long TestCount { get; set; }

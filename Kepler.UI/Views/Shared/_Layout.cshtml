@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
@@ -13,32 +13,66 @@
 
 </head>
 <body>
-<div id="wrapper">
-    <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/">KEPLER</a>
+    <div id="wrapper">
+        <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">KEPLER</a>
+            </div>
+
+            <div class="header-right">
+                <a class="btn btn-default" href="/admin">Admin</a>
+            </div>
+        </nav>
+        <!-- /. NAV TOP -->
+
+        <nav class="navbar-default navbar-side" role="navigation">
+
+            @if (Request.Url.GetLeftPart(UriPartial.Path).Contains("admin"))
+            {
+                @RenderPage("~/Views/Admin/LeftMenu.cshtml")
+            }
+            else
+            {
+                @RenderPage("~/Views/Home/LeftMenu.cshtml")
+            }
+
+
+        </nav>
+        <!-- /. NAV SIDE -->
+
+
+        <div id="page-wrapper">
+            <div id="page-inner">
+                @RenderBody()
+            </div>
+            <!-- /. PAGE INNER -->
         </div>
-    </nav>
-    <!-- /. NAV TOP -->
-
-    <nav class="navbar-default navbar-side" role="navigation">
-        @RenderPage("~/Views/Home/LeftMenu.cshtml")
-    </nav>
-    <!-- /. NAV SIDE -->
-
-
-    <div id="page-wrapper">
-        <div id="page-inner">
-            @RenderBody()
-        </div>
-        <!-- /. PAGE INNER -->
+        <!-- /. PAGE WRAPPER -->
     </div>
-    <!-- /. PAGE WRAPPER -->
-</div>
-<!-- /. WRAPPER -->
-<div id="footer-sec">
-    &copy; 2014 YourCompany | Design By : <a href="http://www.binarytheme.com/" target="_blank">BinaryTheme.com</a>
-</div>
+    <!-- /. WRAPPER -->
+    <div id="footer-sec">
+    &copy; 2015 Kepler.ws | Design By : <a href="http://www.binarytheme.com/" target="_blank">BinaryTheme.com</a>
+    </div>
+
+    <!-- /. MODAL WINDOW -->
+    <div class="modal fade" id="crud-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
+                </div>
+                <form id="modal_form" action="" method="post">
+                    <div class="modal-body">
+                    </div>                    
+                    <div class="modal-footer">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/Scripts/custom.js"></script>
 
 </body>
 </html>

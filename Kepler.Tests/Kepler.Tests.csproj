@@ -64,6 +64,9 @@
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -143,13 +146,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FixtureBuilder\BaseBuilder.cs" />
-    <Compile Include="FixtureBuilder\IFixtureBuilder.cs" />
-    <Compile Include="FixtureBuilder\ProjectBuilder.cs" />
-    <Compile Include="FixtureBuilder\ScreenShotBuilder.cs" />
-    <Compile Include="FixtureBuilder\TestAssemblyBuilder.cs" />
-    <Compile Include="FixtureBuilder\TestCaseBuilder.cs" />
-    <Compile Include="FixtureBuilder\TestSuiteBuilder.cs" />
+    <Compile Include="Test\ApiTest.cs" />
     <Compile Include="Test\ConfigImportTest.cs" />
     <Compile Include="Test\ImageTest.cs" />
     <Compile Include="Test\InitTest.cs" />
@@ -161,6 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\test_config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\simple_test_config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -174,9 +174,9 @@
       <Project>{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}</Project>
       <Name>Kepler.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KeplerImageProcessorService\KeplerImageProcessorService.csproj">
+    <ProjectReference Include="..\Kepler.ImageProcessor.Service\Kepler.ImageProcessor.Service.csproj">
       <Project>{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}</Project>
-      <Name>KeplerImageProcessorService</Name>
+      <Name>Kepler.ImageProcessor.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

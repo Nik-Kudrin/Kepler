@@ -1,0 +1,37 @@
+﻿{
+    "Projects": [
+        {
+            "Name": "Demo Project",
+            "Branches": [
+                {
+                    "Name": "Develop",
+                    "TestAssemblies": [
+                        {
+                            "Name": "TestAssembly Name",
+                            "TestSuites": [
+                                {
+                                    "Name": "Test suite Name",
+                                    "TestCases": [
+                                        {
+                                            "Name": "Test case name",
+                                            "ScreenShots": [
+                                                {
+                                                    "ImagePath": "c:\\Users\\neon\\Pictures\\ElementFinder_2015-07-29_15-51-21.png",
+                                                     "Name": "ScreenName_1"
+                                                },
+                                                {
+                                                    "ImagePath": "c:\\Users\\neon\\Pictures\\ElementFinder_2015-07-29_15-51-00.png",
+                                                    "Name": "ScreenName_2"
+                                                }                                              
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

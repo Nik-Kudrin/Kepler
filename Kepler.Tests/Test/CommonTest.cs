@@ -1,6 +1,7 @@
-﻿using Kepler.Core;
-using Kepler.Core.Common;
-using Kepler.Models;
+﻿using Kepler.Common.Models;
+using Kepler.Common.Models.Common;
+using Kepler.Common.Repository;
+using Kepler.Service.Core;
 using NUnit.Framework;
 
 namespace Kepler.Tests.Test
@@ -47,20 +48,22 @@ namespace Kepler.Tests.Test
         {
             var repo = ProjectRepository.Instance;
 
-            var project = new Project() {Name = "Some Project Name"};
+            var baseline = new BaseLine();
+            BaseLineRepository.Instance.Insert(baseline);
+
+            var branch = new Branch() {BaseLineId = baseline.Id, IsMainBranch = true, Name = "Master"};
+            BranchRepository.Instance.Insert(branch);
+
+            var project = new Project() {Name = "Some Project Name", MainBranchId = branch.Id};
             repo.Insert(project);
+
+            baseline.BranchId = branch.Id;
+            BaseLineRepository.Instance.UpdateAndFlashChanges(baseline);
+
+            branch.ProjectId = project.Id;
+            BranchRepository.Instance.UpdateAndFlashChanges(branch);
         }
 
-        [Test]
-        public void CreateProjectBaseLine()
-        {
-            var repo = ProjectRepository.Instance;
-
-            var project = new Project() {Name = "Project name"};
-            project.BaseLine = new BaseLine();
-
-            repo.Insert(project);
-        }
 
         [Test]
         public void CreateBuild()
@@ -82,10 +85,10 @@ namespace Kepler.Tests.Test
         }
 
 
-        [Ignore]
         [Test]
-        public void CreateAllObjectsTree()
+        public void UpdateObjectsTypeTests()
         {
+            ObjectStatusUpdater.RecursiveSetObjectsStatus<Build>(2, ObjectStatus.Stopped);
         }
     }
 }
