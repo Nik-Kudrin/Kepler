@@ -46,6 +46,16 @@ h3 {
 span.fileupload-preview {
     padding: 0px 10px;
 }
+
+input.form-control.error {
+    border: 1px solid #CA2F00;
+}
+
+label.error {
+    color: #CA2F00;
+    font-size: 12px;
+    font-weight: normal;
+}
 /*GLOBAL END*/
 
 /*NAVBAR LEFT START*/
