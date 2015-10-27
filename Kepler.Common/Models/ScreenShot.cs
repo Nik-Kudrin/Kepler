@@ -18,6 +18,10 @@ namespace Kepler.Common.Models
         [StringLength(500)]
         public string Url { get; set; }
 
+        [StringLength(500)]
+        [DataMember]
+        public string OriginalName { get; set; }
+
         [DataMember]
         public long BaseLineId { get; set; }
 

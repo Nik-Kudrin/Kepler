@@ -408,8 +408,9 @@ namespace Kepler.Service.Config
                                     screenShot.ParentObjId = currentCase.Key;
                                     screenShot.BaseLineId = currentBranch.BaseLineId.Value;
                                     screenShot.Status = ObjectStatus.InQueue;
+                                    screenShot.OriginalName = screenShot.Name;
                                     screenShot.Name = string.Format("{0}_{1}_{2}_{3}", currentAssembly.Name,
-                                        currentSuite.Value.Name, currentCase.Value.Name, screenShot.Name);
+                                        currentSuite.Value.Name, currentCase.Value.Name, screenShot.OriginalName);
 
                                     ScreenShotRepository.Instance.Insert(screenShot);
                                 }
