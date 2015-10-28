@@ -185,7 +185,7 @@ namespace Kepler.Service
 
         public Project GetProject(long id)
         {
-            return projectRepository.Get(id);
+            return projectRepository.GetCompleteObject(id);
         }
 
         public IEnumerable<Project> GetProjects()
@@ -354,6 +354,19 @@ namespace Kepler.Service
             BranchRepository.Instance.UpdateAndFlashChanges(branch);
 
             return string.Empty;
+        }
+
+        public Branch GetBranch(long id)
+        {
+            return BranchRepository.Instance.GetCompleteObject(id);
+        }
+
+        public IEnumerable<Branch> GetBranches(long projectId)
+        {
+            var branches = BranchRepository.Instance.Find(branch => branch.ProjectId == projectId);
+            branches.Each(branch => branch.InitChildObjectsFromDb());
+
+            return branches;
         }
 
         #endregion

@@ -101,7 +101,7 @@ namespace Kepler.Service
         #region Project
 
         [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetProject?projectId={id}")]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetProject?id={id}")]
         Project GetProject(long id);
 
         [OperationContract]
@@ -137,6 +137,18 @@ namespace Kepler.Service
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "UpdateBranch?name={name}&newName={newName}&isMainBranch={isMainBranch}")]
         string UpdateBranch(string name, string newName, bool isMainBranch);
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "GetBranch?id={id}")]
+        Branch GetBranch(long id);
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "GetBranches?projectId={projectId}")]
+        IEnumerable<Branch> GetBranches(long projectId);
 
         #endregion
 

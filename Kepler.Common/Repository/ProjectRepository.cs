@@ -1,5 +1,6 @@
 ﻿using Kepler.Common.DB;
 using Kepler.Common.Models;
+using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
@@ -24,6 +25,14 @@ namespace Kepler.Common.Repository
 
         private ProjectRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.Projects)
         {
+        }
+
+        public Project GetCompleteObject(long id)
+        {
+            var entity = Get(id);
+            (entity as IChildInit).InitChildObjectsFromDb();
+
+            return entity;
         }
     }
 }
