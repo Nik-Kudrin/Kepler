@@ -1,10 +1,14 @@
 ﻿using System;
+using System.ServiceModel;
+using System.ServiceModel.Activation;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Error;
 using Kepler.ImageProcessor.Service.TaskManager;
 
 namespace Kepler.ImageProcessor.Service
 {
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     public class KeplerImageProcessorService : IKeplerImageProcessorService
     {
         public int GetMaxCountWorkers()

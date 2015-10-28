@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.ServiceModel;
+using System.ServiceModel.Activation;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Error;
 using Kepler.Common.Models;
@@ -13,6 +15,8 @@ using Kepler.Service.RestWorkerClient;
 
 namespace Kepler.Service
 {
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     public class KeplerService : IKeplerService
     {
         private BuildRepository buildRepo = BuildRepository.Instance;
