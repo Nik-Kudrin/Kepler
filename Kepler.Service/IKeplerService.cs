@@ -60,21 +60,12 @@ namespace Kepler.Service
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetScreenShots?testCaseId={testCaseId}")]
         IEnumerable<ScreenShot> GetScreenShots(long testCaseId);
 
-        [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetImageComparisonObj?screenShotId={screenShotId}")]
-        ImageComparisonInfo GetImageComparisonObj(long screenShotId);
-
-        [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json,
-            UriTemplate = "GetImageComparisonObjects?testCaseId={testCaseId}")]
-        ImageComparisonContract GetImageComparisonObjects(long testCaseId);
-
         #endregion
 
         #region TestCase
 
         [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestCase?testCaseId={id}")]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestCase?id={id}")]
         TestCase GetTestCase(long id);
 
         [OperationContract]
@@ -98,8 +89,8 @@ namespace Kepler.Service
         #region TestAssembly
 
         [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestAssembly?assemblyId={assemblyId}")]
-        TestAssembly GetTestAssembly(long assemblyId);
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestAssembly?id={id}")]
+        TestAssembly GetTestAssembly(long id);
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetTestAssemblies?buildId={buildId}")]

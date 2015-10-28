@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using AutoMapper.Internal;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Error;
 using Kepler.Common.Models;
@@ -135,28 +136,18 @@ namespace Kepler.Service
             return ScreenShotRepository.Instance.Find(item => item.ParentObjId == testCaseId);
         }
 
-        public ImageComparisonInfo GetImageComparisonObj(long screenShotId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ImageComparisonContract GetImageComparisonObjects(long testCaseId)
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
 
         #region TestCase
 
         public TestCase GetTestCase(long id)
         {
-            return testCaseRepo.Get(id);
+            return testCaseRepo.GetCompleteObject(id);
         }
 
         public IEnumerable<TestCase> GetTestCases(long testSuiteId)
         {
-            return testCaseRepo.Find(testSuiteId);
+            return testCaseRepo.GetObjectsTreeByParentId(testSuiteId);
         }
 
         #endregion
@@ -165,27 +156,27 @@ namespace Kepler.Service
 
         public TestSuite GetTestSuite(long id)
         {
-            return testSuiteRepo.Get(id);
+            return testSuiteRepo.GetCompleteObject(id);
         }
 
         public IEnumerable<TestSuite> GetTestSuites(long assemblyId)
         {
-            return testSuiteRepo.Find(assemblyId);
+            return testSuiteRepo.GetObjectsTreeByParentId(assemblyId);
         }
 
         #endregion
 
         #region TestAssembly
 
-        public TestAssembly GetTestAssembly(long assemblyId)
+        public TestAssembly GetTestAssembly(long id)
         {
-            return assemblyRepository.Get(assemblyId);
+            return assemblyRepository.GetCompleteObject(id);
         }
 
 
         public IEnumerable<TestAssembly> GetTestAssemblies(long buildId)
         {
-            return assemblyRepository.Find(buildId);
+            return assemblyRepository.GetObjectsTreeByParentId(buildId);
         }
 
         #endregion

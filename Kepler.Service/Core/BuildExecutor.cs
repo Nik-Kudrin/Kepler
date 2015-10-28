@@ -139,6 +139,7 @@ namespace Kepler.Service.Core
                     newScreenShotsForProcessing.ForEach(item =>
                     {
                         item.Status = ObjectStatus.Passed;
+                        item.BaseLineImagePath = item.ImagePath;
                         item.IsLastPassed = true;
                     });
                     ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
@@ -176,8 +177,8 @@ namespace Kepler.Service.Core
                 if (oldScreenShot == null)
                 {
                     newScreenShot.Status = ObjectStatus.Passed;
+                    newScreenShot.BaseLineImagePath = newScreenShot.ImagePath;
                     newScreenShot.IsLastPassed = true;
-                    ScreenShotRepository.Instance.Update(newScreenShot);
                 }
                 else
                 {
@@ -191,7 +192,10 @@ namespace Kepler.Service.Core
                     };
 
                     resultImagesForComparison.Add(imageComparison);
+                    newScreenShot.BaseLineImagePath = oldScreenShot.ImagePath;
                 }
+
+                ScreenShotRepository.Instance.Update(newScreenShot);
             }
 
             ScreenShotRepository.Instance.FlushChanges();

@@ -16,6 +16,10 @@ namespace Kepler.Common.Models
 
         [DataMember]
         [StringLength(500)]
+        public string BaseLineImagePath { get; set; }
+
+        [DataMember]
+        [StringLength(500)]
         public string Url { get; set; }
 
         [StringLength(500)]
@@ -23,9 +27,11 @@ namespace Kepler.Common.Models
         public string OriginalName { get; set; }
 
         [DataMember]
+        [IgnoreDataMember]
         public long BaseLineId { get; set; }
 
         [DataMember]
+        [IgnoreDataMember]
         public bool IsLastPassed { get; set; }
 
         [DataMember]

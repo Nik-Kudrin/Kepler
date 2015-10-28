@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Kepler.Common.Models.Common
 {
     [DataContract]
-    public class InfoObject
+    public abstract class InfoObject
     {
         [Key]
         [DataMember]
