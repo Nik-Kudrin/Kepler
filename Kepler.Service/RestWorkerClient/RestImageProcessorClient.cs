@@ -15,7 +15,7 @@ namespace Kepler.Service.RestWorkerClient
             _workerServiceUrl = workerServiceUrl;
         }
 
-        public void SetDiffImagePath()
+        public void SetKeplerServiceUrl()
         {
             var client = new RestClient(_workerServiceUrl);
             var request = new RestRequest("SetKeplerServiceUrl", Method.GET);
@@ -26,7 +26,6 @@ namespace Kepler.Service.RestWorkerClient
             request.AddQueryParameter("url", url.AbsoluteUri);
             client.Execute(request);
         }
-
 
         public void StopStopDiffGeneration(List<ScreenShot> screenShotsToStopProcessing)
         {

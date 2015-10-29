@@ -12,7 +12,15 @@ namespace Kepler.Common.Models
 
         [DataMember]
         [StringLength(500)]
+        public string PreviewImagePath { get; set; }
+
+        [DataMember]
+        [StringLength(500)]
         public string DiffImagePath { get; set; }
+
+        [DataMember]
+        [StringLength(500)]
+        public string DiffPreviewPath { get; set; }
 
         [DataMember]
         [StringLength(500)]
@@ -20,9 +28,13 @@ namespace Kepler.Common.Models
 
         [DataMember]
         [StringLength(500)]
+        public string BaseLinePreviewPath { get; set; }
+
+        [DataMember]
+        [StringLength(500)]
         public string Url { get; set; }
 
-        [StringLength(500)]
+        [StringLength(700)]
         [DataMember]
         public string OriginalName { get; set; }
 

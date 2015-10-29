@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Timers;
@@ -18,11 +20,15 @@ namespace Kepler.Service.Core
         private static Timer _sendScreenShotsForProcessingTimer;
         private static Timer _updateObjectStatusesTimer;
         public static string DiffImageSavingPath { get; set; }
+        public static string PreviewImageSavingPath { get; set; }
 
         static BuildExecutor()
         {
             GetExecutor();
-            DiffImageSavingPath = new KeplerService().GetDiffImageSavingPath();
+            var keplerService = new KeplerService();
+
+            DiffImageSavingPath = keplerService.GetDiffImageSavingPath();
+            PreviewImageSavingPath = keplerService.GetPreviewSavingPath();
         }
 
 
@@ -40,24 +46,14 @@ namespace Kepler.Service.Core
             _sendScreenShotsForProcessingTimer.Enabled = true;
 
             _updateObjectStatusesTimer = new Timer();
-            _updateObjectStatusesTimer.Interval = 15000; //every 30 sec
+            _updateObjectStatusesTimer.Interval = 15000; //every 15 sec
             _updateObjectStatusesTimer.Elapsed += UpdateObjectsStatuses;
             _updateObjectStatusesTimer.Enabled = true;
 
             UpdateKeplerServiceUrlOnWorkers();
+            UpdateDiffImagePath();
         }
 
-        public void UpdateKeplerServiceUrlOnWorkers()
-        {
-            var workers = ImageWorkerRepository.Instance.FindAll()
-                .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
-
-            foreach (var imageWorker in workers)
-            {
-                var restImageProcessorClient = new RestImageProcessorClient(imageWorker.WorkerServiceUrl);
-                restImageProcessorClient.SetDiffImagePath();
-            }
-        }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void UpdateObjectsStatuses(object sender, ElapsedEventArgs eventArgs)
@@ -91,20 +87,31 @@ namespace Kepler.Service.Core
                     ImageComparisonList = imageComparisonContainers.Take(imgComparisonPerWorker).ToList()
                 };
 
-                if (imageComparisonContainers.Count() < imgComparisonPerWorker)
-                    imageComparisonContainers.Clear();
-                else
+                var requestIsSuccessfull = true;
+                try
                 {
-                    imageComparisonContainers.RemoveRange(0, imgComparisonPerWorker);
+                    var client = new RestClient(workers[workerIndex++].WorkerServiceUrl);
+                    var request = new RestRequest("AddImagesForDiffGeneration", Method.POST);
+
+                    request.RequestFormat = DataFormat.Json;
+                    request.AddJsonBody(jsonMessage);
+
+                    client.Execute(request);
+                }
+                catch (Exception ex)
+                {
+                    requestIsSuccessfull = false;
                 }
 
-                var client = new RestClient(workers[workerIndex++].WorkerServiceUrl);
-                var request = new RestRequest("AddImagesForDiffGeneration", Method.POST);
-
-                request.RequestFormat = DataFormat.Json;
-                request.AddJsonBody(jsonMessage);
-
-                client.Execute(request);
+                if (requestIsSuccessfull)
+                {
+                    if (imageComparisonContainers.Count() < imgComparisonPerWorker)
+                        imageComparisonContainers.Clear();
+                    else
+                    {
+                        imageComparisonContainers.RemoveRange(0, imgComparisonPerWorker);
+                    }
+                }
 
                 if (workerIndex == workers.Count)
                     workerIndex = 0;
@@ -134,7 +141,7 @@ namespace Kepler.Service.Core
                 var newScreenShotsForProcessing = newBaselineScreenShot.AsEnumerable().ToList();
 
                 // if baseline is "empty" - just set screenshots as "passed"
-                if (oldPassedBaselineScreenShots == null || !oldPassedBaselineScreenShots.Any())
+                /* if (oldPassedBaselineScreenShots == null || !oldPassedBaselineScreenShots.Any())
                 {
                     newScreenShotsForProcessing.ForEach(item =>
                     {
@@ -145,13 +152,13 @@ namespace Kepler.Service.Core
                     ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
                 }
                 else
-                {
-                    newScreenShotsForProcessing.ForEach(item => item.Status = ObjectStatus.InProgress);
-                    ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
+                {*/
+                newScreenShotsForProcessing.ForEach(item => item.Status = ObjectStatus.InProgress);
+                ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
 
-                    imagesComparisonContainer.AddRange(GenerateImageComparison(newScreenShotsForProcessing,
-                        oldPassedBaselineScreenShots.ToList()));
-                }
+                imagesComparisonContainer.AddRange(GenerateImageComparison(newScreenShotsForProcessing,
+                    oldPassedBaselineScreenShots.ToList()));
+//                }
 
                 ScreenShotRepository.Instance.FlushChanges();
             }
@@ -174,33 +181,78 @@ namespace Kepler.Service.Core
             {
                 var oldScreenShot = oldPassedBaselineScreenShots.Find(oldScreen => oldScreen.Name == newScreenShot.Name);
 
+                ImageComparisonInfo imageComparison = null;
+
                 if (oldScreenShot == null)
                 {
                     newScreenShot.Status = ObjectStatus.Passed;
                     newScreenShot.BaseLineImagePath = newScreenShot.ImagePath;
                     newScreenShot.IsLastPassed = true;
+
+                    imageComparison = new ImageComparisonInfo()
+                    {
+                        ScreenShotName = newScreenShot.OriginalName,
+                        LastPassedScreenShotId = newScreenShot.Id,
+                        FirstImagePath = newScreenShot.ImagePath,
+                        FirstPreviewPath = newScreenShot.PreviewImagePath,
+                        SecondImagePath = newScreenShot.ImagePath,
+                        SecondPreviewPath = newScreenShot.PreviewImagePath,
+                        DiffImagePath = DiffImageSavingPath,
+                        DiffPreviewPath = PreviewImageSavingPath,
+                        ScreenShotId = newScreenShot.Id,
+                    };
                 }
                 else
                 {
-                    var imageComparison = new ImageComparisonInfo()
+                    if (string.IsNullOrEmpty(oldScreenShot.PreviewImagePath))
+                        oldScreenShot.PreviewImagePath = PreviewImageSavingPath;
+
+                    imageComparison = new ImageComparisonInfo()
                     {
+                        ScreenShotName = newScreenShot.OriginalName,
                         LastPassedScreenShotId = oldScreenShot.Id,
                         FirstImagePath = oldScreenShot.ImagePath,
+                        FirstPreviewPath = oldScreenShot.PreviewImagePath,
                         SecondImagePath = newScreenShot.ImagePath,
-                        DiffImgPathToSave = DiffImageSavingPath,
+                        SecondPreviewPath = PreviewImageSavingPath,
+                        DiffImagePath = DiffImageSavingPath,
+                        DiffPreviewPath = PreviewImageSavingPath,
                         ScreenShotId = newScreenShot.Id,
                     };
 
-                    resultImagesForComparison.Add(imageComparison);
                     newScreenShot.BaseLineImagePath = oldScreenShot.ImagePath;
                 }
-
+                resultImagesForComparison.Add(imageComparison);
                 ScreenShotRepository.Instance.Update(newScreenShot);
             }
 
             ScreenShotRepository.Instance.FlushChanges();
 
             return resultImagesForComparison;
+        }
+
+        public void UpdateKeplerServiceUrlOnWorkers()
+        {
+            var workers = ImageWorkerRepository.Instance.FindAll()
+                .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
+
+            foreach (var imageWorker in workers)
+            {
+                var restImageProcessorClient = new RestImageProcessorClient(imageWorker.WorkerServiceUrl);
+                restImageProcessorClient.SetKeplerServiceUrl();
+            }
+        }
+
+        public void UpdateDiffImagePath()
+        {
+            if (string.IsNullOrEmpty(DiffImageSavingPath))
+                return;
+
+            if (!Directory.Exists(DiffImageSavingPath))
+            {
+                Directory.CreateDirectory(DiffImageSavingPath);
+                Directory.CreateDirectory(PreviewImageSavingPath);
+            }
         }
     }
 }
