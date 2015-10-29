@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Tests", "Kepler.Tests\Kepler.Tests.csproj", "{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}"
 EndProject
@@ -21,36 +21,51 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		WalsashRelease|Any CPU = WalsashRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.WalsashRelease|Any CPU.ActiveCfg = WalsashRelease|Any CPU
+		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.WalsashRelease|Any CPU.Build.0 = WalsashRelease|Any CPU
 		{6C80A420-6AB0-4172-93E1-C44974187669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6C80A420-6AB0-4172-93E1-C44974187669}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C80A420-6AB0-4172-93E1-C44974187669}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C80A420-6AB0-4172-93E1-C44974187669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C80A420-6AB0-4172-93E1-C44974187669}.WalsashRelease|Any CPU.ActiveCfg = WalsashRelease|Any CPU
+		{6C80A420-6AB0-4172-93E1-C44974187669}.WalsashRelease|Any CPU.Build.0 = WalsashRelease|Any CPU
 		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.WalsashRelease|Any CPU.ActiveCfg = WalsashRelease|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.WalsashRelease|Any CPU.Build.0 = WalsashRelease|Any CPU
 		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.WalsashRelease|Any CPU.ActiveCfg = WalsashRelease|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.WalsashRelease|Any CPU.Build.0 = WalsashRelease|Any CPU
 		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.WalsashRelease|Any CPU.ActiveCfg = WalsashRelease|Any CPU
+		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.WalsashRelease|Any CPU.Build.0 = WalsashRelease|Any CPU
 		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.WalsashRelease|Any CPU.ActiveCfg = WalsashRelease|Any CPU
+		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.WalsashRelease|Any CPU.Build.0 = WalsashRelease|Any CPU
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.WalsashRelease|Any CPU.ActiveCfg = WalsashRelease|Any CPU
+		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.WalsashRelease|Any CPU.Build.0 = WalsashRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
