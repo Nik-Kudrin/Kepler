@@ -10,7 +10,7 @@ namespace Kepler.Common.Models.Common
         [DataMember]
         public long Id { get; set; }
 
-        [StringLength(700)]
+        [StringLength(500)]
         [DataMember]
         public string Name { get; set; }
 

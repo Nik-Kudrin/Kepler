@@ -18,7 +18,7 @@ namespace Kepler.ImageProcessor.Service
         /// <returns>Return empty string if everything is OK, otherwise - error message</returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "AddImagesForDiffGeneration")]
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "/AddImagesForDiffGeneration")]
         string AddImagesForDiffGeneration(ImageComparisonContract imagesToProcess);
 
         [OperationContract]
@@ -28,7 +28,7 @@ namespace Kepler.ImageProcessor.Service
 
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "StopDiffGeneration")]
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "/StopDiffGeneration")]
         void StopDiffGeneration(ImageComparisonContract imagesToStopProcessing);
     }
 }

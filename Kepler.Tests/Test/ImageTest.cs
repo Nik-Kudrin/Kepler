@@ -30,7 +30,7 @@ namespace Kepler.Tests.Test
                 {
                     FirstImagePath = fileNames[index],
                     SecondImagePath = fileNames[index + 1],
-                    DiffImagePath = outputFile + "_" + index + ".png"
+                    DiffImgPathToSave = outputFile + "_" + index + ".png"
                 };
 
                 imageProcessor.ImageComparisonInfo = imageInfo;
@@ -52,7 +52,7 @@ namespace Kepler.Tests.Test
             var imagesForProcessing = new List<ImageComparisonInfo>();
             imagesForProcessing.Add(new ImageComparisonInfo()
             {
-                DiffImagePath = outputFile + "_diff_ImageTaskWorkerTest.png",
+                DiffImgPathToSave = outputFile + "_diff_ImageTaskWorkerTest.png",
                 FirstImagePath = @"e:\Temp\ScreenShot_Samples\ElementFinder_2015-07-29_15-51-00.png",
                 SecondImagePath = @"e:\Temp\ScreenShot_Samples\ElementFinder_2015-07-29_15-51-21.png"
             });
@@ -80,7 +80,7 @@ namespace Kepler.Tests.Test
                 {
                     FirstImagePath = fileNames[index],
                     SecondImagePath = fileNames[index + 1],
-                    DiffImagePath = outputFile + "_" + index + ".png"
+                    DiffImgPathToSave = outputFile + "_" + index + ".png"
                 };
 
                 images.Add(imageInfo);
@@ -127,7 +127,7 @@ namespace Kepler.Tests.Test
                     ScreenShotId = index,
                     FirstImagePath = fileNames[index],
                     SecondImagePath = fileNames[index + 1],
-                    DiffImagePath = outputFile + "_" + index + ".png"
+                    DiffImgPathToSave = outputFile + "_" + index + ".png"
                 };
 
                 images.Add(imageInfo);
