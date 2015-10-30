@@ -35,6 +35,10 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
 
                 var errorMessage = "";
 
+                //Write preview for first image
+                ImageComparisonInfo.FirstPreviewPath = ImageComparisonInfo.FirstImagePath + "_preview.png";
+                WritePreviewImage(firstImage, ImageComparisonInfo.FirstPreviewPath);
+
                 if (firstImage.GetHashCode() == secondImage.GetHashCode())
                 {
                     // because images are equal, just save first image
@@ -47,10 +51,6 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
 
                     return ImageComparisonInfo;
                 }
-
-                //Write preview for first image
-                ImageComparisonInfo.FirstPreviewPath = ImageComparisonInfo.FirstImagePath + "_preview.png";
-                WritePreviewImage(firstImage, ImageComparisonInfo.FirstPreviewPath);
 
                 // Generate Diff
                 firstImage.Composite(secondImage, CompositeOperator.Difference);
