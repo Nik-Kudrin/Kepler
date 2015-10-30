@@ -26,38 +26,81 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
             {
                 ImageComparisonInfo.IsImagesDifferent = false;
 
-                if (!Directory.Exists(ImageComparisonInfo.DiffImgPathToSave))
-                {
-                    ImageComparisonInfo.ErrorMessage =
-                        $"Path for saving screenshots '{ImageComparisonInfo.DiffImgPathToSave}' doesn't exist";
-                    return ImageComparisonInfo;
-                }
+                var diffFileName = $"{ImageComparisonInfo.ScreenShotName}_{Guid.NewGuid()}";
 
-                ImageComparisonInfo.DiffImgPathToSave = Path.Combine(ImageComparisonInfo.DiffImgPathToSave,
-                    Guid.NewGuid().ToString() + ".png");
+                ImageComparisonInfo.DiffImagePath = Path.Combine(ImageComparisonInfo.DiffImagePath,
+                    diffFileName + ".png");
+                ImageComparisonInfo.DiffPreviewPath = Path.Combine(ImageComparisonInfo.DiffPreviewPath,
+                    diffFileName + "_preview.png");
+
+                var errorMessage = "";
 
                 if (firstImage.GetHashCode() == secondImage.GetHashCode())
                 {
                     // because images are equal, just save first image
-                    firstImage.Write(ImageComparisonInfo.DiffImgPathToSave);
+                    errorMessage = WriteImageWithPreview(firstImage, ImageComparisonInfo.DiffImagePath,
+                        ImageComparisonInfo.DiffPreviewPath);
+                    if (errorMessage != "")
+                    {
+                        ImageComparisonInfo.ErrorMessage = errorMessage;
+                    }
+
                     return ImageComparisonInfo;
                 }
 
+                //Write preview for first image
+                ImageComparisonInfo.FirstPreviewPath = ImageComparisonInfo.FirstImagePath + "_preview.png";
+                WritePreviewImage(firstImage, ImageComparisonInfo.FirstPreviewPath);
+
+                // Generate Diff
                 firstImage.Composite(secondImage, CompositeOperator.Difference);
-                try
+
+                errorMessage = WriteImageWithPreview(firstImage, ImageComparisonInfo.DiffImagePath,
+                    ImageComparisonInfo.DiffPreviewPath);
+                if (errorMessage != "")
                 {
-                    firstImage.Write(ImageComparisonInfo.DiffImgPathToSave);
-                }
-                catch (Exception ex)
-                {
-                    ImageComparisonInfo.ErrorMessage =
-                        $"Something bad happend in attempt to write file with diff screenshot '{ImageComparisonInfo.DiffImgPathToSave}'. {ex.Message}";
+                    ImageComparisonInfo.ErrorMessage = errorMessage;
                     return ImageComparisonInfo;
                 }
 
                 ImageComparisonInfo.IsImagesDifferent = true;
                 return ImageComparisonInfo;
             }
+        }
+
+        private string WriteImageWithPreview(MagickImage image, string imagePathToSave, string previewPathToSave)
+        {
+            var errorMessage = WriteImage(image, imagePathToSave);
+            errorMessage += WritePreviewImage(image, previewPathToSave);
+
+            return errorMessage;
+        }
+
+        private string WriteImage(MagickImage image, string pathToSave)
+        {
+            try
+            {
+                image.Write(pathToSave);
+            }
+            catch (Exception ex)
+            {
+                return
+                    $"Something bad happend in attempt to write file with diff screenshot '{pathToSave}'. {ex.Message}";
+            }
+            return "";
+        }
+
+        private string WritePreviewImage(MagickImage image, string pathToSave)
+        {
+            var clonedImage = image.Clone();
+            clonedImage.Resize(118, 96);
+
+            var errorMessage = WriteImage(clonedImage, pathToSave);
+            if (errorMessage != "")
+            {
+                return errorMessage;
+            }
+            return "";
         }
 
         public ImageComparisonInfo GetCompareImageDiff()
@@ -72,7 +115,7 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
                     return ImageComparisonInfo;
 
                 firstImage.Compare(secondImage, ErrorMetric.Absolute, diffImage, Channels.Index);
-                diffImage.Write(ImageComparisonInfo.DiffImgPathToSave);
+                diffImage.Write(ImageComparisonInfo.DiffImagePath);
                 return ImageComparisonInfo;
             }
         }

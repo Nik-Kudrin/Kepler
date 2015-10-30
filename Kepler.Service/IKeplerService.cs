@@ -195,6 +195,10 @@ namespace Kepler.Service
         string GetDiffImageSavingPath();
 
         [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetPreviewSavingPath")]
+        string GetPreviewSavingPath();
+
+        [OperationContract]
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "SetDiffImageSavingPath?diffImageSavingPath={diffImageSavingPath}")]

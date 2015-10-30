@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
@@ -13,6 +14,7 @@ using Kepler.Common.Repository;
 using Kepler.Service.Config;
 using Kepler.Service.Core;
 using Kepler.Service.RestWorkerClient;
+using Newtonsoft.Json;
 
 namespace Kepler.Service
 {
@@ -270,7 +272,7 @@ namespace Kepler.Service
                 return new ErrorMessage()
                 {
                     Code = ErrorMessage.ErorCode.UndefinedError,
-                    ExceptionMessage = $"Something bad happend. Exception: {ex.Message} {ex.StackTrace}"
+                    ExceptionMessage = $"Something bad happend. {ex.Message} {ex.StackTrace}"
                 }.ToString();
             }
 
@@ -393,22 +395,27 @@ namespace Kepler.Service
                 // if current screenshot status = Stopped, then just update diff image path field
                 if (screenShot.Status == ObjectStatus.Stopped)
                 {
-                    screenShot.DiffImagePath = imageComparisonInfo.DiffImgPathToSave;
+                    screenShot.DiffImagePath = imageComparisonInfo.DiffImagePath;
+                    screenShot.PreviewImagePath = imageComparisonInfo.FirstPreviewPath;
+                    screenShot.BaseLinePreviewPath = imageComparisonInfo.SecondImagePath;
+                    screenShot.DiffPreviewPath = imageComparisonInfo.DiffPreviewPath;
                     ScreenShotRepository.Instance.Update(screenShot);
                     continue;
                 }
 
+                // if Failed
                 if (imageComparisonInfo.IsImagesDifferent || imageComparisonInfo.ErrorMessage != "")
                 {
                     screenShot.Status = ObjectStatus.Failed;
                     screenShot.ErrorMessage = imageComparisonInfo.ErrorMessage;
                 }
-                else
+                else // if Passedd
                 {
                     screenShot.Status = ObjectStatus.Passed;
                     screenShot.IsLastPassed = true;
 
-                    if (imageComparisonInfo.LastPassedScreenShotId.HasValue)
+                    if (imageComparisonInfo.LastPassedScreenShotId.HasValue &&
+                        imageComparisonInfo.LastPassedScreenShotId != screenShot.Id)
                     {
                         var oldPassedScreenShot =
                             ScreenShotRepository.Instance.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
@@ -417,7 +424,10 @@ namespace Kepler.Service
                     }
                 }
 
-                screenShot.DiffImagePath = imageComparisonInfo.DiffImgPathToSave;
+                screenShot.DiffImagePath = imageComparisonInfo.DiffImagePath;
+                screenShot.PreviewImagePath = imageComparisonInfo.FirstPreviewPath;
+                screenShot.BaseLinePreviewPath = imageComparisonInfo.SecondImagePath;
+                screenShot.DiffPreviewPath = imageComparisonInfo.DiffPreviewPath;
                 ScreenShotRepository.Instance.Update(screenShot);
             }
 
@@ -443,7 +453,7 @@ namespace Kepler.Service
                 });
 
                 var restImageWorkerClient = new RestImageProcessorClient(imageWorkerServiceUrl);
-                restImageWorkerClient.SetDiffImagePath();
+                restImageWorkerClient.SetKeplerServiceUrl();
             }
             else
             {
@@ -486,26 +496,46 @@ namespace Kepler.Service
 
         public string GetDiffImageSavingPath()
         {
-            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImgPathToSave");
+            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImagePath");
             return diffImgPathToSaveProperty == null ? "" : diffImgPathToSaveProperty.Value;
+        }
+
+        public string GetPreviewSavingPath()
+        {
+            var previewPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("PreviewPath");
+            return previewPathToSaveProperty == null ? "" : previewPathToSaveProperty.Value;
         }
 
         public void SetDiffImageSavingPath(string diffImageSavingPath)
         {
-            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImgPathToSave");
+            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImagePath");
+
+            var previewPath = Path.Combine(diffImageSavingPath, "Preview");
 
             if (diffImgPathToSaveProperty == null)
-                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("DiffImgPathToSave",
+            {
+                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("DiffImagePath",
                     diffImageSavingPath));
+                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("PreviewPath",
+                    previewPath));
+            }
             else
             {
                 diffImgPathToSaveProperty.Value = diffImageSavingPath;
+
+                var previewPathProperty = KeplerSystemConfigRepository.Instance.Find("PreviewPath");
+                previewPathProperty.Value = previewPath;
+
                 KeplerSystemConfigRepository.Instance.Update(diffImgPathToSaveProperty);
+                KeplerSystemConfigRepository.Instance.Update(previewPathProperty);
                 KeplerSystemConfigRepository.Instance.FlushChanges();
             }
 
             BuildExecutor.DiffImageSavingPath = diffImageSavingPath;
+            BuildExecutor.PreviewImageSavingPath = previewPath;
+
             BuildExecutor.GetExecutor().UpdateKeplerServiceUrlOnWorkers();
+            BuildExecutor.GetExecutor().UpdateDiffImagePath();
         }
 
         #endregion

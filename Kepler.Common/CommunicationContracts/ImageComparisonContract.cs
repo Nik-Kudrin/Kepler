@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Kepler.Common.Models;
 
 namespace Kepler.Common.CommunicationContracts
 {
