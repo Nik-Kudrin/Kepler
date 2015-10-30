@@ -193,11 +193,7 @@ namespace Kepler.Service
         public IEnumerable<Project> GetProjects()
         {
             var projects = projectRepository.FindAll();
-
-            foreach (var project in projects)
-            {
-                projectRepository.GetCompleteObject(project.Id);
-            }
+            projects.Each(project => projectRepository.GetCompleteObject(project.Id));
 
             return projects;
         }
@@ -411,17 +407,16 @@ namespace Kepler.Service
                 }
                 else // if Passedd
                 {
-                    screenShot.Status = ObjectStatus.Passed;
-                    screenShot.IsLastPassed = true;
-
-                    if (imageComparisonInfo.LastPassedScreenShotId.HasValue &&
-                        imageComparisonInfo.LastPassedScreenShotId != screenShot.Id)
+                    if (imageComparisonInfo.LastPassedScreenShotId.HasValue)
                     {
                         var oldPassedScreenShot =
                             ScreenShotRepository.Instance.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
                         oldPassedScreenShot.IsLastPassed = false;
                         ScreenShotRepository.Instance.Update(oldPassedScreenShot);
                     }
+
+                    screenShot.Status = ObjectStatus.Passed;
+                    screenShot.IsLastPassed = true;
                 }
 
                 screenShot.DiffImagePath = imageComparisonInfo.DiffImagePath;
