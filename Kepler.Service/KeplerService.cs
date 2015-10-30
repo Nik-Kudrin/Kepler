@@ -190,7 +190,14 @@ namespace Kepler.Service
 
         public IEnumerable<Project> GetProjects()
         {
-            return projectRepository.FindAll();
+            var projects = projectRepository.FindAll();
+
+            foreach (var project in projects)
+            {
+                projectRepository.GetCompleteObject(project.Id);
+            }
+
+            return projects;
         }
 
         public string CreateProject(string name)
