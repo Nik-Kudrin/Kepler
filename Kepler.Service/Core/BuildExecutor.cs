@@ -254,6 +254,17 @@ namespace Kepler.Service.Core
                 try
                 {
                     Directory.CreateDirectory(DiffImageSavingPath);
+                }
+                catch (Exception ex)
+                {
+                    // TODO: log error about impossible to create diff directory
+                }
+            }
+
+            if (!Directory.Exists(PreviewImageSavingPath))
+            {
+                try
+                {
                     Directory.CreateDirectory(PreviewImageSavingPath);
                 }
                 catch (Exception ex)
