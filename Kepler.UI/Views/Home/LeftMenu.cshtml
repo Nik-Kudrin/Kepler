@@ -48,8 +48,35 @@
             type: 'GET',
             success: function (data) {
                 console.log(data);
-
-                $('#page-inner').html(data);
+                $.each(data, function (objNum) {
+                    $('#main-menu').append(
+                        '<li>' +
+                            '<a href="#" class="main-menu-item">' + data[objNum].Name + '<span class="fa arrow"></span></a>' +
+                            '<div class="main-menu-conf">' +
+                                '<i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>' +
+                                '<ul class="dropdown-menu">' +
+                                    '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_proj" data-obj="' + data[objNum].Id + '">Create</a></li>' +
+                                    '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_proj" data-obj="' + data[objNum].Id + '">Edit</a></li>' +
+                                    '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_proj" data-obj="' + data[objNum].Id + '">Delete</a></li>' +
+                                '</ul>' +
+                            '</div>' +
+                            '<ul class="nav nav-second-level">' +
+                                $.each(data, function (subObjNum) {
+                                '<li>' +
+                                    '<a class="left-nav-link main-menu-item" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="master">' + data[objNum].Branches.data[subObjNum].Value.Name + '</a>' +
+                                    '<div class="main-menu-conf">' +
+                                        '<i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>' +
+                                        '<ul class="dropdown-menu">' +
+                                            '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_proj">Create</a></li>' +
+                                            '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_proj">Edit</a></li>' +
+                                            '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_proj">Delete</a></li>' +
+                                        '</ul>' +
+                                    '</div>' +
+                                '</li>'
+                                }) +
+                            '</ul>' +
+                        '</li>');
+                });
             }
         });
 
@@ -72,12 +99,8 @@
             });
         });
 
-        $('.main-menu-conf a').click(function () {
-            $('.main-menu-conf a').removeClass("current");
-            $(this).addClass("current");
-
-            loadModalWin($(this).closest('.main-menu-conf').siblings('.main-menu-item').text(), $(this).attr('data-content'));
-
+        $(document).on('click', '.main-menu-conf a', function (e) {
+            loadModalWin($(this).attr('data-obj'), $(this).attr('data-content'));
         });
 
     });
