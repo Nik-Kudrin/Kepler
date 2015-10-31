@@ -5,20 +5,6 @@
 * Kepler - Web app for screenshot based testing
 * Version 0.0.1
 
-### Requirements ###
-
-On Machines with ImageProcessor
-
-* Visual C++ Redistributable for Visual Studio 2012 (.NET 4.0)
-
-----
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
 
 ### Contribution guidelines ###
 
