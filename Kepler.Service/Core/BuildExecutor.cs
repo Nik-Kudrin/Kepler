@@ -25,10 +25,6 @@ namespace Kepler.Service.Core
         static BuildExecutor()
         {
             GetExecutor();
-            var keplerService = new KeplerService();
-
-            DiffImageSavingPath = keplerService.GetDiffImageSavingPath();
-            PreviewImageSavingPath = keplerService.GetPreviewSavingPath();
         }
 
 
@@ -245,6 +241,11 @@ namespace Kepler.Service.Core
 
         public void UpdateDiffImagePath()
         {
+            var keplerService = new KeplerService();
+
+            DiffImageSavingPath = keplerService.GetDiffImageSavingPath();
+            PreviewImageSavingPath = keplerService.GetPreviewSavingPath();
+
             if (string.IsNullOrEmpty(DiffImageSavingPath))
                 return;
 
