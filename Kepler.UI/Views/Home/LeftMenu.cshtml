@@ -47,6 +47,8 @@
             url: KeplerServiceUrl + 'GetProjects',
             type: 'GET',
             success: function (data) {
+                console.log(data);
+
                 $('#page-inner').html(data);
             }
         });
