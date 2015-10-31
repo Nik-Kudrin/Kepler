@@ -43,6 +43,14 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $.ajax({
+            url: KeplerServiceUrl + 'GetProjects',
+            type: 'GET',
+            success: function (data) {
+                $('#page-inner').html(data);
+            }
+        });
+
         $('.left-nav-link').click(function () {
 
             $('.left-nav-link').removeClass("current");
@@ -57,7 +65,6 @@
                     $('#page-inner').html(data);
                 },
                 complete: function (data) {
-                    document.location.hash = $('.left-nav-link.current').attr("linkBranch") + "_branch"; //set HASH to url - e.g. #Develop_branch etc.
                     $('.panel-heading h3').text($('.left-nav-link.current').attr("linkBranch"));
                 }
             });
