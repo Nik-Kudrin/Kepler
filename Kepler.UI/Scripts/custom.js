@@ -2,7 +2,7 @@
 /*====================================
 METIS MENU 
 ======================================*/
-function load_metis_manu () {
+function load_metis_menu() {
     "use strict";
     var mainApp = {
 
@@ -77,10 +77,9 @@ function load_metis_manu () {
     };
     $(document).ready(function () {
         mainApp.metisMenu();
-        mainApp.loadMenu();
-        mainApp.slide_show();
-        mainApp.reviews_fun();
-        mainApp.wizard_fun();
-       
+        //mainApp.loadMenu();
+        //mainApp.slide_show();
+        //mainApp.reviews_fun();
+        //mainApp.wizard_fun();
     });
 };
