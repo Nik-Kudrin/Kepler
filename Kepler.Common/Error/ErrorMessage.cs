@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 
 namespace Kepler.Common.Error
 {
@@ -18,16 +20,31 @@ namespace Kepler.Common.Error
             ScreenShotHasEmptyFilePath,
             EmptyListOfObjects,
 
-            UndefinedError,
             ObjectNotFoundInDb,
             NotUniqueObjects,
 
             AddTaskToImageWorkerError,
-            ScreenShotDoesntHaveAName
+            ScreenShotDoesntHaveAName,
+
+            UndefinedError
         }
 
+        [DataMember]
+        [Key]
+        public long Id { get; set; }
+
+        [DataMember]
         public ErorCode Code { get; set; }
-        public string ExceptionMessage { get; set; }
+
+        private string _exceptionMessage;
+
+        [DataMember]
+        public string ExceptionMessage
+        {
+            get { return ToString(); }
+            set { _exceptionMessage = value; }
+        }
+
 
         public override string ToString()
         {
@@ -82,7 +99,7 @@ namespace Kepler.Common.Error
                     return "Detailed text about this type of error isn't written";
             }
 
-            return $"Error: {codeMessage}. {ExceptionMessage}";
+            return $"Error: {codeMessage}. {_exceptionMessage}";
         }
     }
 }

@@ -3,39 +3,39 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Kepler.Common.DB;
-using Kepler.Common.Models.Common;
+using Kepler.Common.Error;
 
 namespace Kepler.Common.Repository
 {
-    public class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : InfoObject
+    public class ErrorMessageRepository<TEntity> : IRepository<TEntity, long> where TEntity : ErrorMessage
     {
-        protected readonly KeplerDataContext DbContext;
-        protected readonly DbSet<TEntity> DbSet;
+        protected readonly KeplerDataContext _dbContext;
+        protected readonly DbSet<TEntity> _dbSet;
 
 
-        protected BaseRepository(KeplerDataContext dbContext, DbSet<TEntity> dbSet)
+        protected ErrorMessageRepository(KeplerDataContext dbContext, DbSet<TEntity> dbSet)
         {
-            DbContext = dbContext;
-            DbSet = dbSet;
+            _dbContext = dbContext;
+            _dbSet = dbSet;
         }
 
         public virtual TEntity Get(long id)
         {
-            return DbSet.FirstOrDefault(x => x.Id == id);
+            return _dbSet.FirstOrDefault(x => x.Id == id);
         }
 
         public void Add(TEntity entity)
         {
             if (entity != null)
-                DbSet.Add(entity);
+                _dbSet.Add(entity);
         }
 
         public void Update(TEntity entity)
         {
             if (entity != null)
             {
-                DbSet.Attach(entity);
-                DbContext.Entry(entity).State = EntityState.Modified;
+                _dbSet.Attach(entity);
+                _dbContext.Entry(entity).State = EntityState.Modified;
             }
         }
 
@@ -43,8 +43,8 @@ namespace Kepler.Common.Repository
         {
             foreach (var entity in entities)
             {
-                DbSet.Attach(entity);
-                DbContext.Entry(entity).State = EntityState.Modified;
+                _dbSet.Attach(entity);
+                _dbContext.Entry(entity).State = EntityState.Modified;
             }
         }
 
@@ -68,32 +68,32 @@ namespace Kepler.Common.Repository
 
         public virtual void FlushChanges()
         {
-            DbContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
 
         public void Remove(TEntity entity)
         {
-            if (DbContext.Entry(entity).State == EntityState.Detached)
+            if (_dbContext.Entry(entity).State == EntityState.Detached)
             {
-                DbSet.Attach(entity);
+                _dbSet.Attach(entity);
             }
 
-            DbSet.Remove(entity);
+            _dbSet.Remove(entity);
         }
 
         public virtual IEnumerable<TEntity> FindAll()
         {
-            return DbSet.ToList();
+            return _dbSet.ToList();
         }
 
         public virtual IEnumerable<TEntity> Find(string name)
         {
-            return DbSet.Where(x => x.Name == name).ToList();
+            throw new NotImplementedException();
         }
 
         public virtual IEnumerable<TEntity> Find(Func<TEntity, bool> filterCondition)
         {
-            return DbSet.Where(filterCondition).ToList();
+            return _dbSet.Where(filterCondition).ToList();
         }
     }
 }

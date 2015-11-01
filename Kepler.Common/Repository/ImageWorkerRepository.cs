@@ -29,7 +29,7 @@ namespace Kepler.Common.Repository
 
         public override IEnumerable<ImageWorker> Find(string workerServiceUrl)
         {
-            return _dbSet.Where(worker => worker.WorkerServiceUrl == workerServiceUrl);
+            return DbSet.Where(worker => worker.WorkerServiceUrl == workerServiceUrl);
         }
     }
 }
