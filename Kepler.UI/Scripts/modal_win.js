@@ -1,17 +1,33 @@
 ﻿function loadModalWin(modalWinObj, modalWinAction) {
     switch (modalWinAction) {
         case 'create_proj':
-            $('.modal-title').text('Create');
-            $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="proj_name" type="text"></div>');
+            $('.modal-title').text('Create project');
+            $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text"></div>');
             $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+            $('#modal_form').attr({ 'action': KeplerServiceUrl + 'CreateProject?name=', 'method': 'get' });
             break;
         case 'edit_proj':
-            $('.modal-title').text('Edit');
+            $('.modal-title').text('Edit project');
             $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" type="text" name="proj_name" value=""></div>');
             $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
             break;
         case 'delete_proj':
-            $('.modal-title').text('Delete');
+            $('.modal-title').text('Delete project');
+            $('.modal-body').empty().append('Are you sure want to delete ' + modalWinObj + '?');
+            $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-danger">Yes</button>');
+            break;
+        case 'create_branch':
+            $('.modal-title').text('Create branch');
+            $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="proj_name" type="text"></div>');
+            $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+            break;
+        case 'edit_branch':
+            $('.modal-title').text('Edit branch');
+            $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" type="text" name="proj_name" value=""></div>');
+            $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+            break;
+        case 'delete_branch':
+            $('.modal-title').text('Delete branch');
             $('.modal-body').empty().append('Are you sure want to delete ' + modalWinObj + '?');
             $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-danger">Yes</button>');
             break;

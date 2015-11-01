@@ -2,7 +2,7 @@
 /*====================================
 METIS MENU 
 ======================================*/
-(function ($) {
+function load_metis_manu () {
     "use strict";
     var mainApp = {
 
@@ -83,4 +83,4 @@ METIS MENU
         mainApp.wizard_fun();
        
     });
-}(jQuery));
+};

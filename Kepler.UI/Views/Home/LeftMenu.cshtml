@@ -23,22 +23,19 @@
     <div class="main-menu-conf">
         <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
         <ul class="dropdown-menu">
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_proj">Create</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_proj">Edit</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_proj">Delete</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_branch" data-obj="">Create</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_branch" data-obj="">Edit</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_branch" data-obj="">Delete</a></li>
         </ul>
     </div>
 </li>
 
 <script type="text/javascript">
     $(document).ready(function () {
-
         $.ajax({
             url: KeplerServiceUrl + 'GetProjects',
             type: 'GET',
             success: function (data) {
-                console.log(data);
-
                 $.each(data, function (objNum) {
                     if (data[objNum]) {
                         $('.main-menu-li-1-lvl').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl').show();
@@ -47,20 +44,18 @@
 
                         $.each(data, function (subObjNum) {
                             if (data[objNum].Branches[subObjNum]) {
-                                $('.main-menu-li-2-lvl').clone(true, true).appendTo('#main-menu > li:last .nav-second-level').removeClass('main-menu-li-2-lvl');
+                                $('.main-menu-li-2-lvl').clone(true, true).appendTo('#main-menu > li:last .nav-second-level').removeClass('main-menu-li-2-lvl').show();
                                 $('#main-menu > li:last .nav-second-level > li:last > a').prepend(data[objNum].Branches[subObjNum].Value.Name);
+                                $('#main-menu > li:last .nav-second-level > li:last .dropdown-menu a').attr('data-obj', data[objNum].Branches[subObjNum].Value.Id);
                             }
                         });
                     }
                 });
+                load_metis_manu();
             }
         });
 
         $('.left-nav-link').click(function () {
-
-            $('.left-nav-link').removeClass("current");
-            $(this).addClass("current");
-
             var linkUrl = $(this).attr('linkUrl');
 
             $.ajax({
@@ -68,9 +63,6 @@
                 type: 'GET',
                 success: function (data) {
                     $('#page-inner').html(data);
-                },
-                complete: function (data) {
-                    $('.panel-heading h3').text($('.left-nav-link.current').attr("linkBranch"));
                 }
             });
         });
