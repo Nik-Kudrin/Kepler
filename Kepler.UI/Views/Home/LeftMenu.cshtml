@@ -1,81 +1,57 @@
 ﻿<div class="sidebar-collapse">
     <ul class="nav" id="main-menu">
-        <li>
-            <a href="#" class="main-menu-item">Project A<span class="fa arrow"></span></a>
-            <div class="main-menu-conf">
-                <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
-                <ul class="dropdown-menu">
-                    <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_proj">Create</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_proj">Edit</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_proj">Delete</a></li>
-                </ul>
-            </div>
-            <ul class="nav nav-second-level">
-                <li>
-                    <a class="left-nav-link main-menu-item" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="master">Master</a>
-                    <div class="main-menu-conf">
-                        <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
-                        <ul class="dropdown-menu">
-                            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_proj">Create</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_proj">Edit</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_proj">Delete</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a class="left-nav-link main-menu-item" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="develop">Develop</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" class="main-menu-item">Project B<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level">
-                <li>
-                    <a class="left-nav-link main-menu-item" href="invoice.html"><i class="fa fa-coffee"></i>Master</a>
-                </li>
-                <li>
-                    <a class="left-nav-link main-menu-item" href="pricing.html"><i class="fa fa-flash "></i>Develop</a>
-                </li>
-            </ul>
-        </li>
+
     </ul>
 </div>
 
+<li class="main-menu-li-1-lvl" style="display: none">
+    <a href="#" class="main-menu-item"><span class="fa arrow"></span></a>
+    <div class="main-menu-conf">
+        <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
+        <ul class="dropdown-menu">
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_proj" data-obj="">Create</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_proj" data-obj="">Edit</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_proj" data-obj="">Delete</a></li>
+        </ul>
+    </div>
+    <ul class="nav nav-second-level">
+    </ul>
+</li>
+
+<li class="main-menu-li-2-lvl" style="display: none">
+    <a class="left-nav-link main-menu-item" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="master"></a>
+    <div class="main-menu-conf">
+        <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
+        <ul class="dropdown-menu">
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_proj">Create</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_proj">Edit</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_proj">Delete</a></li>
+        </ul>
+    </div>
+</li>
+
 <script type="text/javascript">
     $(document).ready(function () {
+
         $.ajax({
             url: KeplerServiceUrl + 'GetProjects',
             type: 'GET',
             success: function (data) {
                 console.log(data);
+
                 $.each(data, function (objNum) {
-                    $('#main-menu').append(
-                        '<li>' +
-                            '<a href="#" class="main-menu-item">' + data[objNum].Name + '<span class="fa arrow"></span></a>' +
-                            '<div class="main-menu-conf">' +
-                                '<i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>' +
-                                '<ul class="dropdown-menu">' +
-                                    '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_proj" data-obj="' + data[objNum].Id + '">Create</a></li>' +
-                                    '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_proj" data-obj="' + data[objNum].Id + '">Edit</a></li>' +
-                                    '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_proj" data-obj="' + data[objNum].Id + '">Delete</a></li>' +
-                                '</ul>' +
-                            '</div>' +
-                            '<ul class="nav nav-second-level">' +
-                                $.each(data, function (subObjNum) {
-                                '<li>' +
-                                    '<a class="left-nav-link main-menu-item" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="master">' + data[objNum].Branches.data[subObjNum].Value.Name + '</a>' +
-                                    '<div class="main-menu-conf">' +
-                                        '<i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>' +
-                                        '<ul class="dropdown-menu">' +
-                                            '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_proj">Create</a></li>' +
-                                            '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_proj">Edit</a></li>' +
-                                            '<li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_proj">Delete</a></li>' +
-                                        '</ul>' +
-                                    '</div>' +
-                                '</li>'
-                                }) +
-                            '</ul>' +
-                        '</li>');
+                    if (data[objNum]) {
+                        $('.main-menu-li-1-lvl').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl').show();
+                        $('#main-menu > li:last > .main-menu-item').prepend(data[objNum].Name);
+                        $('#main-menu > li:last .dropdown-menu a').attr('data-obj', data[objNum].Id);
+
+                        $.each(data, function (subObjNum) {
+                            if (data[objNum].Branches[subObjNum]) {
+                                $('.main-menu-li-2-lvl').clone(true, true).appendTo('#main-menu > li:last .nav-second-level').removeClass('main-menu-li-2-lvl');
+                                $('#main-menu > li:last .nav-second-level > li:last > a').prepend(data[objNum].Branches[subObjNum].Value.Name);
+                            }
+                        });
+                    }
                 });
             }
         });
@@ -104,22 +80,5 @@
         });
 
     });
-
-
-   /* $.ajax({
-        url: 'http://localhost:8733/Kepler.Service/GetProjects',
-        type: 'GET',
-        success: function (data) {
-            console.log(data);
-            $.each(data, function (objNum) {
-                console.log("Project Name: " + data[objNum].Name);
-
-                $.each(data, function (subObjNum) {
-                    console.log("Branch name: " + data[objNum].Branches[subObjNum].Value.Name);
-                });
-            });
-        }
-    });*/
-
 
 </script>

@@ -7,7 +7,7 @@
             break;
         case 'edit_proj':
             $('.modal-title').text('Edit');
-            $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" type="text" name="proj_name" value="' + modalWinObj + '"></div>');
+            $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" type="text" name="proj_name" value=""></div>');
             $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
             break;
         case 'delete_proj':
