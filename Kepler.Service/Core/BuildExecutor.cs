@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Timers;
 using Kepler.Common.CommunicationContracts;
+using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
@@ -136,25 +137,11 @@ namespace Kepler.Service.Core
 
                 var newScreenShotsForProcessing = newBaselineScreenShot.AsEnumerable().ToList();
 
-                // if baseline is "empty" - just set screenshots as "passed"
-                /* if (oldPassedBaselineScreenShots == null || !oldPassedBaselineScreenShots.Any())
-                {
-                    newScreenShotsForProcessing.ForEach(item =>
-                    {
-                        item.Status = ObjectStatus.Passed;
-                        item.BaseLineImagePath = item.ImagePath;
-                        item.IsLastPassed = true;
-                    });
-                    ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
-                }
-                else
-                {*/
                 newScreenShotsForProcessing.ForEach(item => item.Status = ObjectStatus.InProgress);
                 ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
 
                 imagesComparisonContainer.AddRange(GenerateImageComparison(newScreenShotsForProcessing,
                     oldPassedBaselineScreenShots.ToList()));
-//                }
 
                 ScreenShotRepository.Instance.FlushChanges();
             }
@@ -257,7 +244,7 @@ namespace Kepler.Service.Core
                 }
                 catch (Exception ex)
                 {
-                    // TODO: log error about impossible to create diff directory
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = ex.Message});
                 }
             }
 
@@ -269,7 +256,7 @@ namespace Kepler.Service.Core
                 }
                 catch (Exception ex)
                 {
-                    // TODO: log error about impossible to create diff directory
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = ex.Message});
                 }
             }
         }

@@ -2,6 +2,7 @@
 using System.IO;
 using ImageMagick;
 using Kepler.Common.CommunicationContracts;
+using Kepler.ImageProcessor.Service.RestKeplerClient;
 
 namespace Kepler.ImageProcessor.Service.ImgProcessor
 {
@@ -84,8 +85,11 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
             }
             catch (Exception ex)
             {
-                return
+                var errorMessage =
                     $"Something bad happend in attempt to write file with diff screenshot '{pathToSave}'. {ex.Message}";
+                new RestKeplerServiceClient().LogError(errorMessage);
+
+                return errorMessage;
             }
             return "";
         }

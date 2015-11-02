@@ -188,15 +188,15 @@ namespace Kepler.Service.Core
             switch (typeName.ToLowerInvariant())
             {
                 case "build":
-                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<Build>(objId, newStatus);
+                    return RecursiveSetObjectsStatus<Build>(objId, newStatus);
                 case "testAssembly":
-                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<TestAssembly>(objId, newStatus);
+                    return RecursiveSetObjectsStatus<TestAssembly>(objId, newStatus);
                 case "testSuite":
-                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<TestSuite>(objId, newStatus);
+                    return RecursiveSetObjectsStatus<TestSuite>(objId, newStatus);
                 case "testCase":
-                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<TestCase>(objId, newStatus);
+                    return RecursiveSetObjectsStatus<TestCase>(objId, newStatus);
                 case "screenShot":
-                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<ScreenShot>(objId, newStatus);
+                    return RecursiveSetObjectsStatus<ScreenShot>(objId, newStatus);
 
                 default:
                     throw new ArgumentException(

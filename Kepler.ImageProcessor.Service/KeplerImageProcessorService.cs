@@ -35,7 +35,7 @@ namespace Kepler.ImageProcessor.Service
 
         public void SetKeplerServiceUrl(string url)
         {
-            TaskGenerator.GetTaskGenerator.SetKeplerServiceUrl(url);
+            TaskGenerator.KeplerServiceUrl = url;
         }
 
         public void StopDiffGeneration(ImageComparisonContract imagesToStopProcessing)

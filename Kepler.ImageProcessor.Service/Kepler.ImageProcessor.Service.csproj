@@ -76,6 +76,7 @@
     <Compile Include="ImgProcessor\ImageComparator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KeplerImageProcessorService.cs" />
+    <Compile Include="RestKeplerClient\RestKeplerServiceClient.cs" />
     <Compile Include="TaskManager\ImageTaskWorker.cs" />
     <Compile Include="TaskManager\TaskGenerator.cs" />
   </ItemGroup>

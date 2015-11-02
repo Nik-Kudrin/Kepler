@@ -69,10 +69,11 @@ namespace Kepler.Service
                         restImageProcessorClient.StopStopDiffGeneration(affectedScreenShots);
                     }
                     break;
+
                 default:
                     LogErrorMessage(ErrorMessage.ErorCode.RunOperationError,
                         $"OperationName {operationName} is not recognized. Possible values: run, stop");
-                    break;
+                    return;
             }
         }
 
@@ -89,9 +90,9 @@ namespace Kepler.Service
                     status = ObjectStatus.Passed;
                     break;
                 default:
-                    throw new WebFaultException<string>(
-                        $"Status {newStatus} is not recognized. Possible values: failed, passed",
-                        HttpStatusCode.InternalServerError);
+                    LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError,
+                        $"Status {newStatus} is not recognized. Possible values: failed, passed");
+                    return;
             }
 
             try
@@ -100,7 +101,7 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                throw new WebFaultException<string>(ex.Message, HttpStatusCode.InternalServerError);
+                LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError, ex.Message);
             }
         }
 
@@ -191,11 +192,7 @@ namespace Kepler.Service
         public void CreateProject(string name)
         {
             if (projectRepository.Find(name).Any())
-                throw new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
-                    ExceptionMessage = $"Project with name {name} already exist"
-                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+                LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Project with name {name} already exist");
 
             try
             {
@@ -204,11 +201,7 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                throw new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.UndefinedError,
-                    ExceptionMessage = $"Something bad happend. Exception: {ex.Message} {ex.StackTrace}"
-                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, $"{ex.Message} {ex.StackTrace}");
             }
         }
 
@@ -226,7 +219,12 @@ namespace Kepler.Service
                 var baseline = new BaseLine();
                 BaseLineRepository.Instance.Insert(baseline);
 
-                var branch = new Branch() {Name = name, BaseLineId = baseline.Id, ProjectId = projectId};
+                var branch = new Branch()
+                {
+                    Name = name,
+                    BaseLineId = baseline.Id,
+                    ProjectId = projectId
+                };
                 BranchRepository.Instance.Insert(branch);
 
                 baseline.BranchId = branch.Id;
@@ -251,11 +249,7 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                throw new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.UndefinedError,
-                    ExceptionMessage = $"Something bad happend. {ex.Message} {ex.StackTrace}"
-                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, $"{ex.Message} {ex.StackTrace}");
             }
         }
 
@@ -267,23 +261,16 @@ namespace Kepler.Service
             var project = ProjectRepository.Instance.Get(projectId);
             if (project == null)
             {
-                throw new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
-                    ExceptionMessage = $"Project with specified projectID {projectId} doesn't exist"
-                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb,
+                    $"Project with specified projectID {projectId} doesn't exist");
             }
 
 
             if (!project.MainBranchId.HasValue &&
                 BranchRepository.Instance.Find(branch => branch.ProjectId == project.Id).Any())
             {
-                throw new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.ProjectDontHaveMainBranch,
-                    ExceptionMessage =
-                        $"Project '{project.Name}' don't have main branch. Please, manually specify for project which branch should be considered as main."
-                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+                LogErrorMessage(ErrorMessage.ErorCode.ProjectDontHaveMainBranch,
+                    $"Project '{project.Name}' don't have main branch. Please, manually specify for project which branch should be considered as main.");
             }
         }
 
@@ -291,11 +278,8 @@ namespace Kepler.Service
         {
             if (BranchRepository.Instance.Find(branchName).Any())
             {
-                throw new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
-                    ExceptionMessage = $"Branch with name {branchName} already exist"
-                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+                LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects,
+                    $"Branch with name {branchName} already exist");
             }
         }
 
@@ -310,11 +294,7 @@ namespace Kepler.Service
 
             if (branch == null)
             {
-                throw new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
-                    ExceptionMessage = $"Branch with name {name} doesn't exist"
-                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Branch with name {name} doesn't exist");
             }
 
             if (isMainBranch)
@@ -369,7 +349,8 @@ namespace Kepler.Service
                     screenShot.PreviewImagePath = imageComparisonInfo.FirstPreviewPath;
                     screenShot.BaseLinePreviewPath = imageComparisonInfo.SecondImagePath;
                     screenShot.DiffPreviewPath = imageComparisonInfo.DiffPreviewPath;
-                    ScreenShotRepository.Instance.Update(screenShot);
+                    ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
+
                     continue;
                 }
 
@@ -426,11 +407,8 @@ namespace Kepler.Service
             }
             else
             {
-                throw new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
-                    ExceptionMessage = $"Image worker with the same URL {imageWorkerServiceUrl} already exist"
-                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+                LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects,
+                    "Image worker with the same URL {imageWorkerServiceUrl} already exist");
             }
         }
 
@@ -440,17 +418,12 @@ namespace Kepler.Service
 
             if (worker == null)
             {
-                throw new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
-                    ExceptionMessage = $"Image worker with name {name} not found"
-                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Image worker with name {name} not found");
             }
             else
             {
                 worker.Name = newName;
                 worker.WorkerServiceUrl = newWorkerServiceUrl;
-
                 workerRepository.UpdateAndFlashChanges(worker);
             }
         }
@@ -512,7 +485,7 @@ namespace Kepler.Service
         {
             return ErrorMessageRepository.Instance.Find(item => item.IsLastViewed);
         }
-        
+
         private void LogErrorMessage(ErrorMessage.ErorCode errorCode, string exceptionMessage)
         {
             var error = new ErrorMessage()
