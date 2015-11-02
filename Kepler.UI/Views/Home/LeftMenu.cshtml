@@ -1,7 +1,5 @@
 ﻿<div class="sidebar-collapse">
-    <ul class="nav" id="main-menu">
-
-    </ul>
+    <ul class="nav" id="main-menu"></ul>
 </div>
 
 <li class="main-menu-li-1-lvl" style="display: none">
@@ -9,13 +7,12 @@
     <div class="main-menu-conf">
         <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
         <ul class="dropdown-menu">
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_proj" data-obj="">Create</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_proj" data-obj="">Edit</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_proj" data-obj="">Delete</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="create_proj" data-obj="">Create</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_proj" data-obj="">Edit</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_proj" data-obj="">Delete</a></li>
         </ul>
     </div>
-    <ul class="nav nav-second-level">
-    </ul>
+    <ul class="nav nav-second-level"></ul>
 </li>
 
 <li class="main-menu-li-2-lvl" style="display: none">
@@ -31,7 +28,13 @@
 </li>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    //
+    // Load left menu
+    //
+    loadLeftMenu();
+
+    function loadLeftMenu() {
+        $('#main-menu').empty();
         $.ajax({
             url: KeplerServiceUrl + 'GetProjects',
             type: 'GET',
@@ -51,26 +54,59 @@
                         });
                     }
                 });
-                load_metis_manu();
+                $('#main-menu').metisMenu();
             }
         });
+    }
 
-        $('.left-nav-link').click(function () {
-            var linkUrl = $(this).attr('linkUrl');
+    //
+    // Load content by click in left menu
+    //
+    $('.left-nav-link').click(function () {
+        var linkUrl = $(this).attr('linkUrl');
 
-            $.ajax({
-                url: linkUrl,
-                type: 'GET',
-                success: function (data) {
-                    $('#page-inner').html(data);
-                }
-            });
+        $.ajax({
+            url: linkUrl,
+            type: 'GET',
+            success: function (data) {
+                $('#page-inner').html(data);
+            }
         });
-
-        $(document).on('click', '.main-menu-conf a', function (e) {
-            loadModalWin($(this).attr('data-obj'), $(this).attr('data-content'));
-        });
-
     });
+
+    //
+    // Popup switch for actions in left menu(Create project, edit branch, etc.)
+    //
+    var obj_act = ""; // Variable with action, to do with project or branch. Left menu.
+
+    $(document).on('click', '.main-menu-conf a', function (e) {
+        switch ($(this).attr('data-act')) {
+            case 'create_proj':
+                obj_act = "CreateProject";
+                $('.modal-title').text('Create project');
+                $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text"></div>');
+                $('.modal-footer').show().empty().append('<button type="submit" onclick="" class="btn btn-success">Save</button>');
+                break;
+        }
+    });
+
+    //
+    // Ajax call for modal popup (Create project, edit branch, etc.)
+    //
+
+    function modal_ajax_call() {
+        var url_parameters = obj_act + '?' + $('#modal_form').serialize();
+        $.ajax({
+            type: 'GET',
+            url: KeplerServiceUrl + url_parameters,
+            success: function (data) {
+                $('#crud-modal button.close').click();
+                loadLeftMenu();
+            },
+            error: function (xhr, str) {
+                alert('Возникла ошибка: ' + xhr.responseCode);
+            }
+        });
+    }
 
 </script>

@@ -63,8 +63,7 @@ namespace Kepler.Tests.Test
             var config = File.ReadAllText(Path.Combine(BaseResourcePath, "simple_test_config.json"));
 
             var configImporter = new ConfigImporter();
-            var errorMessage = configImporter.ImportConfig(config);
-            Console.WriteLine(errorMessage);
+            configImporter.ImportConfig(config);
         }
     }
 }

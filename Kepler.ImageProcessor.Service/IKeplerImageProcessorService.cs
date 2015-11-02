@@ -19,7 +19,7 @@ namespace Kepler.ImageProcessor.Service
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "AddImagesForDiffGeneration")]
-        string AddImagesForDiffGeneration(ImageComparisonContract imagesToProcess);
+        void AddImagesForDiffGeneration(ImageComparisonContract imagesToProcess);
 
         [OperationContract]
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
