@@ -22,7 +22,7 @@ namespace Kepler.Service
         [WebGet(ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "RunOperation?typeName={typeName}&objId={objId}&operationName={operationName}")
         ]
-        string RunOperation(string typeName, long objId, string operationName);
+        void RunOperation(string typeName, long objId, string operationName);
 
         /// <summary>
         /// Set new newStatus for objects recursively
@@ -34,7 +34,7 @@ namespace Kepler.Service
         [WebGet(ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "SetObjectsStatus?typeName={typeName}&objId={objId}&newStatus={newStatus}")
         ]
-        string SetObjectsStatus(string typeName, long objId, string newStatus);
+        void SetObjectsStatus(string typeName, long objId, string newStatus);
 
         #endregion
 
@@ -116,7 +116,7 @@ namespace Kepler.Service
         [OperationContract]
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "CreateProject?name={name}")]
-        string CreateProject(string name);
+        void CreateProject(string name);
 
         #endregion
 
@@ -130,13 +130,13 @@ namespace Kepler.Service
         [OperationContract]
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "CreateBranch?name={name}&projectId={projectId}")]
-        string CreateBranch(string name, long projectId);
+        void CreateBranch(string name, long projectId);
 
         [OperationContract]
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "UpdateBranch?name={name}&newName={newName}&isMainBranch={isMainBranch}")]
-        string UpdateBranch(string name, string newName, bool isMainBranch);
+        void UpdateBranch(string name, string newName, bool isMainBranch);
 
         [OperationContract]
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
@@ -160,7 +160,7 @@ namespace Kepler.Service
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "ImportTestConfig")]
-        string ImportTestConfig(string testConfig);
+        void ImportTestConfig(string testConfig);
 
 
         [OperationContract]
@@ -178,13 +178,13 @@ namespace Kepler.Service
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "RegisterImageWorker?name={name}&imageWorkerServiceUrl={imageWorkerServiceUrl}")]
-        string RegisterImageWorker(string name, string imageWorkerServiceUrl);
+        void RegisterImageWorker(string name, string imageWorkerServiceUrl);
 
         [OperationContract]
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "UpdateImageWorker?name={name}&newName={newName}&newWorkerServiceUrl={newWorkerServiceUrl}")]
-        string UpdateImageWorker(string name, string newName, string newWorkerServiceUrl);
+        void UpdateImageWorker(string name, string newName, string newWorkerServiceUrl);
 
         #endregion
 
