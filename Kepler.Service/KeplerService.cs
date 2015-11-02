@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -16,7 +15,6 @@ using Kepler.Common.Repository;
 using Kepler.Service.Config;
 using Kepler.Service.Core;
 using Kepler.Service.RestWorkerClient;
-using Newtonsoft.Json;
 
 namespace Kepler.Service
 {
@@ -47,19 +45,19 @@ namespace Kepler.Service
                     }
                     catch (Exception ex)
                     {
-                        throw new WebFaultException<string>(ex.Message, HttpStatusCode.InternalServerError);
+                        LogErrorMessage(ErrorMessage.ErorCode.RunOperationError, ex.Message);
                     }
                     break;
-                case "stop":
-                    List<ScreenShot> affectedScreenShots;
 
+                case "stop":
+                    List<ScreenShot> affectedScreenShots = new List<ScreenShot>();
                     try
                     {
                         affectedScreenShots = ObjectStatusUpdater.SetObjectsStatus(typeName, objId, ObjectStatus.Stopped);
                     }
                     catch (Exception ex)
                     {
-                        throw new WebFaultException<string>(ex.Message, HttpStatusCode.InternalServerError);
+                        LogErrorMessage(ErrorMessage.ErorCode.RunOperationError, ex.Message);
                     }
 
                     var workers = ImageWorkerRepository.Instance.FindAll()
@@ -72,9 +70,9 @@ namespace Kepler.Service
                     }
                     break;
                 default:
-                    throw new WebFaultException<string>(
-                        $"OperationName {operationName} is not recognized. Possible values: run, stop",
-                        HttpStatusCode.InternalServerError);
+                    LogErrorMessage(ErrorMessage.ErorCode.RunOperationError,
+                        $"OperationName {operationName} is not recognized. Possible values: run, stop");
+                    break;
             }
         }
 
@@ -505,14 +503,45 @@ namespace Kepler.Service
             BuildExecutor.GetExecutor().UpdateDiffImagePath();
         }
 
-        public IEnumerable<ErrorMessage> GetErrors(int sinceLastDays)
+        public IEnumerable<ErrorMessage> GetErrors(DateTime fromTime)
         {
-            throw new NotImplementedException();
+            return ErrorMessageRepository.Instance.Find(item => item.Time >= fromTime);
+        }
+
+        public IEnumerable<ErrorMessage> GetErrorsSinceLastViewed()
+        {
+            return ErrorMessageRepository.Instance.Find(item => item.IsLastViewed);
+        }
+        
+        private void LogErrorMessage(ErrorMessage.ErorCode errorCode, string exceptionMessage)
+        {
+            var error = new ErrorMessage()
+            {
+                Code = errorCode,
+                ExceptionMessage = exceptionMessage
+            };
+            LogError(error);
+
+            throw error.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
         }
 
         public void LogError(ErrorMessage error)
         {
             ErrorMessageRepository.Instance.Insert(error);
+        }
+
+        public void SetLastViewedError(long errorId)
+        {
+            var error = ErrorMessageRepository.Instance.Get(errorId);
+            if (error == null)
+                throw new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
+                    ExceptionMessage = $"Error message with id={errorId} not found"
+                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+
+            error.IsLastViewed = true;
+            ErrorMessageRepository.Instance.UpdateAndFlashChanges(error);
         }
 
         #endregion

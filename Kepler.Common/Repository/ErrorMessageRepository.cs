@@ -4,8 +4,6 @@ using System.Data.Entity;
 using System.Linq;
 using Kepler.Common.DB;
 using Kepler.Common.Error;
-using Kepler.Common.Models;
-using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {

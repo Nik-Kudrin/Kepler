@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Kepler.Common.CommunicationContracts;
@@ -212,13 +213,25 @@ namespace Kepler.Service
         [OperationContract]
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare,
-            UriTemplate = "GetErrors?sinceLastDays={sinceLastDays}")]
-        IEnumerable<ErrorMessage> GetErrors(int sinceLastDays);
+            UriTemplate = "GetErrors?fromTime={fromTime}")]
+        IEnumerable<ErrorMessage> GetErrors(DateTime fromTime);
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "GetErrorsSinceLastViewed")]
+        IEnumerable<ErrorMessage> GetErrorsSinceLastViewed();
 
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "LogError")]
         void LogError(ErrorMessage error);
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "SetLastViewedError?errorId={errorId}")]
+        void SetLastViewedError(long errorId);
 
         #endregion
     }

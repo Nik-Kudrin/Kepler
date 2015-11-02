@@ -25,6 +25,9 @@ namespace Kepler.Common.Error
             ObjectNotFoundInDb,
             NotUniqueObjects,
 
+            RunOperationError,
+            SetObjectStatusError,
+
             AddTaskToImageWorkerError,
             ScreenShotDoesntHaveAName,
 
@@ -33,6 +36,7 @@ namespace Kepler.Common.Error
 
         public ErrorMessage()
         {
+            Code = ErorCode.UndefinedError;
             Time = DateTime.Now;
         }
 
@@ -46,6 +50,9 @@ namespace Kepler.Common.Error
 
         [DataMember]
         public ErorCode Code { get; set; }
+
+        [DataMember]
+        public bool IsLastViewed { get; set; }
 
         private string _exceptionMessage;
 
@@ -101,6 +108,12 @@ namespace Kepler.Common.Error
                     break;
                 case ErorCode.AddTaskToImageWorkerError:
                     codeMessage = "Error happend in process to add images for diff comparison";
+                    break;
+                case ErorCode.RunOperationError:
+                    codeMessage = "Error happend during run operation";
+                    break;
+                case ErorCode.SetObjectStatusError:
+                    codeMessage = "Error happend during set status for object";
                     break;
                 case ErorCode.UndefinedError:
                     codeMessage = "Undefined error";
