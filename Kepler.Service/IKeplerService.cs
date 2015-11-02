@@ -2,6 +2,7 @@
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Kepler.Common.CommunicationContracts;
+using Kepler.Common.Error;
 using Kepler.Common.Models;
 
 namespace Kepler.Service
@@ -203,6 +204,21 @@ namespace Kepler.Service
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "SetDiffImageSavingPath?diffImageSavingPath={diffImageSavingPath}")]
         void SetDiffImageSavingPath(string diffImageSavingPath);
+
+        #endregion
+
+        #region Error Log
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "GetErrors?sinceLastDays={sinceLastDays}")]
+        IEnumerable<ErrorMessage> GetErrors(int sinceLastDays);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "LogError")]
+        void LogError(ErrorMessage error);
 
         #endregion
     }

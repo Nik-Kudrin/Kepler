@@ -29,9 +29,18 @@ namespace Kepler.Common.Error
             UndefinedError
         }
 
+        public ErrorMessage()
+        {
+            Time = DateTime.Now;
+        }
+
         [DataMember]
         [Key]
         public long Id { get; set; }
+
+        [DataMember]
+        [DataType(DataType.DateTime)]
+        public DateTime? Time { get; set; }
 
         [DataMember]
         public ErorCode Code { get; set; }

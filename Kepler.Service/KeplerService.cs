@@ -533,6 +533,16 @@ namespace Kepler.Service
             BuildExecutor.GetExecutor().UpdateDiffImagePath();
         }
 
+        public IEnumerable<ErrorMessage> GetErrors(int sinceLastDays)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogError(ErrorMessage error)
+        {
+            ErrorMessageRepository.Instance.Insert(error);
+        }
+
         #endregion
     }
 }

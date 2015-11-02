@@ -4,33 +4,50 @@ using System.Data.Entity;
 using System.Linq;
 using Kepler.Common.DB;
 using Kepler.Common.Error;
+using Kepler.Common.Models;
+using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
-    public class ErrorMessageRepository<TEntity> : IRepository<TEntity, long> where TEntity : ErrorMessage
+    public class ErrorMessageRepository : IRepository<ErrorMessage, long>
     {
-        protected readonly KeplerDataContext _dbContext;
-        protected readonly DbSet<TEntity> _dbSet;
+        private readonly KeplerDataContext _dbContext;
+        private readonly DbSet<ErrorMessage> _dbSet;
 
+        private static ErrorMessageRepository _repoInstance;
 
-        protected ErrorMessageRepository(KeplerDataContext dbContext, DbSet<TEntity> dbSet)
+        public static ErrorMessageRepository Instance
+        {
+            get
+            {
+                if (_repoInstance == null)
+                {
+                    var dbContext = new KeplerDataContext();
+                    _repoInstance = new ErrorMessageRepository(dbContext, dbContext.ErrorMessages);
+                }
+
+                return _repoInstance;
+            }
+        }
+
+        protected ErrorMessageRepository(KeplerDataContext dbContext, DbSet<ErrorMessage> dbSet)
         {
             _dbContext = dbContext;
             _dbSet = dbSet;
         }
 
-        public virtual TEntity Get(long id)
+        public virtual ErrorMessage Get(long id)
         {
             return _dbSet.FirstOrDefault(x => x.Id == id);
         }
 
-        public void Add(TEntity entity)
+        public void Add(ErrorMessage entity)
         {
             if (entity != null)
                 _dbSet.Add(entity);
         }
 
-        public void Update(TEntity entity)
+        public void Update(ErrorMessage entity)
         {
             if (entity != null)
             {
@@ -39,7 +56,7 @@ namespace Kepler.Common.Repository
             }
         }
 
-        public void Update(IEnumerable<TEntity> entities)
+        public void Update(IEnumerable<ErrorMessage> entities)
         {
             foreach (var entity in entities)
             {
@@ -48,19 +65,19 @@ namespace Kepler.Common.Repository
             }
         }
 
-        public void UpdateAndFlashChanges(TEntity entity)
+        public void UpdateAndFlashChanges(ErrorMessage entity)
         {
             Update(entity);
             FlushChanges();
         }
 
-        public void UpdateAndFlashChanges(IEnumerable<TEntity> entities)
+        public void UpdateAndFlashChanges(IEnumerable<ErrorMessage> entities)
         {
             Update(entities);
             FlushChanges();
         }
 
-        public void Insert(TEntity entity)
+        public void Insert(ErrorMessage entity)
         {
             Add(entity);
             FlushChanges();
@@ -71,7 +88,7 @@ namespace Kepler.Common.Repository
             _dbContext.SaveChanges();
         }
 
-        public void Remove(TEntity entity)
+        public void Remove(ErrorMessage entity)
         {
             if (_dbContext.Entry(entity).State == EntityState.Detached)
             {
@@ -81,17 +98,17 @@ namespace Kepler.Common.Repository
             _dbSet.Remove(entity);
         }
 
-        public virtual IEnumerable<TEntity> FindAll()
+        public virtual IEnumerable<ErrorMessage> FindAll()
         {
             return _dbSet.ToList();
         }
 
-        public virtual IEnumerable<TEntity> Find(string name)
+        public virtual IEnumerable<ErrorMessage> Find(string name)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IEnumerable<TEntity> Find(Func<TEntity, bool> filterCondition)
+        public virtual IEnumerable<ErrorMessage> Find(Func<ErrorMessage, bool> filterCondition)
         {
             return _dbSet.Where(filterCondition).ToList();
         }
