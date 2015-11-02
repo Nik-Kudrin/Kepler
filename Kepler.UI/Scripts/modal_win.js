@@ -61,7 +61,7 @@
 
 $("#modal_form").validate({
     rules: {
-        proj_name: {
+        name: {
             required: true,
             minlength: 4,
             maxlength: 10,

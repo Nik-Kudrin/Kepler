@@ -56,6 +56,10 @@ label.error {
     font-size: 12px;
     font-weight: normal;
 }
+
+#modal_form .alert-warning {
+    display: none;
+}
 /*GLOBAL END*/
 
 /*NAVBAR LEFT START*/

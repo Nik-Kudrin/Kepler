@@ -34,7 +34,7 @@
     loadLeftMenu();
 
     function loadLeftMenu() {
-        $('#main-menu').empty();
+        $('.sidebar-collapse').empty().append('<ul class="nav" id="main-menu"></ul>');
         $.ajax({
             url: KeplerServiceUrl + 'GetProjects',
             type: 'GET',
@@ -84,8 +84,9 @@
             case 'create_proj':
                 obj_act = "CreateProject";
                 $('.modal-title').text('Create project');
-                $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text"></div>');
-                $('.modal-footer').show().empty().append('<button type="submit" onclick="" class="btn btn-success">Save</button>');
+                $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text"></div>' +
+                    '<div class="alert alert-warning"></div>');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
         }
     });
