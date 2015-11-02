@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.ServiceModel.Web;
 
 namespace Kepler.Common.Error
 {
@@ -83,6 +85,11 @@ namespace Kepler.Common.Error
             }
 
             return $"Error: {codeMessage}. {ExceptionMessage}";
+        }
+
+        public WebFaultException<string> ConvertToWebFaultException(HttpStatusCode statusCode)
+        {
+            return new WebFaultException<string>(ToString(), statusCode);
         }
     }
 }

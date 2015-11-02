@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.ServiceModel.Web;
 using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
@@ -18,7 +20,7 @@ namespace Kepler.Service.Config
         /// </summary>
         /// <param name="jsonConfig"></param>
         /// <returns>Return empty string, if import was 'Ok', otherwise - error message</returns>
-        public string ImportConfig(string jsonConfig)
+        public void ImportConfig(string jsonConfig)
         {
             ImportConfigModel importedConfig;
             try
@@ -27,14 +29,16 @@ namespace Kepler.Service.Config
             }
             catch (Exception ex)
             {
-                return
-                    new ErrorMessage() {Code = ErrorMessage.ErorCode.ParsingFileError, ExceptionMessage = ex.Message}
-                        .ToString();
+                throw new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.ParsingFileError,
+                    ExceptionMessage = ex.Message
+                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
             }
 
             var validationErrorMessage = ValidateImportedConfigObjects(importedConfig);
             if (validationErrorMessage != "")
-                return validationErrorMessage;
+                throw new WebFaultException<string>(validationErrorMessage, HttpStatusCode.InternalServerError);
 
             var mappedProjects = mapper.GetProjects(importedConfig.Projects).ToList();
 
@@ -44,7 +48,7 @@ namespace Kepler.Service.Config
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                throw new WebFaultException<string>(ex.Message, HttpStatusCode.InternalServerError);
             }
 
             List<Branch> branches = null;
@@ -54,7 +58,7 @@ namespace Kepler.Service.Config
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                throw new WebFaultException<string>(ex.Message, HttpStatusCode.InternalServerError);
             }
 
             var builds = BindImportedBranchesWithBuilds(branches);
@@ -62,8 +66,6 @@ namespace Kepler.Service.Config
             assemblies = BindTestSuitesWithAssemblies(importedConfig, assemblies);
             BindTestCasesWithSuites(importedConfig, assemblies);
             BindScreenshotsWithTestCases(importedConfig, branches, assemblies);
-
-            return "";
         }
 
 
