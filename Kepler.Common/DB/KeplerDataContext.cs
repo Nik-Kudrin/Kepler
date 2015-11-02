@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using Kepler.Common.Error;
 using Kepler.Common.Models;
 
 namespace Kepler.Common.DB
@@ -17,6 +18,7 @@ namespace Kepler.Common.DB
 
         public DbSet<ImageWorker> ImageWorkers { get; set; }
         public DbSet<KeplerSystemConfig> KeplerSystemConfig { get; set; }
+        public DbSet<ErrorMessage> ErrorMessages { get; set; }
 
         public KeplerDataContext() : base("name=Kepler")
         {

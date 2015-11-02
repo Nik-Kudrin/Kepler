@@ -19,7 +19,7 @@ namespace Kepler.Common.Repository
 
         public virtual IEnumerable<TBuildObjEntity> Find(long parentObjId)
         {
-            return _dbSet.Where(x => x.ParentObjId == parentObjId);
+            return DbSet.Where(x => x.ParentObjId == parentObjId);
         }
 
         protected BuildObjectRepository(KeplerDataContext dbContext, DbSet<TBuildObjEntity> dbSet)

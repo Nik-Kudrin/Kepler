@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Runtime.Serialization;
 using System.ServiceModel.Web;
 
 namespace Kepler.Common.Error
@@ -20,16 +22,47 @@ namespace Kepler.Common.Error
             ScreenShotHasEmptyFilePath,
             EmptyListOfObjects,
 
-            UndefinedError,
             ObjectNotFoundInDb,
             NotUniqueObjects,
 
+            RunOperationError,
+            SetObjectStatusError,
+
             AddTaskToImageWorkerError,
-            ScreenShotDoesntHaveAName
+            ScreenShotDoesntHaveAName,
+
+            UndefinedError
         }
 
+        public ErrorMessage()
+        {
+            Code = ErorCode.UndefinedError;
+            Time = DateTime.Now;
+        }
+
+        [DataMember]
+        [Key]
+        public long Id { get; set; }
+
+        [DataMember]
+        [DataType(DataType.DateTime)]
+        public DateTime? Time { get; set; }
+
+        [DataMember]
         public ErorCode Code { get; set; }
-        public string ExceptionMessage { get; set; }
+
+        [DataMember]
+        public bool IsLastViewed { get; set; }
+
+        private string _exceptionMessage;
+
+        [DataMember]
+        public string ExceptionMessage
+        {
+            get { return ToString(); }
+            set { _exceptionMessage = value; }
+        }
+
 
         public override string ToString()
         {
@@ -76,6 +109,12 @@ namespace Kepler.Common.Error
                 case ErorCode.AddTaskToImageWorkerError:
                     codeMessage = "Error happend in process to add images for diff comparison";
                     break;
+                case ErorCode.RunOperationError:
+                    codeMessage = "Error happend during run operation";
+                    break;
+                case ErorCode.SetObjectStatusError:
+                    codeMessage = "Error happend during set status for object";
+                    break;
                 case ErorCode.UndefinedError:
                     codeMessage = "Undefined error";
                     break;
@@ -84,7 +123,7 @@ namespace Kepler.Common.Error
                     return "Detailed text about this type of error isn't written";
             }
 
-            return $"Error: {codeMessage}. {ExceptionMessage}";
+            return $"Error: {codeMessage}. {_exceptionMessage}";
         }
 
         public WebFaultException<string> ConvertToWebFaultException(HttpStatusCode statusCode)

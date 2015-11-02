@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Kepler.Common.CommunicationContracts;
+using Kepler.Common.Error;
 using Kepler.Common.Models;
 
 namespace Kepler.Service
@@ -203,6 +205,33 @@ namespace Kepler.Service
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "SetDiffImageSavingPath?diffImageSavingPath={diffImageSavingPath}")]
         void SetDiffImageSavingPath(string diffImageSavingPath);
+
+        #endregion
+
+        #region Error Log
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "GetErrors?fromTime={fromTime}")]
+        IEnumerable<ErrorMessage> GetErrors(DateTime fromTime);
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "GetErrorsSinceLastViewed")]
+        IEnumerable<ErrorMessage> GetErrorsSinceLastViewed();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "LogError")]
+        void LogError(ErrorMessage error);
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "SetLastViewedError?errorId={errorId}")]
+        void SetLastViewedError(long errorId);
 
         #endregion
     }
