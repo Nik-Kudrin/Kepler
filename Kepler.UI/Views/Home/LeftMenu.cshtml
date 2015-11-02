@@ -101,11 +101,12 @@
             type: 'GET',
             url: KeplerServiceUrl + url_parameters,
             success: function (data) {
+                $('#modal_form .alert-warning').hide();
                 $('#crud-modal button.close').click();
                 loadLeftMenu();
             },
-            error: function (xhr, str) {
-                alert('Возникла ошибка: ' + xhr.responseCode);
+            error: function (xhr) {
+                $('#modal_form .alert-warning').show().text(xhr.responseText);
             }
         });
     }

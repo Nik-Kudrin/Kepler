@@ -59,7 +59,9 @@
     }
 }
 
-$("#modal_form").validate({
+$("#modal_form").submit(function (e) {
+    e.preventDefault();
+}).validate({
     rules: {
         name: {
             required: true,
@@ -101,5 +103,9 @@ $("#modal_form").validate({
             required: "This field is required",
             url: "Please, enter valid URL: http://...",
         },
+    },
+    submitHandler: function (form) {
+        modal_ajax_call();
+        return false;  //This doesn't prevent the form from submitting.
     }
 });
