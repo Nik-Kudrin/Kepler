@@ -86,7 +86,7 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
             catch (Exception ex)
             {
                 var errorMessage =
-                    $"Something bad happend in attempt to write file with diff screenshot '{pathToSave}'. {ex.Message}";
+                    $"Attempt to write file with diff screenshot failed. '{pathToSave}'. {ex.Message}";
                 new RestKeplerServiceClient().LogError(errorMessage);
 
                 return errorMessage;

@@ -6,6 +6,7 @@ using System.ServiceModel.Web;
 
 namespace Kepler.Common.Error
 {
+    [DataContract]
     public class ErrorMessage
     {
         public enum ErorCode

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Kepler.Common.CommunicationContracts;
 using Kepler.ImageProcessor.Service.ImgProcessor;
+using Kepler.ImageProcessor.Service.RestKeplerClient;
 
 namespace Kepler.ImageProcessor.Service.TaskManager
 {
@@ -65,6 +66,8 @@ namespace Kepler.ImageProcessor.Service.TaskManager
                     ErrorMessage = ex.Message,
                     ScreenShotId = imageComparator.ImageComparisonInfo.ScreenShotId
                 };
+
+                new RestKeplerServiceClient().LogError(ex.Message);
             }
 
             return diffImage;

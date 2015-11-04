@@ -1,4 +1,5 @@
-﻿using Kepler.Common.Error;
+﻿using System.Web.Script.Serialization;
+using Kepler.Common.Error;
 using Kepler.ImageProcessor.Service.TaskManager;
 using RestSharp;
 
@@ -24,8 +25,9 @@ namespace Kepler.ImageProcessor.Service.RestKeplerClient
             var request = new RestRequest("LogError", Method.POST);
 
             request.RequestFormat = DataFormat.Json;
+            request.JsonSerializer = new RestSharpDataContractJsonSerializer();
+            request.AddJsonBody(error);
 
-            request.AddBody(error);
             client.Execute(request);
         }
     }

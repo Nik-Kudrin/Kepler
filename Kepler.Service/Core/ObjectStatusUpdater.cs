@@ -9,6 +9,44 @@ namespace Kepler.Service.Core
 {
     public class ObjectStatusUpdater
     {
+        /// <summary>
+        /// Update StartDate, StopDate, Duration, PredictedDuration, based on changed build status
+        /// </summary>
+        /// <param name="buildId"></param>
+        public static void UpdateBuildDurationFields(long buildId)
+        {
+            var build = BuildRepository.Instance.Get(buildId);
+            if (build == null) return;
+
+            switch (build.Status)
+            {
+                case ObjectStatus.InProgress:
+                    if (build.StartDate.HasValue) return;
+
+                    build.StartDate = DateTime.Now;
+
+                    var averagePredictedBuildRunTicks = BuildRepository.Instance.Find(
+                        item => item.BranchId == build.BranchId)
+                        .Average(item => item.Duration?.Ticks ?? 0);
+
+                    var longAverageTicks = Convert.ToInt64(averagePredictedBuildRunTicks);
+                    build.PredictedDuration = TimeSpan.FromTicks(longAverageTicks);
+                    break;
+
+                case ObjectStatus.Failed:
+                case ObjectStatus.Passed:
+                case ObjectStatus.Stopped:
+                    if (build.StopDate.HasValue) return;
+
+                    build.StopDate = DateTime.Now;
+                    build.Duration = build.StopDate - build.StartDate;
+                    break;
+            }
+
+            BuildRepository.Instance.UpdateAndFlashChanges(build);
+        }
+
+
         // select all In progress, In queue Test Cases
         // select In queue, In progress screenshots
         // if > 0 in progress screenshtos, then set status = In progress .
@@ -55,12 +93,20 @@ namespace Kepler.Service.Core
                 if (childItems.Any(item => item.Status == ObjectStatus.Failed))
                 {
                     baseItem.Status = ObjectStatus.Failed;
+                    if (typeof (TEntityBase) == typeof (Build))
+                    {
+                        UpdateBuildDurationFields(baseItem.Id);
+                    }
                     continue;
                 }
 
                 if (childItems.Any(item => item.Status == ObjectStatus.InProgress))
                 {
                     baseItem.Status = ObjectStatus.InProgress;
+                    if (typeof (TEntityBase) == typeof (Build))
+                    {
+                        UpdateBuildDurationFields(baseItem.Id);
+                    }
                     continue;
                 }
 
@@ -69,10 +115,13 @@ namespace Kepler.Service.Core
                     baseItem.Status = ObjectStatus.Passed;
                 }
 
-                baseObjectRepository.Update(baseItem);
-            }
+                baseObjectRepository.UpdateAndFlashChanges(baseItem);
 
-            baseObjectRepository.FlushChanges();
+                if (typeof (TEntityBase) == typeof (Build))
+                {
+                    UpdateBuildDurationFields(baseItem.Id);
+                }
+            }
         }
 
         /// <summary>
@@ -95,6 +144,7 @@ namespace Kepler.Service.Core
                 if (updateParentObj)
                 {
                     SetParentObjStatus<BuildRepository, Build>(BuildRepository.Instance, objectId, newStatus);
+                    UpdateBuildDurationFields(objectId);
                 }
                 var childObjects =
                     SetChildObjStatuses<TestAssemblyRepository, TestAssembly>(TestAssemblyRepository.Instance,
