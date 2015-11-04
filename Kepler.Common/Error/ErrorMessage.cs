@@ -124,7 +124,12 @@ namespace Kepler.Common.Error
                     return "Detailed text about this type of error isn't written";
             }
 
-            return $"Error: {codeMessage}. {_exceptionMessage}";
+            codeMessage = $"Error: {codeMessage}. ";
+
+            if (_exceptionMessage.Contains(codeMessage))
+                return _exceptionMessage;
+
+            return codeMessage + _exceptionMessage;
         }
 
         public WebFaultException<string> ConvertToWebFaultException(HttpStatusCode statusCode)
