@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Timers;
+using AutoMapper.Internal;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Error;
 using Kepler.Common.Models;
@@ -65,6 +66,10 @@ namespace Kepler.Service.Core
                 .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
 
             var screenShots = ScreenShotRepository.Instance.GetAllInQueueScreenShots();
+            screenShots.Each(item => item.Status = ObjectStatus.InProgress);
+            ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShots);
+            UpdateObjectsStatuses(this, null);
+
             var imageComparisonContainers = ConvertScreenShotsToImageComparison(screenShots).ToList();
 
             if (workers.Count == 0)
@@ -76,7 +81,7 @@ namespace Kepler.Service.Core
                 imgComparisonPerWorker = imageComparisonContainers.Count();
 
 
-            int workerIndex = 0;
+            var workerIndex = 0;
             while (imageComparisonContainers.Any())
             {
                 var jsonMessage = new ImageComparisonContract()
@@ -137,13 +142,8 @@ namespace Kepler.Service.Core
 
                 var newScreenShotsForProcessing = newBaselineScreenShot.AsEnumerable().ToList();
 
-                newScreenShotsForProcessing.ForEach(item => item.Status = ObjectStatus.InProgress);
-                ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
-
                 imagesComparisonContainer.AddRange(GenerateImageComparison(newScreenShotsForProcessing,
                     oldPassedBaselineScreenShots.ToList()));
-
-                ScreenShotRepository.Instance.FlushChanges();
             }
 
             return imagesComparisonContainer;

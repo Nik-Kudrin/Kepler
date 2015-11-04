@@ -25,9 +25,13 @@ namespace Kepler.Service.Core
 
                     build.StartDate = DateTime.Now;
 
-                    var averagePredictedBuildRunTicks = BuildRepository.Instance.Find(
-                        item => item.BranchId == build.BranchId)
-                        .Average(item => item.Duration?.Ticks ?? 0);
+                    var builds = BuildRepository.Instance.Find(
+                        item => item.BranchId == build.BranchId && item.Id != buildId);
+
+                    var averagePredictedBuildRunTicks = 0.0;
+
+                    if (builds.Any())
+                        averagePredictedBuildRunTicks = builds.Average(item => item.Duration?.Ticks ?? 0);
 
                     var longAverageTicks = Convert.ToInt64(averagePredictedBuildRunTicks);
                     build.PredictedDuration = TimeSpan.FromTicks(longAverageTicks);
