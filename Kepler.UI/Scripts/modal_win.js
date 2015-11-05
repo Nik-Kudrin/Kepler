@@ -66,7 +66,7 @@ $("#modal_form").submit(function (e) {
         name: {
             required: true,
             minlength: 4,
-            maxlength: 10,
+            maxlength: 15,
         },
         diff_path: {
             required: true,
