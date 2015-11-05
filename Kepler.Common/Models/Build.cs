@@ -12,8 +12,16 @@ namespace Kepler.Common.Models
         public DateTime? StartDate { get; set; }
 
         [DataMember]
+        [DataType(DataType.DateTime)]
+        public DateTime? StopDate { get; set; }
+
+        [DataMember]
         [DataType(DataType.Time)]
         public TimeSpan? Duration { get; set; }
+
+        [DataMember]
+        [DataType(DataType.Time)]
+        public TimeSpan? PredictedDuration { get; set; }
 
         [DataMember]
         public long? BranchId { get; set; }

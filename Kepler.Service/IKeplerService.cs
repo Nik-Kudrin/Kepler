@@ -120,6 +120,12 @@ namespace Kepler.Service
             BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "CreateProject?name={name}")]
         void CreateProject(string name);
 
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "UpdateProject?id={id}&newName={newName}")]
+        void UpdateProject(long id, string newName);
+
         #endregion
 
         #region Branch
@@ -137,8 +143,8 @@ namespace Kepler.Service
         [OperationContract]
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare,
-            UriTemplate = "UpdateBranch?name={name}&newName={newName}&isMainBranch={isMainBranch}")]
-        void UpdateBranch(string name, string newName, bool isMainBranch);
+            UriTemplate = "UpdateBranch?id={id}&newName={newName}&isMainBranch={isMainBranch}")]
+        void UpdateBranch(long id, string newName, bool isMainBranch);
 
         [OperationContract]
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,

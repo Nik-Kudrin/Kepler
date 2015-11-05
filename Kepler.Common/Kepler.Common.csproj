@@ -56,6 +56,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -107,6 +111,8 @@
     <Compile Include="Models\TestSuite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\EntityXmlSerializer.cs" />
+    <Compile Include="Util\RestSharpDataContractJsonDeserializer.cs" />
+    <Compile Include="Util\RestSharpDataContractJsonSerializer.cs" />
     <Compile Include="Util\Utf8StringWriter.cs" />
   </ItemGroup>
   <ItemGroup>

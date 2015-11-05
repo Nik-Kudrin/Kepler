@@ -1,6 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Text;
+using System.Web.Script.Serialization;
 using FluentAssertions;
+using Kepler.Common.Error;
 using Newtonsoft.Json;
 using NLog.Fluent;
 using NUnit.Framework;
@@ -47,6 +51,7 @@ namespace Kepler.Tests.Test
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
         }
 
+
         [Test]
         public void InitDatabaseContent()
         {
@@ -80,7 +85,7 @@ namespace Kepler.Tests.Test
             // Set branch as main
             request = new RestRequest("UpdateBranch", Method.GET);
             request.RequestFormat = DataFormat.Json;
-            request.AddQueryParameter("name", "Develop");
+            request.AddQueryParameter("id", "1");
             request.AddQueryParameter("newName", "Develop");
             request.AddQueryParameter("isMainBranch", "true");
 

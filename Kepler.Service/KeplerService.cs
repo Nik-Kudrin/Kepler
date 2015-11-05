@@ -205,6 +205,27 @@ namespace Kepler.Service
             }
         }
 
+        public void UpdateProject(long id, string newName)
+        {
+            var project = ProjectRepository.Instance.Get(id);
+
+            if (project == null)
+            {
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Project with Id={id} doesn't exist");
+            }
+
+            if (project.Name != newName)
+            {
+                if (ProjectRepository.Instance.Find(newName).Any())
+                {
+                    LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Project with name {newName} already exist");
+                }
+            }
+
+            project.Name = newName;
+            ProjectRepository.Instance.UpdateAndFlashChanges(project);
+        }
+
         #endregion
 
         #region Branch
@@ -278,23 +299,22 @@ namespace Kepler.Service
         {
             if (BranchRepository.Instance.Find(branchName).Any())
             {
-                LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects,
-                    $"Branch with name {branchName} already exist");
+                LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Branch with name {branchName} already exist");
             }
         }
 
-        public void UpdateBranch(string name, string newName, bool isMainBranch)
+        public void UpdateBranch(long id, string newName, bool isMainBranch)
         {
-            if (name != newName)
-            {
-                IsBranchAlreadyExist(newName);
-            }
-
-            var branch = BranchRepository.Instance.Find(name).FirstOrDefault();
+            var branch = BranchRepository.Instance.Get(id);
 
             if (branch == null)
             {
-                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Branch with name {name} doesn't exist");
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Branch with Id={id} doesn't exist");
+            }
+
+            if (branch.Name != newName)
+            {
+                IsBranchAlreadyExist(newName);
             }
 
             if (isMainBranch)
