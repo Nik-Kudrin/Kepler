@@ -21,6 +21,7 @@ namespace Kepler.Service.Core
             switch (build.Status)
             {
                 case ObjectStatus.InProgress:
+                    // if StartDate already set, just get out of here
                     if (build.StartDate.HasValue) return;
 
                     build.StartDate = DateTime.Now;
@@ -38,18 +39,43 @@ namespace Kepler.Service.Core
                     break;
 
                 case ObjectStatus.Failed:
+                    // if StopDate already set, just get out of here
+                    if (build.StopDate.HasValue) return;
+
+                    var numberNotProcessedScreenShots =
+                        ScreenShotRepository.Instance.Find(item => item.BuildId == buildId &&
+                                                                   (item.Status == ObjectStatus.InProgress ||
+                                                                    item.Status == ObjectStatus.InQueue)).Count();
+                    // if build still in processing
+                    if (numberNotProcessedScreenShots > 0) return;
+
+                    UpdateBuildFailedScreenshotsNumber(build);
+                    break;
+
                 case ObjectStatus.Passed:
-                case ObjectStatus.Stopped:
+                    // if StopDate already set, just get out of here
                     if (build.StopDate.HasValue) return;
 
                     build.StopDate = DateTime.Now;
                     build.Duration = build.StopDate - build.StartDate;
+                    break;
+
+                case ObjectStatus.Stopped:
+                    // if StopDate already set, just get out of here
+                    if (build.StopDate.HasValue) return;
+                    UpdateBuildFailedScreenshotsNumber(build);
                     break;
             }
 
             BuildRepository.Instance.UpdateAndFlashChanges(build);
         }
 
+        private static void UpdateBuildFailedScreenshotsNumber(Build build)
+        {
+            build.StopDate = DateTime.Now;
+            build.Duration = build.StopDate - build.StartDate;
+            build.NumberFailedScreenshots = ScreenShotRepository.Instance.FindFailedInBuild(build.Id).Count();
+        }
 
         // select all In progress, In queue Test Cases
         // select In queue, In progress screenshots

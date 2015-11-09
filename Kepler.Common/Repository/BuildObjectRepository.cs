@@ -9,6 +9,11 @@ namespace Kepler.Common.Repository
     public class BuildObjectRepository<TBuildObjEntity> : BaseRepository<TBuildObjEntity>
         where TBuildObjEntity : BuildObject
     {
+        protected BuildObjectRepository(KeplerDataContext dbContext, DbSet<TBuildObjEntity> dbSet)
+            : base(dbContext, dbSet)
+        {
+        }
+
         public TBuildObjEntity GetCompleteObject(long id)
         {
             var entity = Get(id);
@@ -17,22 +22,27 @@ namespace Kepler.Common.Repository
             return entity;
         }
 
-        public virtual IEnumerable<TBuildObjEntity> Find(long parentObjId)
-        {
-            return DbSet.Where(x => x.ParentObjId == parentObjId);
-        }
-
-        protected BuildObjectRepository(KeplerDataContext dbContext, DbSet<TBuildObjEntity> dbSet)
-            : base(dbContext, dbSet)
-        {
-        }
-
         public IEnumerable<TBuildObjEntity> GetObjectsTreeByParentId(long parentObjId)
         {
             var items = Find(parentObjId).ToList();
             items.ForEach(item => (item as IChildInit).InitChildObjectsFromDb());
 
             return items;
+        }
+
+        public virtual IEnumerable<TBuildObjEntity> Find(long parentObjId)
+        {
+            return DbSet.Where(x => x.ParentObjId == parentObjId);
+        }
+
+        public virtual IEnumerable<TBuildObjEntity> FindByBuildId(long buildId)
+        {
+            return DbSet.Where(item => item.BuildId == buildId);
+        }
+
+        public virtual IEnumerable<TBuildObjEntity> FindFailedInBuild(long buildId)
+        {
+            return DbSet.Where(item => item.BuildId == buildId && item.Status == ObjectStatus.Failed);
         }
     }
 }

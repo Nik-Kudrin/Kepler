@@ -66,6 +66,8 @@ namespace Kepler.Service.Config
             assemblies = BindTestSuitesWithAssemblies(importedConfig, assemblies);
             BindTestCasesWithSuites(importedConfig, assemblies);
             BindScreenshotsWithTestCases(importedConfig, branches, assemblies);
+
+            UpdateBuildsCountersFields(builds);
         }
 
 
@@ -424,6 +426,21 @@ namespace Kepler.Service.Config
                     }
                 }
             }
+        }
+
+        private void UpdateBuildsCountersFields(List<Build> builds)
+        {
+            foreach (var build in builds)
+            {
+                build.NumberTestAssemblies = TestAssemblyRepository.Instance.FindByBuildId(build.Id).Count();
+                build.NumberTestSuites = TestSuiteRepository.Instance.FindByBuildId(build.Id).Count();
+                build.NumberTestCase = TestCaseRepository.Instance.FindByBuildId(build.Id).Count();
+                build.NumberScreenshots = ScreenShotRepository.Instance.FindByBuildId(build.Id).Count();
+
+                BuildRepository.Instance.Update(build);
+            }
+
+            BuildRepository.Instance.FlushChanges();
         }
     }
 }

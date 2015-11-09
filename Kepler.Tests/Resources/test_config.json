@@ -16,12 +16,12 @@
                                             "Name": "Test case name",
                                             "ScreenShots": [
                                                 {
-                                                    "ImagePath": "c:\\Users\\neon\\Pictures\\2015-11-04 23_11_41.png",
+                                                    "ImagePath": "c:\\Users\\neon\\Pictures\\2015-11-04 23_11_50.png",
                                                     "Name": "ScreenName_1",
                                                     "Url": "https://trello.com/c/fBpszhrM/33-api-add-in-screenshot-object-field-url"
                                                 },
                                                 {
-                                                    "ImagePath": "c:\\Users\\neon\\Pictures\\2015-11-04 23_11_50.png",
+                                                    "ImagePath": "c:\\Users\\neon\\Pictures\\2015-11-04 23_11_41.png",
                                                      "Name": "ScreenName_2",
                                                 }                                              
                                             ]
