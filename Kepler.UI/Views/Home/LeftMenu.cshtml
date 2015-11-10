@@ -11,7 +11,7 @@
             <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_proj" data-obj="">Edit</a></li>
             <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_proj" data-obj="">Delete</a></li>
             <li class="divider"></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="create_branch" data-obj="">Create branch</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="create_branch" data-obj="">Create branch</a></li>
         </ul>
     </div>
     <ul class="nav nav-second-level"></ul>
@@ -22,8 +22,8 @@
     <div class="main-menu-conf">
         <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
         <ul class="dropdown-menu">
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_branch" data-obj="">Edit</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="delete_branch" data-obj="">Delete</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_branch" data-obj="">Edit</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_branch" data-obj="">Delete</a></li>
         </ul>
     </div>
 </li>
@@ -40,22 +40,40 @@
             url: KeplerServiceUrl + 'GetProjects',
             type: 'GET',
             success: function (data) {
-                $.each(data, function (objNum) {
-                    if (data[objNum]) {
-                        $('.main-menu-li-1-lvl').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl').show();
-                        $('#main-menu > li:last > .main-menu-item').prepend(data[objNum].Name);
-                        $('#main-menu > li:last .dropdown-menu a').attr('data-obj', data[objNum].Id);
+                $.each(data, function (key, value) {
+                    $.each(value, function (key, value) {
+                        //if (data[objNum]) {
+                        //$('.main-menu-li-1-lvl').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl').show();
+                        //$('#main-menu > li:last > .main-menu-item').prepend(data[objNum].Name);
+                        //$('#main-menu > li:last .dropdown-menu a').attr('data-obj', data[objNum].Id);
 
-                        $.each(data, function (subObjNum) {
-                            if (data[objNum].Branches[subObjNum]) {
-                                $('.main-menu-li-2-lvl').clone(true, true).appendTo('#main-menu > li:last .nav-second-level').removeClass('main-menu-li-2-lvl').show();
-                                $('#main-menu > li:last .nav-second-level > li:last > a').prepend(data[objNum].Branches[subObjNum].Value.Name);
-                                $('#main-menu > li:last .nav-second-level > li:last .dropdown-menu a').attr('data-obj', data[objNum].Branches[subObjNum].Value.Id);
-                            }
-                        });
-                    }
+                        if (key == "Branches") {
+                            $.each(value, function (key, value) {
+                                $.each(value, function (key, value) {
+                                    if (key == "Value") {
+                                        $.each(value, function (key, value) {
+                                            console.log('     ' + key, value);
+                                        });
+                                    }
+                                });
+                            });
+                        } else {
+                            $('.main-menu-li-1-lvl').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl').show();
+                            $('#main-menu > li:last > .main-menu-item').prepend(key['Name'].value);
+                            $('#main-menu > li:last .dropdown-menu a').attr(key, value);
+                        }
+                        //$.each(data, function (subObjNum) {
+                        //    if (data[objNum].Branches[subObjNum]) {
+                        //        $('.main-menu-li-2-lvl').clone(true, true).appendTo('#main-menu > li:last .nav-second-level').removeClass('main-menu-li-2-lvl').show();
+                        //        $('#main-menu > li:last .nav-second-level > li:last > a').prepend(data[objNum].Branches[subObjNum].Value.Name);
+                        //        $('#main-menu > li:last .nav-second-level > li:last .dropdown-menu a').attr('data-obj', data[objNum].Branches[subObjNum].Value.Id);
+                        //    }
+                        //});
+                        //}
+                    });
                 });
                 $('#main-menu').metisMenu();
+                console.log(data);
             }
         });
     }
@@ -89,10 +107,27 @@
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
+            case 'edit_proj':
+                obj_act = "UpdateProject";
+                $('.modal-title').text('Edit project');
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('data-obj') + '"></div>' +
+                    '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
+                    '<div class="alert alert-warning"></div>');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+                break;
             case 'create_branch':
                 obj_act = "CreateBranch";
                 $('.modal-title').text('Create branch');
-                $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text"></div>' +
+                $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text">' +
+                    '<input class="form-control" name="projectId" type="hidden" value="' + $(this).attr('data-obj') + '"></div>' +
+                    '<div class="alert alert-warning"></div>');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+                break;
+            case 'edit_branch':
+                obj_act = "UpdateBranch";
+                $('.modal-title').text('Edit branch');
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('data-obj') + '"></div>' +
+                    '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
