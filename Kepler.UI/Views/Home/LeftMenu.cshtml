@@ -41,35 +41,28 @@
             type: 'GET',
             success: function (data) {
                 $.each(data, function (key, value) {
+                    $('.main-menu-li-1-lvl').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl').show();
                     $.each(value, function (key, value) {
-                        //if (data[objNum]) {
-                        //$('.main-menu-li-1-lvl').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl').show();
-                        //$('#main-menu > li:last > .main-menu-item').prepend(data[objNum].Name);
-                        //$('#main-menu > li:last .dropdown-menu a').attr('data-obj', data[objNum].Id);
-
-                        if (key == "Branches") {
+                        if (key != "Branches") {
+                            if (key == "Name") {
+                                $('#main-menu > li:last > .main-menu-item').prepend(value);
+                            }
+                            $('#main-menu > li:last .dropdown-menu a').attr("proj_" + key, value);
+                        } else {
                             $.each(value, function (key, value) {
                                 $.each(value, function (key, value) {
                                     if (key == "Value") {
+                                        $('.main-menu-li-2-lvl').clone(true, true).appendTo('#main-menu > li:last .nav-second-level').removeClass('main-menu-li-2-lvl').show();
                                         $.each(value, function (key, value) {
-                                            console.log('     ' + key, value);
+                                            if (key == "Name") {
+                                                $('#main-menu > li:last .nav-second-level > li:last > a').prepend(value);
+                                            }
+                                            $('#main-menu > li:last .nav-second-level > li:last .dropdown-menu a').attr("branch_" + key, value);
                                         });
                                     }
                                 });
                             });
-                        } else {
-                            $('.main-menu-li-1-lvl').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl').show();
-                            $('#main-menu > li:last > .main-menu-item').prepend(key['Name'].value);
-                            $('#main-menu > li:last .dropdown-menu a').attr(key, value);
                         }
-                        //$.each(data, function (subObjNum) {
-                        //    if (data[objNum].Branches[subObjNum]) {
-                        //        $('.main-menu-li-2-lvl').clone(true, true).appendTo('#main-menu > li:last .nav-second-level').removeClass('main-menu-li-2-lvl').show();
-                        //        $('#main-menu > li:last .nav-second-level > li:last > a').prepend(data[objNum].Branches[subObjNum].Value.Name);
-                        //        $('#main-menu > li:last .nav-second-level > li:last .dropdown-menu a').attr('data-obj', data[objNum].Branches[subObjNum].Value.Id);
-                        //    }
-                        //});
-                        //}
                     });
                 });
                 $('#main-menu').metisMenu();
