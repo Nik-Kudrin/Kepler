@@ -126,7 +126,7 @@ namespace Kepler.Common.Error
 
             codeMessage = $"Error: {codeMessage}. ";
 
-            if (_exceptionMessage.Contains(codeMessage))
+            if (_exceptionMessage.StartsWith(codeMessage))
                 return _exceptionMessage;
 
             return codeMessage + _exceptionMessage;

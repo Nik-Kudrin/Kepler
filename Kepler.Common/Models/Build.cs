@@ -27,9 +27,18 @@ namespace Kepler.Common.Models
         public long? BranchId { get; set; }
 
         [DataMember]
-        public long TestCount { get; set; }
+        public long NumberTestAssemblies { get; set; }
 
         [DataMember]
-        public long TestsFailed { get; set; }
+        public long NumberTestSuites { get; set; }
+
+        [DataMember]
+        public long NumberTestCase { get; set; }
+
+        [DataMember]
+        public long NumberScreenshots { get; set; }
+
+        [DataMember]
+        public long NumberFailedScreenshots { get; set; }
     }
 }
