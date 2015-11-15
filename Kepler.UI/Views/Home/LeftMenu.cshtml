@@ -7,11 +7,11 @@
     <div class="main-menu-conf">
         <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
         <ul class="dropdown-menu">
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="create_proj" data-obj="">Create</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_proj" data-obj="">Edit</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_proj" data-obj="">Delete</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="create_proj">Create</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_proj">Edit</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_proj">Delete</a></li>
             <li class="divider"></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="create_branch" data-obj="">Create branch</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="create_branch">Create branch</a></li>
         </ul>
     </div>
     <ul class="nav nav-second-level"></ul>
@@ -22,8 +22,8 @@
     <div class="main-menu-conf">
         <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
         <ul class="dropdown-menu">
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_branch" data-obj="">Edit</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_branch" data-obj="">Delete</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_branch">Edit</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_branch">Delete</a></li>
         </ul>
     </div>
 </li>
@@ -47,6 +47,7 @@
                             if (key == "Name") {
                                 $('#main-menu > li:last > .main-menu-item').prepend(value);
                             }
+                            $('#main-menu > li:last > .main-menu-item').attr("proj_" + key, value);
                             $('#main-menu > li:last .dropdown-menu a').attr("proj_" + key, value);
                         } else {
                             $.each(value, function (key, value) {
@@ -57,6 +58,7 @@
                                             if (key == "Name") {
                                                 $('#main-menu > li:last .nav-second-level > li:last > a').prepend(value);
                                             }
+                                            $('#main-menu > li:last .nav-second-level > li:last > a').attr("branch_" + key, value);
                                             $('#main-menu > li:last .nav-second-level > li:last .dropdown-menu a').attr("branch_" + key, value);
                                         });
                                     }
@@ -66,7 +68,6 @@
                     });
                 });
                 $('#main-menu').metisMenu();
-                console.log(data);
             }
         });
     }
@@ -103,7 +104,7 @@
             case 'edit_proj':
                 obj_act = "UpdateProject";
                 $('.modal-title').text('Edit project');
-                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('data-obj') + '"></div>' +
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('proj_id') + '"></div>' +
                     '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
@@ -112,14 +113,14 @@
                 obj_act = "CreateBranch";
                 $('.modal-title').text('Create branch');
                 $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text">' +
-                    '<input class="form-control" name="projectId" type="hidden" value="' + $(this).attr('data-obj') + '"></div>' +
+                    '<input class="form-control" name="projectId" type="hidden" value="' + $(this).attr('proj_id') + '"></div>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
             case 'edit_branch':
                 obj_act = "UpdateBranch";
                 $('.modal-title').text('Edit branch');
-                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('data-obj') + '"></div>' +
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('branch_id') + '"></div>' +
                     '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
