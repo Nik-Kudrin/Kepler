@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Kepler.UI.Controllers
@@ -20,8 +17,8 @@ namespace Kepler.UI.Controllers
 
         public ActionResult PartialBuildView()
         {
+            ViewData["BuildId"] = Convert.ToInt32(RouteData.Values["BuildId"]);
             return PartialView();
         }
-
     }
 }

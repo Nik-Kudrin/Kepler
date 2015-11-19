@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace Kepler.UI
@@ -16,8 +12,26 @@ namespace Kepler.UI
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Kepler", action = "Index", id = UrlParameter.Optional }
-            );
+                defaults: new {controller = "Kepler", action = "Index", id = UrlParameter.Optional}
+                );
+            routes.MapRoute(
+                name: "Build",
+                url: "{controller}/{Project}/{Branch}/{BuildId}",
+                defaults:
+                    new
+                    {
+                        controller = "Kepler",
+                        action = "PartialBuildView",
+                        Project = UrlParameter.Optional,
+                        Branch = UrlParameter.Optional,
+                        BuildId = UrlParameter.Optional
+                    }
+                );
+        }
+
+        protected void Application_Start()
+        {
+            RegisterRoutes(RouteTable.Routes);
         }
     }
 }
