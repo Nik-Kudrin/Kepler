@@ -167,7 +167,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\KeplerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -243,12 +243,12 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Kepler\Index.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Home\LeftMenu.cshtml" />
-    <Content Include="Views\Home\PartialBranchView.cshtml" />
-    <Content Include="Views\Home\PartialBuildView.cshtml" />
+    <Content Include="Views\Kepler\LeftMenu.cshtml" />
+    <Content Include="Views\Kepler\PartialBranchView.cshtml" />
+    <Content Include="Views\Kepler\PartialBuildView.cshtml" />
     <Content Include="Views\Admin\LeftMenu.cshtml" />
     <Content Include="Views\Admin\ImageWorkersView.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />

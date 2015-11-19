@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace Kepler.UI.Controllers
 {
-    public class HomeController : Controller
+    public class KeplerController : Controller
     {
         public ActionResult Index()
         {
