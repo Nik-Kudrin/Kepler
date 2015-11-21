@@ -3,27 +3,46 @@ h3 {
     margin: 0px;
 }
 
-.status-failed, .status-passed, .status-queued {
+/*
+    0 - Undefined
+    1 - Skipped
+    2 - Pending
+    3 - InProgress
+    4 - InQueue
+    5 - Passed
+    6 - Failed
+    7 - Stopped
+*/
+
+.status-6, .status-5, .status-4, .status-3, .status-7 {
     display: inline-block;
     height: 16px;
     width: 16px;
 }
 
-.build-panel .status-failed, .build-panel .status-passed, .build-panel .status-queued {
+.build-panel .status-6, .build-panel .status-5, .build-panel .status-4, .build-panel .status-3, .build-panel .status-7 {
     width: 16px;
     vertical-align: text-bottom;
 }
 
-.status-failed {
-    background: url("../img/progress_red.png");
+.status-6 {
+    background: url("../img/progress_failed.png");
 }
 
-.status-passed {
-    background: url("../img/progress_green.png");
+.status-5 {
+    background: url("../img/progress_passed.png");
 }
 
-.status-queued {
-    background: url("../img/progress_blue.gif");
+.status-4 {
+    background: url("../img/progress_inqueue.png");
+}
+
+.status-3 {
+    background: url("../img/progress_inprogress.png");
+}
+
+.status-7 {
+    background: url("../img/progress_stoped.png");
 }
 
 .btn {
