@@ -8,7 +8,7 @@
 <div class="col-md-12">
     <div id="build-info-block" class="col-md-8">
         <div class="col-md-6">
-            <h3>Build <span>@ViewData["BuildId"]</span>&nbsp;<div class="status-"></div></h3>
+            <h3>Build <span>@ViewData["BuildId"]</span>&nbsp;<div class=""></div></h3>
         </div>
         <div class="col-md-2">
             <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
@@ -406,12 +406,47 @@
                     $('.icon-build-info').attr(key, value);
                 }
             });
+
+            updateBuildInfo();
         }
     });
 
-
-
     //
-    // Get Assembly
+    // Update Build info
     //
+
+    function updateBuildInfo() {
+        $('h3 > div').removeClass('status-3 status-4 status-5 status-6 status-7').addClass('status-' + $('.icon-build-info').attr('status'));
+
+        $('.build-info-popup').empty();
+
+        var startdate = moment($('.icon-build-info').attr('startdate')).format("YYYY-MM-DD hh:mmA");
+        var stopdate = moment($('.icon-build-info').attr('stopdate')).format("YYYY-MM-DD hh:mmA");
+        var duration = $('.icon-build-info').attr('duration').replace("PT","").replace("H"," hours ").replace("M"," minutes ").replace("S"," seconds");
+        var predictedduration = $('.icon-build-info').attr('predictedduration').replace("PT","").replace("H"," hours ").replace("M"," minutes ").replace("S"," seconds");
+
+        $('.build-info-popup').append($('<li>').text('Start: ' + startdate));
+        $('.build-info-popup').append($('<li>').text('Stop: ' + stopdate));
+        $('.build-info-popup').append($('<li>').text('Duration: ' + duration));
+        $('.build-info-popup').append($('<li>').text('Predicted duration: ' + predictedduration));
+
+        var numberscreenshots = $('.icon-build-info').attr('numberscreenshots');
+        var numberfailedscreenshots = $('.icon-build-info').attr('numberfailedscreenshots');
+        var numbertestassemblies = $('.icon-build-info').attr('numbertestassemblies');
+        var numbertestcase = $('.icon-build-info').attr('numbertestcase');
+        var numbertestsuites = $('.icon-build-info').attr('numbertestsuites');
+
+        $('.build-info-popup').append($('<li class="divider">'));
+
+        $('.build-info-popup').append($('<li>').text('Screenshots: ' + numberscreenshots));
+        $('.build-info-popup').append($('<li>').text('Failed screenshots: ' + numberfailedscreenshots));
+        $('.build-info-popup').append($('<li>').text('Test assemblies: ' + numbertestassemblies));
+        $('.build-info-popup').append($('<li>').text('Test cases: ' + numbertestcase));
+        $('.build-info-popup').append($('<li>').text('Test suites: ' + numbertestsuites));
+
+    }
+
+        //
+        // Get Assembly
+        //
 </script>

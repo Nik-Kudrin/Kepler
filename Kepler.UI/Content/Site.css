@@ -141,7 +141,12 @@ label.error {
 
 .build-info-popup {
     padding-left: 10px;
+    padding-right: 10px;
 }
+
+    .build-info-popup li {
+        white-space: nowrap;
+    }
 
 .build-panel {
     margin: 20px 0px;
