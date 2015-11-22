@@ -175,6 +175,35 @@
     </div>
 </div>
 
+<div class="col-md-12 build-panel-one-page build-panel-one-page-hidden">
+    <div class="col-md-12 build-panel-one-page-header">
+        <span>1</span><span class="build-panel-one-page-header-title">Title</span>
+        <a href="#" class="build-panel-one-page-link" target="_blank"><i class="fa fa-link"></i></a>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-4 build-panel-screen-base">
+            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Base line" href="http://www.designervista.com/images/website/screenshots6/large/Website.png">
+                <img alt="Alt" title="Title" src="http://image.jimcdn.com/app/cms/image/transf/dimension=118x1024:mode=fitin:format=jpg/path/s800b008301e94537/image/i9cb1da829de9d0a7/version/1359674476/image.jpg">
+            </a>
+        </div>
+        <div class="col-md-4 build-panel-screen-dif">
+            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Difference" href="http://www.websitescreenshots.com/images/example-club977.jpg">
+                <img alt="Alt" title="Title" src="http://image.jimcdn.com/app/cms/image/transf/dimension=118x1024:mode=fitin:format=jpg/path/s800b008301e94537/image/ic3c0a3610c9d898b/version/1415617620/image.jpg">
+            </a>
+        </div>
+        <div class="col-md-4 build-panel-screen-curr">
+
+        </div>
+    </div>
+    <div class="col-md-12 build-panel-error-log">
+        <textarea class="form-control" rows="1"></textarea>
+    </div>
+</div>
+
+<div class="col-md-12 build-panel-splitter build-panel-splitter-hidden">
+    <hr>
+</div>
+
 <div class="dropdown-btn-hidden">
     <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
     <ul class="dropdown-menu">
@@ -287,7 +316,7 @@
                                                 $.each(value, function (key, value) {
                                                     if (key == "Value") {
                                                         $.each(value, function (key, value) {
-                                                            if (key != "TestCases") {
+                                                            if (key != "ScreenShots") {
                                                                 if (key == "Id") {
                                                                     $('#assembly_group .test_suite_group:last .test_case_group:last').attr('id', 'test_suite_group-' + value);
                                                                     $('#assembly_group .test_suite_group:last .test_case_group:last div.panel-default:last .collapsed').attr('href', '#test_case-' + value);
@@ -301,9 +330,20 @@
                                                                     $('#assembly_group .test_suite_group:last .test_case_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
                                                                 }
                                                             } else {
-
+                                                                $.each(value, function (key, value) {
+                                                                    $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_suite_group:last .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
+                                                                    $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_suite_group:last .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
+                                                                    $.each(value, function (key, value) {
+                                                                        if (key == "Key") {
+                                                                            $('#assembly_group .build-panel-one-page-header:last > span').text(value);
+                                                                        } else {
+                                                                            $.each(value, function (key, value) {
+                                                                                console.log(key + ":" + value);
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                });
                                                             }
-                                                            console.log(key + ":" + value);
                                                         });
                                                     }
                                                 });

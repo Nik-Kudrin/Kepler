@@ -155,7 +155,9 @@ label.error {
 /*NAVBAR LEFT END*/
 
 /*BUILD LIST PAGE START*/
-.panel-default-assembly, .panel-default-suite, .panel-default-case, .dropdown-btn-hidden {
+.panel-default-assembly, .panel-default-suite, 
+.panel-default-case, .dropdown-btn-hidden, 
+.build-panel-one-page-hidden, .build-panel-splitter-hidden {
     display: none;
 }
 
