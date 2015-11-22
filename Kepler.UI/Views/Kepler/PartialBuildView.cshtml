@@ -43,7 +43,7 @@
     <div class="panel panel-default build-panel">
         <div class="panel-body">
             <div class="panel-group assembly_group" id="assembly_group">
-                <div class="panel panel-default">
+                @*<div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#assembly_group" href="#assembly1" class="collapsed"><span>Assembly 1</span> <i class="fa"></i></a>
@@ -126,7 +126,47 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default panel-default-assembly">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#assembly_group" href="#assembly" class="collapsed"><i class="fa"></i>&nbsp;<span>Assembly name</span></a>
+        </h4>
+    </div>
+    <div id="assembly" class="panel-collapse collapse" style="height: 0px;">
+        <div class="panel-body">
+            <div class="panel-group test_suite_group" id="test_suite_group">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default panel-default-suite">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#test_suite_group" href="#test_suite" class="collapsed"><i class="fa"></i>&nbsp;<span>Test suite name</span></a>
+        </h4>
+        <div class="dropdown-btn">
+            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li><a href="#">Stop</a></li>
+                <li><a href="#">Rerun</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Set passed</a></li>
+                <li><a href="#">Set failed</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="test_suite" class="panel-collapse collapse" style="height: 0px;">
+        <div class="panel-body">
+            <div class="panel-group test_case_group" id="test_case_group">
+
             </div>
         </div>
     </div>
@@ -193,16 +233,49 @@
     // Get Assembly
     //
     $.ajax({
-        url: KeplerServiceUrl + 'GetBuild?id=' + @ViewData["BuildId"],
+        url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + @ViewData["BuildId"],
         type: 'GET',
         success: function (data) {
             $.each(data, function (key, value) {
-                if (value != null) {
-                    $('.icon-build-info').attr(key, value);
-                }
+                $('.panel-default-assembly').clone(true, true).appendTo('#assembly_group').removeClass('panel-default-assembly').show();
+                $.each(value, function (key, value) {
+                    if (key != "TestSuites") {
+                        if (key == "Name") {
+                            $('#assembly_group > div.panel-default:last .panel-title span').text(value);
+                        } else if (key == "Status") {
+                            $('#assembly_group > div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                        } else if (key == "Id") {
+                            $('.collapsed').attr('href', '#assembly-' + value);
+                            $('.panel-collapse').attr('id', 'assembly-' + value);
+                        }
+                    } else {
+                        $.each(value, function (key, value) {
+                            $('.panel-default-suite').clone(true, true).appendTo('#assembly_group .test_suite_group:last').removeClass('panel-default-suite').show();
+                            $.each(value, function (key, value) {
+                                if (key == "Value") {
+                                    $.each(value, function (key, value) {
+                                        if (key != "TestCases") {
+                                            if (key == "Id") {
+                                                $('#assembly_group .test_suite_group:last').attr('id', 'test_suite_group-' + value);
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed').attr('href', '#test_suite-' + value);
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_suite_group-' + value);
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .panel-collapse').attr('id', 'test_suite-' + value);
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .dropdown-menu a').attr('test_suite-id', value);
+                                            } else if (key == "Name") {
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed span').text(value);
+                                            } else if (key == "Status") {
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                                            }
+                                        } else { 
+                                        }
+                                        console.log(key + ":" + value);
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
             });
-
-            updateBuildInfo();
         }
     });
 

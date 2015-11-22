@@ -3,48 +3,6 @@ h3 {
     margin: 0px;
 }
 
-/*
-    0 - Undefined
-    1 - Skipped
-    2 - Pending
-    3 - InProgress
-    4 - InQueue
-    5 - Passed
-    6 - Failed
-    7 - Stopped
-*/
-
-.status-6, .status-5, .status-4, .status-3, .status-7 {
-    display: inline-block;
-    height: 16px;
-    width: 16px;
-}
-
-.build-panel .status-6, .build-panel .status-5, .build-panel .status-4, .build-panel .status-3, .build-panel .status-7 {
-    width: 16px;
-    vertical-align: text-bottom;
-}
-
-.status-6 {
-    background: url("../img/progress_failed.png");
-}
-
-.status-5 {
-    background: url("../img/progress_passed.png");
-}
-
-.status-4 {
-    background: url("../img/progress_inqueue.png");
-}
-
-.status-3 {
-    background: url("../img/progress_inprogress.png");
-}
-
-.status-7 {
-    background: url("../img/progress_stoped.png");
-}
-
 .btn {
     border: 1px solid #ccc;
     padding: 3px 12px;
@@ -81,6 +39,96 @@ label.error {
 }
 /*GLOBAL END*/
 
+/*STATUS START*/
+
+/*
+    0 - Undefined
+    1 - Skipped
+    2 - Pending
+    3 - InProgress
+    4 - InQueue
+    5 - Passed
+    6 - Failed
+    7 - Stopped
+*/
+
+.status-1, .status-2, .status-3,
+.status-4, .status-5, .status-6,
+.status-7 {
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+.build-panel .status-1, .build-panel .status-2,
+.build-panel .status-3, .build-panel .status-4,
+.build-panel .status-5, .build-panel .status-6,
+.build-panel .status-7 {
+    width: 16px;
+    vertical-align: text-bottom;
+}
+
+.status-1::before, .status-2::before, .status-3::before,
+.status-4::before, .status-5::before, .status-6::before,
+.status-7::before {
+    display: none;
+    position: absolute;
+    margin: -2px 0px 0px 20px;
+    font-size: 12px;
+    background: #E4E4E4;
+    color: #000;
+    border: 1px solid #CECECE;
+    padding: 3px;
+}
+
+.status-1:hover::before, .status-2:hover::before, .status-3:hover::before,
+.status-4:hover::before, .status-5:hover::before, .status-6:hover::before,
+.status-7:hover::before {
+    display: block;
+}
+
+.status-3 {
+    background: url("../img/progress_inprogress.png");
+}
+
+    .status-3::before {
+        content: 'In progress';
+    }
+
+.status-4 {
+    background: url("../img/progress_inqueue.png");
+}
+
+    .status-4::before {
+        content: 'In queue';
+    }
+
+.status-5 {
+    background: url("../img/progress_passed.png");
+}
+
+    .status-5::before {
+        content: 'Passed';
+    }
+
+.status-6 {
+    background: url("../img/progress_failed.png");
+}
+
+    .status-6::before {
+        content: 'Failed';
+    }
+
+.status-7 {
+    background: url("../img/progress_stoped.png");
+}
+
+    .status-7::before {
+        content: 'Stoped';
+    }
+
+/*STATUS END*/
+
 /*NAVBAR LEFT START*/
 .main-menu-conf {
     position: absolute;
@@ -95,9 +143,9 @@ label.error {
     color: #FFF;
 }
 
-.navbar-side .fa-cog:hover {
-    opacity: 1;
-}
+    .navbar-side .fa-cog:hover {
+        opacity: 1;
+    }
 
 .navbar-side .fa.arrow {
     line-height: 26px;
@@ -107,6 +155,10 @@ label.error {
 /*NAVBAR LEFT END*/
 
 /*BUILD LIST PAGE START*/
+.panel-default-assembly, .panel-default-suite {
+    display: none;
+}
+
 .panel-default .panel-heading {
     padding-bottom: 0px;
 }
@@ -275,13 +327,13 @@ label.error {
 }
 
 .panel-title a.collapsed i.fa:before {
-    content: "\f01a";
+    content: "\f196";
     color: #337AB7;
 }
 
 .panel-title a i.fa:before {
-    content: "\f01b";
-    color: #a94442;
+    content: "\f147";
+    color: #337AB7;
 }
 
 /*BUILD PAGE END*/
