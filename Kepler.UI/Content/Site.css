@@ -75,6 +75,7 @@ label.error {
     position: absolute;
     margin: -2px 0px 0px 20px;
     font-size: 12px;
+    line-height: 12px;
     background: #E4E4E4;
     color: #000;
     border: 1px solid #CECECE;
@@ -242,6 +243,7 @@ label.error {
 }
 
 .build-panel-one-page-link {
+    display: none;
     font-size: 18px;
     float: right;
 }
@@ -260,7 +262,7 @@ label.error {
     margin-bottom: 20px;
 }
 
-    .build-panel-one-page-header span {
+    .build-panel-one-page-header span:first-of-type {
         background: #DDD;
         padding: 5px;
         border-radius: 4px;
@@ -283,6 +285,7 @@ label.error {
     }
 
 .build-panel-error-log {
+    display: none;
     padding-top: 20px;
 }
 

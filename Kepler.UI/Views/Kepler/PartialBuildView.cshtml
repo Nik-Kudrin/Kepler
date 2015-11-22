@@ -177,26 +177,28 @@
 
 <div class="col-md-12 build-panel-one-page build-panel-one-page-hidden">
     <div class="col-md-12 build-panel-one-page-header">
-        <span>1</span><span class="build-panel-one-page-header-title">Title</span>
+        <span>1</span>
         <a href="#" class="build-panel-one-page-link" target="_blank"><i class="fa fa-link"></i></a>
     </div>
     <div class="col-md-12">
         <div class="col-md-4 build-panel-screen-base">
-            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Base line" href="http://www.designervista.com/images/website/screenshots6/large/Website.png">
-                <img alt="Alt" title="Title" src="http://image.jimcdn.com/app/cms/image/transf/dimension=118x1024:mode=fitin:format=jpg/path/s800b008301e94537/image/i9cb1da829de9d0a7/version/1359674476/image.jpg">
+            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Base line" href="">
+                <img alt="Alt" title="Title" src="">
             </a>
         </div>
         <div class="col-md-4 build-panel-screen-dif">
-            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Difference" href="http://www.websitescreenshots.com/images/example-club977.jpg">
-                <img alt="Alt" title="Title" src="http://image.jimcdn.com/app/cms/image/transf/dimension=118x1024:mode=fitin:format=jpg/path/s800b008301e94537/image/ic3c0a3610c9d898b/version/1415617620/image.jpg">
+            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Difference" href="">
+                <img alt="Alt" title="Title" src="">
             </a>
         </div>
         <div class="col-md-4 build-panel-screen-curr">
-
+            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Original" href="">
+                <img alt="Alt" title="Title" src="">
+            </a>
         </div>
     </div>
     <div class="col-md-12 build-panel-error-log">
-        <textarea class="form-control" rows="1"></textarea>
+        <textarea class="form-control" rows="2"></textarea>
     </div>
 </div>
 
@@ -312,33 +314,64 @@
                                             }
                                         } else {
                                             $.each(value, function (key, value) {
-                                                $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_suite_group:last .test_case_group:last').removeClass('panel-default-case').show();
+                                                $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_case_group:last').removeClass('panel-default-case').show();
                                                 $.each(value, function (key, value) {
                                                     if (key == "Value") {
                                                         $.each(value, function (key, value) {
                                                             if (key != "ScreenShots") {
                                                                 if (key == "Id") {
-                                                                    $('#assembly_group .test_suite_group:last .test_case_group:last').attr('id', 'test_suite_group-' + value);
-                                                                    $('#assembly_group .test_suite_group:last .test_case_group:last div.panel-default:last .collapsed').attr('href', '#test_case-' + value);
-                                                                    $('#assembly_group .test_suite_group:last .test_case_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_case_group-' + value);
-                                                                    $('#assembly_group .test_suite_group:last .test_case_group:last div.panel-default:last .panel-collapse').attr('id', 'test_case-' + value);
-                                                                    $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_suite_group:last .test_case_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-                                                                    $('#assembly_group .test_suite_group:last .test_case_group:last div.panel-default:last .dropdown-menu a').attr('test_case-id', value);
+                                                                    $('#assembly_group .test_case_group:last').attr('id', 'test_suite_group-' + value);
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .collapsed').attr('href', '#test_case-' + value);
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_case_group-' + value);
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .panel-collapse').attr('id', 'test_case-' + value);
+                                                                    $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .dropdown-menu a').attr('test_case-id', value);
                                                                 } else if (key == "Name") {
-                                                                    $('#assembly_group .test_suite_group:last .test_case_group:last div.panel-default:last .collapsed span').text(value);
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .collapsed span').text(value);
                                                                 } else if (key == "Status") {
-                                                                    $('#assembly_group .test_suite_group:last .test_case_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
                                                                 }
                                                             } else {
                                                                 $.each(value, function (key, value) {
-                                                                    $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_suite_group:last .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
-                                                                    $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_suite_group:last .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
+                                                                    $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
+                                                                    $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
                                                                     $.each(value, function (key, value) {
                                                                         if (key == "Key") {
                                                                             $('#assembly_group .build-panel-one-page-header:last > span').text(value);
                                                                         } else {
                                                                             $.each(value, function (key, value) {
-                                                                                console.log(key + ":" + value);
+                                                                                var slashReplaced = "";
+
+                                                                                if (key == "Name") {
+                                                                                    $('#assembly_group .build-panel-one-page:last img').attr('title', value);
+                                                                                } else if (key == "Status") {
+                                                                                    $('#assembly_group .build-panel-one-page-header:last').append('&nbsp;<span class="status-' + value + '">');
+                                                                                } else if (key == "BaseLineImagePath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-base:last a').attr('href', slashReplaced);
+                                                                                } else if (key == "BaseLinePreviewPath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-base:last img').attr('src', slashReplaced);
+                                                                                } else if (key == "DiffImagePath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-dif:last a').attr('href', slashReplaced);
+                                                                                } else if (key == "DiffPreviewPath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-dif:last img').attr('src', slashReplaced);
+                                                                                } else if (key == "ImagePath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-curr:last a').attr('href', slashReplaced);
+                                                                                } else if (key == "PreviewImagePath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-curr:last img').attr('src', slashReplaced);
+                                                                                } else if (key == "ErrorMessage" && value != "") {
+                                                                                    $('#assembly_group .build-panel-error-log:last').show();
+                                                                                    $('#assembly_group .build-panel-error-log:last textarea').text(value);
+                                                                                } else if (key == "OriginalName") {
+                                                                                    $('#assembly_group .build-panel-one-page:last img:last').attr('title', value);
+                                                                                } else if (key == "Url" && value != "") {
+                                                                                    $('#assembly_group .build-panel-one-page-link:last').attr('href', value).show();
+                                                                                }
                                                                             });
                                                                         }
                                                                     });
