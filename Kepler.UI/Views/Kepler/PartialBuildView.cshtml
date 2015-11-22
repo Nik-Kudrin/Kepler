@@ -1,7 +1,7 @@
 ﻿@*
-@{
-    ViewData["BuildId"] = RO
-}
+    @{
+        ViewData["BuildId"] = RO
+    }
 *@
 
 
@@ -106,7 +106,7 @@
                                                                         </a>
                                                                     </div>
                                                                     <div class="col-md-4 build-panel-screen-curr">
-                                                                        
+
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12 build-panel-error-log">
@@ -412,9 +412,8 @@
     });
 
     //
-    // Update Build info
+    // Update Build info (parse and insert into html)
     //
-
     function updateBuildInfo() {
         $('h3 > div').removeClass('status-3 status-4 status-5 status-6 status-7').addClass('status-' + $('.icon-build-info').attr('status'));
 
@@ -446,7 +445,21 @@
 
     }
 
-        //
-        // Get Assembly
-        //
+    //
+    // Get Assembly
+    //
+    $.ajax({
+        url: KeplerServiceUrl + 'GetBuild?id=' + @ViewData["BuildId"],
+        type: 'GET',
+        success: function (data) {
+            $.each(data, function (key, value) {
+                if (value != null) {
+                    $('.icon-build-info').attr(key, value);
+                }
+            });
+
+            updateBuildInfo();
+        }
+    });
+
 </script>
