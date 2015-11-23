@@ -1,29 +1,43 @@
-﻿<div class="sidebar-collapse">
+﻿@using System.Dynamic
+<div class="sidebar-collapse">
     <ul class="nav" id="main-menu"></ul>
 </div>
 
 <li class="main-menu-li-1-lvl" style="display: none">
-    <a href="#" class="main-menu-item"><span class="fa arrow"></span></a>
+    <a href="#" class="main-menu-item">
+        <span class="fa arrow"></span></a>
     <div class="main-menu-conf">
         <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
         <ul class="dropdown-menu">
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="create_proj">Create</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_proj">Edit</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_proj">Delete</a></li>
+            <li>
+                <a href="#" data-toggle="modal" data-target="#crud-modal" data-act="create_proj">Create</a>
+            </li>
+            <li>
+                <a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_proj">Edit</a>
+            </li>
+            <li>
+                <a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_proj">Delete</a>
+            </li>
             <li class="divider"></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="create_branch">Create branch</a></li>
+            <li>
+                <a href="#" data-toggle="modal" data-target="#crud-modal" data-act="create_branch">Create branch</a>
+            </li>
         </ul>
     </div>
     <ul class="nav nav-second-level"></ul>
 </li>
 
 <li class="main-menu-li-2-lvl" style="display: none">
-    <a class="left-nav-link main-menu-item" href="#" linkUrl="@Url.Action("PartialBranchView")" linkBranch="master"></a>
+    <a class="left-nav-link main-menu-item" href="#" linkUrl="@Url.Action("PartialBranchView", new {project = Model.ProjectName, branch = Model.BranchName})" linkBranch="master"></a>
     <div class="main-menu-conf">
         <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
         <ul class="dropdown-menu">
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_branch">Edit</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_branch">Delete</a></li>
+            <li>
+                <a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_branch">Edit</a>
+            </li>
+            <li>
+                <a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_branch">Delete</a>
+            </li>
         </ul>
     </div>
 </li>
@@ -39,10 +53,10 @@
         $.ajax({
             url: KeplerServiceUrl + 'GetProjects',
             type: 'GET',
-            success: function (data) {
-                $.each(data, function (key, value) {
+            success: function(data) {
+                $.each(data, function(key, value) {
                     $('.main-menu-li-1-lvl').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl').show();
-                    $.each(value, function (key, value) {
+                    $.each(value, function(key, value) {
                         if (key != "Branches") {
                             if (key == "Name") {
                                 $('#main-menu > li:last > .main-menu-item').prepend(value);
@@ -50,11 +64,11 @@
                             $('#main-menu > li:last > .main-menu-item').attr("proj_" + key, value);
                             $('#main-menu > li:last .dropdown-menu a').attr("proj_" + key, value);
                         } else {
-                            $.each(value, function (key, value) {
-                                $.each(value, function (key, value) {
+                            $.each(value, function(key, value) {
+                                $.each(value, function(key, value) {
                                     if (key == "Value") {
                                         $('.main-menu-li-2-lvl').clone(true, true).appendTo('#main-menu > li:last .nav-second-level').removeClass('main-menu-li-2-lvl').show();
-                                        $.each(value, function (key, value) {
+                                        $.each(value, function(key, value) {
                                             if (key == "Name") {
                                                 $('#main-menu > li:last .nav-second-level > li:last > a').prepend(value);
                                             }
@@ -75,13 +89,13 @@
     //
     // Load content by click in left menu
     //
-    $('.left-nav-link').click(function () {
+    $('.left-nav-link').click(function() {
         var linkUrl = $(this).attr('linkUrl');
 
         $.ajax({
             url: linkUrl,
             type: 'GET',
-            success: function (data) {
+            success: function(data) {
                 $('#page-inner').html(data);
             }
         });
@@ -92,39 +106,39 @@
     //
     var obj_act = ""; // Variable with action, to do with project or branch. Left menu.
 
-    $(document).on('click', '.main-menu-conf a', function (e) {
+    $(document).on('click', '.main-menu-conf a', function(e) {
         switch ($(this).attr('data-act')) {
-            case 'create_proj':
-                obj_act = "CreateProject";
-                $('.modal-title').text('Create project');
-                $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text"></div>' +
-                    '<div class="alert alert-warning"></div>');
-                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
-                break;
-            case 'edit_proj':
-                obj_act = "UpdateProject";
-                $('.modal-title').text('Edit project');
-                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('proj_id') + '"></div>' +
-                    '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
-                    '<div class="alert alert-warning"></div>');
-                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
-                break;
-            case 'create_branch':
-                obj_act = "CreateBranch";
-                $('.modal-title').text('Create branch');
-                $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text">' +
-                    '<input class="form-control" name="projectId" type="hidden" value="' + $(this).attr('proj_id') + '"></div>' +
-                    '<div class="alert alert-warning"></div>');
-                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
-                break;
-            case 'edit_branch':
-                obj_act = "UpdateBranch";
-                $('.modal-title').text('Edit branch');
-                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('branch_id') + '"></div>' +
-                    '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
-                    '<div class="alert alert-warning"></div>');
-                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
-                break;
+        case 'create_proj':
+            obj_act = "CreateProject";
+            $('.modal-title').text('Create project');
+            $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text"></div>' +
+                '<div class="alert alert-warning"></div>');
+            $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+            break;
+        case 'edit_proj':
+            obj_act = "UpdateProject";
+            $('.modal-title').text('Edit project');
+            $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('proj_id') + '"></div>' +
+                '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
+                '<div class="alert alert-warning"></div>');
+            $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+            break;
+        case 'create_branch':
+            obj_act = "CreateBranch";
+            $('.modal-title').text('Create branch');
+            $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text">' +
+                '<input class="form-control" name="projectId" type="hidden" value="' + $(this).attr('proj_id') + '"></div>' +
+                '<div class="alert alert-warning"></div>');
+            $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+            break;
+        case 'edit_branch':
+            obj_act = "UpdateBranch";
+            $('.modal-title').text('Edit branch');
+            $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('branch_id') + '"></div>' +
+                '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
+                '<div class="alert alert-warning"></div>');
+            $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+            break;
         }
     });
 
@@ -137,12 +151,12 @@
         $.ajax({
             type: 'GET',
             url: KeplerServiceUrl + url_parameters,
-            success: function (data) {
+            success: function(data) {
                 $('#modal_form .alert-warning').hide();
                 $('#crud-modal button.close').click();
                 loadLeftMenu();
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 $('#modal_form .alert-warning').show().text(xhr.responseText);
             }
         });

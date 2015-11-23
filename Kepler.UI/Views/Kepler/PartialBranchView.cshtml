@@ -1,7 +1,7 @@
 ﻿<div class="panel panel-default">
     <div class="panel-heading">
         <div>
-            <h3>Name of branch</h3>
+            <h3>@ViewData["BranchName"]</h3>
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#crud-modal" data-content="create_config">Create build</button>
         </div>
     </div>
@@ -18,7 +18,7 @@
                 <tbody>
                 <tr>
                     <td>
-                        <a class="build-list-item" href="#" linkUrl="@Url.Action("PartialBuildView", new {BuildId = 100500})">100500</a>
+                        <a class="build-list-item" href="#" linkUrl="@Url.Action("PartialBuildView")">Put here build ID</a>
                     </td>
                     <td>
                         <div class="status-queued"></div>
