@@ -68,7 +68,7 @@ $("#modal_form").submit(function (e) {
             minlength: 4,
             maxlength: 15,
         },
-        diff_path: {
+        newName: {
             required: true,
             minlength: 4,
             maxlength: 10,
@@ -84,12 +84,12 @@ $("#modal_form").submit(function (e) {
         },
     },
     messages: {
-        proj_name: {
+        name: {
             required: "This field is required",
             minlength: "Minimum length of 4 symbol",
             maxlength: "Maximum length of 10 symbol",
         },
-        diff_path: {
+        newName: {
             required: "This field is required",
             minlength: "Minimum length of 4 symbol",
             maxlength: "Maximum length of 10 symbol",

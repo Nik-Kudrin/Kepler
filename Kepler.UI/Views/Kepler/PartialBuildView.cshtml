@@ -1,14 +1,14 @@
 ﻿@*
-@{
-    ViewData["BuildId"] = RO
-}
+    @{
+        ViewData["BuildId"] = RO
+    }
 *@
 
 
 <div class="col-md-12">
-    <div class="col-md-8">
+    <div id="build-info-block" class="col-md-8">
         <div class="col-md-6">
-            <h3>Build <span>@Model.BuildId</span>&nbsp;<div class="status-queued"></div></h3>
+            <h3>Build <span>@ViewData["BuildId"]</span>&nbsp;<div class=""></div></h3>
         </div>
         <div class="col-md-2">
             <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
@@ -43,188 +43,80 @@
     <div class="panel panel-default build-panel">
         <div class="panel-body">
             <div class="panel-group assembly_group" id="assembly_group">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#assembly_group" href="#assembly1" class="collapsed"><span>Assembly 1</span> <i class="fa"></i></a>
-                        </h4>
-                    </div>
-                    <div id="assembly1" class="panel-collapse collapse" style="height: 0px;">
-                        <div class="panel-body">
-                            <div class="panel-group test_suite_group" id="test_suite_group11">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#test_suite_group11" href="#test_suite11" class="collapsed"><span class="status-queued"></span>&nbsp;<span>Test suite 1</span> <i class="fa"></i></a>
-                                        </h4>
-                                        <div class="dropdown-btn">
-                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Stop</a></li>
-                                                <li><a href="#">Rerun</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#">Set passed</a></li>
-                                                <li><a href="#">Set failed</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div id="test_suite11" class="panel-collapse collapse" style="height: 0px;">
-                                        <div class="panel-body">
-                                            <div class="panel-group test_case_group" id="test_case_group11">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <h4 class="panel-title">
-                                                            <a data-toggle="collapse" data-parent="#test_case_group11" href="#test_case11" class="collapsed"><span class="status-queued"></span>&nbsp;<span>Test case 1</span> <i class="fa"></i></a>
-                                                        </h4>
-                                                        <div class="dropdown-btn">
-                                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a href="#">Stop</a></li>
-                                                                <li><a href="#">Rerun</a></li>
-                                                                <li class="divider"></li>
-                                                                <li><a href="#">Set passed</a></li>
-                                                                <li><a href="#">Set failed</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div id="test_case11" class="panel-collapse collapse" style="height: 0px;">
-                                                        <div class="panel-body">
-                                                            <div class="col-md-12 build-panel-one-page">
-                                                                <div class="col-md-12 build-panel-one-page-header">
-                                                                    <span>1</span>
-                                                                    <a href="#" class="build-panel-one-page-link" target="_blank"><i class="fa fa-link"></i></a>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <div class="col-md-4 build-panel-screen-base">
-                                                                        <a data-toggle="lightbox" data-gallery="multiimages" data-title="Base line" href="http://www.designervista.com/images/website/screenshots6/large/Website.png">
-                                                                            <img alt="Alt" title="Title" src="http://image.jimcdn.com/app/cms/image/transf/dimension=118x1024:mode=fitin:format=jpg/path/s800b008301e94537/image/i9cb1da829de9d0a7/version/1359674476/image.jpg">
-                                                                        </a>
-                                                                    </div>
-                                                                    <div class="col-md-4 build-panel-screen-dif">
-                                                                        <a data-toggle="lightbox" data-gallery="multiimages" data-title="Difference" href="http://www.websitescreenshots.com/images/example-club977.jpg">
-                                                                            <img alt="Alt" title="Title" src="http://image.jimcdn.com/app/cms/image/transf/dimension=118x1024:mode=fitin:format=jpg/path/s800b008301e94537/image/ic3c0a3610c9d898b/version/1415617620/image.jpg">
-                                                                        </a>
-                                                                    </div>
-                                                                    <div class="col-md-4 build-panel-screen-curr">
-                                                                        
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-12 build-panel-error-log">
-                                                                    <textarea class="form-control" rows="1"></textarea>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-12 build-panel-splitter">
-                                                                <hr>
-                                                            </div>
-                                                            <div class="col-md-12 build-panel-one-page">
-                                                                <div class="col-md-12 build-panel-one-page-header">
-                                                                    <span>2</span>
-                                                                    <a href="#" class="build-panel-one-page-link" target="_blank"><i class="fa fa-link"></i></a>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <div class="col-md-4 build-panel-screen-base">
-
-                                                                    </div>
-                                                                    <div class="col-md-4 build-panel-screen-dif">
-
-                                                                    </div>
-                                                                    <div class="col-md-4 build-panel-screen-curr">
-
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-12 build-panel-error-log">
-                                                                    <textarea class="form-control" rows="1"></textarea>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <h4 class="panel-title">
-                                                            <a data-toggle="collapse" data-parent="#test_case_group11" href="#test_case12" class="collapsed"><span class="status-failed"></span>&nbsp;<span>Test case 2</span> <i class="fa"></i></a>
-                                                        </h4>
-                                                        <div class="dropdown-btn">
-                                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a href="#">Stop</a></li>
-                                                                <li><a href="#">Rerun</a></li>
-                                                                <li class="divider"></li>
-                                                                <li><a href="#">Set passed</a></li>
-                                                                <li><a href="#">Set failed</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div id="test_case12" class="panel-collapse collapse" style="height: 0px;">
-                                                        <div class="panel-body">
-                                                            Test Case body
-                                                        </div>
-                                                    </div>
-                                                </div>
+                @*<div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#assembly_group" href="#assembly1" class="collapsed"><span>Assembly 1</span> <i class="fa"></i></a>
+                            </h4>
+                        </div>
+                        <div id="assembly1" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <div class="panel-group test_suite_group" id="test_suite_group11">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#test_suite_group11" href="#test_suite11" class="collapsed"><span class="status-queued"></span>&nbsp;<span>Test suite 1</span> <i class="fa"></i></a>
+                                            </h4>
+                                            <div class="dropdown-btn">
+                                                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Stop</a></li>
+                                                    <li><a href="#">Rerun</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Set passed</a></li>
+                                                    <li><a href="#">Set failed</a></li>
+                                                </ul>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#test_suite_group11" href="#test_suite12" class="collapsed"><span class="status-failed"></span>&nbsp;<span>Test suite 2</span> <i class="fa"></i></a>
-                                        </h4>
-                                        <div class="dropdown-btn">
-                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Stop</a></li>
-                                                <li><a href="#">Rerun</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#">Set passed</a></li>
-                                                <li><a href="#">Set failed</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div id="test_suite12" class="panel-collapse collapse" style="height: 0px;">
-                                        <div class="panel-body">
-                                            <div class="panel-group test_case_group" id="test_case_group21">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <h4 class="panel-title">
-                                                            <a data-toggle="collapse" data-parent="#test_case_group21" href="#test_case21" class="collapsed"><span class="status-passed"></span>&nbsp;<span>Test case 1</span> <i class="fa"></i></a>
-                                                        </h4>
-                                                        <div class="dropdown-btn">
-                                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a href="#">Stop</a></li>
-                                                                <li><a href="#">Rerun</a></li>
-                                                                <li class="divider"></li>
-                                                                <li><a href="#">Set passed</a></li>
-                                                                <li><a href="#">Set failed</a></li>
-                                                            </ul>
+                                        <div id="test_suite11" class="panel-collapse collapse" style="height: 0px;">
+                                            <div class="panel-body">
+                                                <div class="panel-group test_case_group" id="test_case_group11">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">
+                                                            <h4 class="panel-title">
+                                                                <a data-toggle="collapse" data-parent="#test_case_group11" href="#test_case11" class="collapsed"><span class="status-queued"></span>&nbsp;<span>Test case 1</span> <i class="fa"></i></a>
+                                                            </h4>
+                                                            <div class="dropdown-btn">
+                                                                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a href="#">Stop</a></li>
+                                                                    <li><a href="#">Rerun</a></li>
+                                                                    <li class="divider"></li>
+                                                                    <li><a href="#">Set passed</a></li>
+                                                                    <li><a href="#">Set failed</a></li>
+                                                                </ul>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div id="test_case21" class="panel-collapse collapse" style="height: 0px;">
-                                                        <div class="panel-body">
-                                                            Test Case body
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <h4 class="panel-title">
-                                                            <a data-toggle="collapse" data-parent="#test_case_group21" href="#test_case22" class="collapsed"><span class="status-failed"></span>&nbsp;<span>Test case 2</span> <i class="fa"></i></a>
-                                                        </h4>
-                                                        <div class="dropdown-btn">
-                                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a href="#">Stop</a></li>
-                                                                <li><a href="#">Rerun</a></li>
-                                                                <li class="divider"></li>
-                                                                <li><a href="#">Set passed</a></li>
-                                                                <li><a href="#">Set failed</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div id="test_case22" class="panel-collapse collapse" style="height: 0px;">
-                                                        <div class="panel-body">
-                                                            Test Case body
+                                                        <div id="test_case11" class="panel-collapse collapse" style="height: 0px;">
+                                                            <div class="panel-body">
+                                                                <div class="col-md-12 build-panel-one-page">
+                                                                    <div class="col-md-12 build-panel-one-page-header">
+                                                                        <span>1</span>
+                                                                        <a href="#" class="build-panel-one-page-link" target="_blank"><i class="fa fa-link"></i></a>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="col-md-4 build-panel-screen-base">
+                                                                            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Base line" href="http://www.designervista.com/images/website/screenshots6/large/Website.png">
+                                                                                <img alt="Alt" title="Title" src="http://image.jimcdn.com/app/cms/image/transf/dimension=118x1024:mode=fitin:format=jpg/path/s800b008301e94537/image/i9cb1da829de9d0a7/version/1359674476/image.jpg">
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="col-md-4 build-panel-screen-dif">
+                                                                            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Difference" href="http://www.websitescreenshots.com/images/example-club977.jpg">
+                                                                                <img alt="Alt" title="Title" src="http://image.jimcdn.com/app/cms/image/transf/dimension=118x1024:mode=fitin:format=jpg/path/s800b008301e94537/image/ic3c0a3610c9d898b/version/1415617620/image.jpg">
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="col-md-4 build-panel-screen-curr">
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 build-panel-error-log">
+                                                                        <textarea class="form-control" rows="1"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12 build-panel-splitter">
+                                                                    <hr>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -234,158 +126,95 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#assembly_group" href="#assembly2" class="collapsed"><span>Assembly 2</span> <i class="fa"></i></a>
-                        </h4>
-                    </div>
-                    <div id="assembly2" class="panel-collapse collapse" style="height: 0px;">
-                        <div class="panel-body">
-                            <div class="panel-group test_suite_group" id="test_suite_group21">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#test_suite_group21" href="#test_suite21" class="collapsed"><span class="status-failed"></span>&nbsp;<span>Test suite 1</span> <i class="fa"></i></a>
-                                        </h4>
-                                        <div class="dropdown-btn">
-                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Stop</a></li>
-                                                <li><a href="#">Rerun</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#">Set passed</a></li>
-                                                <li><a href="#">Set failed</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div id="test_suite21" class="panel-collapse collapse" style="height: 0px;">
-                                        <div class="panel-body">
-                                            <div class="panel-group test_case_group" id="test_case_group41">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <h4 class="panel-title">
-                                                            <a data-toggle="collapse" data-parent="#test_case_group41" href="#test_case41" class="collapsed"><span class="status-failed"></span>&nbsp;<span>Test case 1</span> <i class="fa"></i></a>
-                                                        </h4>
-                                                        <div class="dropdown-btn">
-                                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a href="#">Stop</a></li>
-                                                                <li><a href="#">Rerun</a></li>
-                                                                <li class="divider"></li>
-                                                                <li><a href="#">Set passed</a></li>
-                                                                <li><a href="#">Set failed</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div id="test_case41" class="panel-collapse collapse" style="height: 0px;">
-                                                        <div class="panel-body">
-                                                            Test Case body
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <h4 class="panel-title">
-                                                            <a data-toggle="collapse" data-parent="#test_case_group41" href="#test_case42" class="collapsed"><span class="status-failed"></span>&nbsp;<span>Test case 2</span> <i class="fa"></i></a>
-                                                        </h4>
-                                                        <div class="dropdown-btn">
-                                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a href="#">Stop</a></li>
-                                                                <li><a href="#">Rerun</a></li>
-                                                                <li class="divider"></li>
-                                                                <li><a href="#">Set passed</a></li>
-                                                                <li><a href="#">Set failed</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div id="test_case42" class="panel-collapse collapse" style="height: 0px;">
-                                                        <div class="panel-body">
-                                                            Test Case body
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#test_suite_group21" href="#test_suite22" class="collapsed"><span class="status-failed"></span>&nbsp;<span>Test suite 2</span> <i class="fa"></i></a>
-                                        </h4>
-                                        <div class="dropdown-btn">
-                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Stop</a></li>
-                                                <li><a href="#">Rerun</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#">Set passed</a></li>
-                                                <li><a href="#">Set failed</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div id="test_suite22" class="panel-collapse collapse" style="height: 0px;">
-                                        <div class="panel-body">
-                                            <div class="panel-group test_case_group" id="test_case_group31">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <h4 class="panel-title">
-                                                            <a data-toggle="collapse" data-parent="#test_case_group31" href="#test_case31" class="collapsed"><span class="status-failed"></span>&nbsp;<span>Test case 1</span> <i class="fa"></i></a>
-                                                        </h4>
-                                                        <div class="dropdown-btn">
-                                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a href="#">Stop</a></li>
-                                                                <li><a href="#">Rerun</a></li>
-                                                                <li class="divider"></li>
-                                                                <li><a href="#">Set passed</a></li>
-                                                                <li><a href="#">Set failed</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div id="test_case31" class="panel-collapse collapse" style="height: 0px;">
-                                                        <div class="panel-body">
-                                                            Test Case body
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <h4 class="panel-title">
-                                                            <a data-toggle="collapse" data-parent="#test_case_group31" href="#test_case32" class="collapsed"><span class="status-failed"></span>&nbsp;<span>Test case 2</span> <i class="fa"></i></a>
-                                                        </h4>
-                                                        <div class="dropdown-btn">
-                                                            <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a href="#">Stop</a></li>
-                                                                <li><a href="#">Rerun</a></li>
-                                                                <li class="divider"></li>
-                                                                <li><a href="#">Set passed</a></li>
-                                                                <li><a href="#">Set failed</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div id="test_case32" class="panel-collapse collapse" style="height: 0px;">
-                                                        <div class="panel-body">
-                                                            Test Case body
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    </div>*@
             </div>
         </div>
     </div>
+</div>
+
+<div class="panel panel-default panel-default-assembly">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#assembly_group" href="#assembly" class="collapsed"><i class="fa"></i>&nbsp;<span>Assembly name</span></a>
+        </h4>
+    </div>
+    <div id="assembly" class="panel-collapse collapse" style="height: 0px;">
+        <div class="panel-body">
+            <div class="panel-group test_suite_group" id="test_suite_group">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default panel-default-suite">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#test_suite_group" href="#test_suite" class="collapsed"><i class="fa"></i>&nbsp;<span>Test suite name</span></a>
+        </h4>
+    </div>
+    <div id="test_suite" class="panel-collapse collapse" style="height: 0px;">
+        <div class="panel-body">
+            <div class="panel-group test_case_group" id="test_case_group">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default panel-default-case">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#test_case_group11" href="#test_case" class="collapsed"><i class="fa"></i>&nbsp;<span>Test case name</span></a>
+        </h4>
+    </div>
+    <div id="test_case" class="panel-collapse collapse" style="height: 0px;">
+        <div class="panel-body">
+
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 build-panel-one-page build-panel-one-page-hidden">
+    <div class="col-md-12 build-panel-one-page-header">
+        <span>1</span>
+        <a href="#" class="build-panel-one-page-link" target="_blank"><i class="fa fa-link"></i></a>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-4 build-panel-screen-base">
+            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Base line" href="">
+                <img alt="Alt" title="Title" src="">
+            </a>
+        </div>
+        <div class="col-md-4 build-panel-screen-dif">
+            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Difference" href="">
+                <img alt="Alt" title="Title" src="">
+            </a>
+        </div>
+        <div class="col-md-4 build-panel-screen-curr">
+            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Original" href="">
+                <img alt="Alt" title="Title" src="">
+            </a>
+        </div>
+    </div>
+    <div class="col-md-12 build-panel-error-log">
+        <textarea class="form-control" rows="2"></textarea>
+    </div>
+</div>
+
+<div class="col-md-12 build-panel-splitter build-panel-splitter-hidden">
+    <hr>
+</div>
+
+<div class="dropdown-btn-hidden">
+    <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+        <li><a href="#">Stop</a></li>
+        <li><a href="#">Rerun</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Set passed</a></li>
+        <li><a href="#">Set failed</a></li>
+    </ul>
 </div>
 
 <script>
@@ -393,4 +222,174 @@
         event.preventDefault();
         $(this).ekkoLightbox();
     });
+
+    //
+    // Get Build
+    //
+    $.ajax({
+        url: KeplerServiceUrl + 'GetBuild?id=' + @ViewData["BuildId"],
+        type: 'GET',
+        success: function (data) {
+            $.each(data, function (key, value) {
+                if (value != null) {
+                    $('.icon-build-info').attr(key, value);
+                }
+            });
+
+            updateBuildInfo();
+        }
+    });
+
+    //
+    // Update Build info (parse and insert into html)
+    //
+    function updateBuildInfo() {
+        $('h3 > div').removeClass('status-3 status-4 status-5 status-6 status-7').addClass('status-' + $('.icon-build-info').attr('status'));
+
+        $('.build-info-popup').empty();
+
+        var startdate = moment($('.icon-build-info').attr('startdate')).format("YYYY-MM-DD hh:mmA");
+        var stopdate = moment($('.icon-build-info').attr('stopdate')).format("YYYY-MM-DD hh:mmA");
+        var duration = $('.icon-build-info').attr('duration').replace("PT","").replace("H"," hours ").replace("M"," minutes ").replace("S"," seconds");
+        var predictedduration = $('.icon-build-info').attr('predictedduration').replace("PT","").replace("H"," hours ").replace("M"," minutes ").replace("S"," seconds");
+
+        $('.build-info-popup').append($('<li>').text('Start: ' + startdate));
+        $('.build-info-popup').append($('<li>').text('Stop: ' + stopdate));
+        $('.build-info-popup').append($('<li>').text('Duration: ' + duration));
+        $('.build-info-popup').append($('<li>').text('Predicted duration: ' + predictedduration));
+
+        var numberscreenshots = $('.icon-build-info').attr('numberscreenshots');
+        var numberfailedscreenshots = $('.icon-build-info').attr('numberfailedscreenshots');
+        var numbertestassemblies = $('.icon-build-info').attr('numbertestassemblies');
+        var numbertestcase = $('.icon-build-info').attr('numbertestcase');
+        var numbertestsuites = $('.icon-build-info').attr('numbertestsuites');
+
+        $('.build-info-popup').append($('<li class="divider">'));
+
+        $('.build-info-popup').append($('<li>').text('Screenshots: ' + numberscreenshots));
+        $('.build-info-popup').append($('<li>').text('Failed screenshots: ' + numberfailedscreenshots));
+        $('.build-info-popup').append($('<li>').text('Test assemblies: ' + numbertestassemblies));
+        $('.build-info-popup').append($('<li>').text('Test cases: ' + numbertestcase));
+        $('.build-info-popup').append($('<li>').text('Test suites: ' + numbertestsuites));
+
+    }
+
+    //
+    // Get Assembly
+    //
+    $.ajax({
+        url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + @ViewData["BuildId"],
+        type: 'GET',
+        success: function (data) {
+            $.each(data, function (key, value) {
+                $('.panel-default-assembly').clone(true, true).appendTo('#assembly_group').removeClass('panel-default-assembly').show();
+                $.each(value, function (key, value) {
+                    if (key != "TestSuites") {
+                        if (key == "Name") {
+                            $('#assembly_group > div.panel-default:last .panel-title span').text(value);
+                        } else if (key == "Status") {
+                            $('#assembly_group > div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                        } else if (key == "Id") {
+                            $('.collapsed').attr('href', '#assembly-' + value);
+                            $('.panel-collapse').attr('id', 'assembly-' + value);
+                        }
+                    } else {
+                        $.each(value, function (key, value) {
+                            $('.panel-default-suite').clone(true, true).appendTo('#assembly_group .test_suite_group:last').removeClass('panel-default-suite').show();
+                            $.each(value, function (key, value) {
+                                if (key == "Value") {
+                                    $.each(value, function (key, value) {
+                                        if (key != "TestCases") {
+                                            if (key == "Id") {
+                                                $('#assembly_group .test_suite_group:last').attr('id', 'test_suite_group-' + value);
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed').attr('href', '#test_suite-' + value);
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_suite_group-' + value);
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .panel-collapse').attr('id', 'test_suite-' + value);
+                                                $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_suite_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .dropdown-menu a').attr('test_suite-id', value);
+                                            } else if (key == "Name") {
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed span').text(value);
+                                            } else if (key == "Status") {
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                                            }
+                                        } else {
+                                            $.each(value, function (key, value) {
+                                                $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_case_group:last').removeClass('panel-default-case').show();
+                                                $.each(value, function (key, value) {
+                                                    if (key == "Value") {
+                                                        $.each(value, function (key, value) {
+                                                            if (key != "ScreenShots") {
+                                                                if (key == "Id") {
+                                                                    $('#assembly_group .test_case_group:last').attr('id', 'test_suite_group-' + value);
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .collapsed').attr('href', '#test_case-' + value);
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_case_group-' + value);
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .panel-collapse').attr('id', 'test_case-' + value);
+                                                                    $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .dropdown-menu a').attr('test_case-id', value);
+                                                                } else if (key == "Name") {
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .collapsed span').text(value);
+                                                                } else if (key == "Status") {
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                                                                }
+                                                            } else {
+                                                                $.each(value, function (key, value) {
+                                                                    $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
+                                                                    $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
+                                                                    $.each(value, function (key, value) {
+                                                                        if (key == "Key") {
+                                                                            $('#assembly_group .build-panel-one-page-header:last > span').text(value);
+                                                                        } else {
+                                                                            $.each(value, function (key, value) {
+                                                                                var slashReplaced = "";
+
+                                                                                if (key == "Name") {
+                                                                                    $('#assembly_group .build-panel-one-page:last img').attr('title', value);
+                                                                                } else if (key == "Status") {
+                                                                                    $('#assembly_group .build-panel-one-page-header:last').append('&nbsp;<span class="status-' + value + '">');
+                                                                                } else if (key == "BaseLineImagePath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-base:last a').attr('href', slashReplaced);
+                                                                                } else if (key == "BaseLinePreviewPath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-base:last img').attr('src', slashReplaced);
+                                                                                } else if (key == "DiffImagePath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-dif:last a').attr('href', slashReplaced);
+                                                                                } else if (key == "DiffPreviewPath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-dif:last img').attr('src', slashReplaced);
+                                                                                } else if (key == "ImagePath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-curr:last a').attr('href', slashReplaced);
+                                                                                } else if (key == "PreviewImagePath") {
+                                                                                    slashReplaced = value.replace(/\\/g, "/");
+                                                                                    $('#assembly_group .build-panel-screen-curr:last img').attr('src', slashReplaced);
+                                                                                } else if (key == "ErrorMessage" && value != "") {
+                                                                                    $('#assembly_group .build-panel-error-log:last').show();
+                                                                                    $('#assembly_group .build-panel-error-log:last textarea').text(value);
+                                                                                } else if (key == "OriginalName") {
+                                                                                    $('#assembly_group .build-panel-one-page:last img:last').attr('title', value);
+                                                                                } else if (key == "Url" && value != "") {
+                                                                                    $('#assembly_group .build-panel-one-page-link:last').attr('href', value).show();
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+        }
+    });
+
 </script>
