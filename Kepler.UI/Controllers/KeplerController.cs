@@ -15,13 +15,8 @@ namespace Kepler.UI.Controllers
             return PartialView();
         }
 
-        public ActionResult PartialBuildView(int? buildId)
+        public ActionResult PartialBuildView()
         {
-            ViewData["BuildId"] = RouteData.Values["BuildId"];
-
-            if (buildId != null)
-                ViewData["BuildId"] = buildId;
-
             return PartialView();
         }
     }
