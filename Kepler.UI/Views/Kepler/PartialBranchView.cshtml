@@ -1,11 +1,4 @@
-﻿@{
-    if ((ViewData["BranchName"] as string).IsEmpty())
-    {
-        ViewData["BranchName"] = Request.RequestContext.RouteData.Values["branch"];
-    }
-}
-
-<div class="panel panel-default">
+﻿<div class="panel panel-default">
     <div class="panel-heading">
         <div>
             <h3>@ViewData["BranchName"]</h3>

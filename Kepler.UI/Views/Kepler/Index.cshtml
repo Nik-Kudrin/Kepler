@@ -2,13 +2,3 @@
 @{
     ViewBag.Title = "Kepler";
 }
-
-@if (Model == null)
-{
-    return;
-}
-
-@if (!(Model.BranchName as string).IsEmpty())
-{
-    @Html.Partial("PartialBranchView")
-}

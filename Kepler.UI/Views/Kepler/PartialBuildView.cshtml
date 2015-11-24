@@ -1,10 +1,14 @@
-﻿<div class="col-md-12">
+﻿@*
+    @{
+        ViewData["BuildId"] = RO
+    }
+*@
+
+
+<div class="col-md-12">
     <div id="build-info-block" class="col-md-8">
         <div class="col-md-6">
-            <h3>
-                Build <span>@ViewData["BuildId"]</span>&nbsp;
-                <div class=""></div>
-            </h3>
+            <h3>Build <span>@ViewData["BuildId"]</span>&nbsp;<div class=""></div></h3>
         </div>
         <div class="col-md-2">
             <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
@@ -19,30 +23,18 @@
     <div class="col-md-2">
         <button data-toggle="dropdown" class="btn dropdown-toggle">Filter <span class="caret"></span></button>
         <ul class="dropdown-menu">
-            <li>
-                <a href="#">Failed</a>
-            </li>
-            <li>
-                <a href="#">Passed</a>
-            </li>
+            <li><a href="#">Failed</a></li>
+            <li><a href="#">Passed</a></li>
         </ul>
     </div>
     <div class="col-md-2">
         <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
         <ul class="dropdown-menu">
-            <li>
-                <a href="#">Stop</a>
-            </li>
-            <li>
-                <a href="#">Rerun</a>
-            </li>
+            <li><a href="#">Stop</a></li>
+            <li><a href="#">Rerun</a></li>
             <li class="divider"></li>
-            <li>
-                <a href="#">Set passed</a>
-            </li>
-            <li>
-                <a href="#">Set failed</a>
-            </li>
+            <li><a href="#">Set passed</a></li>
+            <li><a href="#">Set failed</a></li>
         </ul>
     </div>
 </div>
@@ -186,9 +178,7 @@
 <div class="col-md-12 build-panel-one-page build-panel-one-page-hidden">
     <div class="col-md-12 build-panel-one-page-header">
         <span>1</span>
-        <a href="#" class="build-panel-one-page-link" target="_blank">
-            <i class="fa fa-link"></i>
-        </a>
+        <a href="#" class="build-panel-one-page-link" target="_blank"><i class="fa fa-link"></i></a>
     </div>
     <div class="col-md-12">
         <div class="col-md-4 build-panel-screen-base">
@@ -219,24 +209,16 @@
 <div class="dropdown-btn-hidden">
     <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
     <ul class="dropdown-menu">
-        <li>
-            <a href="#">Stop</a>
-        </li>
-        <li>
-            <a href="#">Rerun</a>
-        </li>
+        <li><a href="#">Stop</a></li>
+        <li><a href="#">Rerun</a></li>
         <li class="divider"></li>
-        <li>
-            <a href="#">Set passed</a>
-        </li>
-        <li>
-            <a href="#">Set failed</a>
-        </li>
+        <li><a href="#">Set passed</a></li>
+        <li><a href="#">Set failed</a></li>
     </ul>
 </div>
 
 <script>
-    $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+    $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
         event.preventDefault();
         $(this).ekkoLightbox();
     });
@@ -247,8 +229,8 @@
     $.ajax({
         url: KeplerServiceUrl + 'GetBuild?id=' + @ViewData["BuildId"],
         type: 'GET',
-        success: function(data) {
-            $.each(data, function(key, value) {
+        success: function (data) {
+            $.each(data, function (key, value) {
                 if (value != null) {
                     $('.icon-build-info').attr(key, value);
                 }
@@ -268,8 +250,8 @@
 
         var startdate = moment($('.icon-build-info').attr('startdate')).format("YYYY-MM-DD hh:mmA");
         var stopdate = moment($('.icon-build-info').attr('stopdate')).format("YYYY-MM-DD hh:mmA");
-        var duration = $('.icon-build-info').attr('duration').replace("PT", "").replace("H", " hours ").replace("M", " minutes ").replace("S", " seconds");
-        var predictedduration = $('.icon-build-info').attr('predictedduration').replace("PT", "").replace("H", " hours ").replace("M", " minutes ").replace("S", " seconds");
+        var duration = $('.icon-build-info').attr('duration').replace("PT","").replace("H"," hours ").replace("M"," minutes ").replace("S"," seconds");
+        var predictedduration = $('.icon-build-info').attr('predictedduration').replace("PT","").replace("H"," hours ").replace("M"," minutes ").replace("S"," seconds");
 
         $('.build-info-popup').append($('<li>').text('Start: ' + startdate));
         $('.build-info-popup').append($('<li>').text('Stop: ' + stopdate));
@@ -298,10 +280,10 @@
     $.ajax({
         url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + @ViewData["BuildId"],
         type: 'GET',
-        success: function(data) {
-            $.each(data, function(key, value) {
+        success: function (data) {
+            $.each(data, function (key, value) {
                 $('.panel-default-assembly').clone(true, true).appendTo('#assembly_group').removeClass('panel-default-assembly').show();
-                $.each(value, function(key, value) {
+                $.each(value, function (key, value) {
                     if (key != "TestSuites") {
                         if (key == "Name") {
                             $('#assembly_group > div.panel-default:last .panel-title span').text(value);
@@ -312,11 +294,11 @@
                             $('.panel-collapse').attr('id', 'assembly-' + value);
                         }
                     } else {
-                        $.each(value, function(key, value) {
+                        $.each(value, function (key, value) {
                             $('.panel-default-suite').clone(true, true).appendTo('#assembly_group .test_suite_group:last').removeClass('panel-default-suite').show();
-                            $.each(value, function(key, value) {
+                            $.each(value, function (key, value) {
                                 if (key == "Value") {
-                                    $.each(value, function(key, value) {
+                                    $.each(value, function (key, value) {
                                         if (key != "TestCases") {
                                             if (key == "Id") {
                                                 $('#assembly_group .test_suite_group:last').attr('id', 'test_suite_group-' + value);
@@ -331,11 +313,11 @@
                                                 $('#assembly_group .test_suite_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
                                             }
                                         } else {
-                                            $.each(value, function(key, value) {
+                                            $.each(value, function (key, value) {
                                                 $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_case_group:last').removeClass('panel-default-case').show();
-                                                $.each(value, function(key, value) {
+                                                $.each(value, function (key, value) {
                                                     if (key == "Value") {
-                                                        $.each(value, function(key, value) {
+                                                        $.each(value, function (key, value) {
                                                             if (key != "ScreenShots") {
                                                                 if (key == "Id") {
                                                                     $('#assembly_group .test_case_group:last').attr('id', 'test_suite_group-' + value);
@@ -350,14 +332,14 @@
                                                                     $('#assembly_group .test_case_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
                                                                 }
                                                             } else {
-                                                                $.each(value, function(key, value) {
+                                                                $.each(value, function (key, value) {
                                                                     $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
                                                                     $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
-                                                                    $.each(value, function(key, value) {
+                                                                    $.each(value, function (key, value) {
                                                                         if (key == "Key") {
                                                                             $('#assembly_group .build-panel-one-page-header:last > span').text(value);
                                                                         } else {
-                                                                            $.each(value, function(key, value) {
+                                                                            $.each(value, function (key, value) {
                                                                                 var slashReplaced = "";
 
                                                                                 if (key == "Name") {
