@@ -27,24 +27,12 @@ namespace Kepler.UI.Controllers
             ViewData["ProjectName"] = Request.QueryString["project"];
             ViewData["BranchName"] = Request.QueryString["branch"];
 
-            return PartialView(model);
+            return PartialView();
         }
 
         public ActionResult PartialBuildView()
         {
-            /* ViewData["BuildId"] = RouteData.Values["BuildId"];
-
-            if (buildId != null)
-                ViewData["BuildId"] = buildId;*/
-//            Index();
-
             return PartialView(model);
         }
-
-/*        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            FillModelData();
-            base.OnActionExecuting(filterContext);
-        }*/
     }
 }
