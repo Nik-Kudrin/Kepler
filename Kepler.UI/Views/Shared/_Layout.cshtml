@@ -91,6 +91,9 @@
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
 
+        //
+        // Bind ajax loader on A with attr linkUrl
+        //
         $(document).on('click', 'a', function (e) {
             var path = $(this).attr('linkUrl');
 
@@ -109,16 +112,16 @@
                 case '/branch':
                     return link_action = '/Kepler/PartialBranchView';
                     break;
+                case '/build':
+                    return link_action = '/Kepler/PartialBuildView';
+                    break;
             }
         }
 
         //
         // Ajax loader
         //
-
         function ajax_loader(path) {
-            
-
             $.ajax({
                 url: url_parse(),
                 type: 'GET',
@@ -128,6 +131,9 @@
             });
         }
 
+        //
+        // Ajax loader
+        //
         $(document).ready(function () {
             if (url_parse() != null) {
                 ajax_loader(url_parse());
