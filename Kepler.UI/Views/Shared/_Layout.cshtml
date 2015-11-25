@@ -92,8 +92,11 @@
         }
 
         $(document).on('click', 'a', function (e) {
-            if ($(this).attr('linkUrl') != null) {
-                ajax_loader($(this).attr('linkUrl'));
+            var path = $(this).attr('linkUrl');
+
+            if (path != null) {
+                history.pushState(null, null, path);
+                ajax_loader();
             }
         });
 
@@ -114,7 +117,7 @@
         //
 
         function ajax_loader(path) {
-            history.pushState(null, null, path);
+            
 
             $.ajax({
                 url: url_parse(),
@@ -125,9 +128,9 @@
             });
         }
 
-        $(window).load(function () {
+        $(document).ready(function () {
             if (url_parse() != null) {
-                ajax_loader(link_action);
+                ajax_loader(url_parse());
             }
         });
     </script>
