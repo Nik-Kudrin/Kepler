@@ -18,7 +18,7 @@
 </head>
 <body>
     <script type="text/javascript">
-            var KeplerServiceUrl = '@KeplerServiceUrl';
+        var KeplerServiceUrl = '@KeplerServiceUrl';
     </script>
     <div id="wrapper">
         <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
@@ -79,6 +79,58 @@
     </div>
 
     <script src="/Scripts/modal_win.js"></script>
+
+    <script type="text/javascript">
+        //
+        // Get parameter value from url
+        //
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        $(document).on('click', 'a', function (e) {
+            if ($(this).attr('linkUrl') != null) {
+                ajax_loader($(this).attr('linkUrl'));
+            }
+        });
+
+        //
+        // Url parse
+        //
+        function url_parse() {
+            var link_action = location.pathname;
+            switch (link_action) {
+                case '/branch':
+                    return link_action = '/Kepler/PartialBranchView';
+                    break;
+            }
+        }
+
+        //
+        // Ajax loader
+        //
+
+        function ajax_loader(path) {
+            history.pushState(null, null, path);
+
+            $.ajax({
+                url: url_parse(),
+                type: 'GET',
+                success: function (data) {
+                    $('#page-inner').html(data);
+                }
+            });
+        }
+
+        $(window).load(function () {
+            if (url_parse() != null) {
+                ajax_loader(link_action);
+            }
+        });
+    </script>
 
 </body>
 </html>
