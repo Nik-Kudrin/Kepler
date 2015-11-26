@@ -489,9 +489,6 @@ namespace Kepler.Service
                 KeplerSystemConfigRepository.Instance.FlushChanges();
             }
 
-            BuildExecutor.DiffImageSavingPath = diffImageSavingPath;
-            BuildExecutor.PreviewImageSavingPath = previewPath;
-
             BuildExecutor.GetExecutor().UpdateKeplerServiceUrlOnWorkers();
             BuildExecutor.GetExecutor().UpdateDiffImagePath();
         }

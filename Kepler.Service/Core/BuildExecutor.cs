@@ -21,8 +21,6 @@ namespace Kepler.Service.Core
         private static BuildExecutor _executor;
         private static Timer _sendScreenShotsForProcessingTimer;
         private static Timer _updateObjectStatusesTimer;
-        public static string DiffImageSavingPath { get; set; }
-        public static string PreviewImageSavingPath { get; set; }
 
         static BuildExecutor()
         {
@@ -166,6 +164,8 @@ namespace Kepler.Service.Core
 
                 ImageComparisonInfo imageComparison = null;
 
+                // if there is no old screenshots => it's first build and first uploaded screenshots.
+                // Just set screenshots as passed
                 if (oldScreenShot == null)
                 {
                     newScreenShot.Status = ObjectStatus.Passed;
@@ -180,16 +180,13 @@ namespace Kepler.Service.Core
                         FirstPreviewPath = newScreenShot.PreviewImagePath,
                         SecondImagePath = newScreenShot.ImagePath,
                         SecondPreviewPath = newScreenShot.PreviewImagePath,
-                        DiffImagePath = DiffImageSavingPath,
-                        DiffPreviewPath = PreviewImageSavingPath,
+                        DiffImagePath = newScreenShot.DiffImagePath,
+                        DiffPreviewPath = newScreenShot.PreviewImagePath,
                         ScreenShotId = newScreenShot.Id,
                     };
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(oldScreenShot.PreviewImagePath))
-                        oldScreenShot.PreviewImagePath = PreviewImageSavingPath;
-
                     imageComparison = new ImageComparisonInfo()
                     {
                         ScreenShotName = newScreenShot.Name,
@@ -197,9 +194,9 @@ namespace Kepler.Service.Core
                         FirstImagePath = oldScreenShot.ImagePath,
                         FirstPreviewPath = oldScreenShot.PreviewImagePath,
                         SecondImagePath = newScreenShot.ImagePath,
-                        SecondPreviewPath = PreviewImageSavingPath,
-                        DiffImagePath = DiffImageSavingPath,
-                        DiffPreviewPath = PreviewImageSavingPath,
+                        SecondPreviewPath = newScreenShot.PreviewImagePath,
+                        DiffImagePath = newScreenShot.DiffImagePath,
+                        DiffPreviewPath = newScreenShot.DiffPreviewPath,
                         ScreenShotId = newScreenShot.Id,
                     };
 
@@ -230,17 +227,17 @@ namespace Kepler.Service.Core
         {
             var keplerService = new KeplerService();
 
-            DiffImageSavingPath = keplerService.GetDiffImageSavingPath();
-            PreviewImageSavingPath = keplerService.GetPreviewSavingPath();
+            var diffImageSavingPath = keplerService.GetDiffImageSavingPath();
+            var previewImageSavingPath = keplerService.GetPreviewSavingPath();
 
-            if (string.IsNullOrEmpty(DiffImageSavingPath))
+            if (string.IsNullOrEmpty(diffImageSavingPath))
                 return;
 
-            if (!Directory.Exists(DiffImageSavingPath))
+            if (!Directory.Exists(diffImageSavingPath))
             {
                 try
                 {
-                    Directory.CreateDirectory(DiffImageSavingPath);
+                    Directory.CreateDirectory(diffImageSavingPath);
                 }
                 catch (Exception ex)
                 {
@@ -248,11 +245,11 @@ namespace Kepler.Service.Core
                 }
             }
 
-            if (!Directory.Exists(PreviewImageSavingPath))
+            if (!Directory.Exists(previewImageSavingPath))
             {
                 try
                 {
-                    Directory.CreateDirectory(PreviewImageSavingPath);
+                    Directory.CreateDirectory(previewImageSavingPath);
                 }
                 catch (Exception ex)
                 {
