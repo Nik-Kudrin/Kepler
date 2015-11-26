@@ -245,7 +245,7 @@
     // Get Build
     //
     $.ajax({
-        url: KeplerServiceUrl + 'GetBuild?id=' + @ViewData["BuildId"],
+        url: KeplerServiceUrl + 'GetBuild?id=1',  @*+ @ViewData["BuildId"],*@
         type: 'GET',
         success: function(data) {
             $.each(data, function(key, value) {
@@ -296,7 +296,7 @@
     // Get Assembly
     //
     $.ajax({
-        url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + @ViewData["BuildId"],
+        url: KeplerServiceUrl + 'GetTestAssemblies?buildId=1',  @*+ @ViewData["BuildId"],*@
         type: 'GET',
         success: function(data) {
             $.each(data, function(key, value) {

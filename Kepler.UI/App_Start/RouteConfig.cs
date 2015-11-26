@@ -12,7 +12,7 @@ namespace Kepler.UI
             routes.MapRoute(
                 name: "Build",
                 url: "{build}",
-                defaults: new { controller = "Kepler", action = "Index", build = UrlParameter.Optional }
+                defaults: new {controller = "Kepler", action = "Index", build = UrlParameter.Optional }
                 );
             routes.MapRoute(
                 name: "Branch",

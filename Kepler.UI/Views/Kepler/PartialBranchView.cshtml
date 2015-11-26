@@ -18,7 +18,7 @@
                 <tbody>
                 <tr>
                     <td>
-                        <a class="build-list-item" href="#" linkUrl="/build?id=">100500</a>
+                        <a class="build-list-item" href="" linkUrl="/build?id=1">100500</a>
                     </td>
                     <td>
                         <div class="status-queued"></div>
@@ -28,17 +28,17 @@
                             <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#">Stop</a>
+                                    <a href="">Stop</a>
                                 </li>
                                 <li>
-                                    <a href="#">Run</a>
+                                    <a href="">Run</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="#">Set passed</a>
+                                    <a href="">Set passed</a>
                                 </li>
                                 <li>
-                                    <a href="#">Set failed</a>
+                                    <a href="">Set failed</a>
                                 </li>
                             </ul>
                         </div>
@@ -46,7 +46,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <a class="build-list-item" href="#" linkUrl="@Url.Action("PartialBuildView")">1230</a>
+                        <a class="build-list-item" href="" linkUrl="@Url.Action("PartialBuildView")">1230</a>
                     </td>
                     <td>
                         <div class="status-passed"></div>
@@ -56,17 +56,17 @@
                             <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#">Stop</a>
+                                    <a href="">Stop</a>
                                 </li>
                                 <li>
-                                    <a href="#">Run</a>
+                                    <a href="">Run</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="#">Set passed</a>
+                                    <a href="">Set passed</a>
                                 </li>
                                 <li>
-                                    <a href="#">Set failed</a>
+                                    <a href="">Set failed</a>
                                 </li>
                             </ul>
                         </div>
@@ -74,7 +74,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <a class="build-list-item" href="#" linkUrl="@Url.Action("PartialBuildView")">1223</a>
+                        <a class="build-list-item" href="" linkUrl="@Url.Action("PartialBuildView")">1223</a>
                     </td>
                     <td>
                         <div class="status-failed"></div>
@@ -84,17 +84,17 @@
                             <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#">Stop</a>
+                                    <a href="">Stop</a>
                                 </li>
                                 <li>
-                                    <a href="#">Run</a>
+                                    <a href="">Run</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="#">Set passed</a>
+                                    <a href="">Set passed</a>
                                 </li>
                                 <li>
-                                    <a href="#">Set failed</a>
+                                    <a href="">Set failed</a>
                                 </li>
                             </ul>
                         </div>
@@ -107,19 +107,19 @@
 </div>
 
 <script type="text/javascript">
-    $('.build-list-item').click(function() {
-        var linkUrl = $(this).attr('linkUrl');
+    //$('.build-list-item').click(function() {
+    //    var linkUrl = $(this).attr('linkUrl');
 
-        $.ajax({
-            url: linkUrl,
-            type: 'GET',
-            success: function(data) {
-                $('#page-inner').html(data);
-            }
-        });
-    });
+    //    $.ajax({
+    //        url: linkUrl,
+    //        type: 'GET',
+    //        success: function(data) {
+    //            $('#page-inner').html(data);
+    //        }
+    //    });
+    //});
 
-    $('button:not([data-content=""])').click(function() {
-        loadModalWin('', $(this).attr('data-content'));
-    });
+    //$('button:not([data-content=""])').click(function() {
+    //    loadModalWin('', $(this).attr('data-content'));
+    //});
 </script>

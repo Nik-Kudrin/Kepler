@@ -121,7 +121,7 @@
         //
         // Ajax loader
         //
-        function ajax_loader(path) {
+        function ajax_loader() {
             $.ajax({
                 url: url_parse(),
                 type: 'GET',
@@ -132,11 +132,11 @@
         }
 
         //
-        // Ajax loader
+        // Run Ajax loader on document ready, if url path != null
         //
         $(document).ready(function () {
             if (url_parse() != null) {
-                ajax_loader(url_parse());
+                ajax_loader();
             }
         });
     </script>
