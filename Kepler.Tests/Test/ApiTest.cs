@@ -101,5 +101,18 @@ namespace Kepler.Tests.Test
             response = client.Execute(request);
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
         }
+
+
+        [Test]
+        public void GetDiffImageSavingPath()
+        {
+            var client = new RestClient("http://localhost:8733/Kepler.Service");
+            var request = new RestRequest("GetPreviewSavingPath", Method.GET);
+
+            request.RequestFormat = DataFormat.Json;
+            
+            var response = client.Execute(request);
+            Console.WriteLine(response.Content);
+        }
     }
 }

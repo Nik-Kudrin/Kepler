@@ -7,7 +7,9 @@ using FluentAssertions;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Models;
 using Kepler.ImageProcessor.Service.ImgProcessor;
+using Kepler.ImageProcessor.Service.RestKeplerClient;
 using Kepler.ImageProcessor.Service.TaskManager;
+using Kepler.Service.Config;
 using NUnit.Framework;
 using RestSharp;
 
@@ -184,7 +186,8 @@ namespace Kepler.Tests.Test
 
                 var newScreenShotsForProcessing = newBaselineScreenShot.AsEnumerable().ToList();
                 newScreenShotsForProcessing.ForEach(
-                    item => Console.WriteLine(string.Format("screen: name={0}; baseline={1}", item.Name, item.BaseLineId)));
+                    item =>
+                        Console.WriteLine(string.Format("screen: name={0}; baseline={1}", item.Name, item.BaseLineId)));
             }
         }
     }

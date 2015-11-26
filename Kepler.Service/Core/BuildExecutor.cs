@@ -174,7 +174,7 @@ namespace Kepler.Service.Core
 
                     imageComparison = new ImageComparisonInfo()
                     {
-                        ScreenShotName = newScreenShot.OriginalName,
+                        ScreenShotName = newScreenShot.Name,
                         LastPassedScreenShotId = newScreenShot.Id,
                         FirstImagePath = newScreenShot.ImagePath,
                         FirstPreviewPath = newScreenShot.PreviewImagePath,
@@ -192,7 +192,7 @@ namespace Kepler.Service.Core
 
                     imageComparison = new ImageComparisonInfo()
                     {
-                        ScreenShotName = newScreenShot.OriginalName,
+                        ScreenShotName = newScreenShot.Name,
                         LastPassedScreenShotId = oldScreenShot.Id,
                         FirstImagePath = oldScreenShot.ImagePath,
                         FirstPreviewPath = oldScreenShot.PreviewImagePath,

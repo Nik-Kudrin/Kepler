@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.ServiceModel.Web;
@@ -402,6 +403,13 @@ namespace Kepler.Service.Config
                                 var currentCase =
                                     currentSuite.Value.TestCases.ToList()
                                         .Find(item => item.Value.Name == testCaseConfig.Name);
+
+                                // Create all directories for the diff and preview screenshots
+                                var pathToSaveScreenShotsDiffs =
+                                    CreateDirectoryTree(Path.Combine(projectConfig.Name, currentBranch.Name,
+                                        currentCase.Value.BuildId.ToString(), currentAssembly.Name,
+                                        currentSuite.Value.Name, currentCase.Value.Name));
+
                                 var screenShots = testCaseConfig.ScreenShots;
 
                                 for (int index = 0; index < screenShots.Count; index++)
@@ -412,9 +420,9 @@ namespace Kepler.Service.Config
                                     screenShot.ParentObjId = currentCase.Key;
                                     screenShot.BaseLineId = currentBranch.BaseLineId.Value;
                                     screenShot.Status = ObjectStatus.InQueue;
-                                    screenShot.OriginalName = screenShot.Name;
-                                    screenShot.Name = string.Format("{0}_{1}_{2}_{3}", currentAssembly.Name,
-                                        currentSuite.Value.Name, currentCase.Value.Name, screenShot.OriginalName);
+
+                                    screenShot.DiffImagePath = pathToSaveScreenShotsDiffs.Item1;
+                                    screenShot.DiffPreviewPath = pathToSaveScreenShotsDiffs.Item2;
 
                                     ScreenShotRepository.Instance.Insert(screenShot);
                                 }
@@ -441,6 +449,22 @@ namespace Kepler.Service.Config
             }
 
             BuildRepository.Instance.FlushChanges();
+        }
+
+
+        /// <summary>
+        /// Recursively create all the neccessary directories (project, branch, build ...) inside "Diff" directory
+        /// </summary>
+        /// <param name="directoriesPath"></param>
+        private Tuple<string, string> CreateDirectoryTree(string directoriesPath)
+        {
+            var keplerService = new KeplerService();
+
+            var diffPath = Path.Combine(keplerService.GetDiffImageSavingPath(), directoriesPath);
+            var previewPath = Path.Combine(keplerService.GetPreviewSavingPath(), directoriesPath);
+
+            Directory.CreateDirectory(diffPath);
+            return new Tuple<string, string>(diffPath, previewPath);
         }
     }
 }
