@@ -10,6 +10,11 @@ namespace Kepler.UI.Controllers
             return View();
         }
 
+        public ActionResult LeftMenu()
+        {
+            return PartialView();
+        }
+
         public ActionResult PartialBranchView()
         {
             return PartialView();

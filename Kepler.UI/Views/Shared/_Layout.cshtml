@@ -94,7 +94,11 @@
         //
         // Bind ajax loader on A with attr linkUrl
         //
-        $(document).on('click', 'a', function (e) {
+        
+
+        $(document).on('click', 'a[href=""]', function (e) {
+            e.preventDefault();
+
             var path = $(this).attr('linkUrl');
 
             if (path != null) {
@@ -110,10 +114,10 @@
             var link_action = location.pathname;
             switch (link_action) {
                 case '/branch':
-                    return link_action = '/Kepler/PartialBranchView';
+                    return '/Kepler/PartialBranchView';
                     break;
                 case '/build':
-                    return link_action = '/Kepler/PartialBuildView';
+                    return '/Kepler/PartialBuildView';
                     break;
             }
         }
