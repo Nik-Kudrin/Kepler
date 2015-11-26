@@ -172,16 +172,18 @@ namespace Kepler.Service.Core
                     newScreenShot.BaseLineImagePath = newScreenShot.ImagePath;
                     newScreenShot.IsLastPassed = true;
 
+                    var screenShotPreviewImagePath = newScreenShot.PreviewImagePath ?? "";
+
                     imageComparison = new ImageComparisonInfo()
                     {
                         ScreenShotName = newScreenShot.Name,
                         LastPassedScreenShotId = newScreenShot.Id,
                         FirstImagePath = newScreenShot.ImagePath,
-                        FirstPreviewPath = newScreenShot.PreviewImagePath,
+                        FirstPreviewPath = screenShotPreviewImagePath,
                         SecondImagePath = newScreenShot.ImagePath,
-                        SecondPreviewPath = newScreenShot.PreviewImagePath,
+                        SecondPreviewPath = screenShotPreviewImagePath,
                         DiffImagePath = newScreenShot.DiffImagePath,
-                        DiffPreviewPath = newScreenShot.PreviewImagePath,
+                        DiffPreviewPath = screenShotPreviewImagePath,
                         ScreenShotId = newScreenShot.Id,
                     };
                 }
