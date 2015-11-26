@@ -60,7 +60,7 @@ namespace Kepler.Tests.Test
             // Set diff image path
             var request = new RestRequest("SetDiffImageSavingPath", Method.GET);
             request.RequestFormat = DataFormat.Json;
-            request.AddQueryParameter("diffImageSavingPath", "e:\\Temp\\ScreenCompareResult\\");
+            request.AddQueryParameter("diffImageSavingPath", "\\\\NEON-PC\\ScreenCompareResult");
 
             var response = client.Execute(request);
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");

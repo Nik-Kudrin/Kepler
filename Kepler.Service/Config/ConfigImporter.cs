@@ -464,6 +464,7 @@ namespace Kepler.Service.Config
             var previewPath = Path.Combine(keplerService.GetPreviewSavingPath(), directoriesPath);
 
             Directory.CreateDirectory(diffPath);
+            Directory.CreateDirectory(previewPath);
             return new Tuple<string, string>(diffPath, previewPath);
         }
     }
