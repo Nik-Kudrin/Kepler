@@ -65,6 +65,14 @@ namespace Kepler.Tests.Test
             var response = client.Execute(request);
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
 
+            // Set source image path
+            request = new RestRequest("SetSourceImageSavingPath", Method.GET);
+            request.RequestFormat = DataFormat.Json;
+            request.AddQueryParameter("sourceImageSavingPath", "\\\\NEON-PC\\ScreenSource");
+
+            response = client.Execute(request);
+            response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
+
             // Create project
             request = new RestRequest("CreateProject", Method.GET);
             request.RequestFormat = DataFormat.Json;
@@ -110,7 +118,7 @@ namespace Kepler.Tests.Test
             var request = new RestRequest("GetPreviewSavingPath", Method.GET);
 
             request.RequestFormat = DataFormat.Json;
-            
+
             var response = client.Execute(request);
             Console.WriteLine(response.Content);
         }

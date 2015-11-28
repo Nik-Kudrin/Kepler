@@ -196,7 +196,7 @@ namespace Kepler.Service
 
         #endregion
 
-        #region Project
+        #region Source and Diff paths
 
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetDiffImageSavingPath")]
@@ -211,6 +211,16 @@ namespace Kepler.Service
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "SetDiffImageSavingPath?diffImageSavingPath={diffImageSavingPath}")]
         void SetDiffImageSavingPath(string diffImageSavingPath);
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetSourceImagePath")]
+        string GetSourceImagePath();
+
+        [OperationContract]
+        [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "SetSourceImageSavingPath?sourceImageSavingPath={sourceImageSavingPath}")]
+        void SetSourceImageSavingPath(string sourceImageSavingPath);
 
         #endregion
 

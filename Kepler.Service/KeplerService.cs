@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
-using System.ServiceModel.Web;
 using AutoMapper.Internal;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Error;
@@ -366,11 +365,14 @@ namespace Kepler.Service
                 if (screenShot.Status == ObjectStatus.Stopped)
                 {
                     screenShot.DiffImagePath = imageComparisonInfo.DiffImagePath;
-                    screenShot.PreviewImagePath = imageComparisonInfo.FirstPreviewPath;
-                    screenShot.BaseLinePreviewPath = imageComparisonInfo.SecondImagePath;
                     screenShot.DiffPreviewPath = imageComparisonInfo.DiffPreviewPath;
-                    ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
+                    screenShot.PreviewImagePath = imageComparisonInfo.SecondPreviewPath;
+                    screenShot.BaseLinePreviewPath = imageComparisonInfo.FirstPreviewPath;
 
+                    // Generate Url paths
+                    UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
+
+                    ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
                     continue;
                 }
 
@@ -395,9 +397,14 @@ namespace Kepler.Service
                 }
 
                 screenShot.DiffImagePath = imageComparisonInfo.DiffImagePath;
-                screenShot.PreviewImagePath = imageComparisonInfo.FirstPreviewPath;
-                screenShot.BaseLinePreviewPath = imageComparisonInfo.SecondImagePath;
                 screenShot.DiffPreviewPath = imageComparisonInfo.DiffPreviewPath;
+
+                screenShot.PreviewImagePath = imageComparisonInfo.SecondPreviewPath;
+                screenShot.BaseLinePreviewPath = imageComparisonInfo.FirstPreviewPath;
+
+                // Generate Url paths
+                UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
+
                 ScreenShotRepository.Instance.Update(screenShot);
             }
 
@@ -491,6 +498,32 @@ namespace Kepler.Service
 
             BuildExecutor.GetExecutor().UpdateKeplerServiceUrlOnWorkers();
             BuildExecutor.GetExecutor().UpdateDiffImagePath();
+            UrlPathGenerator.DiffImagePath = new KeplerService().GetDiffImageSavingPath();
+        }
+
+        public string GetSourceImagePath()
+        {
+            var sourceImagePathProperty = KeplerSystemConfigRepository.Instance.Find("SourceImagePath");
+            return sourceImagePathProperty == null ? "" : sourceImagePathProperty.Value;
+        }
+
+        public void SetSourceImageSavingPath(string sourceImageSavingPath)
+        {
+            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("SourceImagePath");
+
+            if (diffImgPathToSaveProperty == null)
+            {
+                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("SourceImagePath",
+                    sourceImageSavingPath));
+            }
+            else
+            {
+                diffImgPathToSaveProperty.Value = sourceImageSavingPath;
+                KeplerSystemConfigRepository.Instance.Update(diffImgPathToSaveProperty);
+                KeplerSystemConfigRepository.Instance.FlushChanges();
+            }
+
+            UrlPathGenerator.SourceImagePath = new KeplerService().GetSourceImagePath();
         }
 
         public IEnumerable<ErrorMessage> GetErrors(DateTime fromTime)

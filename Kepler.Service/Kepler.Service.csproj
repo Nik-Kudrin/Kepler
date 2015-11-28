@@ -98,6 +98,7 @@
     <Compile Include="Config\ConfigValidator.cs" />
     <Compile Include="Core\BuildExecutor.cs" />
     <Compile Include="Core\ObjectStatusUpdater.cs" />
+    <Compile Include="Core\UrlPathGenerator.cs" />
     <Compile Include="Extension\CustomHeaderMessageInspector.cs" />
     <Compile Include="Extension\EnableCrossOriginResourceSharingBehavior.cs" />
     <Compile Include="IKeplerService.cs" />
