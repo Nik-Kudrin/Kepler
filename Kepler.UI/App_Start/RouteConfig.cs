@@ -22,7 +22,7 @@ namespace Kepler.UI
 
             routes.MapRoute(
                 name: "Admin",
-                url: "admin/{parameter}",
+                url: "*dmin/{parameter}",
                 defaults: new {controller = "Admin", action = "Index", parameter = UrlParameter.Optional}
                 );
 
