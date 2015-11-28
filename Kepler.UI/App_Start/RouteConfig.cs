@@ -11,18 +11,19 @@ namespace Kepler.UI
 
             routes.MapRoute(
                 name: "Build",
-                url: "{build}",
-                defaults: new {controller = "Kepler", action = "Index", build = UrlParameter.Optional}
-                );
-            routes.MapRoute(
-                name: "Branch",
-                url: "{branch}",
-                defaults: new {controller = "Kepler", action = "Index", branch = UrlParameter.Optional}
+                url: "{buildOrBranch}",
+                defaults: new {controller = "Kepler", action = "Index", buildOrBranch = UrlParameter.Optional}
                 );
 
             routes.MapRoute(
                 name: "Admin",
-                url: "admin/{parameter}",
+                url: "admin/image-workers",
+                defaults: new {controller = "Admin", action = "Index", parameter = UrlParameter.Optional}
+                );
+
+            routes.MapRoute(
+                name: "Admin-Diff-Image",
+                url: "admin/diff-image",
                 defaults: new {controller = "Admin", action = "Index", parameter = UrlParameter.Optional}
                 );
 
