@@ -36,9 +36,12 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
 
                 var errorMessage = "";
 
-                //Write preview for first image
+                //Write preview for first image (old screenshot - baseline)
                 ImageComparisonInfo.FirstPreviewPath = ImageComparisonInfo.FirstImagePath + "_preview.png";
                 WritePreviewImage(firstImage, ImageComparisonInfo.FirstPreviewPath);
+
+                ImageComparisonInfo.SecondPreviewPath = ImageComparisonInfo.SecondImagePath + "_preview.png";
+                WritePreviewImage(secondImage, ImageComparisonInfo.SecondPreviewPath);
 
                 if (firstImage.GetHashCode() == secondImage.GetHashCode())
                 {
@@ -96,13 +99,15 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
 
         private string WritePreviewImage(MagickImage image, string pathToSave)
         {
-            var clonedImage = image.Clone();
-            clonedImage.Resize(118, 96);
-
-            var errorMessage = WriteImage(clonedImage, pathToSave);
-            if (errorMessage != "")
+            using (var clonedImage = image.Clone())
             {
-                return errorMessage;
+                clonedImage.Resize(118, 96);
+
+                var errorMessage = WriteImage(clonedImage, pathToSave);
+                if (errorMessage != "")
+                {
+                    return errorMessage;
+                }
             }
             return "";
         }
