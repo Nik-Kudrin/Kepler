@@ -86,14 +86,14 @@
             case 'create_proj':
                 obj_act = "CreateProject";
                 $('.modal-title').text('Create project');
-                $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text"></div>' +
+                $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text">' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
             case 'edit_proj':
                 obj_act = "UpdateProject";
                 $('.modal-title').text('Edit project');
-                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('proj_id') + '"></div>' +
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('proj_id') + '">' +
                     '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
@@ -109,7 +109,7 @@
             case 'edit_branch':
                 obj_act = "UpdateBranch";
                 $('.modal-title').text('Edit branch');
-                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('branch_id') + '"></div>' +
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('branch_id') + '">' +
                     '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
