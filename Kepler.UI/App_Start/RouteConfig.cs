@@ -10,7 +10,7 @@ namespace Kepler.UI
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "Build",
+                name: "BuildOrBranch",
                 url: "{buildOrBranch}",
                 defaults: new {controller = "Kepler", action = "Index", buildOrBranch = UrlParameter.Optional}
                 );
