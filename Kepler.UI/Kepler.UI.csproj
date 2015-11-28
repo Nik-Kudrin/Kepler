@@ -256,7 +256,7 @@
     <Content Include="Views\Admin\LeftMenu.cshtml" />
     <Content Include="Views\Admin\ImageWorkersView.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Admin\DiffImageView.cshtml" />
+    <Content Include="Views\Admin\SourceImagePathView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

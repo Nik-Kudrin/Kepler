@@ -23,7 +23,7 @@ namespace Kepler.UI
 
             routes.MapRoute(
                 name: "Admin-Diff-Image",
-                url: "admin/diff-image",
+                url: "admin/source-image-path",
                 defaults: new {controller = "Admin", action = "Index", parameter = UrlParameter.Optional}
                 );
 

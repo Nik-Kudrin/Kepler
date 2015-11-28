@@ -18,7 +18,7 @@ namespace Kepler.UI.Controllers
             return PartialView();
         }
 
-        public ActionResult DiffImageView()
+        public ActionResult SourceImagePathView()
         {
             return PartialView();
         }
