@@ -273,15 +273,15 @@ label.error {
     }
 
 .build-panel-screen-base, .build-panel-screen-dif, .build-panel-screen-curr {
-    height: 96px;
+    height: 163px;
     background: url("../img/no_image_icon.png") no-repeat center;
     background-size: 117px 95px;
     text-align: center;
 }
 
     .build-panel-screen-base img, .build-panel-screen-dif img, .build-panel-screen-curr img {
-        width: 118px;
-        height: 96px;
+        width: 200px;
+        height: 163px;
         display: inline;
         font-size: 0px;
     }
