@@ -183,7 +183,7 @@ namespace Kepler.Service.Core
                         SecondImagePath = newScreenShot.ImagePath,
                         SecondPreviewPath = screenShotPreviewImagePath,
                         DiffImagePath = newScreenShot.DiffImagePath,
-                        DiffPreviewPath = screenShotPreviewImagePath,
+                        DiffPreviewPath = newScreenShot.DiffPreviewPath,
                         ScreenShotId = newScreenShot.Id,
                     };
                 }
