@@ -51,11 +51,15 @@ label.error {
     5 - Passed
     6 - Failed
     7 - Stopped
+
+    for image workers: 
+    0 - available 
+    1 - offline
 */
 
 .status-1, .status-2, .status-3,
 .status-4, .status-5, .status-6,
-.status-7 {
+.status-7, .worker-status-0, .worker-status-1 {
     display: inline-block;
     height: 16px;
     width: 16px;
@@ -64,30 +68,31 @@ label.error {
 .build-panel .status-1, .build-panel .status-2,
 .build-panel .status-3, .build-panel .status-4,
 .build-panel .status-5, .build-panel .status-6,
-.build-panel .status-7 {
+.build-panel .status-7, .worker-status-0, .worker-status-1 {
     width: 16px;
     vertical-align: text-bottom;
 }
 
-.status-1::before, .status-2::before, .status-3::before,
-.status-4::before, .status-5::before, .status-6::before,
-.status-7::before {
-    display: none;
-    position: absolute;
-    margin: -2px 0px 0px 20px;
-    font-size: 12px;
-    line-height: 12px;
-    background: #E4E4E4;
-    color: #000;
-    border: 1px solid #CECECE;
-    padding: 3px;
-}
+    .status-1::before, .status-2::before, .status-3::before,
+    .status-4::before, .status-5::before, .status-6::before,
+    .status-7::before, .worker-status-0:before, .worker-status-1:before {
+        display: none;
+        position: absolute;
+        margin: -2px 0px 0px 20px;
+        font-size: 12px;
+        line-height: 12px;
+        background: #E4E4E4;
+        color: #000;
+        border: 1px solid #CECECE;
+        padding: 3px;
+    }
 
-.status-1:hover::before, .status-2:hover::before, .status-3:hover::before,
-.status-4:hover::before, .status-5:hover::before, .status-6:hover::before,
-.status-7:hover::before {
-    display: block;
-}
+    .status-1:hover::before, .status-2:hover::before, .status-3:hover::before,
+    .status-4:hover::before, .status-5:hover::before, .status-6:hover::before,
+    .status-7:hover::before, .worker-status-0:hover::before, .worker-status-1:hover::before {
+        display: block;
+        z-index: 100;
+    }
 
 .status-3 {
     background: url("../img/progress_inprogress.png");
@@ -129,6 +134,22 @@ label.error {
         content: 'Stoped';
     }
 
+.worker-status-0 {
+    background: url("../img/progress_passed.png");
+}
+
+    .worker-status-0::before {
+        content: 'Available';
+    }
+
+.worker-status-1 {
+    background: url("../img/progress_failed.png");
+}
+
+    .worker-status-1::before {
+        content: 'Offline';
+    }
+
 /*STATUS END*/
 
 /*NAVBAR LEFT START*/
@@ -157,8 +178,8 @@ label.error {
 /*NAVBAR LEFT END*/
 
 /*BUILD LIST PAGE START*/
-.panel-default-assembly, .panel-default-suite, 
-.panel-default-case, .dropdown-btn-hidden, 
+.panel-default-assembly, .panel-default-suite,
+.panel-default-case, .dropdown-btn-hidden,
 .build-panel-one-page-hidden, .build-panel-splitter-hidden {
     display: none;
 }

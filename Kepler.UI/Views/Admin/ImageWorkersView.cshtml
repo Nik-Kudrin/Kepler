@@ -1,4 +1,4 @@
-﻿<div class="panel panel-default">
+﻿<div class="panel panel-default image-workers-table">
     <div class="panel-heading">
         <div>
             <h3>Image workers</h3>
@@ -10,6 +10,7 @@
             <table class="table table-hover workers_table">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Id</th>
                         <th>Name</th>
                         <th>Url</th>
@@ -29,11 +30,12 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
             <td>
                 <div class="btn-group">
                     <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
                     <ul class="dropdown-menu">
-                        <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_image_worker">Edit</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_worker">Edit</a></li>
                     </ul>
                 </div>
             </td>
@@ -49,6 +51,7 @@
     loadWorkers();
 
     function loadWorkers() {
+        $('.workers_table > tbody').empty();
         $('tr.worker_sample').clone(true, true).appendTo('.workers_table > tbody').removeClass('worker_sample').addClass('worker_row').show();
         $.ajax({
             url: KeplerServiceUrl + 'GetImageWorkers',
@@ -56,16 +59,57 @@
             success: function (data) {
                 $.each(data, function (key, value) {
                     $.each(value, function (key, value) {
-                        if (key == 'Id') {
-                            $('.worker_row:last td:first').html(value);
-                        } else if (key == 'Name') {
+                        if (key == 'WorkerStatus') {
+                            $('.worker_row:last td:nth-of-type(1)').html('<div class="worker-status-' + value + '">');
+                        } else if (key == 'Id') {
                             $('.worker_row:last td:nth-of-type(2)').html(value);
-                        } else if (key == 'WorkerServiceUrl') {
+                        } else if (key == 'Name') {
                             $('.worker_row:last td:nth-of-type(3)').html(value);
+                            $('.worker_row:last td:nth-of-type(5) a').attr('worker_name', value);
+                        } else if (key == 'WorkerServiceUrl') {
+                            $('.worker_row:last td:nth-of-type(4)').html(value);
                         }
                         console.log(key, value);
                     });
                 });
+            }
+        });
+    }
+
+    //
+    // Popup switch
+    //
+    var obj_act = ""; // Variable with action
+
+    $(document).on('click', '.image-workers-table a, .image-workers-table button', function (e) {
+        switch ($(this).attr('data-act')) {
+            case 'edit_worker':
+                obj_act = "UpdateImageWorker";
+                $('.modal-title').text('Edit image worker');
+                $('.modal-body').empty().append('<input class="form-control" name="name" type="hidden" value="' + $(this).attr('worker_name') + '">' +
+                    '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
+                    '<div class="form-group"><label>Url</label><input class="form-control" name="newWorkerServiceUrl" type="text"></div>' +
+                    '<div class="alert alert-warning"></div>');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+                break;
+        }
+    });
+
+    //
+    // Ajax call for modal popup
+    //
+    function modal_ajax_call() {
+        var url_parameters = obj_act + '?' + $('#modal_form').serialize();
+        $.ajax({
+            type: 'GET',
+            url: KeplerServiceUrl + url_parameters,
+            success: function (data) {
+                $('#modal_form .alert-warning').hide();
+                $('#crud-modal button.close').click();
+                loadWorkers();
+            },
+            error: function (xhr) {
+                $('#modal_form .alert-warning').show().text(xhr.responseText);
             }
         });
     }
