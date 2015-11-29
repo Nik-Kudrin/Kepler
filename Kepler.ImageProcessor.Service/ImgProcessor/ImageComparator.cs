@@ -101,7 +101,7 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
         {
             using (var clonedImage = image.Clone())
             {
-                clonedImage.Resize(118, 96);
+                clonedImage.Resize(200, 163);
 
                 var errorMessage = WriteImage(clonedImage, pathToSave);
                 if (errorMessage != "")
