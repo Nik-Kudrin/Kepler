@@ -473,6 +473,7 @@ namespace Kepler.Service
 
         public void SetDiffImageSavingPath(string diffImageSavingPath)
         {
+            diffImageSavingPath = diffImageSavingPath.ToLowerInvariant();
             var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImagePath");
 
             var previewPath = Path.Combine(diffImageSavingPath, "Preview");
@@ -509,6 +510,7 @@ namespace Kepler.Service
 
         public void SetSourceImageSavingPath(string sourceImageSavingPath)
         {
+            sourceImageSavingPath = sourceImageSavingPath.ToLowerInvariant();
             var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("SourceImagePath");
 
             if (diffImgPathToSaveProperty == null)

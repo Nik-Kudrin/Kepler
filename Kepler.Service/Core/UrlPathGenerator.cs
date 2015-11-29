@@ -10,7 +10,7 @@ namespace Kepler.Service.Core
         private static string GenerateUrlPath(string filePath, string replacePath, string urlBasePath)
         {
             if (!string.IsNullOrEmpty(filePath))
-                return filePath.Replace(replacePath, urlBasePath).Replace(@"\", "/");
+                return filePath.ToLowerInvariant().Replace(replacePath, urlBasePath).Replace(@"\", "/");
 
             return "";
         }
