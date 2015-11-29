@@ -283,6 +283,7 @@ label.error {
         width: 118px;
         height: 96px;
         display: inline;
+        font-size: 0px;
     }
 
 .build-panel-error-log {
