@@ -1,6 +1,7 @@
 ﻿/*GLOBAL START*/
 h3 {
     margin: 0px;
+    white-space: nowrap;
 }
 
 .btn {

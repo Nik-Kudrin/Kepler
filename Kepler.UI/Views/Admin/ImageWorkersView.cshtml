@@ -7,37 +7,66 @@
     </div>
     <div class="panel-body">
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover workers_table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>Id</th>
                         <th>Name</th>
                         <th>Url</th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Worker name</td>
-                        <td>http://...</td>
-                        <td>
-                            <div class="btn-group">
-                                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_image_worker">Edit</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
 </div>
 
+
+<table style="display: none;">
+    <tbody>
+        <tr class="worker_sample">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <div class="btn-group">
+                    <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_image_worker">Edit</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
 <script type="text/javascript">
-    $('button:not([data-content=""]), a:not([data-content=""])').click(function () {
-        loadModalWin('', $(this).attr('data-content'));
-    });
+    //
+    // Load image workers
+    //
+    loadWorkers();
+
+    function loadWorkers() {
+        $('tr.worker_sample').clone(true, true).appendTo('.workers_table > tbody').removeClass('worker_sample').addClass('worker_row').show();
+        $.ajax({
+            url: KeplerServiceUrl + 'GetImageWorkers',
+            type: 'GET',
+            success: function (data) {
+                $.each(data, function (key, value) {
+                    $.each(value, function (key, value) {
+                        if (key == 'Id') {
+                            $('.worker_row:last td:first').html(value);
+                        } else if (key == 'Name') {
+                            $('.worker_row:last td:nth-of-type(2)').html(value);
+                        } else if (key == 'WorkerServiceUrl') {
+                            $('.worker_row:last td:nth-of-type(3)').html(value);
+                        }
+                        console.log(key, value);
+                    });
+                });
+            }
+        });
+    }
 </script>

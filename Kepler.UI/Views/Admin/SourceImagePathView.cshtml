@@ -27,24 +27,23 @@
     //
     // Ajax loader
     //
-    load_image_path();
-    function load_image_path() {
-        $.ajax({
-            url: KeplerServiceUrl + 'GetSourceImagePath',
-            type: 'GET',
-            success: function (data) {
-                $('#img_saving_path').val(data);
-            }
-        });
-    }
+    loadPath('GetSourceImagePath');
+    loadPath('GetDiffImageSavingPath');
 
-    load_Diff_image_path();
-    function load_Diff_image_path() {
+    function loadPath(pathType) {
         $.ajax({
-            url: KeplerServiceUrl + 'GetDiffImageSavingPath',
+            url: KeplerServiceUrl + pathType,
             type: 'GET',
             success: function (data) {
-                $('#diff_img_saving_path').val(data);
+                switch (pathType) {
+                    case 'GetSourceImagePath':
+                        $('#img_saving_path').val(data);
+                        break;
+                    case 'GetDiffImageSavingPath':
+                        $('#diff_img_saving_path').val(data);
+                        break;
+                }
+
             }
         });
     }
@@ -88,10 +87,10 @@
                 $('#crud-modal button.close').click();
                 switch (obj_act) {
                     case 'SetSourceImageSavingPath':
-                        load_image_path();
+                        loadPath('GetSourceImagePath');
                         break;
                     case 'SetDiffImageSavingPath':
-                        load_Diff_image_path();;
+                        loadPath('GetDiffImageSavingPath');
                         break;
                 }
             },
