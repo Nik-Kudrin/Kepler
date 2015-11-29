@@ -2,7 +2,7 @@
     <div class="panel-heading">
         <div>
             <h3>Image workers</h3>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#crud-modal" data-content="add_image_worker">Add</button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#crud-modal" data-act="add_worker">Add</button>
         </div>
     </div>
     <div class="panel-body">
@@ -52,12 +52,12 @@
 
     function loadWorkers() {
         $('.workers_table > tbody').empty();
-        $('tr.worker_sample').clone(true, true).appendTo('.workers_table > tbody').removeClass('worker_sample').addClass('worker_row').show();
         $.ajax({
             url: KeplerServiceUrl + 'GetImageWorkers',
             type: 'GET',
             success: function (data) {
                 $.each(data, function (key, value) {
+                    $('tr.worker_sample').clone(true, true).appendTo('.workers_table > tbody').removeClass('worker_sample').addClass('worker_row').show();
                     $.each(value, function (key, value) {
                         if (key == 'WorkerStatus') {
                             $('.worker_row:last td:nth-of-type(1)').html('<div class="worker-status-' + value + '">');
@@ -69,7 +69,6 @@
                         } else if (key == 'WorkerServiceUrl') {
                             $('.worker_row:last td:nth-of-type(4)').html(value);
                         }
-                        console.log(key, value);
                     });
                 });
             }
@@ -89,6 +88,14 @@
                 $('.modal-body').empty().append('<input class="form-control" name="name" type="hidden" value="' + $(this).attr('worker_name') + '">' +
                     '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
                     '<div class="form-group"><label>Url</label><input class="form-control" name="newWorkerServiceUrl" type="text"></div>' +
+                    '<div class="alert alert-warning"></div>');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+                break;
+            case 'add_worker':
+                obj_act = "RegisterImageWorker";
+                $('.modal-title').text('Add image worker');
+                $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text"></div>' +
+                    '<div class="form-group"><label>Url</label><input class="form-control" name="imageWorkerServiceUrl" type="text"></div>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
