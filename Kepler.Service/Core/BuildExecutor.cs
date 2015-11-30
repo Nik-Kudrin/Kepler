@@ -205,10 +205,8 @@ namespace Kepler.Service.Core
                     newScreenShot.BaseLineImagePath = oldScreenShot.ImagePath;
                 }
                 resultImagesForComparison.Add(imageComparison);
-                ScreenShotRepository.Instance.Update(newScreenShot);
+                ScreenShotRepository.Instance.UpdateAndFlashChanges(newScreenShot);
             }
-
-            ScreenShotRepository.Instance.FlushChanges();
 
             return resultImagesForComparison;
         }
