@@ -459,8 +459,8 @@ namespace Kepler.Service
 
         public string GetDiffImageSavingPath()
         {
-            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImagePath");
-            return diffImgPathToSaveProperty == null ? "" : diffImgPathToSaveProperty.Value;
+            var property = KeplerSystemConfigRepository.Instance.Find("DiffImagePath");
+            return property == null ? "" : property.Value;
         }
 
         public string GetPreviewSavingPath()
@@ -502,8 +502,8 @@ namespace Kepler.Service
 
         public string GetSourceImagePath()
         {
-            var sourceImagePathProperty = KeplerSystemConfigRepository.Instance.Find("SourceImagePath");
-            return sourceImagePathProperty == null ? "" : sourceImagePathProperty.Value;
+            var property = KeplerSystemConfigRepository.Instance.Find("SourceImagePath");
+            return property == null ? "" : property.Value;
         }
 
         public void SetSourceImageSavingPath(string sourceImageSavingPath)
@@ -525,6 +525,34 @@ namespace Kepler.Service
 
             UrlPathGenerator.SourceImagePath = new KeplerService().GetSourceImagePath();
         }
+
+        public string GetKeplerServiceUrl()
+        {
+            var property = KeplerSystemConfigRepository.Instance.Find("KeplerServiceUrl");
+            return property == null ? "" : property.Value;
+        }
+
+        public void SetKeplerServiceUrl(string url)
+        {
+            var keplerServiceUrlProperty = KeplerSystemConfigRepository.Instance.Find("KeplerServiceUrl");
+
+            if (keplerServiceUrlProperty == null)
+            {
+                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("KeplerServiceUrl", url));
+            }
+            else
+            {
+                keplerServiceUrlProperty.Value = url;
+                KeplerSystemConfigRepository.Instance.Update(keplerServiceUrlProperty);
+                KeplerSystemConfigRepository.Instance.FlushChanges();
+            }
+
+            BuildExecutor.KeplerServiceUrl = url;
+        }
+
+        #endregion
+
+        #region Errors Logging
 
         public IEnumerable<ErrorMessage> GetErrors(DateTime fromTime)
         {

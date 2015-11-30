@@ -21,6 +21,8 @@ namespace Kepler.Service.Core
         private static BuildExecutor _executor;
         private static Timer _sendScreenShotsForProcessingTimer;
         private static Timer _updateObjectStatusesTimer;
+        private static Timer _checkWorkersTimer;
+        public static string KeplerServiceUrl { get; set; }
 
         static BuildExecutor()
         {
@@ -36,18 +38,24 @@ namespace Kepler.Service.Core
 
         private BuildExecutor()
         {
+            KeplerServiceUrl = new KeplerService().GetKeplerServiceUrl();
+            UpdateKeplerServiceUrlOnWorkers();
+            UpdateDiffImagePath();
+
             _sendScreenShotsForProcessingTimer = new Timer();
-            _sendScreenShotsForProcessingTimer.Interval = 5000; //every 10 sec
+            _sendScreenShotsForProcessingTimer.Interval = 5000; //every 5 sec
             _sendScreenShotsForProcessingTimer.Elapsed += SendComparisonInfoToWorkers;
             _sendScreenShotsForProcessingTimer.Enabled = true;
 
             _updateObjectStatusesTimer = new Timer();
-            _updateObjectStatusesTimer.Interval = 15000; //every 15 sec
+            _updateObjectStatusesTimer.Interval = 15000;
             _updateObjectStatusesTimer.Elapsed += UpdateObjectsStatuses;
             _updateObjectStatusesTimer.Enabled = true;
 
-            UpdateKeplerServiceUrlOnWorkers();
-            UpdateDiffImagePath();
+            _checkWorkersTimer = new Timer();
+            _checkWorkersTimer.Interval = 30000;
+            _checkWorkersTimer.Elapsed += CheckWorkersAvailability;
+            _checkWorkersTimer.Enabled = true;
         }
 
 
@@ -56,6 +64,36 @@ namespace Kepler.Service.Core
         {
             ObjectStatusUpdater.UpdateAllObjectStatusesToActual();
         }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void CheckWorkersAvailability(object sender, ElapsedEventArgs eventArgs)
+        {
+            var workers = ImageWorkerRepository.Instance.FindAll().ToList();
+
+            if (workers == null || !workers.Any())
+                return;
+
+            foreach (var imageWorker in workers)
+            {
+                try
+                {
+                    var restImageProcessorClient = new RestImageProcessorClient(imageWorker.WorkerServiceUrl);
+                    restImageProcessorClient.SetKeplerServiceUrl();
+
+                    imageWorker.WorkerStatus = ImageWorker.StatusOfWorker.Available;
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = ex.Message});
+                    imageWorker.WorkerStatus = ImageWorker.StatusOfWorker.Offline;
+                }
+                finally
+                {
+                    ImageWorkerRepository.Instance.UpdateAndFlashChanges(imageWorker);
+                }
+            }
+        }
+
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void SendComparisonInfoToWorkers(object sender, ElapsedEventArgs eventArgs)

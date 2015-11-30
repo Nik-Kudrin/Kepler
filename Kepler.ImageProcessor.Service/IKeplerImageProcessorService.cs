@@ -8,7 +8,7 @@ namespace Kepler.ImageProcessor.Service
     public interface IKeplerImageProcessorService
     {
         [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "/GetMaxCountWorkers")]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetMaxCountWorkers")]
         int GetMaxCountWorkers();
 
         /// <summary>
