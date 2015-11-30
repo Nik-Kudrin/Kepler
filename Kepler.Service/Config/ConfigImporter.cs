@@ -445,10 +445,8 @@ namespace Kepler.Service.Config
                 build.NumberTestCase = TestCaseRepository.Instance.FindByBuildId(build.Id).Count();
                 build.NumberScreenshots = ScreenShotRepository.Instance.FindByBuildId(build.Id).Count();
 
-                BuildRepository.Instance.Update(build);
+                BuildRepository.Instance.UpdateAndFlashChanges(build);
             }
-
-            BuildRepository.Instance.FlushChanges();
         }
 
 

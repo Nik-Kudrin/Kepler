@@ -322,7 +322,7 @@ namespace Kepler.Service
                     BranchRepository.Instance.Find(item => item.ProjectId == branch.ProjectId).ToList();
 
                 allProjectBranches.ForEach(item => item.IsMainBranch = false);
-                BranchRepository.Instance.Update(allProjectBranches);
+                BranchRepository.Instance.UpdateAndFlashChanges(allProjectBranches);
 
                 var project = ProjectRepository.Instance.Get(branch.ProjectId.Value);
                 project.MainBranchId = branch.Id;
@@ -389,7 +389,7 @@ namespace Kepler.Service
                         var oldPassedScreenShot =
                             ScreenShotRepository.Instance.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
                         oldPassedScreenShot.IsLastPassed = false;
-                        ScreenShotRepository.Instance.Update(oldPassedScreenShot);
+                        ScreenShotRepository.Instance.UpdateAndFlashChanges(oldPassedScreenShot);
                     }
 
                     screenShot.Status = ObjectStatus.Passed;
@@ -405,10 +405,8 @@ namespace Kepler.Service
                 // Generate Url paths
                 UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
 
-                ScreenShotRepository.Instance.Update(screenShot);
+                ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
             }
-
-            ScreenShotRepository.Instance.FlushChanges();
         }
 
         #region ImageWorkers
