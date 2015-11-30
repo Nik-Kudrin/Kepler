@@ -88,7 +88,7 @@ namespace Kepler.Service.Core
                 {
                     ErrorMessageRepository.Instance.Insert(new ErrorMessage()
                     {
-                        ExceptionMessage = $"Image worker: {imageWorker.Name} is unavailable. {ex.Message}"
+                        ExceptionMessage = $"Image worker: '{imageWorker.Name}' is unavailable. {ex.Message}"
                     });
                     imageWorker.WorkerStatus = ImageWorker.StatusOfWorker.Offline;
                 }
@@ -152,7 +152,7 @@ namespace Kepler.Service.Core
                     ErrorMessageRepository.Instance.Insert(new ErrorMessage()
                     {
                         ExceptionMessage =
-                            $"Error happend when process tried to send images for comparison to worker: {workers[workerIndex++].Name}.  {ex.Message}"
+                            $"Error happend when process is tried to send images for comparison to worker: '{workers[workerIndex++].Name}'.  {ex.Message}"
                     });
                 }
 
