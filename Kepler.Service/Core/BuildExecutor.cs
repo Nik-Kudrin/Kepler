@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Timers;
 using AutoMapper.Internal;
@@ -39,6 +40,7 @@ namespace Kepler.Service.Core
         private BuildExecutor()
         {
             KeplerServiceUrl = new KeplerService().GetKeplerServiceUrl();
+            CheckWorkersAvailability(null, null);
             UpdateKeplerServiceUrlOnWorkers();
             UpdateDiffImagePath();
 
@@ -53,7 +55,7 @@ namespace Kepler.Service.Core
             _updateObjectStatusesTimer.Enabled = true;
 
             _checkWorkersTimer = new Timer();
-            _checkWorkersTimer.Interval = 30000;
+            _checkWorkersTimer.Interval = 60000;
             _checkWorkersTimer.Elapsed += CheckWorkersAvailability;
             _checkWorkersTimer.Enabled = true;
         }
@@ -84,7 +86,10 @@ namespace Kepler.Service.Core
                 }
                 catch (Exception ex)
                 {
-                    ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = ex.Message});
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                    {
+                        ExceptionMessage = $"Image worker: {imageWorker.Name} is unavailable. {ex.Message}"
+                    });
                     imageWorker.WorkerStatus = ImageWorker.StatusOfWorker.Offline;
                 }
                 finally
@@ -134,11 +139,21 @@ namespace Kepler.Service.Core
                     request.RequestFormat = DataFormat.Json;
                     request.AddJsonBody(jsonMessage);
 
-                    client.Execute(request);
+                    var response = client.Execute(request);
+                    var responseErrorMessage = RestImageProcessorClient.GetResponseErrorMessage(response);
+
+                    if (!string.IsNullOrEmpty(responseErrorMessage))
+                        throw new WebException(responseErrorMessage);
                 }
                 catch (Exception ex)
                 {
                     requestIsSuccessfull = false;
+
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                    {
+                        ExceptionMessage =
+                            $"Error happend when process tried to send images for comparison to worker: {workers[workerIndex++].Name}.  {ex.Message}"
+                    });
                 }
 
                 if (requestIsSuccessfull)

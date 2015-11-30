@@ -26,6 +26,14 @@ namespace Kepler.Service.RestWorkerClient
             request.AddQueryParameter("url", BuildExecutor.KeplerServiceUrl);
             var response = client.Execute(request);
 
+            var responseErrorMessage = GetResponseErrorMessage(response);
+
+            if (!string.IsNullOrEmpty(responseErrorMessage))
+                throw new WebException(responseErrorMessage);
+        }
+
+        public static string GetResponseErrorMessage(IRestResponse response)
+        {
             if (response.ResponseStatus != ResponseStatus.Completed ||
                 !(response.StatusCode == HttpStatusCode.OK ||
                   response.StatusCode == HttpStatusCode.MultipleChoices ||
@@ -38,8 +46,10 @@ namespace Kepler.Service.RestWorkerClient
                   response.StatusCode == HttpStatusCode.RedirectMethod ||
                   response.StatusCode == HttpStatusCode.NotModified))
             {
-                throw new WebException(response.ErrorMessage);
+                return response.ErrorMessage;
             }
+
+            return "";
         }
 
         public void StopStopDiffGeneration(List<ScreenShot> screenShotsToStopProcessing)
