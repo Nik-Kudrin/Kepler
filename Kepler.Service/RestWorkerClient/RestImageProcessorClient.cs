@@ -46,7 +46,7 @@ namespace Kepler.Service.RestWorkerClient
                   response.StatusCode == HttpStatusCode.RedirectMethod ||
                   response.StatusCode == HttpStatusCode.NotModified))
             {
-                return response.ErrorMessage;
+                return response.ErrorMessage ?? "Empty server response" ;
             }
 
             return "";
