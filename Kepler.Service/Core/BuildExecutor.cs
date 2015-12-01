@@ -106,6 +106,9 @@ namespace Kepler.Service.Core
             var workers = ImageWorkerRepository.Instance.FindAll()
                 .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
 
+            if (workers.Count == 0)
+                return;
+
             // if there is already executed build
             if (BuildRepository.Instance.GetBuildsByStatus(ObjectStatus.InProgress).Any())
                 return;
@@ -120,9 +123,6 @@ namespace Kepler.Service.Core
             UpdateObjectsStatuses(this, null);
 
             var imageComparisonContainers = ConvertScreenShotsToImageComparison(screenShots).ToList();
-
-            if (workers.Count == 0)
-                return;
 
             // split all screenshots for comparison uniformly for all workers
             var imgComparisonPerWorker = imageComparisonContainers.Count()/workers.Count();

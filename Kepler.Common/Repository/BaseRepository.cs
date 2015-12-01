@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Kepler.Common.DB;
+using Kepler.Common.Error;
 using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
@@ -21,7 +22,15 @@ namespace Kepler.Common.Repository
 
         public virtual TEntity Get(long id)
         {
-            return DbSet.FirstOrDefault(x => x.Id == id);
+            try
+            {
+                return DbSet.FirstOrDefault(x => x.Id == id);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
+                return null;
+            }
         }
 
         public virtual void Add(TEntity entity)
@@ -50,20 +59,41 @@ namespace Kepler.Common.Repository
 
         public virtual void UpdateAndFlashChanges(TEntity entity)
         {
-            Update(entity);
-            FlushChanges();
+            try
+            {
+                Update(entity);
+                FlushChanges();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
+            }
         }
 
         public virtual void UpdateAndFlashChanges(IEnumerable<TEntity> entities)
         {
-            Update(entities);
-            FlushChanges();
+            try
+            {
+                Update(entities);
+                FlushChanges();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
+            }
         }
 
         public virtual void Insert(TEntity entity)
         {
-            Add(entity);
-            FlushChanges();
+            try
+            {
+                Add(entity);
+                FlushChanges();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
+            }
         }
 
         public virtual void FlushChanges()
@@ -73,12 +103,19 @@ namespace Kepler.Common.Repository
 
         public virtual void Remove(TEntity entity)
         {
-            if (DbContext.Entry(entity).State == EntityState.Detached)
+            try
             {
-                DbSet.Attach(entity);
-            }
+                if (DbContext.Entry(entity).State == EntityState.Detached)
+                {
+                    DbSet.Attach(entity);
+                }
 
-            DbSet.Remove(entity);
+                DbSet.Remove(entity);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
+            }
         }
 
         public virtual IEnumerable<TEntity> FindAll()
