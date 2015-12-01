@@ -111,9 +111,9 @@ namespace Kepler.Service
             return buildRepo.Get(id);
         }
 
-        public IEnumerable<Build> GetBuilds()
+        public IEnumerable<Build> GetBuilds(long branchId)
         {
-            return buildRepo.FindAll();
+            return buildRepo.Find(item => item.BranchId == branchId);
         }
 
         #region ScreenShot

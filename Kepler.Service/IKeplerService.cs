@@ -47,8 +47,8 @@ namespace Kepler.Service
         Build GetBuild(long id);
 
         [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetBuilds")]
-        IEnumerable<Build> GetBuilds();
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetBuilds?branchId={branchId}")]
+        IEnumerable<Build> GetBuilds(long branchId);
 
         #endregion
 
