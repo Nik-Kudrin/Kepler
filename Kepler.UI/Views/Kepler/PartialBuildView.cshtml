@@ -2,7 +2,7 @@
     <div id="build-info-block" class="col-md-8">
         <div class="col-md-6">
             <h3>
-                Build <span>100500</span>&nbsp;
+                Build <span></span>&nbsp;
                 <div class=""></div>
             </h3>
         </div>
@@ -162,7 +162,7 @@
     // Get Build
     //
     $.ajax({
-        url: KeplerServiceUrl + 'GetBuild?id=1',  @*+ @ViewData["BuildId"],*@
+        url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
         type: 'GET',
         success: function (data) {
             $.each(data, function (key, value) {
@@ -180,6 +180,8 @@
     //
     function updateBuildInfo() {
         $('h3 > div').removeClass('status-3 status-4 status-5 status-6 status-7').addClass('status-' + $('.icon-build-info').attr('status'));
+
+        $('h3 > span').html(getParameterByName('id'));
 
         $('.build-info-popup').empty();
 
@@ -206,14 +208,13 @@
         $('.build-info-popup').append($('<li>').text('Test assemblies: ' + numbertestassemblies));
         $('.build-info-popup').append($('<li>').text('Test cases: ' + numbertestcase));
         $('.build-info-popup').append($('<li>').text('Test suites: ' + numbertestsuites));
-
     }
 
     //
     // Get Assembly
     //
     $.ajax({
-        url: KeplerServiceUrl + 'GetTestAssemblies?buildId=1',  @*+ @ViewData["BuildId"],*@
+        url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
         type: 'GET',
         success: function (data) {
             $.each(data, function (key, value) {
