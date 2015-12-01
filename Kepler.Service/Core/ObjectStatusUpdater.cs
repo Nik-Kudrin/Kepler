@@ -128,24 +128,18 @@ namespace Kepler.Service.Core
             foreach (var baseItem in baseItems)
             {
                 var childItems = childObjectRepository.Find(item => item.ParentObjId == baseItem.Id);
+                
+                if (childItems.Any(item => item.Status == ObjectStatus.InProgress))
+                {
+                    baseItem.Status = ObjectStatus.InProgress;
+                    baseObjectRepository.UpdateAndFlashChanges(baseItem);
+                    continue;
+                }
 
                 if (childItems.Any(item => item.Status == ObjectStatus.Failed))
                 {
                     baseItem.Status = ObjectStatus.Failed;
-                    if (typeof (TEntityBase) == typeof (Build))
-                    {
-                        UpdateBuildDurationFields(baseItem.Id);
-                    }
-                    continue;
-                }
-
-                if (childItems.Any(item => item.Status == ObjectStatus.InProgress))
-                {
-                    baseItem.Status = ObjectStatus.InProgress;
-                    if (typeof (TEntityBase) == typeof (Build))
-                    {
-                        UpdateBuildDurationFields(baseItem.Id);
-                    }
+                    baseObjectRepository.UpdateAndFlashChanges(baseItem);
                     continue;
                 }
 
@@ -155,11 +149,12 @@ namespace Kepler.Service.Core
                 }
 
                 baseObjectRepository.UpdateAndFlashChanges(baseItem);
+            }
 
-                if (typeof (TEntityBase) == typeof (Build))
-                {
-                    UpdateBuildDurationFields(baseItem.Id);
-                }
+            if (typeof (TEntityBase) != typeof (Build)) return;
+            foreach (var baseItem in baseItems)
+            {
+                UpdateBuildDurationFields(baseItem.Id);
             }
         }
 
