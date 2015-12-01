@@ -62,7 +62,7 @@
     function loadBranches() {
         $('.branches_table > tbody').empty();
         $.ajax({
-            url: KeplerServiceUrl + 'GetBranches?projectId=' + getParameterByName('projectId'),
+            url: KeplerServiceUrl + 'GetBuilds?branchId=' + getParameterByName('branchId'),
             type: 'GET',
             success: function (data) {
                 $.each(data, function (key, value) {
