@@ -12,19 +12,12 @@ namespace Kepler.Common.Repository
         private readonly KeplerDataContext _dbContext;
         private readonly DbSet<ErrorMessage> _dbSet;
 
-        private static ErrorMessageRepository _repoInstance;
-
         public static ErrorMessageRepository Instance
         {
             get
             {
-                if (_repoInstance == null)
-                {
-                    var dbContext = new KeplerDataContext();
-                    _repoInstance = new ErrorMessageRepository(dbContext, dbContext.ErrorMessages);
-                }
-
-                return _repoInstance;
+                var dbContext = new KeplerDataContext();
+                return new ErrorMessageRepository(dbContext, dbContext.ErrorMessages);
             }
         }
 

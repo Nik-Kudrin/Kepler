@@ -24,13 +24,13 @@ namespace Kepler.Common.Repository
             return DbSet.FirstOrDefault(x => x.Id == id);
         }
 
-        public void Add(TEntity entity)
+        public virtual void Add(TEntity entity)
         {
             if (entity != null)
                 DbSet.Add(entity);
         }
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
             if (entity != null)
             {
@@ -39,7 +39,7 @@ namespace Kepler.Common.Repository
             }
         }
 
-        public void Update(IEnumerable<TEntity> entities)
+        public virtual void Update(IEnumerable<TEntity> entities)
         {
             foreach (var entity in entities)
             {
@@ -48,19 +48,19 @@ namespace Kepler.Common.Repository
             }
         }
 
-        public void UpdateAndFlashChanges(TEntity entity)
+        public virtual void UpdateAndFlashChanges(TEntity entity)
         {
             Update(entity);
             FlushChanges();
         }
 
-        public void UpdateAndFlashChanges(IEnumerable<TEntity> entities)
+        public virtual void UpdateAndFlashChanges(IEnumerable<TEntity> entities)
         {
             Update(entities);
             FlushChanges();
         }
 
-        public void Insert(TEntity entity)
+        public virtual void Insert(TEntity entity)
         {
             Add(entity);
             FlushChanges();
@@ -71,7 +71,7 @@ namespace Kepler.Common.Repository
             DbContext.SaveChanges();
         }
 
-        public void Remove(TEntity entity)
+        public virtual void Remove(TEntity entity)
         {
             if (DbContext.Entry(entity).State == EntityState.Detached)
             {

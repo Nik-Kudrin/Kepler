@@ -7,30 +7,15 @@ namespace Kepler.Common.Repository
 {
     public class BuildRepository : BaseRepository<Build>
     {
-        private static BuildRepository _repoInstance;
-
-        public static BuildRepository Instance
-        {
-            get
-            {
-                if (_repoInstance == null)
-                {
-                    var dbContext = new KeplerDataContext();
-                    _repoInstance = new BuildRepository(dbContext);
-                }
-
-                return _repoInstance;
-            }
-        }
-
+        public static BuildRepository Instance => new BuildRepository(new KeplerDataContext());
 
         private BuildRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.Builds)
         {
         }
 
-        public IEnumerable<Build> GetInQueueBuilds()
+        public IEnumerable<Build> GetBuildsByStatus(ObjectStatus status)
         {
-            return Find(build => build.Status == ObjectStatus.InQueue);
+            return Find(build => build.Status == status);
         }
     }
 }

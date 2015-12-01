@@ -73,6 +73,14 @@ namespace Kepler.Tests.Test
             response = client.Execute(request);
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
 
+            // Set KeplerService url
+            request = new RestRequest("SetKeplerServiceUrl", Method.GET);
+            request.RequestFormat = DataFormat.Json;
+            request.AddQueryParameter("url", "http://localhost:8733/Kepler.Service");
+
+            response = client.Execute(request);
+            response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
+
             // Create project
             request = new RestRequest("CreateProject", Method.GET);
             request.RequestFormat = DataFormat.Json;

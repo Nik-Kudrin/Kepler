@@ -106,8 +106,11 @@ namespace Kepler.Service.Core
             var workers = ImageWorkerRepository.Instance.FindAll()
                 .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
 
-            var buildInQueue = BuildRepository.Instance.GetInQueueBuilds().FirstOrDefault();
+            // if there is already executed build
+            if (BuildRepository.Instance.GetBuildsByStatus(ObjectStatus.InProgress).Any())
+                return;
 
+            var buildInQueue = BuildRepository.Instance.GetBuildsByStatus(ObjectStatus.InQueue).FirstOrDefault();
             if (buildInQueue == null)
                 return;
 

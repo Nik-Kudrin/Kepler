@@ -12,17 +12,7 @@ namespace Kepler.Common.Repository
         protected readonly KeplerDataContext _dbContext;
         protected readonly DbSet<KeplerSystemConfig> _dbSet;
 
-        private static KeplerSystemConfigRepository _repoInstance;
-
-        public static KeplerSystemConfigRepository Instance
-        {
-            get
-            {
-                _repoInstance = _repoInstance ?? new KeplerSystemConfigRepository();
-                return _repoInstance;
-            }
-        }
-
+        public static KeplerSystemConfigRepository Instance => new KeplerSystemConfigRepository();
 
         protected KeplerSystemConfigRepository()
         {
