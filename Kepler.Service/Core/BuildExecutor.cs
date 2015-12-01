@@ -106,7 +106,12 @@ namespace Kepler.Service.Core
             var workers = ImageWorkerRepository.Instance.FindAll()
                 .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
 
-            var screenShots = ScreenShotRepository.Instance.GetAllInQueueScreenShots();
+            var buildInQueue = BuildRepository.Instance.GetInQueueBuilds().FirstOrDefault();
+
+            if (buildInQueue == null)
+                return;
+
+            var screenShots = ScreenShotRepository.Instance.GetInQueueScreenShotsForBuild(buildInQueue.Id);
             screenShots.Each(item => item.Status = ObjectStatus.InProgress);
             ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShots);
             UpdateObjectsStatuses(this, null);
