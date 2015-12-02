@@ -1,12 +1,6 @@
 ﻿<div class="col-md-12">
-    <div id="build-info-block" class="col-md-8">
-        <div class="col-md-6">
-            <h3>
-                Build <span></span>&nbsp;
-                <div class=""></div>
-            </h3>
-        </div>
-        <div class="col-md-2">
+    <div class="col-md-6">
+        <div class="col-md-1">
             <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
             <ul class="dropdown-menu build-info-popup">
                 <li class="build-info-start">Start: <span>27Jan</span></li>
@@ -15,6 +9,16 @@
                 <li class="build-info-failed">Tests failed: <span>45</span></li>
             </ul>
         </div>
+        <div id="build-info-block" class="col-md-5">
+            <h3>
+                Build <span></span>&nbsp;
+                <div class=""></div>
+            </h3>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <span class="btn btn-default accordion_col_exp collapsed">Expand all</span>
     </div>
     <div class="col-md-2">
         <button data-toggle="dropdown" class="btn dropdown-toggle">Filter <span class="caret"></span></button>
@@ -156,6 +160,21 @@
     $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
         event.preventDefault();
         $(this).ekkoLightbox();
+    });
+
+    //
+    // Expand/Collapse accordions
+    //
+    $('.accordion_col_exp').click(function () {
+        if ($(this).hasClass('collapsed')) {
+            $('.panel-collapse:not(".in")').collapse('show');
+            $(this).removeClass('collapsed').addClass('expanded');
+            $(this).text('Collapse all');
+        } else {
+            $('.panel-collapse.in').collapse('hide');
+            $(this).removeClass('expanded').addClass('collapsed');
+            $(this).text('Expand all');
+        }
     });
 
     //
@@ -304,7 +323,7 @@
                                                                                 } else if (key == "PreviewImagePathUrl") {
                                                                                     slashReplaced = value.replace(/\\/g, "/");
                                                                                     $('#assembly_group .build-panel-screen-curr:last img').attr('src', slashReplaced);
-                                                                                } else if (key == "ErrorMessage" && value != null) {
+                                                                                } else if (key == "ErrorMessage" && value != null && value != '') {
                                                                                     $('#assembly_group .build-panel-error-log:last').show();
                                                                                     $('#assembly_group .build-panel-error-log:last textarea').text(value);
                                                                                 } else if (key == "Url" && value != null) {
@@ -317,6 +336,8 @@
                                                             }
                                                         });
                                                     }
+
+
                                                 });
                                             });
                                         }
