@@ -8,6 +8,7 @@ using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
+using Kepler.Service.Core;
 using Newtonsoft.Json;
 
 namespace Kepler.Service.Config
@@ -244,7 +245,12 @@ namespace Kepler.Service.Config
 
             foreach (var branch in branches)
             {
-                var build = new Build() {Status = ObjectStatus.Pending, BranchId = branch.Id};
+                var build = new Build()
+                {
+                    Status = ObjectStatus.Pending,
+                    BranchId = branch.Id,
+                    ParentObjId = branch.Id
+                };
 
                 BuildRepository.Instance.Insert(build);
                 builds.Add(build);
@@ -467,10 +473,8 @@ namespace Kepler.Service.Config
         /// <param name="directoriesPath"></param>
         private Tuple<string, string> CreateDirectoryTree(string directoriesPath)
         {
-            var keplerService = new KeplerService();
-
-            var diffPath = Path.Combine(keplerService.GetDiffImageSavingPath(), directoriesPath);
-            var previewPath = Path.Combine(keplerService.GetPreviewSavingPath(), directoriesPath);
+            var diffPath = Path.Combine(UrlPathGenerator.DiffImagePath, directoriesPath);
+            var previewPath = Path.Combine(UrlPathGenerator.PreviewImagePath, directoriesPath);
 
             Directory.CreateDirectory(diffPath);
             Directory.CreateDirectory(previewPath);

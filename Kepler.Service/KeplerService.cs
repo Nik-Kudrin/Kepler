@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -104,7 +105,7 @@ namespace Kepler.Service
                     }
                     catch (Exception ex)
                     {
-                        LogErrorMessage(ErrorMessage.ErorCode.RunOperationError, ex.Message);
+                        LogErrorMessage(ErrorMessage.ErorCode.RunOperationError, "Operation - run. " + ex.Message);
                     }
                     break;
 
@@ -116,7 +117,7 @@ namespace Kepler.Service
                     }
                     catch (Exception ex)
                     {
-                        LogErrorMessage(ErrorMessage.ErorCode.RunOperationError, ex.Message);
+                        LogErrorMessage(ErrorMessage.ErorCode.RunOperationError, "Operation - stop. " + ex.Message);
                     }
 
                     var workers = ImageWorkerRepository.Instance.FindAll()
@@ -170,7 +171,11 @@ namespace Kepler.Service
 
         public Build GetBuild(long id)
         {
-            return buildRepo.Get(id);
+            var build = buildRepo.Get(id);
+            if (build == null)
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Build with ID {id} was not found");
+
+            return build;
         }
 
         public IEnumerable<Build> GetBuilds(long branchId)
@@ -180,17 +185,8 @@ namespace Kepler.Service
 
         public void DeleteBuild(long id)
         {
-            var build = GetBuild(id);
-
-            if (build == null)
-                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Build with ID {id} was not found");
-
             RunOperation("build", id, "stop");
-
-            // TODO: delete test assemblies, suites, cases, screenshots
-            // TODO: delete build directory (preview and diff)
-
-            throw new NotImplementedException();
+            DataCleaner.DeleteObjectsTreeRecursively<Build>(id, true);
         }
 
         #endregion
@@ -306,7 +302,13 @@ namespace Kepler.Service
 
         public void DeleteProject(long id)
         {
-            throw new NotImplementedException();
+            var branches = GetBranches(id);
+            var builds = new List<long>();
+            branches.Each(item => builds.AddRange(item.Builds.Keys));
+
+            // Stop all builds
+            builds.Each(buildId => RunOperation("build", buildId, "stop"));
+            DataCleaner.DeleteObjectsTreeRecursively<Project>(id, true);
         }
 
         #endregion
@@ -420,7 +422,11 @@ namespace Kepler.Service
 
         public Branch GetBranch(long id)
         {
-            return BranchRepository.Instance.GetCompleteObject(id);
+            var branch = BranchRepository.Instance.GetCompleteObject(id);
+            if (branch == null)
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Branch with ID {id} was not found");
+
+            return branch;
         }
 
         public IEnumerable<Branch> GetBranches(long projectId)
@@ -433,7 +439,10 @@ namespace Kepler.Service
 
         public void DeleteBranch(long id)
         {
-            throw new NotImplementedException();
+            var builds = GetBuilds(id);
+            // Stop all builds
+            builds.Each(item => RunOperation("build", item.Id, "stop"));
+            DataCleaner.DeleteObjectsTreeRecursively<Branch>(id, true);
         }
 
         #endregion
@@ -532,6 +541,7 @@ namespace Kepler.Service
             BuildExecutor.GetExecutor().UpdateKeplerServiceUrlOnWorkers();
             BuildExecutor.GetExecutor().UpdateDiffImagePath();
             UrlPathGenerator.DiffImagePath = new KeplerService().GetDiffImageSavingPath();
+            UrlPathGenerator.PreviewImagePath = new KeplerService().GetPreviewSavingPath();
         }
 
         public string GetSourceImagePath()

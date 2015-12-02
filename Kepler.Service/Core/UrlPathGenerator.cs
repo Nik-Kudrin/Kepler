@@ -5,6 +5,7 @@ namespace Kepler.Service.Core
     public class UrlPathGenerator
     {
         public static string DiffImagePath = new KeplerService().GetDiffImageSavingPath();
+        public static string PreviewImagePath = new KeplerService().GetPreviewSavingPath();
         public static string SourceImagePath = new KeplerService().GetSourceImagePath();
 
         private static string GenerateUrlPath(string filePath, string replacePath, string urlBasePath)

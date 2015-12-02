@@ -11,11 +11,33 @@ namespace Kepler.Service.Core
 {
     public class DataCleaner
     {
-        public static void DeleteDirectory(string path)
+        private static void DeleteDirectory(string dirPath)
+        {
+            var diffPath = Path.Combine(UrlPathGenerator.DiffImagePath, dirPath);
+            var previewPath = Path.Combine(UrlPathGenerator.PreviewImagePath, dirPath);
+
+            var paths = new List<string>();
+            paths.Add(diffPath);
+            paths.Add(previewPath);
+
+            foreach (var path in paths)
+            {
+                try
+                {
+                    Directory.Delete(path, true);
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = ex.Message});
+                }
+            }
+        }
+
+        private static void DeleteFile(string fileToDelete)
         {
             try
             {
-                Directory.Delete(path, true);
+                File.Delete(fileToDelete);
             }
             catch (Exception ex)
             {
@@ -23,43 +45,58 @@ namespace Kepler.Service.Core
             }
         }
 
-        public static void DeleteObjectsTreeRecurively<TEntityBase>(long objectId, bool deleteDirectory = false)
-            where TEntityBase : BuildObject
+
+        public static void DeleteObjectsTreeRecursively<TEntityBase>(long objectId, bool deleteDirectory = false)
+            where TEntityBase : InfoObject
         {
             if (typeof (TEntityBase) == typeof (Project))
             {
-                var childObjects = GetChildObjects<BranchRepository, Branch>(BranchRepository.Instance, objectId);
-                childObjects.ForEach(child => DeleteObjectsTreeRecurively<TestAssembly>(child.Id));
+                var childObjects = BranchRepository.Instance.Find(branch => branch.ProjectId == objectId).ToList();
+                childObjects.ForEach(child => DeleteObjectsTreeRecursively<Branch>(child.Id));
 
                 var parentObjRepo = ProjectRepository.Instance;
-                parentObjRepo.Remove(parentObjRepo.Get(objectId));
+                var parentObj = parentObjRepo.Get(objectId);
+
+                if (deleteDirectory)
+                    DeleteDirectory(parentObj.Name);
+
+                parentObjRepo.Remove(parentObj);
             }
             else if (typeof (TEntityBase) == typeof (Branch))
             {
                 var childObjects = GetChildObjects<BuildRepository, Build>(BuildRepository.Instance, objectId);
-
-                if (deleteDirectory)
-                    DeleteDirectory();
-
-                childObjects.ForEach(child => DeleteObjectsTreeRecurively<TestAssembly>(child.Id));
+                childObjects.ForEach(child => DeleteObjectsTreeRecursively<Build>(child.Id));
 
                 var parentObjRepo = BranchRepository.Instance;
-                parentObjRepo.Remove(parentObjRepo.Get(objectId));
+                var branchForDelete = parentObjRepo.Get(objectId);
+                var project = ProjectRepository.Instance.Get(branchForDelete.ProjectId.Value);
+
+                if (deleteDirectory)
+                    DeleteDirectory(Path.Combine(project.Name, branchForDelete.Name));
+
+                parentObjRepo.Remove(branchForDelete);
             }
             else if (typeof (TEntityBase) == typeof (Build))
             {
                 var childObjects = GetChildObjects<TestAssemblyRepository, TestAssembly>(
                     TestAssemblyRepository.Instance, objectId);
-                childObjects.ForEach(child => DeleteObjectsTreeRecurively<TestAssembly>(child.Id));
+                childObjects.ForEach(child => DeleteObjectsTreeRecursively<TestAssembly>(child.Id));
 
                 var parentObjRepo = BuildRepository.Instance;
-                parentObjRepo.Remove(parentObjRepo.Get(objectId));
+                var buildForDelete = parentObjRepo.Get(objectId);
+                var branch = BranchRepository.Instance.Get(buildForDelete.ParentObjId.Value);
+                var project = ProjectRepository.Instance.Get(branch.ProjectId.Value);
+
+                if (deleteDirectory)
+                    DeleteDirectory(Path.Combine(project.Name, branch.Name, buildForDelete.Name));
+
+                parentObjRepo.Remove(buildForDelete);
             }
             else if (typeof (TEntityBase) == typeof (TestAssembly))
             {
                 var childObjects = GetChildObjects<TestSuiteRepository, TestSuite>(TestSuiteRepository.Instance,
                     objectId);
-                childObjects.ForEach(child => DeleteObjectsTreeRecurively<TestSuite>(child.Id));
+                childObjects.ForEach(child => DeleteObjectsTreeRecursively<TestSuite>(child.Id));
 
                 var parentObjRepo = TestAssemblyRepository.Instance;
                 parentObjRepo.Remove(parentObjRepo.Get(objectId));
@@ -67,7 +104,7 @@ namespace Kepler.Service.Core
             else if (typeof (TEntityBase) == typeof (TestSuite))
             {
                 var childObjects = GetChildObjects<TestCaseRepository, TestCase>(TestCaseRepository.Instance, objectId);
-                childObjects.ForEach(child => DeleteObjectsTreeRecurively<TestCase>(child.Id));
+                childObjects.ForEach(child => DeleteObjectsTreeRecursively<TestCase>(child.Id));
 
                 var parentObjRepo = TestSuiteRepository.Instance;
                 parentObjRepo.Remove(parentObjRepo.Get(objectId));
@@ -76,7 +113,18 @@ namespace Kepler.Service.Core
             {
                 var screenShotRepo = ScreenShotRepository.Instance;
                 var childObjects = GetChildObjects<ScreenShotRepository, ScreenShot>(screenShotRepo, objectId);
+
+                // Delete source screenshots
+                childObjects.ForEach(screenShot =>
+                {
+                    DeleteFile(screenShot.ImagePath);
+                    DeleteFile(screenShot.PreviewImagePath);
+                });
+
                 screenShotRepo.Remove(childObjects);
+
+                var parentObjRepo = TestCaseRepository.Instance;
+                parentObjRepo.Remove(parentObjRepo.Get(objectId));
             }
         }
 
