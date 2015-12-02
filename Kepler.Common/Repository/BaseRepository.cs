@@ -50,11 +50,7 @@ namespace Kepler.Common.Repository
 
         public virtual void Update(IEnumerable<TEntity> entities)
         {
-            foreach (var entity in entities)
-            {
-                DbSet.Attach(entity);
-                DbContext.Entry(entity).State = EntityState.Modified;
-            }
+            entities.ToList().ForEach(Update);
         }
 
         public virtual void UpdateAndFlashChanges(TEntity entity)
@@ -111,10 +107,30 @@ namespace Kepler.Common.Repository
                 }
 
                 DbSet.Remove(entity);
+                FlushChanges();
             }
             catch (Exception ex)
             {
-                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                {
+                    ExceptionMessage = $"Trying to delete object: {ex.Message}"
+                });
+            }
+        }
+
+        public virtual void Remove(IEnumerable<TEntity> entities)
+        {
+            try
+            {
+                DbSet.RemoveRange(entities);
+                FlushChanges();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                {
+                    ExceptionMessage = $"Trying to delete range of objects: {ex.Message}"
+                });
             }
         }
 

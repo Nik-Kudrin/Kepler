@@ -29,67 +29,54 @@ namespace Kepler.Service.Core
             if (typeof (TEntityBase) == typeof (Project))
             {
                 var childObjects = GetChildObjects<BranchRepository, Branch>(BranchRepository.Instance, objectId);
+                childObjects.ForEach(child => DeleteObjectsTreeRecurively<TestAssembly>(child.Id));
 
-                foreach (var child in childObjects)
-                {
-                    DeleteObjectsTreeRecurively<TestAssembly>(child.Id);
-                }
+                var parentObjRepo = ProjectRepository.Instance;
+                parentObjRepo.Remove(parentObjRepo.Get(objectId));
             }
             else if (typeof (TEntityBase) == typeof (Branch))
             {
-                var childObjects =
-                    SetChildObjStatuses<TestAssemblyRepository, TestAssembly>(TestAssemblyRepository.Instance,
-                        objectId, );
+                var childObjects = GetChildObjects<BuildRepository, Build>(BuildRepository.Instance, objectId);
 
                 if (deleteDirectory)
                     DeleteDirectory();
 
-                foreach (var child in childObjects)
-                {
-                    DeleteObjectsTreeRecurively<TestAssembly>(child.Id);
-                }
+                childObjects.ForEach(child => DeleteObjectsTreeRecurively<TestAssembly>(child.Id));
+
+                var parentObjRepo = BranchRepository.Instance;
+                parentObjRepo.Remove(parentObjRepo.Get(objectId));
             }
             else if (typeof (TEntityBase) == typeof (Build))
             {
-                var childObjects =
-                    SetChildObjStatuses<TestAssemblyRepository, TestAssembly>(TestAssemblyRepository.Instance,
-                        objectId, );
+                var childObjects = GetChildObjects<TestAssemblyRepository, TestAssembly>(
+                    TestAssemblyRepository.Instance, objectId);
+                childObjects.ForEach(child => DeleteObjectsTreeRecurively<TestAssembly>(child.Id));
 
-                foreach (var child in childObjects)
-                {
-                    DeleteObjectsTreeRecurively<TestAssembly>(child.Id);
-                }
+                var parentObjRepo = BuildRepository.Instance;
+                parentObjRepo.Remove(parentObjRepo.Get(objectId));
             }
             else if (typeof (TEntityBase) == typeof (TestAssembly))
             {
-                var childObjects = SetChildObjStatuses<TestSuiteRepository, TestSuite>(TestSuiteRepository.Instance,
-                    objectId, );
+                var childObjects = GetChildObjects<TestSuiteRepository, TestSuite>(TestSuiteRepository.Instance,
+                    objectId);
+                childObjects.ForEach(child => DeleteObjectsTreeRecurively<TestSuite>(child.Id));
 
-                foreach (var child in childObjects)
-                {
-                    DeleteObjectsTreeRecurively<TestSuite>(child.Id);
-                }
+                var parentObjRepo = TestAssemblyRepository.Instance;
+                parentObjRepo.Remove(parentObjRepo.Get(objectId));
             }
             else if (typeof (TEntityBase) == typeof (TestSuite))
             {
-                var childObjects = SetChildObjStatuses<TestCaseRepository, TestCase>(TestCaseRepository.Instance,
-                    objectId, );
+                var childObjects = GetChildObjects<TestCaseRepository, TestCase>(TestCaseRepository.Instance, objectId);
+                childObjects.ForEach(child => DeleteObjectsTreeRecurively<TestCase>(child.Id));
 
-                foreach (var child in childObjects)
-                {
-                    DeleteObjectsTreeRecurively<TestCase>(child.Id);
-                }
+                var parentObjRepo = TestSuiteRepository.Instance;
+                parentObjRepo.Remove(parentObjRepo.Get(objectId));
             }
             else if (typeof (TEntityBase) == typeof (TestCase))
             {
-                return SetChildObjStatuses<ScreenShotRepository, ScreenShot>(ScreenShotRepository.Instance, objectId, 
-                    );
-            }
-            else if (typeof (TEntityBase) == typeof (ScreenShot))
-            {
-                SetParentObjStatus<ScreenShotRepository, ScreenShot>(ScreenShotRepository.Instance, objectId, );
-
-                return new List<ScreenShot>() {ScreenShotRepository.Instance.Get(objectId)};
+                var screenShotRepo = ScreenShotRepository.Instance;
+                var childObjects = GetChildObjects<ScreenShotRepository, ScreenShot>(screenShotRepo, objectId);
+                screenShotRepo.Remove(childObjects);
             }
         }
 
