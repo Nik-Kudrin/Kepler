@@ -185,9 +185,10 @@ namespace Kepler.Service
             if (build == null)
                 LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Build with ID {id} was not found");
 
-            // TODO: stop build recursively
-            // TODO: remove test assemblies, suites, cases, screenshots
-            // TODO: remove build directory (preview and diff)
+            RunOperation("build", id, "stop");
+
+            // TODO: delete test assemblies, suites, cases, screenshots
+            // TODO: delete build directory (preview and diff)
 
             throw new NotImplementedException();
         }

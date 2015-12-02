@@ -128,7 +128,7 @@ namespace Kepler.Service.Core
             foreach (var baseItem in baseItems)
             {
                 var childItems = childObjectRepository.Find(item => item.ParentObjId == baseItem.Id);
-                
+
                 if (childItems.Any(item => item.Status == ObjectStatus.InProgress))
                 {
                     baseItem.Status = ObjectStatus.InProgress;
@@ -157,6 +157,7 @@ namespace Kepler.Service.Core
                 UpdateBuildDurationFields(baseItem.Id);
             }
         }
+
 
         /// <summary>
         /// Set status for all objects in sub tree of element with provided ObjectId and Type
@@ -263,7 +264,7 @@ namespace Kepler.Service.Core
             childItems.ForEach(item => item.Status = newStatus);
             childObjectRepository.UpdateAndFlashChanges(childItems);
 
-            return childItems.ToList();
+            return childItems;
         }
 
 
