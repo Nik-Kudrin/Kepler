@@ -55,11 +55,31 @@
 
 <script type="text/javascript">
     //
-    // Load branches
+    // Load branch info
     //
-    loadBranches();
+    loadBranch();
+
+    function loadBranch() {
+        $.ajax({
+            url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
+            type: 'GET',
+            success: function (data) {
+                $.each(data, function (key, value) {
+
+
+                        console.log(key, value);
+
+                });
+            }
+        });
+    }
+
+    //
+    // Load builds
+    //
+    loadBuilds();
     
-    function loadBranches() {
+    function loadBuilds() {
         $('.branches_table > tbody').empty();
         $.ajax({
             url: KeplerServiceUrl + 'GetBuilds?branchId=' + getParameterByName('branchId'),
@@ -78,7 +98,7 @@
                         } else if (key == 'WorkerServiceUrl') {
                             $('.branch_row:last td:nth-of-type(4)').html(value);
                         }
-                        console.log(key, value);
+                        //console.log(key, value);
                     });
                 });
             }
