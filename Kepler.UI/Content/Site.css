@@ -2,6 +2,7 @@
 h3 {
     margin: 0px;
     white-space: nowrap;
+    font-size: 20px;
 }
 
 .table > tbody > tr > td {
