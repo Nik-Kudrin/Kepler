@@ -172,7 +172,7 @@ namespace Kepler.Service.Core
             bool updateParentObj = true)
             where TEntityBase : BuildObject
         {
-            List<ScreenShot> affectedScreenShots = null;
+            var affectedScreenShots = new List<ScreenShot>();
 
             if (typeof (TEntityBase) == typeof (Build))
             {
