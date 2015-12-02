@@ -105,7 +105,7 @@ namespace Kepler.Service
                     }
                     catch (Exception ex)
                     {
-                        LogErrorMessage(ErrorMessage.ErorCode.RunOperationError, "Operation - run. " + ex.Message);
+                        LogErrorMessage(ErrorMessage.ErorCode.RunOperationError, ex);
                     }
                     break;
 
@@ -117,7 +117,7 @@ namespace Kepler.Service
                     }
                     catch (Exception ex)
                     {
-                        LogErrorMessage(ErrorMessage.ErorCode.RunOperationError, "Operation - stop. " + ex.Message);
+                        LogErrorMessage(ErrorMessage.ErorCode.StopOperationError, ex);
                     }
 
                     var workers = ImageWorkerRepository.Instance.FindAll()
@@ -161,7 +161,7 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError, ex.Message);
+                LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError, ex);
             }
         }
 
@@ -275,7 +275,7 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, $"{ex.Message} {ex.StackTrace}");
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, ex);
             }
         }
 
@@ -355,7 +355,7 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, $"{ex.Message} {ex.StackTrace}");
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, ex);
             }
         }
 
@@ -618,6 +618,11 @@ namespace Kepler.Service
             LogError(error);
 
             throw error.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+        }
+
+        private void LogErrorMessage(ErrorMessage.ErorCode errorCode, Exception exception)
+        {
+            LogErrorMessage(errorCode, $"{exception.Message}  {exception.StackTrace}");
         }
 
         public void LogError(ErrorMessage error)

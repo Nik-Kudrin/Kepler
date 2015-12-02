@@ -7,8 +7,6 @@ namespace Kepler.Common.Repository
 {
     public class ScreenShotRepository : BuildObjectRepository<ScreenShot>
     {
-        private static ScreenShotRepository _repoInstance;
-
         public static ScreenShotRepository Instance => new ScreenShotRepository(new KeplerDataContext());
 
         private ScreenShotRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.ScreenShots)

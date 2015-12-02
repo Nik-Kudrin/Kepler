@@ -27,6 +27,7 @@ namespace Kepler.Common.Error
             NotUniqueObjects,
 
             RunOperationError,
+            StopOperationError,
             SetObjectStatusError,
 
             AddTaskToImageWorkerError,
@@ -112,6 +113,9 @@ namespace Kepler.Common.Error
                     break;
                 case ErorCode.RunOperationError:
                     codeMessage = "Error happend during run operation";
+                    break;
+                case ErorCode.StopOperationError:
+                    codeMessage = "Error happend during stop operation";
                     break;
                 case ErorCode.SetObjectStatusError:
                     codeMessage = "Error happend during set status for object";
