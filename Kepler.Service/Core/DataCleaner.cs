@@ -88,7 +88,7 @@ namespace Kepler.Service.Core
                 var project = ProjectRepository.Instance.Get(branch.ProjectId.Value);
 
                 if (deleteDirectory)
-                    DeleteDirectory(Path.Combine(project.Name, branch.Name, buildForDelete.Name));
+                    DeleteDirectory(Path.Combine(project.Name, branch.Name, buildForDelete.Id.ToString()));
 
                 parentObjRepo.Remove(buildForDelete);
             }
