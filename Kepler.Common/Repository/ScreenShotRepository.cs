@@ -9,19 +9,7 @@ namespace Kepler.Common.Repository
     {
         private static ScreenShotRepository _repoInstance;
 
-        public static ScreenShotRepository Instance
-        {
-            get
-            {
-                if (_repoInstance == null)
-                {
-                    var dbContext = new KeplerDataContext();
-                    _repoInstance = new ScreenShotRepository(dbContext);
-                }
-
-                return _repoInstance;
-            }
-        }
+        public static ScreenShotRepository Instance => new ScreenShotRepository(new KeplerDataContext());
 
         private ScreenShotRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.ScreenShots)
         {

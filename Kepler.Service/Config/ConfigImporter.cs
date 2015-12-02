@@ -68,6 +68,7 @@ namespace Kepler.Service.Config
             BindTestCasesWithSuites(importedConfig, assemblies);
             BindScreenshotsWithTestCases(importedConfig, branches, assemblies);
 
+            UpdateBuildStatusesToInQueue(builds);
             UpdateBuildsCountersFields(builds);
         }
 
@@ -243,7 +244,7 @@ namespace Kepler.Service.Config
 
             foreach (var branch in branches)
             {
-                var build = new Build() {Status = ObjectStatus.InQueue, BranchId = branch.Id};
+                var build = new Build() {Status = ObjectStatus.Pending, BranchId = branch.Id};
 
                 BuildRepository.Instance.Insert(build);
                 builds.Add(build);
@@ -435,6 +436,16 @@ namespace Kepler.Service.Config
                 }
             }
         }
+
+        private void UpdateBuildStatusesToInQueue(List<Build> builds)
+        {
+            foreach (var build in builds)
+            {
+                build.Status = ObjectStatus.InQueue;
+                BuildRepository.Instance.UpdateAndFlashChanges(build);
+            }
+        }
+
 
         private void UpdateBuildsCountersFields(List<Build> builds)
         {

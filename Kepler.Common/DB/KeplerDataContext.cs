@@ -22,6 +22,7 @@ namespace Kepler.Common.DB
 
         public KeplerDataContext() : base("name=Kepler")
         {
+            this.Configuration.LazyLoadingEnabled = false;
         }
     }
 }

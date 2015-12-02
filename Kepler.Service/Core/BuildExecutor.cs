@@ -44,6 +44,8 @@ namespace Kepler.Service.Core
             UpdateKeplerServiceUrlOnWorkers();
             UpdateDiffImagePath();
 
+            ReinitHangedBuilds();
+
             _sendScreenShotsForProcessingTimer = new Timer();
             _sendScreenShotsForProcessingTimer.Interval = 5000; //every 5 sec
             _sendScreenShotsForProcessingTimer.Elapsed += SendComparisonInfoToWorkers;
@@ -58,6 +60,26 @@ namespace Kepler.Service.Core
             _checkWorkersTimer.Interval = 60000;
             _checkWorkersTimer.Elapsed += CheckWorkersAvailability;
             _checkWorkersTimer.Enabled = true;
+        }
+
+        private void ReinitHangedBuilds()
+        {
+            var inprogressBuilds = BuildRepository.Instance.GetBuildsByStatus(ObjectStatus.InProgress);
+
+            inprogressBuilds.Each(build =>
+            {
+                build.Status = ObjectStatus.InQueue;
+                BuildRepository.Instance.UpdateAndFlashChanges(build);
+                var screenShotRepo = ScreenShotRepository.Instance;
+
+                var screenShots = screenShotRepo.Find(item => item.BuildId == build.Id &&
+                                                              item.Status == ObjectStatus.InQueue);
+                screenShots.Each(item =>
+                {
+                    item.Status = ObjectStatus.InQueue;
+                    screenShotRepo.UpdateAndFlashChanges(item);
+                });
+            });
         }
 
 
@@ -103,18 +125,26 @@ namespace Kepler.Service.Core
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void SendComparisonInfoToWorkers(object sender, ElapsedEventArgs eventArgs)
         {
+            // if there is already executing build
+            if (BuildRepository.Instance.GetBuildsByStatus(ObjectStatus.InProgress).Any())
+                return;
+
             var workers = ImageWorkerRepository.Instance.FindAll()
                 .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
 
-            var screenShots = ScreenShotRepository.Instance.GetAllInQueueScreenShots();
+            if (workers.Count == 0)
+                return;
+
+            var buildInQueue = BuildRepository.Instance.GetBuildsByStatus(ObjectStatus.InQueue).FirstOrDefault();
+            if (buildInQueue == null)
+                return;
+
+            var screenShots = ScreenShotRepository.Instance.GetInQueueScreenShotsForBuild(buildInQueue.Id);
             screenShots.Each(item => item.Status = ObjectStatus.InProgress);
             ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShots);
             UpdateObjectsStatuses(this, null);
 
             var imageComparisonContainers = ConvertScreenShotsToImageComparison(screenShots).ToList();
-
-            if (workers.Count == 0)
-                return;
 
             // split all screenshots for comparison uniformly for all workers
             var imgComparisonPerWorker = imageComparisonContainers.Count()/workers.Count();

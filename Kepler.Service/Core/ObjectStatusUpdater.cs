@@ -23,8 +23,7 @@ namespace Kepler.Service.Core
                 case ObjectStatus.InProgress:
                     // if StartDate already set, just get out of here
                     if (build.StartDate.HasValue) return;
-
-                    build.StartDate = DateTime.Now;
+                    SetBuildStartDate(build);
 
                     var builds = BuildRepository.Instance.Find(
                         item => item.BranchId == build.BranchId && item.Id != buildId);
@@ -39,6 +38,8 @@ namespace Kepler.Service.Core
                     break;
 
                 case ObjectStatus.Failed:
+                    SetBuildStartDate(build);
+
                     // if StopDate already set, just get out of here
                     if (build.StopDate.HasValue) return;
 
@@ -53,6 +54,7 @@ namespace Kepler.Service.Core
                     break;
 
                 case ObjectStatus.Passed:
+                    SetBuildStartDate(build);
                     // if StopDate already set, just get out of here
                     if (build.StopDate.HasValue) return;
 
@@ -61,6 +63,7 @@ namespace Kepler.Service.Core
                     break;
 
                 case ObjectStatus.Stopped:
+                    SetBuildStartDate(build);
                     // if StopDate already set, just get out of here
                     if (build.StopDate.HasValue) return;
                     UpdateBuildFailedScreenshotsNumber(build);
@@ -68,6 +71,12 @@ namespace Kepler.Service.Core
             }
 
             BuildRepository.Instance.UpdateAndFlashChanges(build);
+        }
+
+        private static void SetBuildStartDate(Build build)
+        {
+            if (!build.StartDate.HasValue)
+                build.StartDate = DateTime.Now;
         }
 
         private static void UpdateBuildFailedScreenshotsNumber(Build build)
@@ -119,24 +128,18 @@ namespace Kepler.Service.Core
             foreach (var baseItem in baseItems)
             {
                 var childItems = childObjectRepository.Find(item => item.ParentObjId == baseItem.Id);
+                
+                if (childItems.Any(item => item.Status == ObjectStatus.InProgress))
+                {
+                    baseItem.Status = ObjectStatus.InProgress;
+                    baseObjectRepository.UpdateAndFlashChanges(baseItem);
+                    continue;
+                }
 
                 if (childItems.Any(item => item.Status == ObjectStatus.Failed))
                 {
                     baseItem.Status = ObjectStatus.Failed;
-                    if (typeof (TEntityBase) == typeof (Build))
-                    {
-                        UpdateBuildDurationFields(baseItem.Id);
-                    }
-                    continue;
-                }
-
-                if (childItems.Any(item => item.Status == ObjectStatus.InProgress))
-                {
-                    baseItem.Status = ObjectStatus.InProgress;
-                    if (typeof (TEntityBase) == typeof (Build))
-                    {
-                        UpdateBuildDurationFields(baseItem.Id);
-                    }
+                    baseObjectRepository.UpdateAndFlashChanges(baseItem);
                     continue;
                 }
 
@@ -146,11 +149,12 @@ namespace Kepler.Service.Core
                 }
 
                 baseObjectRepository.UpdateAndFlashChanges(baseItem);
+            }
 
-                if (typeof (TEntityBase) == typeof (Build))
-                {
-                    UpdateBuildDurationFields(baseItem.Id);
-                }
+            if (typeof (TEntityBase) != typeof (Build)) return;
+            foreach (var baseItem in baseItems)
+            {
+                UpdateBuildDurationFields(baseItem.Id);
             }
         }
 
