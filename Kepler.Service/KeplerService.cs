@@ -21,15 +21,75 @@ namespace Kepler.Service
     [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     public class KeplerService : IKeplerService
     {
-        private BuildRepository buildRepo = BuildRepository.Instance;
-        private TestCaseRepository testCaseRepo = TestCaseRepository.Instance;
-        private TestAssemblyRepository assemblyRepository = TestAssemblyRepository.Instance;
-        private ProjectRepository projectRepository = ProjectRepository.Instance;
-        private TestSuiteRepository testSuiteRepo = TestSuiteRepository.Instance;
-        private ImageWorkerRepository workerRepository = ImageWorkerRepository.Instance;
-
         // do not remove this field (used for build executor init)
         private static BuildExecutor _executor = BuildExecutor.GetExecutor();
+        private readonly TestAssemblyRepository assemblyRepository = TestAssemblyRepository.Instance;
+        private readonly BuildRepository buildRepo = BuildRepository.Instance;
+        private readonly ProjectRepository projectRepository = ProjectRepository.Instance;
+        private readonly TestCaseRepository testCaseRepo = TestCaseRepository.Instance;
+        private readonly TestSuiteRepository testSuiteRepo = TestSuiteRepository.Instance;
+        private readonly ImageWorkerRepository workerRepository = ImageWorkerRepository.Instance;
+
+
+        public void ImportTestConfig(string testConfig)
+        {
+            var configImporter = new ConfigImporter();
+            configImporter.ImportConfig(testConfig);
+        }
+
+        public void UpdateScreenShots(ImageComparisonContract imageComparisonContract)
+        {
+            foreach (var imageComparisonInfo in imageComparisonContract.ImageComparisonList)
+            {
+                var screenShot = ScreenShotRepository.Instance.Get(imageComparisonInfo.ScreenShotId);
+
+                // if current screenshot status = Stopped, then just update diff image path field
+                if (screenShot.Status == ObjectStatus.Stopped)
+                {
+                    screenShot.DiffImagePath = imageComparisonInfo.DiffImagePath;
+                    screenShot.DiffPreviewPath = imageComparisonInfo.DiffPreviewPath;
+                    screenShot.PreviewImagePath = imageComparisonInfo.SecondPreviewPath;
+                    screenShot.BaseLinePreviewPath = imageComparisonInfo.FirstPreviewPath;
+
+                    // Generate Url paths
+                    UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
+
+                    ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
+                    continue;
+                }
+
+                // if Failed
+                if (imageComparisonInfo.IsImagesDifferent || imageComparisonInfo.ErrorMessage != "")
+                {
+                    screenShot.Status = ObjectStatus.Failed;
+                    screenShot.ErrorMessage = imageComparisonInfo.ErrorMessage;
+                }
+                else // if Passedd
+                {
+                    if (imageComparisonInfo.LastPassedScreenShotId.HasValue)
+                    {
+                        var oldPassedScreenShot =
+                            ScreenShotRepository.Instance.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
+                        oldPassedScreenShot.IsLastPassed = false;
+                        ScreenShotRepository.Instance.UpdateAndFlashChanges(oldPassedScreenShot);
+                    }
+
+                    screenShot.Status = ObjectStatus.Passed;
+                    screenShot.IsLastPassed = true;
+                }
+
+                screenShot.DiffImagePath = imageComparisonInfo.DiffImagePath;
+                screenShot.DiffPreviewPath = imageComparisonInfo.DiffPreviewPath;
+
+                screenShot.PreviewImagePath = imageComparisonInfo.SecondPreviewPath;
+                screenShot.BaseLinePreviewPath = imageComparisonInfo.FirstPreviewPath;
+
+                // Generate Url paths
+                UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
+
+                ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
+            }
+        }
 
         #region Common Actions
 
@@ -49,7 +109,7 @@ namespace Kepler.Service
                     break;
 
                 case "stop":
-                    List<ScreenShot> affectedScreenShots = new List<ScreenShot>();
+                    var affectedScreenShots = new List<ScreenShot>();
                     try
                     {
                         affectedScreenShots = ObjectStatusUpdater.SetObjectsStatus(typeName, objId, ObjectStatus.Stopped);
@@ -106,6 +166,8 @@ namespace Kepler.Service
 
         #endregion
 
+        #region Build
+
         public Build GetBuild(long id)
         {
             return buildRepo.Get(id);
@@ -115,6 +177,22 @@ namespace Kepler.Service
         {
             return buildRepo.Find(item => item.BranchId == branchId);
         }
+
+        public void DeleteBuild(long id)
+        {
+            var build = GetBuild(id);
+
+            if (build == null)
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Build with ID {id} was not found");
+
+            // TODO: stop build recursively
+            // TODO: remove test assemblies, suites, cases, screenshots
+            // TODO: remove build directory (preview and diff)
+
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
         #region ScreenShot
 
@@ -195,7 +273,7 @@ namespace Kepler.Service
 
             try
             {
-                var project = new Project() {Name = name};
+                var project = new Project {Name = name};
                 projectRepository.Insert(project);
             }
             catch (Exception ex)
@@ -225,6 +303,11 @@ namespace Kepler.Service
             ProjectRepository.Instance.UpdateAndFlashChanges(project);
         }
 
+        public void DeleteProject(long id)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region Branch
@@ -239,7 +322,7 @@ namespace Kepler.Service
                 var baseline = new BaseLine();
                 BaseLineRepository.Instance.Insert(baseline);
 
-                var branch = new Branch()
+                var branch = new Branch
                 {
                     Name = name,
                     BaseLineId = baseline.Id,
@@ -347,67 +430,12 @@ namespace Kepler.Service
             return branches;
         }
 
+        public void DeleteBranch(long id)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
-
-        public void ImportTestConfig(string testConfig)
-        {
-            var configImporter = new ConfigImporter();
-            configImporter.ImportConfig(testConfig);
-        }
-
-        public void UpdateScreenShots(ImageComparisonContract imageComparisonContract)
-        {
-            foreach (var imageComparisonInfo in imageComparisonContract.ImageComparisonList)
-            {
-                var screenShot = ScreenShotRepository.Instance.Get(imageComparisonInfo.ScreenShotId);
-
-                // if current screenshot status = Stopped, then just update diff image path field
-                if (screenShot.Status == ObjectStatus.Stopped)
-                {
-                    screenShot.DiffImagePath = imageComparisonInfo.DiffImagePath;
-                    screenShot.DiffPreviewPath = imageComparisonInfo.DiffPreviewPath;
-                    screenShot.PreviewImagePath = imageComparisonInfo.SecondPreviewPath;
-                    screenShot.BaseLinePreviewPath = imageComparisonInfo.FirstPreviewPath;
-
-                    // Generate Url paths
-                    UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
-
-                    ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
-                    continue;
-                }
-
-                // if Failed
-                if (imageComparisonInfo.IsImagesDifferent || imageComparisonInfo.ErrorMessage != "")
-                {
-                    screenShot.Status = ObjectStatus.Failed;
-                    screenShot.ErrorMessage = imageComparisonInfo.ErrorMessage;
-                }
-                else // if Passedd
-                {
-                    if (imageComparisonInfo.LastPassedScreenShotId.HasValue)
-                    {
-                        var oldPassedScreenShot =
-                            ScreenShotRepository.Instance.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
-                        oldPassedScreenShot.IsLastPassed = false;
-                        ScreenShotRepository.Instance.UpdateAndFlashChanges(oldPassedScreenShot);
-                    }
-
-                    screenShot.Status = ObjectStatus.Passed;
-                    screenShot.IsLastPassed = true;
-                }
-
-                screenShot.DiffImagePath = imageComparisonInfo.DiffImagePath;
-                screenShot.DiffPreviewPath = imageComparisonInfo.DiffPreviewPath;
-
-                screenShot.PreviewImagePath = imageComparisonInfo.SecondPreviewPath;
-                screenShot.BaseLinePreviewPath = imageComparisonInfo.FirstPreviewPath;
-
-                // Generate Url paths
-                UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
-
-                ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
-            }
-        }
 
         #region ImageWorkers
 
@@ -421,7 +449,7 @@ namespace Kepler.Service
         {
             if (!workerRepository.Find(imageWorkerServiceUrl).Any())
             {
-                workerRepository.Insert(new ImageWorker()
+                workerRepository.Insert(new ImageWorker
                 {
                     Name = name,
                     WorkerServiceUrl = imageWorkerServiceUrl
@@ -451,6 +479,11 @@ namespace Kepler.Service
                 worker.WorkerServiceUrl = newWorkerServiceUrl;
                 workerRepository.UpdateAndFlashChanges(worker);
             }
+        }
+
+        public void DeleteImageWorker(long id)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -566,7 +599,7 @@ namespace Kepler.Service
 
         private void LogErrorMessage(ErrorMessage.ErorCode errorCode, string exceptionMessage)
         {
-            var error = new ErrorMessage()
+            var error = new ErrorMessage
             {
                 Code = errorCode,
                 ExceptionMessage = exceptionMessage
@@ -585,7 +618,7 @@ namespace Kepler.Service
         {
             var error = ErrorMessageRepository.Instance.Get(errorId);
             if (error == null)
-                throw new ErrorMessage()
+                throw new ErrorMessage
                 {
                     Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
                     ExceptionMessage = $"Error message with id={errorId} not found"

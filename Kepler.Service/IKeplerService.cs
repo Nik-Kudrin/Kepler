@@ -11,10 +11,26 @@ namespace Kepler.Service
     [ServiceContract]
     public interface IKeplerService
     {
+        /// <summary>
+        ///     Import test config
+        /// </summary>
+        /// <param name="testConfig"></param>
+        /// <returns>Return emtpy string, if import was OK. Otherwise return string with error message</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "ImportTestConfig")]
+        void ImportTestConfig(string testConfig);
+
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "UpdateScreenShots")]
+        void UpdateScreenShots(ImageComparisonContract imageComparisonContract);
+
         #region Common Actions
 
         /// <summary>
-        /// Run / Stop operation recursively on Build, TestCase ...
+        ///     Run / Stop operation recursively on Build, TestCase ...
         /// </summary>
         /// <param name="typeName">Possible values: build, testCase, testSuite, testAssembly, screenShot</param>
         /// <param name="objId"></param>
@@ -27,7 +43,7 @@ namespace Kepler.Service
         void RunOperation(string typeName, long objId, string operationName);
 
         /// <summary>
-        /// Set new newStatus for objects recursively
+        ///     Set new newStatus for objects recursively
         /// </summary>
         /// <param name="typeName">Possible values: build, testCase, testSuite, testAssembly, screenShot</param>
         /// <param name="newStatus">Possible values: failed, passed</param>
@@ -49,6 +65,10 @@ namespace Kepler.Service
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetBuilds?branchId={branchId}")]
         IEnumerable<Build> GetBuilds(long branchId);
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "DeleteBuild?id={id}")]
+        void DeleteBuild(long id);
 
         #endregion
 
@@ -111,7 +131,7 @@ namespace Kepler.Service
         IEnumerable<Project> GetProjects();
 
         /// <summary>
-        /// Create project
+        ///     Create project
         /// </summary>
         /// <param name="name"></param>
         /// <returns>Return empty string if operation was OK. Otherwis - error message</returns>
@@ -126,12 +146,16 @@ namespace Kepler.Service
             UriTemplate = "UpdateProject?id={id}&newName={newName}")]
         void UpdateProject(long id, string newName);
 
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "DeleteProject?id={id}")]
+        void DeleteProject(long id);
+
         #endregion
 
         #region Branch
 
         /// <summary>
-        /// Create Branch
+        ///     Create Branch
         /// </summary>
         /// <param name="name"></param>
         /// <returns>Return empty string if operation was OK. Otherwis - error message</returns>
@@ -158,23 +182,11 @@ namespace Kepler.Service
             UriTemplate = "GetBranches?projectId={projectId}")]
         IEnumerable<Branch> GetBranches(long projectId);
 
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "DeleteBranch?id={id}")]
+        void DeleteBranch(long id);
+
         #endregion
-
-        /// <summary>
-        /// Import test config
-        /// </summary>
-        /// <param name="testConfig"></param>
-        /// <returns>Return emtpy string, if import was OK. Otherwise return string with error message</returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "ImportTestConfig")]
-        void ImportTestConfig(string testConfig);
-
-
-        [OperationContract]
-        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "UpdateScreenShots")]
-        void UpdateScreenShots(ImageComparisonContract imageComparisonContract);
 
         #region ImageWorkers
 
@@ -193,6 +205,10 @@ namespace Kepler.Service
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "UpdateImageWorker?name={name}&newName={newName}&newWorkerServiceUrl={newWorkerServiceUrl}")]
         void UpdateImageWorker(string name, string newName, string newWorkerServiceUrl);
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "DeleteImageWorker?id={id}")]
+        void DeleteImageWorker(long id);
 
         #endregion
 
