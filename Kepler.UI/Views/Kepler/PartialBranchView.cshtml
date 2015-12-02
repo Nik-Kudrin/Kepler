@@ -1,7 +1,7 @@
 ﻿<div class="panel panel-default">
     <div class="panel-heading">
         <div>
-            <h3>Name of branch</h3>
+            <h3></h3>
         </div>
     </div>
     <div class="panel-body">
@@ -65,10 +65,27 @@
             type: 'GET',
             success: function (data) {
                 $.each(data, function (key, value) {
-
-
-                        console.log(key, value);
-
+                    if (key == 'Name') {
+                        $('.panel-heading h3').html(value);
+                    } else if (key != 'Builds') {
+                        $('.panel-heading h3').attr(key, value);
+                    } else if (key == 'Builds') {
+                        $.each(value, function (key, value) {
+                            $('tr.branch_sample').clone(true, true).appendTo('.branches_table > tbody').removeClass('branch_sample').addClass('branch_row').show();
+                            $.each(value, function (key, value) {
+                                if (key == 'Value') {
+                                    $.each(value, function (key, value) {
+                                        if (key == 'Id') {
+                                            $('.branch_row:last td:nth-of-type(1) a').html(value);
+                                            $('.branch_row:last td:nth-of-type(1) a').attr('linkurl', '/build?id=' + value);
+                                        } else if (key == 'Status') {
+                                            $('.branch_row:last td:nth-of-type(2)').html('<div class="status-' + value + '">');
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    }
                 });
             }
         });
@@ -77,31 +94,31 @@
     //
     // Load builds
     //
-    loadBuilds();
-    
-    function loadBuilds() {
-        $('.branches_table > tbody').empty();
-        $.ajax({
-            url: KeplerServiceUrl + 'GetBuilds?branchId=' + getParameterByName('branchId'),
-            type: 'GET',
-            success: function (data) {
-                $.each(data, function (key, value) {
-                    $('tr.branch_sample').clone(true, true).appendTo('.branches_table > tbody').removeClass('branch_sample').addClass('branch_row').show();
-                    $.each(value, function (key, value) {
-                        if (key == 'WorkerStatus') {
-                            $('.branch_row:last td:nth-of-type(1)').html('<div class="worker-status-' + value + '">');
-                        } else if (key == 'Id') {
-                            $('.branch_row:last td:nth-of-type(2)').html(value);
-                        } else if (key == 'Name') {
-                            $('.branch_row:last td:nth-of-type(3)').html(value);
-                            $('.branch_row:last td:nth-of-type(5) a').attr('worker_name', value);
-                        } else if (key == 'WorkerServiceUrl') {
-                            $('.branch_row:last td:nth-of-type(4)').html(value);
-                        }
-                        //console.log(key, value);
-                    });
-                });
-            }
-        });
-    }
+    //loadBuilds();
+
+    //function loadBuilds() {
+    //    $('.branches_table > tbody').empty();
+    //    $.ajax({
+    //        url: KeplerServiceUrl + 'GetBuilds?branchId=' + getParameterByName('branchId'),
+    //        type: 'GET',
+    //        success: function (data) {
+    //            $.each(data, function (key, value) {
+    //                $('tr.branch_sample').clone(true, true).appendTo('.branches_table > tbody').removeClass('branch_sample').addClass('branch_row').show();
+    //                $.each(value, function (key, value) {
+    //                    if (key == 'WorkerStatus') {
+    //                        $('.branch_row:last td:nth-of-type(1)').html('<div class="worker-status-' + value + '">');
+    //                    } else if (key == 'Id') {
+    //                        $('.branch_row:last td:nth-of-type(2)').html(value);
+    //                    } else if (key == 'Name') {
+    //                        $('.branch_row:last td:nth-of-type(3)').html(value);
+    //                        $('.branch_row:last td:nth-of-type(5) a').attr('worker_name', value);
+    //                    } else if (key == 'WorkerServiceUrl') {
+    //                        $('.branch_row:last td:nth-of-type(4)').html(value);
+    //                    }
+    //                    //console.log(key, value);
+    //                });
+    //            });
+    //        }
+    //    });
+    //}
 </script>

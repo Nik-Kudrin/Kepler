@@ -4,6 +4,10 @@ h3 {
     white-space: nowrap;
 }
 
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
 .btn {
     border: 1px solid #ccc;
     padding: 3px 12px;
