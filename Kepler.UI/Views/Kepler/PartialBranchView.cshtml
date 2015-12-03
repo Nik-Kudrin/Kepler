@@ -6,7 +6,7 @@
     </div>
     <div class="panel-body">
         <div class="table-responsive">
-            <table class="table table-hover branches_table">
+            <table class="table table-hover builds_table">
                 <thead>
                     <tr>
                         <th>Build</th>
@@ -46,6 +46,10 @@
                         <li>
                             <a href="">Set failed</a>
                         </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_build">Delete</a>
+                        </li>
                     </ul>
                 </div>
             </td>
@@ -60,6 +64,7 @@
     loadBranch();
 
     function loadBranch() {
+        $('.builds_table > tbody').empty();
         $.ajax({
             url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
             type: 'GET',
@@ -71,15 +76,16 @@
                         $('.panel-heading h3').attr(key, value);
                     } else if (key == 'Builds') {
                         $.each(value, function (key, value) {
-                            $('tr.branch_sample').clone(true, true).appendTo('.branches_table > tbody').removeClass('branch_sample').addClass('branch_row').show();
+                            $('tr.branch_sample').clone(true, true).appendTo('.builds_table > tbody').removeClass('branch_sample').addClass('build_row').show();
                             $.each(value, function (key, value) {
                                 if (key == 'Value') {
                                     $.each(value, function (key, value) {
                                         if (key == 'Id') {
-                                            $('.branch_row:last td:nth-of-type(1) a').html(value);
-                                            $('.branch_row:last td:nth-of-type(1) a').attr('linkurl', '/build?id=' + value);
+                                            $('.build_row:last td:nth-of-type(1) a').html(value);
+                                            $('.build_row:last td:nth-of-type(1) a').attr('linkurl', '/build?id=' + value);
+                                            $('.build_row:last td:nth-of-type(3) a').attr('build_id', value);
                                         } else if (key == 'Status') {
-                                            $('.branch_row:last td:nth-of-type(2)').html('<div class="status-' + value + '">');
+                                            $('.build_row:last td:nth-of-type(2)').html('<div class="status-' + value + '">');
                                         }
                                     });
                                 }
@@ -92,33 +98,38 @@
     }
 
     //
-    // Load builds
+    // Popup switch
     //
-    //loadBuilds();
+    var obj_act = ""; // Variable with action
 
-    //function loadBuilds() {
-    //    $('.branches_table > tbody').empty();
-    //    $.ajax({
-    //        url: KeplerServiceUrl + 'GetBuilds?branchId=' + getParameterByName('branchId'),
-    //        type: 'GET',
-    //        success: function (data) {
-    //            $.each(data, function (key, value) {
-    //                $('tr.branch_sample').clone(true, true).appendTo('.branches_table > tbody').removeClass('branch_sample').addClass('branch_row').show();
-    //                $.each(value, function (key, value) {
-    //                    if (key == 'WorkerStatus') {
-    //                        $('.branch_row:last td:nth-of-type(1)').html('<div class="worker-status-' + value + '">');
-    //                    } else if (key == 'Id') {
-    //                        $('.branch_row:last td:nth-of-type(2)').html(value);
-    //                    } else if (key == 'Name') {
-    //                        $('.branch_row:last td:nth-of-type(3)').html(value);
-    //                        $('.branch_row:last td:nth-of-type(5) a').attr('worker_name', value);
-    //                    } else if (key == 'WorkerServiceUrl') {
-    //                        $('.branch_row:last td:nth-of-type(4)').html(value);
-    //                    }
-    //                    //console.log(key, value);
-    //                });
-    //            });
-    //        }
-    //    });
-    //}
+    $(document).on('click', '.builds_table a', function (e) {
+        switch ($(this).attr('data-act')) {
+            case 'delete_build':
+                obj_act = "DeleteBuild";
+                $('.modal-title').text('Delete build ' + $(this).attr('build_id'));
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('build_id') + '">' +
+                    'Are you sure?');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Yes</button>');
+                break;
+        }
+    });
+
+    //
+    // Ajax call for modal popup
+    //
+    function modal_ajax_call() {
+        var url_parameters = obj_act + '?' + $('#modal_form').serialize();
+        $.ajax({
+            type: 'GET',
+            url: KeplerServiceUrl + url_parameters,
+            success: function (data) {
+                $('#modal_form .alert-warning').hide();
+                $('#crud-modal button.close').click();
+                loadBranch();
+            },
+            error: function (xhr) {
+                $('#modal_form .alert-warning').show().text(xhr.responseText);
+            }
+        });
+    }
 </script>
