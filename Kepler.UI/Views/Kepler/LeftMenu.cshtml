@@ -98,6 +98,13 @@
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
+            case 'delete_proj':
+                obj_act = "DeleteProject";
+                $('.modal-title').text('Delete project ' + $(this).attr('proj_name'));
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('proj_id') + '">' +
+                    'Are you sure?');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Yes</button>');
+                break;
             case 'create_branch':
                 obj_act = "CreateBranch";
                 $('.modal-title').text('Create branch');
@@ -113,6 +120,13 @@
                     '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+                break;
+            case 'delete_branch':
+                obj_act = "DeleteBranch";
+                $('.modal-title').text('Delete branch ' + $(this).attr('branch_name'));
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('branch_id') + '">' +
+                    'Are you sure?');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Yes</button>');
                 break;
         }
     });
