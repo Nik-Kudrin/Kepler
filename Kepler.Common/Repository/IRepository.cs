@@ -6,7 +6,7 @@ namespace Kepler.Common.Repository
     {
         TEntity Get(TKey id);
         void Update(TEntity entity);
-        void Remove(TEntity entity);
+        void Delete(TEntity entity);
         IEnumerable<TEntity> FindAll();
         IEnumerable<TEntity> Find(string name);
     }

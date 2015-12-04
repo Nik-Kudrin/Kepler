@@ -60,7 +60,7 @@ namespace Kepler.Service.Core
                 if (deleteDirectory)
                     DeleteDirectory(parentObj.Name);
 
-                parentObjRepo.Remove(parentObj);
+                parentObjRepo.Delete(parentObj);
             }
             else if (typeof (TEntityBase) == typeof (Branch))
             {
@@ -74,7 +74,7 @@ namespace Kepler.Service.Core
                 if (deleteDirectory)
                     DeleteDirectory(Path.Combine(project.Name, branchForDelete.Name));
 
-                parentObjRepo.Remove(branchForDelete);
+                parentObjRepo.Delete(branchForDelete);
             }
             else if (typeof (TEntityBase) == typeof (Build))
             {
@@ -90,7 +90,7 @@ namespace Kepler.Service.Core
                 if (deleteDirectory)
                     DeleteDirectory(Path.Combine(project.Name, branch.Name, buildForDelete.Id.ToString()));
 
-                parentObjRepo.Remove(buildForDelete);
+                parentObjRepo.Delete(buildForDelete);
             }
             else if (typeof (TEntityBase) == typeof (TestAssembly))
             {
@@ -99,7 +99,7 @@ namespace Kepler.Service.Core
                 childObjects.ForEach(child => DeleteObjectsTreeRecursively<TestSuite>(child.Id));
 
                 var parentObjRepo = TestAssemblyRepository.Instance;
-                parentObjRepo.Remove(parentObjRepo.Get(objectId));
+                parentObjRepo.Delete(parentObjRepo.Get(objectId));
             }
             else if (typeof (TEntityBase) == typeof (TestSuite))
             {
@@ -107,7 +107,7 @@ namespace Kepler.Service.Core
                 childObjects.ForEach(child => DeleteObjectsTreeRecursively<TestCase>(child.Id));
 
                 var parentObjRepo = TestSuiteRepository.Instance;
-                parentObjRepo.Remove(parentObjRepo.Get(objectId));
+                parentObjRepo.Delete(parentObjRepo.Get(objectId));
             }
             else if (typeof (TEntityBase) == typeof (TestCase))
             {
@@ -121,10 +121,10 @@ namespace Kepler.Service.Core
                     DeleteFile(screenShot.PreviewImagePath);
                 });
 
-                screenShotRepo.Remove(childObjects);
+                screenShotRepo.Delete(childObjects);
 
                 var parentObjRepo = TestCaseRepository.Instance;
-                parentObjRepo.Remove(parentObjRepo.Get(objectId));
+                parentObjRepo.Delete(parentObjRepo.Get(objectId));
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Kepler.Common.DB;
+using Kepler.Common.Error;
 using Kepler.Common.Models;
 
 namespace Kepler.Common.Repository
@@ -47,14 +48,25 @@ namespace Kepler.Common.Repository
             _dbContext.SaveChanges();
         }
 
-        public void Remove(KeplerSystemConfig entity)
+        public void Delete(KeplerSystemConfig entity)
         {
-            if (_dbContext.Entry(entity).State == EntityState.Detached)
+            try
             {
-                _dbSet.Attach(entity);
-            }
+                if (_dbContext.Entry(entity).State == EntityState.Detached)
+                {
+                    _dbSet.Attach(entity);
+                }
 
-            _dbSet.Remove(entity);
+                _dbSet.Remove(entity);
+                FlushChanges();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                {
+                    ExceptionMessage = $"Trying to delete object: {ex.Message}"
+                });
+            }
         }
 
         public IEnumerable<KeplerSystemConfig> FindAll()

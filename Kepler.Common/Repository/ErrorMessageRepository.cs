@@ -79,7 +79,7 @@ namespace Kepler.Common.Repository
             _dbContext.SaveChanges();
         }
 
-        public void Remove(ErrorMessage entity)
+        public void Delete(ErrorMessage entity)
         {
             if (_dbContext.Entry(entity).State == EntityState.Detached)
             {

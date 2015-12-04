@@ -24,13 +24,6 @@ namespace Kepler.Service
     {
         // do not remove this field (used for build executor init)
         private static BuildExecutor _executor = BuildExecutor.GetExecutor();
-        private readonly TestAssemblyRepository assemblyRepository = TestAssemblyRepository.Instance;
-        private readonly BuildRepository buildRepo = BuildRepository.Instance;
-        private readonly ProjectRepository projectRepository = ProjectRepository.Instance;
-        private readonly TestCaseRepository testCaseRepo = TestCaseRepository.Instance;
-        private readonly TestSuiteRepository testSuiteRepo = TestSuiteRepository.Instance;
-        private readonly ImageWorkerRepository workerRepository = ImageWorkerRepository.Instance;
-
 
         public void ImportTestConfig(string testConfig)
         {
@@ -171,7 +164,7 @@ namespace Kepler.Service
 
         public Build GetBuild(long id)
         {
-            var build = buildRepo.Get(id);
+            var build = BuildRepository.Instance.Get(id);
             if (build == null)
                 LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Build with ID {id} was not found");
 
@@ -180,7 +173,7 @@ namespace Kepler.Service
 
         public IEnumerable<Build> GetBuilds(long branchId)
         {
-            return buildRepo.Find(item => item.BranchId == branchId);
+            return BuildRepository.Instance.Find(item => item.BranchId == branchId);
         }
 
         public void DeleteBuild(long id)
@@ -209,12 +202,12 @@ namespace Kepler.Service
 
         public TestCase GetTestCase(long id)
         {
-            return testCaseRepo.GetCompleteObject(id);
+            return TestCaseRepository.Instance.GetCompleteObject(id);
         }
 
         public IEnumerable<TestCase> GetTestCases(long testSuiteId)
         {
-            return testCaseRepo.GetObjectsTreeByParentId(testSuiteId);
+            return TestCaseRepository.Instance.GetObjectsTreeByParentId(testSuiteId);
         }
 
         #endregion
@@ -223,12 +216,12 @@ namespace Kepler.Service
 
         public TestSuite GetTestSuite(long id)
         {
-            return testSuiteRepo.GetCompleteObject(id);
+            return TestSuiteRepository.Instance.GetCompleteObject(id);
         }
 
         public IEnumerable<TestSuite> GetTestSuites(long assemblyId)
         {
-            return testSuiteRepo.GetObjectsTreeByParentId(assemblyId);
+            return TestSuiteRepository.Instance.GetObjectsTreeByParentId(assemblyId);
         }
 
         #endregion
@@ -237,13 +230,13 @@ namespace Kepler.Service
 
         public TestAssembly GetTestAssembly(long id)
         {
-            return assemblyRepository.GetCompleteObject(id);
+            return TestAssemblyRepository.Instance.GetCompleteObject(id);
         }
 
 
         public IEnumerable<TestAssembly> GetTestAssemblies(long buildId)
         {
-            return assemblyRepository.GetObjectsTreeByParentId(buildId);
+            return TestAssemblyRepository.Instance.GetObjectsTreeByParentId(buildId);
         }
 
         #endregion
@@ -252,26 +245,28 @@ namespace Kepler.Service
 
         public Project GetProject(long id)
         {
-            return projectRepository.GetCompleteObject(id);
+            return ProjectRepository.Instance.GetCompleteObject(id);
         }
 
         public IEnumerable<Project> GetProjects()
         {
-            var projects = projectRepository.FindAll();
-            projects.Each(project => projectRepository.GetCompleteObject(project.Id));
+            var projectRepo = ProjectRepository.Instance;
+            var projects = projectRepo.FindAll();
+            projects.Each(project => projectRepo.GetCompleteObject(project.Id));
 
             return projects;
         }
 
         public void CreateProject(string name)
         {
-            if (projectRepository.Find(name).Any())
+            var projectRepo = ProjectRepository.Instance;
+            if (projectRepo.Find(name).Any())
                 LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Project with name {name} already exist");
 
             try
             {
                 var project = new Project {Name = name};
-                projectRepository.Insert(project);
+                projectRepo.Insert(project);
             }
             catch (Exception ex)
             {
@@ -451,15 +446,16 @@ namespace Kepler.Service
 
         public IEnumerable<ImageWorker> GetImageWorkers()
         {
-            return workerRepository.FindAll();
+            return ImageWorkerRepository.Instance.FindAll();
         }
 
 
         public void RegisterImageWorker(string name, string imageWorkerServiceUrl)
         {
-            if (!workerRepository.Find(imageWorkerServiceUrl).Any())
+            var workerRepo = ImageWorkerRepository.Instance;
+            if (!workerRepo.Find(imageWorkerServiceUrl).Any())
             {
-                workerRepository.Insert(new ImageWorker
+                workerRepo.Insert(new ImageWorker
                 {
                     Name = name,
                     WorkerServiceUrl = imageWorkerServiceUrl
@@ -477,7 +473,8 @@ namespace Kepler.Service
 
         public void UpdateImageWorker(string name, string newName, string newWorkerServiceUrl)
         {
-            var worker = workerRepository.Find(item => item.Name == name).FirstOrDefault();
+            var workerRepo = ImageWorkerRepository.Instance;
+            var worker = workerRepo.Find(item => item.Name == name).FirstOrDefault();
 
             if (worker == null)
             {
@@ -487,13 +484,28 @@ namespace Kepler.Service
             {
                 worker.Name = newName;
                 worker.WorkerServiceUrl = newWorkerServiceUrl;
-                workerRepository.UpdateAndFlashChanges(worker);
+                workerRepo.UpdateAndFlashChanges(worker);
             }
         }
 
         public void DeleteImageWorker(long id)
         {
-            throw new NotImplementedException();
+            var workerRepo = ImageWorkerRepository.Instance;
+            var worker = workerRepo.Get(id);
+
+            if (worker == null)
+            {
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Image worker with ID {id} not found");
+            }
+
+            try
+            {
+                workerRepo.Delete(worker);
+            }
+            catch (Exception ex)
+            {
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, ex);
+            }
         }
 
         #endregion

@@ -97,7 +97,7 @@ namespace Kepler.Common.Repository
             DbContext.SaveChanges();
         }
 
-        public virtual void Remove(TEntity entity)
+        public virtual void Delete(TEntity entity)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace Kepler.Common.Repository
             }
         }
 
-        public virtual void Remove(IEnumerable<TEntity> entities)
+        public virtual void Delete(IEnumerable<TEntity> entities)
         {
             try
             {
