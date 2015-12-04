@@ -12,6 +12,7 @@ using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
 using Kepler.Service.RestWorkerClient;
+using Kepler.Service.Scheduler;
 using RestSharp;
 using Timer = System.Timers.Timer;
 
@@ -21,7 +22,6 @@ namespace Kepler.Service.Core
     {
         private static BuildExecutor _executor;
         private static Timer _sendScreenShotsForProcessingTimer;
-        private static Scheduler _scheduler;
 
         public static string KeplerServiceUrl { get; set; }
 
@@ -29,8 +29,7 @@ namespace Kepler.Service.Core
         {
             GetExecutor();
         }
-
-
+        
         public static BuildExecutor GetExecutor()
         {
             _executor = _executor ?? new BuildExecutor();
@@ -40,8 +39,13 @@ namespace Kepler.Service.Core
         private BuildExecutor()
         {
             KeplerServiceUrl = new KeplerService().GetKeplerServiceUrl();
-            _scheduler = Scheduler.GetScheduler;
-            _scheduler.CheckWorkersAvailability(null, null);
+
+            var checkWorkersScheduler = CheckWorkersScheduler.GetScheduler;
+            checkWorkersScheduler.Enable();
+            checkWorkersScheduler.Invoke();
+
+            UpdateObjectStatusesScheduler.GetScheduler.Enable();
+
             UpdateKeplerServiceUrlOnWorkers();
             UpdateDiffImagePath();
 
@@ -93,7 +97,7 @@ namespace Kepler.Service.Core
             var screenShots = ScreenShotRepository.Instance.GetInQueueScreenShotsForBuild(buildInQueue.Id);
             screenShots.Each(item => item.Status = ObjectStatus.InProgress);
             ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShots);
-            _scheduler.UpdateObjectsStatuses(this, null);
+            UpdateObjectStatusesScheduler.GetScheduler.Invoke();
 
             var imageComparisonContainers = ConvertScreenShotsToImageComparison(screenShots).ToList();
 

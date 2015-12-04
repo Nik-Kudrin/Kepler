@@ -68,12 +68,12 @@ namespace Kepler.Service
         /// <summary>
         /// Set new scheduler settings for data cleaning
         /// </summary>
-        /// <param name="dataSchedulerContract"></param>
+        /// <param name="scheduler"></param>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "UpdateCleanDataScheduler")
         ]
-        void UpdateCleanDataScheduler(DataSchedulerContract dataSchedulerContract);
+        void UpdateCleanDataScheduler(DataSchedulerContract scheduler);
 
         #endregion
 

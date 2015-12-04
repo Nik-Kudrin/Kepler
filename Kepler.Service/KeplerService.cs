@@ -15,6 +15,7 @@ using Kepler.Common.Util;
 using Kepler.Service.Config;
 using Kepler.Service.Core;
 using Kepler.Service.RestWorkerClient;
+using Kepler.Service.Scheduler;
 
 namespace Kepler.Service
 {
@@ -22,8 +23,9 @@ namespace Kepler.Service
     [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     public class KeplerService : IKeplerService
     {
-        // do not remove this field (used for build executor init)
+        // do not remove this field (used for build executor and data clean scheduler init)
         private static BuildExecutor _executor = BuildExecutor.GetExecutor();
+        private static CleanDataSchedulerExecutor _dataCleanExecutor = CleanDataSchedulerExecutor.GetExecutor();
 
         public void ImportTestConfig(string testConfig)
         {
@@ -179,56 +181,34 @@ namespace Kepler.Service
             var schedulerProperty = GetKeplerConfigProperty(schedulerName);
 
             // if scheduler is'n initialized (first time, when applications start)
-            if (string.IsNullOrEmpty(schedulerProperty))
+            if (!string.IsNullOrEmpty(schedulerProperty))
+                return new RestSharpDataContractJsonDeserializer().Deserialize<DataSchedulerContract>(schedulerProperty);
+
+            var scheduler = new DataSchedulerContract()
             {
-                var scheduler = new DataSchedulerContract()
-                {
-                    SchedulerName = schedulerName,
-                    SchedulePeriod = TimeSpan.FromDays(30),
-                    HistoryItemsNumberToPreserve = 3
-                };
+                Name = schedulerName,
+                SchedulePeriod = TimeSpan.FromDays(30),
+                NextStartTime = DateTime.Now + TimeSpan.FromDays(30),
+                HistoryItemsNumberToPreserve = 3
+            };
 
-                var serializer = new RestSharpDataContractJsonSerializer();
-                var serializedProperty = serializer.Serialize(scheduler);
-                SetKeplerConfigProperty(schedulerName, serializedProperty);
+            var serializer = new RestSharpDataContractJsonSerializer();
+            var serializedProperty = serializer.Serialize(scheduler);
+            SetKeplerConfigProperty(schedulerName, serializedProperty);
 
-                return scheduler;
-            }
-
-            return new RestSharpDataContractJsonDeserializer().Deserialize<DataSchedulerContract>(schedulerProperty);
+            return scheduler;
         }
 
 
-        public void UpdateCleanDataScheduler(DataSchedulerContract dataSchedulerContract)
+        public void UpdateCleanDataScheduler(DataSchedulerContract scheduler)
         {
-            /*  diffImageSavingPath = diffImageSavingPath.ToLowerInvariant();
-            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImagePath");
+            if (scheduler.SchedulePeriod < TimeSpan.FromMinutes(10))
+                LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError,
+                    $"Period for data cleaning must be more then 10 min");
 
-            var previewPath = Path.Combine(diffImageSavingPath, "Preview");
-
-            if (diffImgPathToSaveProperty == null)
-            {
-                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("DiffImagePath",
-                    diffImageSavingPath));
-                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("PreviewPath",
-                    previewPath));
-            }
-            else
-            {
-                diffImgPathToSaveProperty.Value = diffImageSavingPath;
-
-                var previewPathProperty = KeplerSystemConfigRepository.Instance.Find("PreviewPath");
-                previewPathProperty.Value = previewPath;
-
-                KeplerSystemConfigRepository.Instance.UpdateAndFlushChanges(diffImgPathToSaveProperty);
-                KeplerSystemConfigRepository.Instance.UpdateAndFlushChanges(previewPathProperty);
-                KeplerSystemConfigRepository.Instance.FlushChanges();
-            }
-
-            BuildExecutor.GetExecutor().UpdateKeplerServiceUrlOnWorkers();
-            BuildExecutor.GetExecutor().UpdateDiffImagePath();
-            UrlPathGenerator.DiffImagePath = new KeplerService().GetDiffImageSavingPath();
-            UrlPathGenerator.PreviewImagePath = new KeplerService().GetPreviewSavingPath();*/
+            var serializer = new RestSharpDataContractJsonSerializer();
+            var serializedProperty = serializer.Serialize(scheduler);
+            SetKeplerConfigProperty(scheduler.Name, serializedProperty);
         }
 
         #endregion

@@ -87,6 +87,7 @@ namespace Kepler.Common.Repository
             }
 
             _dbSet.Remove(entity);
+            FlushChanges();
         }
 
         public virtual IEnumerable<ErrorMessage> FindAll()

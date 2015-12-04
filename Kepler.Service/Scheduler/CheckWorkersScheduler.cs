@@ -7,44 +7,39 @@ using Kepler.Common.Models;
 using Kepler.Common.Repository;
 using Kepler.Service.RestWorkerClient;
 
-namespace Kepler.Service.Core
+namespace Kepler.Service.Scheduler
 {
-    public class Scheduler
+    public class CheckWorkersScheduler : Scheduler
     {
-        private static Timer _updateObjectStatusesTimer;
-        private static Timer _buildDataCleanerTimer;
-        private static Timer _logDataCleanerTimer;
-        private static Timer _checkWorkersTimer;
         private static Scheduler _instance;
 
         public static Scheduler GetScheduler
         {
             get
             {
-                _instance = _instance ?? new Scheduler();
+                _instance = _instance ?? new CheckWorkersScheduler();
                 return _instance;
             }
         }
 
-        private Scheduler()
+        protected CheckWorkersScheduler()
         {
-            _updateObjectStatusesTimer = new Timer {Interval = 15000};
-            _updateObjectStatusesTimer.Elapsed += UpdateObjectsStatuses;
-            _updateObjectStatusesTimer.Enabled = true;
+        }
 
-            _checkWorkersTimer = new Timer {Interval = 60000};
-            _checkWorkersTimer.Elapsed += CheckWorkersAvailability;
-            _checkWorkersTimer.Enabled = true;
+        public override void Invoke()
+        {
+            CheckWorkersAvailability(null, null);
+        }
+
+        public override void Enable()
+        {
+            ScheduleTimer = new Timer {Interval = 60000};
+            ScheduleTimer.Elapsed += CheckWorkersAvailability;
+            ScheduleTimer.Enabled = true;
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void UpdateObjectsStatuses(object sender, ElapsedEventArgs eventArgs)
-        {
-            ObjectStatusUpdater.UpdateAllObjectStatusesToActual();
-        }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public void CheckWorkersAvailability(object sender, ElapsedEventArgs eventArgs)
+        private void CheckWorkersAvailability(object sender, ElapsedEventArgs eventArgs)
         {
             var workers = ImageWorkerRepository.Instance.FindAll().ToList();
 
