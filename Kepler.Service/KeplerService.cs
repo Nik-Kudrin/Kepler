@@ -176,27 +176,26 @@ namespace Kepler.Service
                     return null;
             }
 
-
             var schedulerProperty = GetKeplerConfigProperty(schedulerName);
-            // if scheduler is'n initialized
+
+            // if scheduler is'n initialized (first time, when applications start)
             if (string.IsNullOrEmpty(schedulerProperty))
             {
                 var scheduler = new DataSchedulerContract()
                 {
                     SchedulerName = schedulerName,
-                    SchedulePeriod = TimeSpan.FromDays(44),
+                    SchedulePeriod = TimeSpan.FromDays(30),
                     HistoryItemsNumberToPreserve = 3
                 };
 
                 var serializer = new RestSharpDataContractJsonSerializer();
                 var serializedProperty = serializer.Serialize(scheduler);
                 SetKeplerConfigProperty(schedulerName, serializedProperty);
+
+                return scheduler;
             }
 
-            var deserializer = new RestSharpDataContractJsonDeserializer();
-            var xxx = deserializer.Deserialize<DataSchedulerContract>(GetKeplerConfigProperty(schedulerName));
-
-            return xxx;
+            return new RestSharpDataContractJsonDeserializer().Deserialize<DataSchedulerContract>(schedulerProperty);
         }
 
 
