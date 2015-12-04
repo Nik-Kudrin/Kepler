@@ -202,7 +202,7 @@ namespace Kepler.Service
 
         public void UpdateCleanDataScheduler(DataSchedulerContract scheduler)
         {
-            if (scheduler.SchedulePeriod < TimeSpan.FromMinutes(10))
+            if (scheduler.SchedulePeriod < TimeSpan.FromMinutes(20))
                 LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError,
                     $"Period for data cleaning must be more then 10 min");
 
