@@ -58,6 +58,11 @@ namespace Kepler.Service
 
         #region Scheduler
 
+        /// <summary>
+        /// Get clean scheduler info
+        /// </summary>
+        /// <param name="schedulerName">Possible values: buildCleanScheduler, logCleanScheduler</param>
+        /// <returns></returns>
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "GetCleanDataScheduler?schedulerName={schedulerName}"
