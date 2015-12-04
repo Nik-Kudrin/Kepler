@@ -28,7 +28,7 @@ namespace Kepler.Service.Scheduler
 
         public override void Enable()
         {
-            ScheduleTimer = new Timer {Interval = 600000}; // every 10 min
+            ScheduleTimer = new Timer {Interval = 1200000}; // every 20 min
             ScheduleTimer.Elapsed += CleanData;
             ScheduleTimer.Enabled = true;
         }
@@ -39,10 +39,9 @@ namespace Kepler.Service.Scheduler
             UpdateScheduleInfo(); // Get latest actual schedule info
 
             var now = DateTime.Now;
-            if (now < SchedulerInfo.NextStartTime.Value) return;
-
             SchedulerInfo.LastStartTime = now; // because LastStart time may be null
-            SchedulerInfo.NextStartTime = SchedulerInfo.LastStartTime + SchedulerInfo.SchedulePeriod;
+            SchedulerInfo.NextStartTime = SchedulerInfo.LastStartTime +
+                                          TimeSpan.FromMilliseconds(ScheduleTimer.Interval);
             new KeplerService().UpdateCleanDataScheduler(SchedulerInfo);
         }
     }

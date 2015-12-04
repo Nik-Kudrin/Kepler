@@ -188,7 +188,7 @@ namespace Kepler.Service
             {
                 Name = schedulerName,
                 SchedulePeriod = TimeSpan.FromDays(30),
-                NextStartTime = DateTime.Now + TimeSpan.FromDays(30),
+                NextStartTime = DateTime.Now,
                 HistoryItemsNumberToPreserve = 3
             };
 

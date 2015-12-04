@@ -15,11 +15,7 @@ namespace Kepler.Service.Scheduler
         [MethodImpl(MethodImplOptions.Synchronized)]
         protected override void CleanData(object sender, ElapsedEventArgs eventArgs)
         {
-            var lastStartTime = SchedulerInfo.LastStartTime;
             base.CleanData(sender, eventArgs);
-
-            if (lastStartTime == SchedulerInfo.LastStartTime) return;
-
             var errorRepo = ErrorMessageRepository.Instance;
 
             var errorsForDelete = errorRepo.Find(
