@@ -669,7 +669,14 @@ namespace Kepler.Service
 
         public IEnumerable<ErrorMessage> GetErrorsSinceLastViewed()
         {
-            return ErrorMessageRepository.Instance.Find(item => item.IsLastViewed);
+            var lastViewedError = ErrorMessageRepository.Instance.Find(item => item.IsLastViewed).FirstOrDefault();
+
+            if (lastViewedError == null)
+            {
+                return ErrorMessageRepository.Instance.FindAll();
+            }
+
+            return ErrorMessageRepository.Instance.Find(item => item.Time > lastViewedError.Time);
         }
 
         private void LogErrorMessage(ErrorMessage.ErorCode errorCode, string exceptionMessage)
