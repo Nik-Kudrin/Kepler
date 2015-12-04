@@ -31,10 +31,11 @@ namespace Kepler.Common.Repository
             _dbSet.Add(entity);
         }
 
-        public void Update(KeplerSystemConfig entity)
+        public void UpdateAndFlushChanges(KeplerSystemConfig entity)
         {
             _dbSet.Attach(entity);
             _dbContext.Entry(entity).State = EntityState.Modified;
+            FlushChanges();
         }
 
         public void Insert(KeplerSystemConfig entity)

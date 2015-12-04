@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -12,6 +11,7 @@ using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
+using Kepler.Common.Util;
 using Kepler.Service.Config;
 using Kepler.Service.Core;
 using Kepler.Service.RestWorkerClient;
@@ -156,6 +156,80 @@ namespace Kepler.Service
             {
                 LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError, ex);
             }
+        }
+
+        #endregion
+
+        #region Scheduler
+
+        public DataSchedulerContract GetCleanDataScheduler(string schedulerName)
+        {
+            // check scheduler name
+            switch (schedulerName)
+            {
+                case "buildCleanScheduler":
+                case "logCleanScheduler":
+                    break;
+                default:
+                    LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError,
+                        $"Scheduler name {schedulerName} is not recognized. Possible values: buildCleanScheduler, logCleanScheduler");
+                    return null;
+            }
+
+
+            var schedulerProperty = GetKeplerConfigProperty(schedulerName);
+            // if scheduler is'n initialized
+            if (string.IsNullOrEmpty(schedulerProperty))
+            {
+                var scheduler = new DataSchedulerContract()
+                {
+                    SchedulerName = schedulerName,
+                    SchedulePeriod = TimeSpan.FromDays(44),
+                    HistoryItemsNumberToPreserve = 3
+                };
+
+                var serializer = new RestSharpDataContractJsonSerializer();
+                var serializedProperty = serializer.Serialize(scheduler);
+                SetKeplerConfigProperty(schedulerName, serializedProperty);
+            }
+
+            var deserializer = new RestSharpDataContractJsonDeserializer();
+            var xxx = deserializer.Deserialize<DataSchedulerContract>(GetKeplerConfigProperty(schedulerName));
+
+            return xxx;
+        }
+
+
+        public void UpdateCleanDataScheduler(DataSchedulerContract dataSchedulerContract)
+        {
+            /*  diffImageSavingPath = diffImageSavingPath.ToLowerInvariant();
+            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImagePath");
+
+            var previewPath = Path.Combine(diffImageSavingPath, "Preview");
+
+            if (diffImgPathToSaveProperty == null)
+            {
+                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("DiffImagePath",
+                    diffImageSavingPath));
+                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("PreviewPath",
+                    previewPath));
+            }
+            else
+            {
+                diffImgPathToSaveProperty.Value = diffImageSavingPath;
+
+                var previewPathProperty = KeplerSystemConfigRepository.Instance.Find("PreviewPath");
+                previewPathProperty.Value = previewPath;
+
+                KeplerSystemConfigRepository.Instance.UpdateAndFlushChanges(diffImgPathToSaveProperty);
+                KeplerSystemConfigRepository.Instance.UpdateAndFlushChanges(previewPathProperty);
+                KeplerSystemConfigRepository.Instance.FlushChanges();
+            }
+
+            BuildExecutor.GetExecutor().UpdateKeplerServiceUrlOnWorkers();
+            BuildExecutor.GetExecutor().UpdateDiffImagePath();
+            UrlPathGenerator.DiffImagePath = new KeplerService().GetDiffImageSavingPath();
+            UrlPathGenerator.PreviewImagePath = new KeplerService().GetPreviewSavingPath();*/
         }
 
         #endregion
@@ -512,43 +586,47 @@ namespace Kepler.Service
 
         #region Kepler Configs
 
+        private string GetKeplerConfigProperty(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName))
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, "Kepler config property name must be non emtpy");
+
+            var property = KeplerSystemConfigRepository.Instance.Find(propertyName);
+            return property == null ? "" : property.Value;
+        }
+
+        private void SetKeplerConfigProperty(string propertyName, string propertyValue)
+        {
+            var property = KeplerSystemConfigRepository.Instance.Find(propertyName);
+
+            if (property == null)
+            {
+                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig(propertyName, propertyValue));
+            }
+            else
+            {
+                property.Value = propertyValue;
+                KeplerSystemConfigRepository.Instance.UpdateAndFlushChanges(property);
+            }
+        }
+
         public string GetDiffImageSavingPath()
         {
-            var property = KeplerSystemConfigRepository.Instance.Find("DiffImagePath");
-            return property == null ? "" : property.Value;
+            return GetKeplerConfigProperty("DiffImagePath");
         }
 
         public string GetPreviewSavingPath()
         {
-            var previewPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("PreviewPath");
-            return previewPathToSaveProperty == null ? "" : previewPathToSaveProperty.Value;
+            return GetKeplerConfigProperty("PreviewPath");
         }
 
         public void SetDiffImageSavingPath(string diffImageSavingPath)
         {
             diffImageSavingPath = diffImageSavingPath.ToLowerInvariant();
-            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImagePath");
-
             var previewPath = Path.Combine(diffImageSavingPath, "Preview");
 
-            if (diffImgPathToSaveProperty == null)
-            {
-                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("DiffImagePath",
-                    diffImageSavingPath));
-                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("PreviewPath",
-                    previewPath));
-            }
-            else
-            {
-                diffImgPathToSaveProperty.Value = diffImageSavingPath;
-
-                var previewPathProperty = KeplerSystemConfigRepository.Instance.Find("PreviewPath");
-                previewPathProperty.Value = previewPath;
-
-                KeplerSystemConfigRepository.Instance.Update(diffImgPathToSaveProperty);
-                KeplerSystemConfigRepository.Instance.Update(previewPathProperty);
-                KeplerSystemConfigRepository.Instance.FlushChanges();
-            }
+            SetKeplerConfigProperty("DiffImagePath", diffImageSavingPath);
+            SetKeplerConfigProperty("PreviewPath", previewPath);
 
             BuildExecutor.GetExecutor().UpdateKeplerServiceUrlOnWorkers();
             BuildExecutor.GetExecutor().UpdateDiffImagePath();
@@ -558,50 +636,25 @@ namespace Kepler.Service
 
         public string GetSourceImagePath()
         {
-            var property = KeplerSystemConfigRepository.Instance.Find("SourceImagePath");
-            return property == null ? "" : property.Value;
+            return GetKeplerConfigProperty("SourceImagePath");
         }
 
         public void SetSourceImageSavingPath(string sourceImageSavingPath)
         {
             sourceImageSavingPath = sourceImageSavingPath.ToLowerInvariant();
-            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("SourceImagePath");
-
-            if (diffImgPathToSaveProperty == null)
-            {
-                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("SourceImagePath",
-                    sourceImageSavingPath));
-            }
-            else
-            {
-                diffImgPathToSaveProperty.Value = sourceImageSavingPath;
-                KeplerSystemConfigRepository.Instance.Update(diffImgPathToSaveProperty);
-                KeplerSystemConfigRepository.Instance.FlushChanges();
-            }
+            SetKeplerConfigProperty("SourceImagePath", sourceImageSavingPath);
 
             UrlPathGenerator.SourceImagePath = new KeplerService().GetSourceImagePath();
         }
 
         public string GetKeplerServiceUrl()
         {
-            var property = KeplerSystemConfigRepository.Instance.Find("KeplerServiceUrl");
-            return property == null ? "" : property.Value;
+            return GetKeplerConfigProperty("KeplerServiceUrl");
         }
 
         public void SetKeplerServiceUrl(string url)
         {
-            var keplerServiceUrlProperty = KeplerSystemConfigRepository.Instance.Find("KeplerServiceUrl");
-
-            if (keplerServiceUrlProperty == null)
-            {
-                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("KeplerServiceUrl", url));
-            }
-            else
-            {
-                keplerServiceUrlProperty.Value = url;
-                KeplerSystemConfigRepository.Instance.Update(keplerServiceUrlProperty);
-                KeplerSystemConfigRepository.Instance.FlushChanges();
-            }
+            SetKeplerConfigProperty("KeplerServiceUrl", url);
 
             BuildExecutor.KeplerServiceUrl = url;
         }

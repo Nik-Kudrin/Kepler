@@ -56,6 +56,27 @@ namespace Kepler.Service
 
         #endregion
 
+        #region Scheduler
+
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "GetCleanDataScheduler?schedulerName={schedulerName}"
+            )
+        ]
+        DataSchedulerContract GetCleanDataScheduler(string schedulerName);
+
+        /// <summary>
+        /// Set new scheduler settings for data cleaning
+        /// </summary>
+        /// <param name="dataSchedulerContract"></param>
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "UpdateCleanDataScheduler")
+        ]
+        void UpdateCleanDataScheduler(DataSchedulerContract dataSchedulerContract);
+
+        #endregion
+
         #region Build
 
         [OperationContract]

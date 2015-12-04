@@ -21,8 +21,8 @@ namespace Kepler.Service.Core
     {
         private static BuildExecutor _executor;
         private static Timer _sendScreenShotsForProcessingTimer;
-        private static Timer _updateObjectStatusesTimer;
-        private static Timer _checkWorkersTimer;
+        private static Scheduler _scheduler;
+
         public static string KeplerServiceUrl { get; set; }
 
         static BuildExecutor()
@@ -40,26 +40,16 @@ namespace Kepler.Service.Core
         private BuildExecutor()
         {
             KeplerServiceUrl = new KeplerService().GetKeplerServiceUrl();
-            CheckWorkersAvailability(null, null);
+            _scheduler = Scheduler.GetScheduler;
+            _scheduler.CheckWorkersAvailability(null, null);
             UpdateKeplerServiceUrlOnWorkers();
             UpdateDiffImagePath();
 
             ReinitHangedBuilds();
 
-            _sendScreenShotsForProcessingTimer = new Timer();
-            _sendScreenShotsForProcessingTimer.Interval = 5000; //every 5 sec
+            _sendScreenShotsForProcessingTimer = new Timer {Interval = 5000}; //every 5 sec
             _sendScreenShotsForProcessingTimer.Elapsed += SendComparisonInfoToWorkers;
             _sendScreenShotsForProcessingTimer.Enabled = true;
-
-            _updateObjectStatusesTimer = new Timer();
-            _updateObjectStatusesTimer.Interval = 15000;
-            _updateObjectStatusesTimer.Elapsed += UpdateObjectsStatuses;
-            _updateObjectStatusesTimer.Enabled = true;
-
-            _checkWorkersTimer = new Timer();
-            _checkWorkersTimer.Interval = 60000;
-            _checkWorkersTimer.Elapsed += CheckWorkersAvailability;
-            _checkWorkersTimer.Enabled = true;
         }
 
         private void ReinitHangedBuilds()
@@ -84,45 +74,6 @@ namespace Kepler.Service.Core
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private void UpdateObjectsStatuses(object sender, ElapsedEventArgs eventArgs)
-        {
-            ObjectStatusUpdater.UpdateAllObjectStatusesToActual();
-        }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        private void CheckWorkersAvailability(object sender, ElapsedEventArgs eventArgs)
-        {
-            var workers = ImageWorkerRepository.Instance.FindAll().ToList();
-
-            if (workers == null || !workers.Any())
-                return;
-
-            foreach (var imageWorker in workers)
-            {
-                try
-                {
-                    var restImageProcessorClient = new RestImageProcessorClient(imageWorker.WorkerServiceUrl);
-                    restImageProcessorClient.SetKeplerServiceUrl();
-
-                    imageWorker.WorkerStatus = ImageWorker.StatusOfWorker.Available;
-                }
-                catch (Exception ex)
-                {
-                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
-                    {
-                        ExceptionMessage = $"Image worker: '{imageWorker.Name}' is unavailable. {ex.Message}"
-                    });
-                    imageWorker.WorkerStatus = ImageWorker.StatusOfWorker.Offline;
-                }
-                finally
-                {
-                    ImageWorkerRepository.Instance.UpdateAndFlashChanges(imageWorker);
-                }
-            }
-        }
-
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
         private void SendComparisonInfoToWorkers(object sender, ElapsedEventArgs eventArgs)
         {
             // if there is already executing build
@@ -142,7 +93,7 @@ namespace Kepler.Service.Core
             var screenShots = ScreenShotRepository.Instance.GetInQueueScreenShotsForBuild(buildInQueue.Id);
             screenShots.Each(item => item.Status = ObjectStatus.InProgress);
             ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShots);
-            UpdateObjectsStatuses(this, null);
+            _scheduler.UpdateObjectsStatuses(this, null);
 
             var imageComparisonContainers = ConvertScreenShotsToImageComparison(screenShots).ToList();
 
@@ -172,7 +123,7 @@ namespace Kepler.Service.Core
                     var response = client.Execute(request);
                     var responseErrorMessage = RestImageProcessorClient.GetResponseErrorMessage(response);
 
-                    if (!string.IsNullOrEmpty(responseErrorMessage))
+                    if (!String.IsNullOrEmpty(responseErrorMessage))
                         throw new WebException(responseErrorMessage);
                 }
                 catch (Exception ex)
@@ -313,7 +264,7 @@ namespace Kepler.Service.Core
             var diffImageSavingPath = keplerService.GetDiffImageSavingPath();
             var previewImageSavingPath = keplerService.GetPreviewSavingPath();
 
-            if (string.IsNullOrEmpty(diffImageSavingPath))
+            if (String.IsNullOrEmpty(diffImageSavingPath))
                 return;
 
             if (!Directory.Exists(diffImageSavingPath))

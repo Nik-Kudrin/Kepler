@@ -1,5 +1,5 @@
-﻿using System.Web.Script.Serialization;
-using Kepler.Common.Error;
+﻿using Kepler.Common.Error;
+using Kepler.Common.Util;
 using Kepler.ImageProcessor.Service.TaskManager;
 using RestSharp;
 
