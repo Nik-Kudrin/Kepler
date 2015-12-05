@@ -100,7 +100,7 @@ label.error {
     }
 
 .status-3 {
-    background: url("../img/progress_inprogress.png");
+    background: url("../img/progress_inprogress.gif");
 }
 
     .status-3::before {
