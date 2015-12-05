@@ -26,21 +26,28 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
             using (var secondImage = new MagickImage(ImageComparisonInfo.SecondImagePath))
             {
                 ImageComparisonInfo.IsImagesDifferent = false;
-
+                var previewSuffix = "_preview.png";
                 var diffFileName = $"{ImageComparisonInfo.ScreenShotName}_{Guid.NewGuid()}";
 
-                ImageComparisonInfo.DiffImagePath = Path.Combine(ImageComparisonInfo.DiffImagePath,
-                    diffFileName + ".png");
-                ImageComparisonInfo.DiffPreviewPath = Path.Combine(ImageComparisonInfo.DiffPreviewPath,
-                    diffFileName + "_preview.png");
-
+                // in case - rerun build just use old generated paths
+                if (!ImageComparisonInfo.DiffImagePath.Contains(ImageComparisonInfo.ScreenShotName))
+                {
+                    ImageComparisonInfo.DiffImagePath = Path.Combine(ImageComparisonInfo.DiffImagePath,
+                        diffFileName + ".png");
+                    ImageComparisonInfo.DiffPreviewPath = Path.Combine(ImageComparisonInfo.DiffPreviewPath,
+                        diffFileName + previewSuffix);
+                }
                 var errorMessage = "";
 
                 //Write preview for first image (old screenshot - baseline)
-                ImageComparisonInfo.FirstPreviewPath = ImageComparisonInfo.FirstImagePath + "_preview.png";
-                WritePreviewImage(firstImage, ImageComparisonInfo.FirstPreviewPath);
 
-                ImageComparisonInfo.SecondPreviewPath = ImageComparisonInfo.SecondImagePath + "_preview.png";
+                // in case - rerun build just use old generated paths
+                if (!ImageComparisonInfo.FirstPreviewPath.EndsWith(previewSuffix))
+                {
+                    ImageComparisonInfo.FirstPreviewPath = ImageComparisonInfo.FirstImagePath + "_preview.png";
+                    ImageComparisonInfo.SecondPreviewPath = ImageComparisonInfo.SecondImagePath + "_preview.png";
+                }
+                WritePreviewImage(firstImage, ImageComparisonInfo.FirstPreviewPath);
                 WritePreviewImage(secondImage, ImageComparisonInfo.SecondPreviewPath);
 
                 if (firstImage.GetHashCode() == secondImage.GetHashCode())
