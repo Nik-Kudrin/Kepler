@@ -34,21 +34,21 @@
                     <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="">Stop</a>
+                            <a href="" data-act="run_build">Run</a>
                         </li>
                         <li>
-                            <a href="">Run</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="">Set passed</a>
-                        </li>
-                        <li>
-                            <a href="">Set failed</a>
+                            <a href="" data-act="stop_build">Stop</a>
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_build">Delete</a>
+                            <a href="" data-act="set_passed_build">Set passed</a>
+                        </li>
+                        <li>
+                            <a href="" data-act="set_failed_build">Set failed</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="" data-toggle="modal" data-target="#crud-modal" data-act="delete_build">Delete</a>
                         </li>
                     </ul>
                 </div>
@@ -101,9 +101,45 @@
     // Popup switch
     //
     var obj_act = ""; // Variable with action
+    var obj_act_with_param = ""; // Variable with parameters for operations and status change
+    var typeName = "";
+    var objId = "";
+    var operationName = "";
 
     $(document).on('click', '.builds_table a', function (e) {
         switch ($(this).attr('data-act')) {
+            case 'stop_build':
+                obj_act = "RunOperation?";
+                typeName = "typeName=build&";
+                objId = 'objId=' + $(this).attr('build_id') + '&';
+                operationName = 'operationName=stop';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                ajax_call();
+                break;
+            case 'run_build':
+                obj_act = "RunOperation?";
+                typeName = "typeName=build&";
+                objId = 'objId=' + $(this).attr('build_id') + '&';
+                operationName = 'operationName=run';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                ajax_call();
+                break;
+            case 'set_passed_build':
+                obj_act = "SetObjectsStatus?";
+                typeName = "typeName=build&";
+                objId = 'objId=' + $(this).attr('build_id') + '&';
+                operationName = 'newStatus=passed';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                ajax_call();
+                break;
+            case 'set_failed_build':
+                obj_act = "SetObjectsStatus?";
+                typeName = "typeName=build&";
+                objId = 'objId=' + $(this).attr('build_id') + '&';
+                operationName = 'newStatus=failed';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                ajax_call();
+                break;
             case 'delete_build':
                 obj_act = "DeleteBuild";
                 $('.modal-title').text('Delete build ' + $(this).attr('build_id'));
@@ -126,6 +162,27 @@
                 $('#modal_form .alert-warning').hide();
                 $('#crud-modal button.close').click();
                 loadBranch();
+                obj_act_with_param = "";
+            },
+            error: function (xhr) {
+                $('#modal_form .alert-warning').show().text(xhr.responseText);
+            }
+        });
+    }
+
+    //
+    // Ajax call for operations and status change
+    //
+    function ajax_call() {
+        var url_parameters = obj_act_with_param;
+        $.ajax({
+            type: 'GET',
+            url: KeplerServiceUrl + url_parameters,
+            success: function (data) {
+                $('#modal_form .alert-warning').hide();
+                $('#crud-modal button.close').click();
+                loadBranch();
+                obj_act_with_param = "";
             },
             error: function (xhr) {
                 $('#modal_form .alert-warning').show().text(xhr.responseText);
