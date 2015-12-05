@@ -33,12 +33,12 @@
     </div>
     <div class="col-md-2">
         <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu build_action_menu">
             <li>
                 <a href="#">Stop</a>
             </li>
             <li>
-                <a href="#">Rerun</a>
+                <a href="#">Run</a>
             </li>
             <li class="divider"></li>
             <li>
@@ -144,7 +144,7 @@
             <a href="#">Stop</a>
         </li>
         <li>
-            <a href="#">Rerun</a>
+            <a href="#">Run</a>
         </li>
         <li class="divider"></li>
         <li>
@@ -186,7 +186,11 @@
         success: function (data) {
             $.each(data, function (key, value) {
                 if (value != null) {
-                    $('.icon-build-info').attr(key, value);
+                    if (key == 'Id') {
+                        $('.build_action_menu a').attr('obj_id', value);
+                    } else {
+                        $('.icon-build-info').attr(key, value);
+                    }
                 }
             });
 
@@ -261,7 +265,7 @@
                                                 $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_suite_group-' + value);
                                                 $('#assembly_group .test_suite_group:last div.panel-default:last .panel-collapse').attr('id', 'test_suite-' + value);
                                                 $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_suite_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-                                                $('#assembly_group .test_suite_group:last div.panel-default:last .dropdown-menu a').attr('test_suite-id', value);
+                                                $('#assembly_group .test_suite_group:last div.panel-default:last .dropdown-menu a').attr('obj_id', value);
                                             } else if (key == "Name") {
                                                 $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed span').text(value);
                                             } else if (key == "Status") {
@@ -280,7 +284,7 @@
                                                                     $('#assembly_group .test_case_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_case_group-' + value);
                                                                     $('#assembly_group .test_case_group:last div.panel-default:last .panel-collapse').attr('id', 'test_case-' + value);
                                                                     $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .dropdown-menu a').attr('test_case-id', value);
+                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .dropdown-menu a').attr('obj_id', value);
                                                                 } else if (key == "Name") {
                                                                     $('#assembly_group .test_case_group:last div.panel-default:last .collapsed span').text(value);
                                                                 } else if (key == "Status") {
