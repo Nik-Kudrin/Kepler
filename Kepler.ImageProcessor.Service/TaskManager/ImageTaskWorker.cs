@@ -67,7 +67,7 @@ namespace Kepler.ImageProcessor.Service.TaskManager
                     ScreenShotId = imageComparator.ImageComparisonInfo.ScreenShotId
                 };
 
-                new RestKeplerServiceClient().LogError(ex.Message);
+                new RestKeplerServiceClient().LogError($"{ex.Message} {ex.StackTrace}");
             }
 
             return diffImage;
