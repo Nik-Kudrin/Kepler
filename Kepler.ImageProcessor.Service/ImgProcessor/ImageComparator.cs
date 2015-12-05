@@ -30,7 +30,8 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
                 var diffFileName = $"{ImageComparisonInfo.ScreenShotName}_{Guid.NewGuid()}";
 
                 // in case - rerun build just use old generated paths
-                if (!ImageComparisonInfo.DiffImagePath.Contains(ImageComparisonInfo.ScreenShotName))
+                if (ImageComparisonInfo.DiffImagePath == null ||
+                    !ImageComparisonInfo.DiffImagePath.Contains(ImageComparisonInfo.ScreenShotName))
                 {
                     ImageComparisonInfo.DiffImagePath = Path.Combine(ImageComparisonInfo.DiffImagePath,
                         diffFileName + ".png");
@@ -42,7 +43,8 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
                 //Write preview for first image (old screenshot - baseline)
 
                 // in case - rerun build just use old generated paths
-                if (!ImageComparisonInfo.FirstPreviewPath.EndsWith(previewSuffix))
+                if (ImageComparisonInfo.FirstPreviewPath == null ||
+                    !ImageComparisonInfo.FirstPreviewPath.EndsWith(previewSuffix))
                 {
                     ImageComparisonInfo.FirstPreviewPath = ImageComparisonInfo.FirstImagePath + "_preview.png";
                     ImageComparisonInfo.SecondPreviewPath = ImageComparisonInfo.SecondImagePath + "_preview.png";
