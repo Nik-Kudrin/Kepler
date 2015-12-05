@@ -61,13 +61,15 @@ namespace Kepler.ImageProcessor.Service.TaskManager
             }
             catch (Exception ex)
             {
+                var errorMessage = $"{ex.Message} {ex.StackTrace}";
+
                 diffImage = new ImageComparisonInfo()
                 {
-                    ErrorMessage = ex.Message,
+                    ErrorMessage = errorMessage,
                     ScreenShotId = imageComparator.ImageComparisonInfo.ScreenShotId
                 };
 
-                new RestKeplerServiceClient().LogError($"{ex.Message} {ex.StackTrace}");
+                new RestKeplerServiceClient().LogError(errorMessage);
             }
 
             return diffImage;
