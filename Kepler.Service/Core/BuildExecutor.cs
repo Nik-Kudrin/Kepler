@@ -29,7 +29,7 @@ namespace Kepler.Service.Core
         {
             GetExecutor();
         }
-        
+
         public static BuildExecutor GetExecutor()
         {
             _executor = _executor ?? new BuildExecutor();
@@ -206,10 +206,7 @@ namespace Kepler.Service.Core
                 // Just set screenshots as passed
                 if (oldScreenShot == null)
                 {
-                    newScreenShot.Status = ObjectStatus.Passed;
                     newScreenShot.BaseLineImagePath = newScreenShot.ImagePath;
-                    newScreenShot.IsLastPassed = true;
-
                     var screenShotPreviewImagePath = newScreenShot.PreviewImagePath ?? "";
 
                     imageComparison = new ImageComparisonInfo()
