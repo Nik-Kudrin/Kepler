@@ -28,6 +28,12 @@ namespace Kepler.UI
                 );
 
             routes.MapRoute(
+                name: "Admin-Service-Url",
+                url: "admin/service-url",
+                defaults: new { controller = "Admin", action = "Index", parameter = UrlParameter.Optional }
+                );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{*parameter}",
                 defaults: new {controller = "Kepler", action = "Index", parameter = UrlParameter.Optional}

@@ -257,6 +257,7 @@
     <Content Include="Views\Admin\ImageWorkersView.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\SourceImagePathView.cshtml" />
+    <Content Include="Views\Admin\ServiceUrlView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
