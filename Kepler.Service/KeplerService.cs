@@ -694,7 +694,8 @@ namespace Kepler.Service
 
         public IEnumerable<ErrorMessage> GetErrors(DateTime fromTime)
         {
-            return ErrorMessageRepository.Instance.Find(item => item.Time >= fromTime);
+            return ErrorMessageRepository.Instance.Find(item => item.Time >= fromTime)
+                .OrderByDescending(item => item.Id);
         }
 
         public IEnumerable<ErrorMessage> GetErrorsSinceLastViewed()
@@ -703,10 +704,12 @@ namespace Kepler.Service
 
             if (lastViewedError == null)
             {
-                return ErrorMessageRepository.Instance.FindAll();
+                return ErrorMessageRepository.Instance.FindAll().OrderByDescending(item => item.Id);
             }
 
-            return ErrorMessageRepository.Instance.Find(item => item.Id > lastViewedError.Id);
+            return
+                ErrorMessageRepository.Instance.Find(item => item.Id > lastViewedError.Id)
+                    .OrderByDescending(item => item.Id);
         }
 
         public void SetLastViewedError(long errorId)
