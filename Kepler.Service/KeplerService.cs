@@ -98,6 +98,8 @@ namespace Kepler.Service
                     {
                         ObjectStatusUpdater.SetObjectsStatus(typeName, objId, ObjectStatus.InQueue);
 
+                        if (typeName == "build") return;
+
                         long? buildId = -1;
                         switch (typeName.ToLowerInvariant())
                         {
