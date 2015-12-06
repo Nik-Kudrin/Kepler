@@ -97,6 +97,57 @@ namespace Kepler.Service
                     try
                     {
                         ObjectStatusUpdater.SetObjectsStatus(typeName, objId, ObjectStatus.InQueue);
+
+                        long? buildId = -1;
+                        switch (typeName.ToLowerInvariant())
+                        {
+                            case "screenshot":
+                                var screenShot = ScreenShotRepository.Instance.Get(objId);
+                                buildId = screenShot.BuildId;
+
+                                var caseRepo = TestCaseRepository.Instance;
+                                ObjectStatusUpdater.SetParentObjStatus<TestCaseRepository, TestCase>(
+                                    caseRepo, screenShot.ParentObjId.Value, ObjectStatus.InQueue);
+                                var suiteId = caseRepo.Get(screenShot.ParentObjId.Value).ParentObjId.Value;
+
+                                var repoSuite = TestSuiteRepository.Instance;
+                                ObjectStatusUpdater.SetParentObjStatus<TestSuiteRepository, TestSuite>(
+                                    repoSuite, suiteId, ObjectStatus.InQueue);
+                                var assembId = repoSuite.Get(suiteId).ParentObjId.Value;
+
+                                ObjectStatusUpdater.SetParentObjStatus<TestAssemblyRepository, TestAssembly>(
+                                    TestAssemblyRepository.Instance, assembId, ObjectStatus.InQueue);
+
+                                break;
+                            case "testcase":
+                                var testCase = TestCaseRepository.Instance.Get(objId);
+                                buildId = testCase.BuildId;
+
+                                var suiteRepo = TestSuiteRepository.Instance;
+                                ObjectStatusUpdater.SetParentObjStatus<TestSuiteRepository, TestSuite>(
+                                    suiteRepo, testCase.ParentObjId.Value, ObjectStatus.InQueue);
+                                var assemblyId = suiteRepo.Get(testCase.ParentObjId.Value).ParentObjId.Value;
+
+                                ObjectStatusUpdater.SetParentObjStatus<TestAssemblyRepository, TestAssembly>(
+                                    TestAssemblyRepository.Instance, assemblyId, ObjectStatus.InQueue);
+
+                                break;
+                            case "testsuite":
+                                var suite = TestSuiteRepository.Instance.Get(objId);
+                                buildId = suite.BuildId;
+
+                                ObjectStatusUpdater.SetParentObjStatus<TestAssemblyRepository, TestAssembly>(
+                                    TestAssemblyRepository.Instance, suite.ParentObjId.Value, ObjectStatus.InQueue);
+
+                                break;
+                            case "testassembly":
+                                buildId = TestAssemblyRepository.Instance.Get(objId).BuildId;
+                                break;
+                        }
+
+                        var build = BuildRepository.Instance.Get(buildId.Value);
+                        build.Status = ObjectStatus.InQueue;
+                        BuildRepository.Instance.UpdateAndFlashChanges(build);
                     }
                     catch (Exception ex)
                     {

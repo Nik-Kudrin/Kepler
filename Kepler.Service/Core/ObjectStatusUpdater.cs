@@ -239,7 +239,7 @@ namespace Kepler.Service.Core
             return new List<ScreenShot>();
         }
 
-        private static void SetParentObjStatus<T, TEntity>(T objectRepository, long objectId,
+        public static void SetParentObjStatus<T, TEntity>(T objectRepository, long objectId,
             ObjectStatus newStatus)
             where T : BaseRepository<TEntity>
             where TEntity : BuildObject
@@ -253,7 +253,7 @@ namespace Kepler.Service.Core
         }
 
 
-        private static List<TEntityChild> SetChildObjStatuses<T, TEntityChild>(T childObjectRepository,
+        public static List<TEntityChild> SetChildObjStatuses<T, TEntityChild>(T childObjectRepository,
             long parentObjId,
             ObjectStatus newStatus)
             where T : BaseRepository<TEntityChild>
@@ -274,13 +274,13 @@ namespace Kepler.Service.Core
             {
                 case "build":
                     return RecursiveSetObjectsStatus<Build>(objId, newStatus);
-                case "testAssembly":
+                case "testassembly":
                     return RecursiveSetObjectsStatus<TestAssembly>(objId, newStatus);
-                case "testSuite":
+                case "testsuite":
                     return RecursiveSetObjectsStatus<TestSuite>(objId, newStatus);
-                case "testCase":
+                case "testcase":
                     return RecursiveSetObjectsStatus<TestCase>(objId, newStatus);
-                case "screenShot":
+                case "screenshot":
                     return RecursiveSetObjectsStatus<ScreenShot>(objId, newStatus);
 
                 default:
