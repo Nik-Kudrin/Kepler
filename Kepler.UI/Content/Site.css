@@ -379,3 +379,13 @@ label.error {
 }
 
 /*BUILD PAGE END*/
+
+/*ERROR LOG PAGE START*/
+.error_log_row td:nth-of-type(1) {
+    white-space: nowrap;
+}
+
+.error_log_row td:nth-of-type(2) {
+    word-break: break-word;
+}
+/*ERROR LOG PAGE END*/

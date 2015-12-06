@@ -6,7 +6,7 @@
     </div>
     <div class="panel-body">
         <div class="table-responsive">
-            <table class="table table-hover builds_table">
+            <table class="table table-hover error_log_table">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -28,129 +28,39 @@
             <td>
 
             </td>
-            <td>
-
-            </td>
         </tr>
     </tbody>
 </table>
 
 <script type="text/javascript">
     //
-    // Load branch info
+    // Load error log
     //
-    getBranch();
+    getErrorLogLastMonth();
 
-    function getBranch() {
-        $('.builds_table > tbody').empty();
+    function getErrorLogLastMonth() {
+        var monthAgoDate = moment(); // Get current time
+        monthAgoDate.subtract('months', 1); // Current date subtract 1 month
+        monthAgoDate = monthAgoDate.toISOString();
+
+        $('.error_log_table > tbody').empty();
         $.ajax({
-            url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
+            url: KeplerServiceUrl + 'GetErrors?fromTime=' + monthAgoDate,
             type: 'GET',
             success: function (data) {
                 $.each(data, function (key, value) {
-                    if (key == 'Name') {
-                        $('.panel-heading h3').html(value);
-                    } else if (key != 'Builds') {
-                        $('.panel-heading h3').attr(key, value);
-                    } else if (key == 'Builds') {
-                        $.each(value, function (key, value) {
-                            $('tr.branch_sample').clone(true, true).appendTo('.builds_table > tbody').removeClass('branch_sample').addClass('build_row').show();
-                            $.each(value, function (key, value) {
-                                if (key == 'Value') {
-                                    $.each(value, function (key, value) {
-                                        if (key == 'Id') {
-                                            $('.build_row:last td:nth-of-type(1) a').html(value);
-                                            $('.build_row:last td:nth-of-type(1) a').attr('linkurl', '/build?id=' + value);
-                                            $('.build_row:last td:nth-of-type(3) a').attr('obj_id', value);
-                                        } else if (key == 'Status') {
-                                            $('.build_row:last td:nth-of-type(2)').html('<div class="status-' + value + '">');
-                                        }
-                                    });
-                                }
-                            });
-                        });
-                    }
+                    $('tr.error_sample').clone(true, true).appendTo('.error_log_table > tbody').removeClass('error_sample').addClass('error_log_row').show();
+                    $.each(value, function (key, value) {
+                        if (key == 'Time') {
+                            $('.error_log_row:last td:nth-of-type(1)').html(moment(value).format("YYYY-MM-DD hh:mmA"));
+                        } else if (key == 'ExceptionMessage') {
+                            $('.error_log_row:last td:nth-of-type(2)').html(value);
+                        }
+                        console.log(key, value);
+                    });
                 });
             }
         });
     }
 
-    //
-    // Link switch
-    //
-    var obj_act = ""; // Variable with action
-    var obj_act_with_param = ""; // Variable with parameters for operations and status change
-    var typeName = "";
-    var objId = "";
-    var operationName = "";
-
-    $(document).on('click', '.builds_table a', function (e) {
-        switch ($(this).attr('data-act')) {
-            case 'stop_obj':
-                obj_act = "RunOperation?";
-                typeName = 'typeName=' + $(this).attr('typeName') + '&';
-                objId = 'objId=' + $(this).attr('obj_id') + '&';
-                operationName = 'operationName=stop';
-                obj_act_with_param = obj_act + typeName + objId + operationName;
-                modal_ajax_call();
-                break;
-            case 'run_obj':
-                obj_act = "RunOperation?";
-                typeName = 'typeName=' + $(this).attr('typeName') + '&';
-                objId = 'objId=' + $(this).attr('obj_id') + '&';
-                operationName = 'operationName=run';
-                obj_act_with_param = obj_act + typeName + objId + operationName;
-                modal_ajax_call();
-                break;
-            case 'set_passed_obj':
-                obj_act = "SetObjectsStatus?";
-                typeName = 'typeName=' + $(this).attr('typeName') + '&';
-                objId = 'objId=' + $(this).attr('obj_id') + '&';
-                operationName = 'newStatus=passed';
-                obj_act_with_param = obj_act + typeName + objId + operationName;
-                modal_ajax_call();
-                break;
-            case 'set_failed_obj':
-                obj_act = "SetObjectsStatus?";
-                typeName = 'typeName=' + $(this).attr('typeName') + '&';
-                objId = 'objId=' + $(this).attr('obj_id') + '&';
-                operationName = 'newStatus=failed';
-                obj_act_with_param = obj_act + typeName + objId + operationName;
-                modal_ajax_call();
-                break;
-            case 'delete_build':
-                obj_act = "DeleteBuild";
-                $('.modal-title').text('Delete build ' + $(this).attr('obj_id'));
-                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('obj_id') + '">' +
-                    'Are you sure?');
-                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Yes</button>');
-                break;
-        }
-    });
-
-    //
-    // Ajax call for modal popup
-    //
-    function modal_ajax_call() {
-        var url_parameters = "";
-        if (obj_act_with_param != "") {
-            url_parameters = obj_act_with_param;
-        } else {
-            url_parameters = obj_act + '?' + $('#modal_form').serialize();
-        }
-
-        $.ajax({
-            type: 'GET',
-            url: KeplerServiceUrl + url_parameters,
-            success: function (data) {
-                $('#modal_form .alert-warning').hide();
-                $('#crud-modal button.close').click();
-                getBranch();
-                obj_act_with_param = "";
-            },
-            error: function (xhr) {
-                $('#modal_form .alert-warning').show().text(xhr.responseText);
-            }
-        });
-    }
 </script>
