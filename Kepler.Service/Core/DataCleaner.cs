@@ -71,10 +71,17 @@ namespace Kepler.Service.Core
                 var branchForDelete = parentObjRepo.Get(objectId);
                 var project = ProjectRepository.Instance.Get(branchForDelete.ProjectId.Value);
 
+                var baselineRepo = BaseLineRepository.Instance;
+                var baseline = baselineRepo.Get(branchForDelete.BaseLineId.Value);
+                baselineRepo.Delete(baseline);
+
                 if (deleteDirectory)
                     DeleteDirectory(Path.Combine(project.Name, branchForDelete.Name));
 
                 parentObjRepo.Delete(branchForDelete);
+
+                project.MainBranchId = null;
+                ProjectRepository.Instance.UpdateAndFlashChanges(project);
             }
             else if (typeof (TEntityBase) == typeof (Build))
             {
