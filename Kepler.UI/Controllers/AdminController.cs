@@ -22,5 +22,10 @@ namespace Kepler.UI.Controllers
         {
             return PartialView();
         }
+
+        public ActionResult ServiceUrlView()
+        {
+            return PartialView();
+        }
     }
 }
