@@ -42,14 +42,11 @@ namespace Kepler.Service
                 // if current screenshot status = Stopped, then just update diff image path field
                 if (screenShot.Status == ObjectStatus.Stopped)
                 {
-                    screenShot.DiffImagePath = imageComparisonInfo.DiffImagePath;
-                    screenShot.DiffPreviewPath = imageComparisonInfo.DiffPreviewPath;
                     screenShot.PreviewImagePath = imageComparisonInfo.SecondPreviewPath;
                     screenShot.BaseLinePreviewPath = imageComparisonInfo.FirstPreviewPath;
 
                     // Generate Url paths
                     UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
-
                     ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
                     continue;
                 }
