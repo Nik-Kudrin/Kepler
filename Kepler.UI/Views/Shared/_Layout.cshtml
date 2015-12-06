@@ -28,6 +28,9 @@
 
             <div class="header-right">
                 <a class="btn btn-default" href="/admin">Admin</a>
+                <a class="btn btn-default header-log-btn" href="" linkUrl="/error-log">
+                    <i class="fa fa-exclamation-circle fa-2x"></i>
+                </a>
             </div>
         </nav>
         <!-- /. NAV TOP -->
@@ -94,7 +97,7 @@
         //
         // Bind ajax loader on A with attr linkUrl
         //
-        
+
 
         $(document).on('click', 'a[href=""]', function (e) {
             e.preventDefault();
@@ -118,6 +121,9 @@
                     break;
                 case '/build':
                     return '/Kepler/PartialBuildView';
+                    break;
+                case '/error-log':
+                    return '/Kepler/ErrorLogView';
                     break;
                 case '/admin/image-workers':
                     return '/Admin/ImageWorkersView';

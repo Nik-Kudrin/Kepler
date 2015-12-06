@@ -51,6 +51,10 @@ label.error {
     font-weight: normal;
 }
 
+.header-log-btn i {
+    font-size: 16px;
+}
+
 #modal_form .alert-warning {
     display: none;
 }

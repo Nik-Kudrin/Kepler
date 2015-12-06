@@ -24,5 +24,10 @@ namespace Kepler.UI.Controllers
         {
             return PartialView();
         }
+
+        public ActionResult ErrorLogView()
+        {
+            return PartialView();
+        }
     }
 }
