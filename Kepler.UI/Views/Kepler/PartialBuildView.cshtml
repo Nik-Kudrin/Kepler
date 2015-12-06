@@ -35,17 +35,17 @@
         <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
         <ul class="dropdown-menu build_action_menu">
             <li>
-                <a href="#">Stop</a>
+                <a href="" data-act="run_obj" typeName="build">Run</a>
             </li>
             <li>
-                <a href="#">Run</a>
+                <a href="" data-act="stop_obj" typeName="build">Stop</a>
             </li>
             <li class="divider"></li>
             <li>
-                <a href="#">Set passed</a>
+                <a href="" data-act="set_passed_obj" typeName="build">Set passed</a>
             </li>
             <li>
-                <a href="#">Set failed</a>
+                <a href="" data-act="set_failed_obj" typeName="build">Set failed</a>
             </li>
         </ul>
     </div>
@@ -141,17 +141,17 @@
     <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
     <ul class="dropdown-menu">
         <li>
-            <a href="#">Stop</a>
+            <a href="" data-act="run_obj">Run</a>
         </li>
         <li>
-            <a href="#">Run</a>
+            <a href="" data-act="stop_obj">Stop</a>
         </li>
         <li class="divider"></li>
         <li>
-            <a href="#">Set passed</a>
+            <a href="" data-act="set_passed_obj">Set passed</a>
         </li>
         <li>
-            <a href="#">Set failed</a>
+            <a href="" data-act="set_failed_obj">Set failed</a>
         </li>
     </ul>
 </div>
@@ -180,23 +180,25 @@
     //
     // Get Build
     //
-    $.ajax({
-        url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
-        type: 'GET',
-        success: function (data) {
-            $.each(data, function (key, value) {
-                if (value != null) {
-                    if (key == 'Id') {
-                        $('.build_action_menu a').attr('obj_id', value);
-                    } else {
-                        $('.icon-build-info').attr(key, value);
+    getBuild();
+    function getBuild() {
+        $.ajax({
+            url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
+            type: 'GET',
+            success: function (data) {
+                $.each(data, function (key, value) {
+                    if (value != null) {
+                        if (key == 'Id') {
+                            $('.build_action_menu a').attr('obj_id', value);
+                        } else {
+                            $('.icon-build-info').attr(key, value);
+                        }
                     }
-                }
-            });
-
-            updateBuildInfo();
-        }
-    });
+                });
+                updateBuildInfo();
+            }
+        });
+    }
 
     //
     // Update Build info (parse and insert into html)
@@ -236,123 +238,200 @@
     //
     // Get Assembly
     //
-    $.ajax({
-        url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
-        type: 'GET',
-        success: function (data) {
-            $.each(data, function (key, value) {
-                $('.panel-default-assembly').clone(true, true).appendTo('#assembly_group').removeClass('panel-default-assembly').show();
-                $.each(value, function (key, value) {
-                    if (key != "TestSuites") {
-                        if (key == "Name") {
-                            $('#assembly_group > div.panel-default:last .panel-title span').text(value);
-                        } else if (key == "Status") {
-                            $('#assembly_group > div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
-                        } else if (key == "Id") {
-                            $('.collapsed').attr('href', '#assembly-' + value);
-                            $('.panel-collapse').attr('id', 'assembly-' + value);
-                        }
-                    } else {
-                        $.each(value, function (key, value) {
-                            $('.panel-default-suite').clone(true, true).appendTo('#assembly_group .test_suite_group:last').removeClass('panel-default-suite').show();
+    getAssemblies();
+    function getAssemblies() {
+        $.ajax({
+            url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
+            type: 'GET',
+            success: function (data) {
+                $.each(data, function (key, value) {
+                    $('#assembly_group').empty();
+                    $('.panel-default-assembly').clone(true, true).appendTo('#assembly_group').removeClass('panel-default-assembly').show();
+                    $.each(value, function (key, value) {
+                        if (key != "TestSuites") {
+                            if (key == "Name") {
+                                $('#assembly_group > div.panel-default:last .panel-title span').text(value);
+                            } else if (key == "Status") {
+                                $('#assembly_group > div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                            } else if (key == "Id") {
+                                $('.collapsed').attr('href', '#assembly-' + value);
+                                $('.panel-collapse').attr('id', 'assembly-' + value);
+                            }
+                        } else {
                             $.each(value, function (key, value) {
-                                if (key == "Value") {
-                                    $.each(value, function (key, value) {
-                                        if (key != "TestCases") {
-                                            if (key == "Id") {
-                                                $('#assembly_group .test_suite_group:last').attr('id', 'test_suite_group-' + value);
-                                                $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed').attr('href', '#test_suite-' + value);
-                                                $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_suite_group-' + value);
-                                                $('#assembly_group .test_suite_group:last div.panel-default:last .panel-collapse').attr('id', 'test_suite-' + value);
-                                                $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_suite_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-                                                $('#assembly_group .test_suite_group:last div.panel-default:last .dropdown-menu a').attr('obj_id', value);
-                                            } else if (key == "Name") {
-                                                $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed span').text(value);
-                                            } else if (key == "Status") {
-                                                $('#assembly_group .test_suite_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
-                                            }
-                                        } else {
-                                            $.each(value, function (key, value) {
-                                                $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_case_group:last').removeClass('panel-default-case').show();
+                                $('.panel-default-suite').clone(true, true).appendTo('#assembly_group .test_suite_group:last').removeClass('panel-default-suite').show();
+                                $.each(value, function (key, value) {
+                                    if (key == "Value") {
+                                        $.each(value, function (key, value) {
+                                            if (key != "TestCases") {
+                                                if (key == "Id") {
+                                                    $('#assembly_group .test_suite_group:last').attr('id', 'test_suite_group-' + value);
+                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed').attr('href', '#test_suite-' + value);
+                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_suite_group-' + value);
+                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .panel-collapse').attr('id', 'test_suite-' + value);
+                                                    $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_suite_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .dropdown-menu a').attr('obj_id', value);
+                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .dropdown-menu a').attr('typeName', 'testSuite');
+                                                } else if (key == "Name") {
+                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed span').text(value);
+                                                } else if (key == "Status") {
+                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                                                }
+                                            } else {
                                                 $.each(value, function (key, value) {
-                                                    if (key == "Value") {
-                                                        $.each(value, function (key, value) {
-                                                            if (key != "ScreenShots") {
-                                                                if (key == "Id") {
-                                                                    $('#assembly_group .test_case_group:last').attr('id', 'test_suite_group-' + value);
-                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .collapsed').attr('href', '#test_case-' + value);
-                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_case_group-' + value);
-                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .panel-collapse').attr('id', 'test_case-' + value);
-                                                                    $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .dropdown-menu a').attr('obj_id', value);
-                                                                } else if (key == "Name") {
-                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .collapsed span').text(value);
-                                                                } else if (key == "Status") {
-                                                                    $('#assembly_group .test_case_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
-                                                                }
-                                                            } else {
-                                                                $.each(value, function (key, value) {
-                                                                    $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
-                                                                    $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
+                                                    $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_case_group:last').removeClass('panel-default-case').show();
+                                                    $.each(value, function (key, value) {
+                                                        if (key == "Value") {
+                                                            $.each(value, function (key, value) {
+                                                                if (key != "ScreenShots") {
+                                                                    if (key == "Id") {
+                                                                        $('#assembly_group .test_case_group:last').attr('id', 'test_suite_group-' + value);
+                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .collapsed').attr('href', '#test_case-' + value);
+                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_case_group-' + value);
+                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .panel-collapse').attr('id', 'test_case-' + value);
+                                                                        $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .dropdown-menu a').attr('obj_id', value);
+                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .dropdown-menu a').attr('typeName', 'testCase');
+                                                                    } else if (key == "Name") {
+                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .collapsed span').text(value);
+                                                                    } else if (key == "Status") {
+                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                                                                    }
+                                                                } else {
                                                                     $.each(value, function (key, value) {
-                                                                        if (key == "Key") {
-                                                                            $('#assembly_group .build-panel-one-page-header:last > span').text(value);
-                                                                        } else {
-                                                                            $.each(value, function (key, value) {
-                                                                                var slashReplaced = "";
+                                                                        $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
+                                                                        $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
+                                                                        $.each(value, function (key, value) {
+                                                                            if (key == "Key") {
+                                                                                $('#assembly_group .build-panel-one-page-header:last > span').text(value);
+                                                                            } else {
+                                                                                $.each(value, function (key, value) {
+                                                                                    var slashReplaced = "";
 
-                                                                                if (key == "Name") {
-                                                                                    $('#assembly_group .build-panel-one-page:last img').attr('title', value);
-                                                                                    $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-gallery', value);
-                                                                                    $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-title', function (i, val) {
-                                                                                        return val + '&nbsp;' + value;
-                                                                                    });
-                                                                                } else if (key == "Status") {
-                                                                                    $('#assembly_group .build-panel-one-page-header:last').append('&nbsp;<span class="status-' + value + '">');
-                                                                                } else if (key == "BaseLineImagePathUrl") {
-                                                                                    slashReplaced = value.replace(/\\/g, "/");
-                                                                                    $('#assembly_group .build-panel-screen-base:last a').attr('href', slashReplaced);
-                                                                                } else if (key == "BaseLinePreviewPathUrl") {
-                                                                                    slashReplaced = value.replace(/\\/g, "/");
-                                                                                    $('#assembly_group .build-panel-screen-base:last img').attr('src', slashReplaced);
-                                                                                } else if (key == "DiffImagePathUrl" && value.indexOf('img/') != -1) {
-                                                                                    slashReplaced = value.replace(/\\/g, "/");
-                                                                                    $('#assembly_group .build-panel-screen-dif:last a').attr('href', slashReplaced);
-                                                                                } else if (key == "DiffPreviewPathUrl" && value.indexOf('img/') != -1) {
-                                                                                    slashReplaced = value.replace(/\\/g, "/");
-                                                                                    $('#assembly_group .build-panel-screen-dif:last img').attr('src', slashReplaced);
-                                                                                } else if (key == "ImagePathUrl") {
-                                                                                    slashReplaced = value.replace(/\\/g, "/");
-                                                                                    $('#assembly_group .build-panel-screen-curr:last a').attr('href', slashReplaced);
-                                                                                } else if (key == "PreviewImagePathUrl") {
-                                                                                    slashReplaced = value.replace(/\\/g, "/");
-                                                                                    $('#assembly_group .build-panel-screen-curr:last img').attr('src', slashReplaced);
-                                                                                } else if (key == "ErrorMessage" && value != null && value != '') {
-                                                                                    $('#assembly_group .build-panel-error-log:last').show();
-                                                                                    $('#assembly_group .build-panel-error-log:last textarea').text(value);
-                                                                                } else if (key == "Url" && value != null) {
-                                                                                    $('#assembly_group .build-panel-one-page-link:last').attr('href', value).show();
-                                                                                }
-                                                                            });
-                                                                        }
+                                                                                    if (key == "Name") {
+                                                                                        $('#assembly_group .build-panel-one-page:last img').attr('title', value);
+                                                                                        $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-gallery', value);
+                                                                                        $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-title', function (i, val) {
+                                                                                            return val + '&nbsp;' + value;
+                                                                                        });
+                                                                                    } else if (key == "Status") {
+                                                                                        $('#assembly_group .build-panel-one-page-header:last').append('&nbsp;<span class="status-' + value + '">');
+                                                                                    } else if (key == "BaseLineImagePathUrl") {
+                                                                                        slashReplaced = value.replace(/\\/g, "/");
+                                                                                        $('#assembly_group .build-panel-screen-base:last a').attr('href', slashReplaced);
+                                                                                    } else if (key == "BaseLinePreviewPathUrl") {
+                                                                                        slashReplaced = value.replace(/\\/g, "/");
+                                                                                        $('#assembly_group .build-panel-screen-base:last img').attr('src', slashReplaced);
+                                                                                    } else if (key == "DiffImagePathUrl" && value.indexOf('img/') != -1) {
+                                                                                        slashReplaced = value.replace(/\\/g, "/");
+                                                                                        $('#assembly_group .build-panel-screen-dif:last a').attr('href', slashReplaced);
+                                                                                    } else if (key == "DiffPreviewPathUrl" && value.indexOf('img/') != -1) {
+                                                                                        slashReplaced = value.replace(/\\/g, "/");
+                                                                                        $('#assembly_group .build-panel-screen-dif:last img').attr('src', slashReplaced);
+                                                                                    } else if (key == "ImagePathUrl") {
+                                                                                        slashReplaced = value.replace(/\\/g, "/");
+                                                                                        $('#assembly_group .build-panel-screen-curr:last a').attr('href', slashReplaced);
+                                                                                    } else if (key == "PreviewImagePathUrl") {
+                                                                                        slashReplaced = value.replace(/\\/g, "/");
+                                                                                        $('#assembly_group .build-panel-screen-curr:last img').attr('src', slashReplaced);
+                                                                                    } else if (key == "ErrorMessage" && value != null && value != '') {
+                                                                                        $('#assembly_group .build-panel-error-log:last').show();
+                                                                                        $('#assembly_group .build-panel-error-log:last textarea').text(value);
+                                                                                    } else if (key == "Url" && value != null) {
+                                                                                        $('#assembly_group .build-panel-one-page-link:last').attr('href', value).show();
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        });
                                                                     });
-                                                                });
-                                                            }
-                                                        });
-                                                    }
-
-
+                                                                }
+                                                            });
+                                                        }
+                                                    });
                                                 });
-                                            });
-                                        }
-                                    });
-                                }
+                                            }
+                                        });
+                                    }
+                                });
                             });
-                        });
-                    }
+                        }
+                    });
                 });
-            });
+            }
+        });
+    }
+
+    //
+    // Link switch
+    //
+    var obj_act = ""; // Variable with action
+    var obj_act_with_param = ""; // Variable with parameters for operations and status change
+    var typeName = "";
+    var objId = "";
+    var operationName = "";
+
+    $(document).on('click', '#page-inner a', function (e) {
+        switch ($(this).attr('data-act')) {
+            case 'stop_obj':
+                obj_act = "RunOperation?";
+                typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                objId = 'objId=' + $(this).attr('obj_id') + '&';
+                operationName = 'operationName=stop';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                modal_ajax_call();
+                break;
+            case 'run_obj':
+                obj_act = "RunOperation?";
+                typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                objId = 'objId=' + $(this).attr('obj_id') + '&';
+                operationName = 'operationName=run';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                modal_ajax_call();
+                break;
+            case 'set_passed_obj':
+                obj_act = "SetObjectsStatus?";
+                typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                objId = 'objId=' + $(this).attr('obj_id') + '&';
+                operationName = 'newStatus=passed';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                modal_ajax_call();
+                break;
+            case 'set_failed_obj':
+                obj_act = "SetObjectsStatus?";
+                typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                objId = 'objId=' + $(this).attr('obj_id') + '&';
+                operationName = 'newStatus=failed';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                modal_ajax_call();
+                break;
         }
     });
+
+    //
+    // Ajax call for operations and status change
+    //
+    function modal_ajax_call() {
+        var url_parameters = "";
+        if (obj_act_with_param != "") {
+            url_parameters = obj_act_with_param;
+        } else {
+            url_parameters = obj_act + '?' + $('#modal_form').serialize();
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: KeplerServiceUrl + url_parameters,
+            success: function (data) {
+                $('#modal_form .alert-warning').hide();
+                $('#crud-modal button.close').click();
+                getBuild();
+                getAssemblies();
+                obj_act_with_param = "";
+            },
+            error: function (xhr) {
+                $('#modal_form .alert-warning').show().text(xhr.responseText);
+            }
+        });
+    }
 
 </script>
