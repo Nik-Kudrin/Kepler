@@ -709,7 +709,26 @@ namespace Kepler.Service
                 return ErrorMessageRepository.Instance.FindAll();
             }
 
-            return ErrorMessageRepository.Instance.Find(item => item.Time > lastViewedError.Time);
+            return ErrorMessageRepository.Instance.Find(item => item.Id > lastViewedError.Id);
+        }
+
+        public void SetLastViewedError(long errorId)
+        {
+            var error = ErrorMessageRepository.Instance.Get(errorId);
+            if (error == null)
+                throw new ErrorMessage
+                {
+                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
+                    ExceptionMessage = $"Error message with id={errorId} not found"
+                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+
+
+            var allLastViewedItems = ErrorMessageRepository.Instance.Find(item => item.IsLastViewed);
+            allLastViewedItems.Each(item => item.IsLastViewed = false);
+            ErrorMessageRepository.Instance.UpdateAndFlashChanges(allLastViewedItems);
+
+            error.IsLastViewed = true;
+            ErrorMessageRepository.Instance.UpdateAndFlashChanges(error);
         }
 
         private void LogErrorMessage(ErrorMessage.ErorCode errorCode, string exceptionMessage)
@@ -732,20 +751,6 @@ namespace Kepler.Service
         public void LogError(ErrorMessage error)
         {
             ErrorMessageRepository.Instance.Insert(error);
-        }
-
-        public void SetLastViewedError(long errorId)
-        {
-            var error = ErrorMessageRepository.Instance.Get(errorId);
-            if (error == null)
-                throw new ErrorMessage
-                {
-                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
-                    ExceptionMessage = $"Error message with id={errorId} not found"
-                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
-
-            error.IsLastViewed = true;
-            ErrorMessageRepository.Instance.UpdateAndFlashChanges(error);
         }
 
         #endregion
