@@ -32,7 +32,7 @@
         </ul>
     </div>
     <div class="col-md-2">
-        <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
+        <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
         <ul class="dropdown-menu build_action_menu">
             <li>
                 <a href="" data-act="run_obj" typeName="build">Run</a>
@@ -138,7 +138,7 @@
 </div>
 
 <div class="dropdown-btn-hidden">
-    <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
+    <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
     <ul class="dropdown-menu">
         <li>
             <a href="" data-act="run_obj">Run</a>
@@ -256,6 +256,9 @@
                             } else if (key == "Id") {
                                 $('.collapsed').attr('href', '#assembly-' + value);
                                 $('.panel-collapse').attr('id', 'assembly-' + value);
+                                $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group > div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+                                $('#assembly_group > div.panel-default:last .dropdown-menu a').attr('obj_id', value);
+                                $('#assembly_group > div.panel-default:last .dropdown-menu a').attr('typeName', 'testAssembly');
                             }
                         } else {
                             $.each(value, function (key, value) {
@@ -316,6 +319,10 @@
                                                                                         });
                                                                                     } else if (key == "Status") {
                                                                                         $('#assembly_group .build-panel-one-page-header:last').append('&nbsp;<span class="status-' + value + '">');
+                                                                                    } else if (key == "Id") {
+                                                                                        $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .build-panel-one-page-header:last').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+                                                                                        $('#assembly_group .build-panel-one-page-header:last .dropdown-menu a').attr('obj_id', value);
+                                                                                        $('#assembly_group .build-panel-one-page-header:last .dropdown-menu a').attr('typeName', 'screenShot');
                                                                                     } else if (key == "BaseLineImagePathUrl") {
                                                                                         slashReplaced = value.replace(/\\/g, "/");
                                                                                         $('#assembly_group .build-panel-screen-base:last a').attr('href', slashReplaced);
