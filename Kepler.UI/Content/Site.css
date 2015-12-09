@@ -5,6 +5,10 @@ h3 {
     font-size: 20px;
 }
 
+.table > thead > tr > th {
+    border-bottom: 1px solid #ddd;
+}
+
 .table > tbody > tr > td {
     vertical-align: middle;
 }
@@ -382,10 +386,50 @@ label.error {
 
 /*ERROR LOG PAGE START*/
 .error_log_row td:nth-of-type(1) {
-    white-space: nowrap;
+    padding: 2px;
 }
 
 .error_log_row td:nth-of-type(2) {
+    white-space: nowrap;
+}
+
+.error_log_row td:nth-of-type(3) {
     word-break: break-word;
 }
+
+.error_type_1 > td:nth-of-type(1) { background: #EADCD6}
+.error_type_1 > td { border: 1px solid #EADCD6}
+.error_type_2 > td:nth-of-type(1) { background: #EFE0CF}
+.error_type_2 > td { border: 1px solid #EFE0CF}
+.error_type_3 > td:nth-of-type(1) { background: #F0E4BA}
+.error_type_3 > td { border: 1px solid #F0E4BA}
+.error_type_4 > td:nth-of-type(1) { background: #DBE2AF}
+.error_type_4 > td { border: 1px solid #DBE2AF}
+.error_type_5 > td:nth-of-type(1) { background: #DAE5C8}
+.error_type_5 > td { border: 1px solid #DAE5C8}
+.error_type_6 > td:nth-of-type(1) { background: #CBE7BE}
+.error_type_6 > td { border: 1px solid #CBE7BE}
+.error_type_7 > td:nth-of-type(1) { background: #CBE7CA}
+.error_type_7 > td { border: 1px solid #CBE7CA}
+.error_type_8 > td:nth-of-type(1) { background: #D7E4DA}
+.error_type_8 > td { border: 1px solid #D7E4DA}
+.error_type_9 > td:nth-of-type(1) { background: #A0E6CD}
+.error_type_9 > td { border: 1px solid #A0E6CD}
+.error_type_10 > td:nth-of-type(1) { background: #A5E2DE}
+.error_type_10 > td { border: 1px solid #A5E2DE}
+.error_type_11 > td:nth-of-type(1) { background: #AFE3E3}
+.error_type_11 > td { border: 1px solid #AFE3E3}
+.error_type_12 > td:nth-of-type(1) { background: #DFEBF1}
+.error_type_12 > td { border: 1px solid #DFEBF1}
+.error_type_13 > td:nth-of-type(1) { background: #E6EEF4}
+.error_type_13 > td { border: 1px solid #E6EEF4}
+.error_type_14 > td:nth-of-type(1) { background: #E2EBEF}
+.error_type_14 > td { border: 1px solid #E2EBEF}
+.error_type_15 > td:nth-of-type(1) { background: #E9EFF3}
+.error_type_15 > td { border: 1px solid #E9EFF3}
+.error_type_16 > td:nth-of-type(1) { background: #FBD3F0}
+.error_type_16 > td { border: 1px solid #FBD3F0}
+.error_type_17 > td:nth-of-type(1) { background: #C5AFE3}
+.error_type_17 > td { border: 1px solid #C5AFE3}
+
 /*ERROR LOG PAGE END*/
