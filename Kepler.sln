@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.ServiceInstaller", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.ImageProcessor.Installer", "Kepler.ImageProcessor.Installer\Kepler.ImageProcessor.Installer.csproj", "{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Kepler.Service.Setup", "Kepler.Service.Setup\Kepler.Service.Setup.vdproj", "{6CA44AA8-237A-49D3-A9E7-B07CF81688FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.WalsashDebug|Any CPU.ActiveCfg = WalsashDebug|Any CPU
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.WalsashDebug|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{6CA44AA8-237A-49D3-A9E7-B07CF81688FF}.Debug|Any CPU.ActiveCfg = Debug
+		{6CA44AA8-237A-49D3-A9E7-B07CF81688FF}.NEONDebug|Any CPU.ActiveCfg = Debug
+		{6CA44AA8-237A-49D3-A9E7-B07CF81688FF}.Release|Any CPU.ActiveCfg = Release
+		{6CA44AA8-237A-49D3-A9E7-B07CF81688FF}.WalsashDebug|Any CPU.ActiveCfg = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
