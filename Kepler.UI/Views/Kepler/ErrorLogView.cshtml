@@ -9,6 +9,7 @@
             <table class="table table-hover error_log_table">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Date</th>
                         <th>Text</th>
                     </tr>
@@ -22,10 +23,9 @@
 <table style="display: none;">
     <tbody>
         <tr class="error_sample">
-            <td>
-            </td>
-            <td>
-            </td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
     </tbody>
 </table>
@@ -50,9 +50,13 @@
                     $('tr.error_sample').clone(true, true).appendTo('.error_log_table > tbody').removeClass('error_sample').addClass('error_log_row').show();
                     $.each(value, function (key, value) {
                         if (key == 'Time') {
-                            $('.error_log_row:last td:nth-of-type(1)').html(moment(value).format("YYYY-MM-DD hh:mma"));
+                            $('.error_log_row:last td:nth-of-type(2)').html(moment(value).format("YYYY-MM-DD hh:mma"));
                         } else if (key == 'ExceptionMessage') {
-                            $('.error_log_row:last td:nth-of-type(2)').html(value);
+                            $('.error_log_row:last td:nth-of-type(3)').html(value);
+                        } else if (key == 'Code') {
+                            $('.error_log_row:last').addClass("error_type_" + value);
+                        } else if (key == 'Id') {
+                            $('.error_log_row:last').attr('obj_id', value);
                         }
                         console.log(key, value);
                     });
