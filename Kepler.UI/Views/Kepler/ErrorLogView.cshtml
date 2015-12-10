@@ -38,7 +38,7 @@
 
     function getErrorLogLastMonth() {
         var monthAgoDate = moment(); // Get current time
-        monthAgoDate.subtract('months', 1); // Current date subtract 1 month
+        monthAgoDate.subtract(1, 'months'); // Current date subtract 1 month
         monthAgoDate = monthAgoDate.toISOString();
 
         $('.error_log_table > tbody').empty();
@@ -54,14 +54,55 @@
                         } else if (key == 'ExceptionMessage') {
                             $('.error_log_row:last td:nth-of-type(3)').html(value);
                         } else if (key == 'Code') {
-                            $('.error_log_row:last').addClass("error_type_" + value);
+                            $('.error_log_row:last').addClass("error_type_" + value).addClass('error_viewed');
                         } else if (key == 'Id') {
                             $('.error_log_row:last').attr('obj_id', value);
                         }
-                        console.log(key, value);
                     });
                 });
             }
+        });
+    }
+
+    //
+    // Load last viewed errors
+    //
+    getErrorsSinceLastViewed();
+
+    function getErrorsSinceLastViewed() {
+        $.ajax({
+            url: KeplerServiceUrl + 'GetErrorsSinceLastViewed',
+            type: 'GET',
+            success: function (data) {
+                if (data != '') {
+                    $.each(data, function (key, value) {
+                        if (key == '0') { // Check first error in array and SetLastViewed
+                            $.each(value, function (key, value) {
+                                if (key == 'Id') {
+                                    setLastViewedError(value);
+                                    $('.error_log_row[obj_id="' + value + '"]').removeClass('error_viewed');
+                                }
+                            });
+                        } else { // Check other errors in array
+                            $.each(value, function (key, value) {
+                                if (key == 'Id') {
+                                    $('.error_log_row[obj_id="' + value + '"]').removeClass('error_viewed');
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    //
+    // Set last viewed error
+    //
+    function setLastViewedError(lastViewedId) {
+        $.ajax({
+            url: KeplerServiceUrl + 'SetLastViewedError?errorId=' + lastViewedId,
+            type: 'GET'
         });
     }
 
