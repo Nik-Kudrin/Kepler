@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.ServiceInstaller", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.ImageProcessor.Installer", "Kepler.ImageProcessor.Installer\Kepler.ImageProcessor.Installer.csproj", "{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Service.Setup", "Kepler.Service.Setup\Kepler.Service.Setup.csproj", "{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,22 @@ Global
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.WalsashDebug|Any CPU.Build.0 = WalsashDebug|Any CPU
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.WalsashDebug|x86.ActiveCfg = WalsashDebug|Any CPU
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.WalsashDebug|x86.Build.0 = WalsashDebug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.Debug|x86.Build.0 = Debug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.NEONDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.NEONDebug|Any CPU.Build.0 = Debug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.NEONDebug|x86.ActiveCfg = Debug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.NEONDebug|x86.Build.0 = Debug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.Release|x86.ActiveCfg = Release|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.Release|x86.Build.0 = Release|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.WalsashDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.WalsashDebug|Any CPU.Build.0 = Debug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.WalsashDebug|x86.ActiveCfg = Debug|Any CPU
+		{FF0DC770-90AC-4AA7-B4F5-E283DEB84A42}.WalsashDebug|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
