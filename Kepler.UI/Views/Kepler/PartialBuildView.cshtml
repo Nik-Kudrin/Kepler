@@ -238,27 +238,45 @@
     //
     // Get Assembly
     //
-    getAssemblies();
+    var interval = 8000;
+    setInterval(getAssemblies, interval);
+
     function getAssemblies() {
+        $('#assembly_group .panel-default').addClass('panel-default-remove');
         $.ajax({
             url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
             type: 'GET',
             success: function (data) {
                 $.each(data, function (key, value) {
-                    $('#assembly_group').empty();
-                    $('.panel-default-assembly').clone(true, true).appendTo('#assembly_group').removeClass('panel-default-assembly').show();
                     $.each(value, function (key, value) {
                         if (key != "TestSuites") {
                             if (key == "Name") {
-                                $('#assembly_group > div.panel-default:last .panel-title span').text(value);
+                                var assemblyName = value;
                             } else if (key == "Status") {
-                                $('#assembly_group > div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                                var assemblyStatus = value;
                             } else if (key == "Id") {
-                                $('.collapsed').attr('href', '#assembly-' + value);
-                                $('.panel-collapse').attr('id', 'assembly-' + value);
-                                $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group > div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-                                $('#assembly_group > div.panel-default:last .dropdown-menu a').attr('obj_id', value);
-                                $('#assembly_group > div.panel-default:last .dropdown-menu a').attr('typeName', 'testAssembly');
+                                var assemblyId = value;
+                            }
+                            console.log($('.assembly-' + assemblyId).length);
+                            if ($('.assembly-' + assemblyId).length && assemblyId != null) {
+                                if ($('.assembly-' + assemblyId).attr('assembly-status') != assemblyStatus) {
+                                    $('.assembly-' + assemblyId + ' .panel-title span').text(assemblyName);
+                                    $('.assembly-' + assemblyId + ' .panel-title a span').attr('class', 'status-' + assemblyStatus);
+                                    $('.assembly-' + assemblyId + ' .panel-title a').attr('href', '#assembly-' + assemblyId);
+                                    $('.assembly-' + assemblyId + ' .panel-collapse').attr('id', 'assembly-' + assemblyId);
+                                    $('.assembly-' + assemblyId + ' .dropdown-menu a').attr('obj_id', assemblyId);
+                                    $('.assembly-' + assemblyId + ' .dropdown-menu a').attr('typeName', 'testAssembly');
+                                }
+                            } else if ($('.assembly-' + assemblyId).length == 0 && assemblyId != null) {
+                                $('.panel-default-assembly').clone(true, true).appendTo('#assembly_group').addClass('.assembly-' + assemblyId).removeClass('panel-default-assembly').show();
+                                $('.assembly-' + assemblyId).attr('assembly-status', assemblyStatus);
+                                $('.assembly-' + assemblyId + ' .panel-title span').text(assemblyName);
+                                $('.assembly-' + assemblyId + ' .panel-title a span').attr('class', 'status-' + assemblyStatus);
+                                $('.assembly-' + assemblyId + ' .panel-title a').attr('href', '#assembly-' + assemblyId);
+                                $('.assembly-' + assemblyId + ' .panel-collapse').attr('id', 'assembly-' + assemblyId);
+                                $('.dropdown-btn-hidden').clone(true, true).appendTo('.assembly-' + assemblyId + '.panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+                                $('.assembly-' + assemblyId + ' .dropdown-menu a').attr('obj_id', assemblyId);
+                                $('.assembly-' + assemblyId + ' .dropdown-menu a').attr('typeName', 'testAssembly');
                             }
                         } else {
                             $.each(value, function (key, value) {
