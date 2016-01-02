@@ -97,5 +97,10 @@ namespace Kepler.Service.Setup
             if (!Directory.Exists(installationPath.Text))
                 Directory.CreateDirectory(installationPath.Text);
         }
+
+        private void dbNameTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
