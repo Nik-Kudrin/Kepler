@@ -76,7 +76,7 @@
     </div>
 </div>
 
-<div class="panel panel-default panel-default-suite">
+<div class="panel panel-default panel-default-test_suite">
     <div class="panel-heading">
         <h4 class="panel-title">
             <a data-toggle="collapse" data-parent="#test_suite_group" href="#test_suite" class="collapsed"><i class="fa"></i>&nbsp;<span>Test suite name</span></a>
@@ -91,7 +91,7 @@
     </div>
 </div>
 
-<div class="panel panel-default panel-default-case">
+<div class="panel panel-default panel-default-test_case">
     <div class="panel-heading">
         <h4 class="panel-title">
             <a data-toggle="collapse" data-parent="#test_case_group11" href="#test_case" class="collapsed"><i class="fa"></i>&nbsp;<span>Test case name</span></a>
@@ -246,62 +246,57 @@
             url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
             type: 'GET',
             success: function (data) {
-                var assemblyName = '';
-                var assemblyStatus = '';
-                var assemblyId = '';
+                var entityName = '';
+                var entityStatus = '';
+                var entityId = '';
+                var entityParentId = '';
                 $.each(data, function (key, value) {
                     $.each(value, function (key, value) {
                         if (key != "TestSuites") {
                             if (key == "Name") {
-                                assemblyName = value;
+                                entityName = value;
                             } else if (key == "Status") {
-                                assemblyStatus = value;
+                                entityStatus = value;
                             } else if (key == "Id") {
-                                assemblyId = value;
+                                entityId = value;
+                            } else if (key == "ParentObjId") {
+                                entityParentId = value;
                             }
                         } else {
-                            assemblyBuilt(assemblyId, assemblyName, assemblyStatus);
-
+                            entityBuilt(entity = 'assembly', entityParentId, childEntity = 'test_suite', entityId, entityName, entityStatus);
                             $.each(value, function (key, value) {
-                                $('.panel-default-suite').clone(true, true).appendTo('#assembly_group .test_suite_group:last').removeClass('panel-default-suite').show();
                                 $.each(value, function (key, value) {
                                     if (key == "Value") {
                                         $.each(value, function (key, value) {
                                             if (key != "TestCases") {
-                                                if (key == "Id") {
-                                                    $('#assembly_group .test_suite_group:last').attr('id', 'test_suite_group-' + value);
-                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed').attr('href', '#test_suite-' + value);
-                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_suite_group-' + value);
-                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .panel-collapse').attr('id', 'test_suite-' + value);
-                                                    $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_suite_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .dropdown-menu a').attr('obj_id', value);
-                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .dropdown-menu a').attr('typeName', 'testSuite');
-                                                } else if (key == "Name") {
-                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .collapsed span').text(value);
+                                                if (key == "Name") {
+                                                    entityName = value;
                                                 } else if (key == "Status") {
-                                                    $('#assembly_group .test_suite_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                                                    entityStatus = value;
+                                                } else if (key == "Id") {
+                                                    entityId = value;
+                                                } else if (key == "ParentObjId") {
+                                                    entityParentId = value;
                                                 }
                                             } else {
+                                                entityBuilt(entity = 'test_suite', entityParentId, childEntity = 'test_case', entityId, entityName, entityStatus);
                                                 $.each(value, function (key, value) {
                                                     $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_case_group:last').removeClass('panel-default-case').show();
                                                     $.each(value, function (key, value) {
                                                         if (key == "Value") {
                                                             $.each(value, function (key, value) {
                                                                 if (key != "ScreenShots") {
-                                                                    if (key == "Id") {
-                                                                        $('#assembly_group .test_case_group:last').attr('id', 'test_suite_group-' + value);
-                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .collapsed').attr('href', '#test_case-' + value);
-                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .collapsed').attr('data-parent', '#test_case_group-' + value);
-                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .panel-collapse').attr('id', 'test_case-' + value);
-                                                                        $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last div.panel-default:last .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .dropdown-menu a').attr('obj_id', value);
-                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .dropdown-menu a').attr('typeName', 'testCase');
-                                                                    } else if (key == "Name") {
-                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .collapsed span').text(value);
+                                                                    if (key == "Name") {
+                                                                        entityName = value;
                                                                     } else if (key == "Status") {
-                                                                        $('#assembly_group .test_case_group:last div.panel-default:last .panel-title a').append('&nbsp;<span class="status-' + value + '">');
+                                                                        entityStatus = value;
+                                                                    } else if (key == "Id") {
+                                                                        entityId = value;
+                                                                    } else if (key == "ParentObjId") {
+                                                                        entityParentId = value;
                                                                     }
                                                                 } else {
+                                                                    entityBuilt(entity = 'test_case', entityParentId, childEntity = 'test_case', entityId, entityName, entityStatus);
                                                                     $.each(value, function (key, value) {
                                                                         $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
                                                                         $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
@@ -367,24 +362,27 @@
         });
     }
 
-    function assemblyBuilt(assemblyId, assemblyName, assemblyStatus) {
-        if ($('#assembly-' + assemblyId).length) {
-            if ($('#assembly-' + assemblyId).attr('assembly-status') != assemblyStatus) {
-                $('#assembly-' + assemblyId + ' .panel-title span').text(assemblyName);
-                $('#assembly-' + assemblyId + ' .panel-title a span').attr('class', 'status-' + assemblyStatus);
-                $('#assembly-' + assemblyId + ' .panel-title a').attr('href', '#assembly-' + assemblyId);
-                $('#assembly-' + assemblyId + ' .dropdown-menu a').attr('obj_id', assemblyId);
-                $('#assembly-' + assemblyId + ' .dropdown-menu a').attr('typeName', 'testAssembly');
+    function entityBuilt(entity, entityParentId, childEntity, entityId, entityName, entityStatus) {
+        if ($('#' + entity + '-' + entityId).length) {
+            if ($('#' + entity + '-' + entityId).attr('' + entity + '-status') != entityStatus) {
+                $('#' + entity + '-' + entityId + ' .panel-title a span').toggleClass('status-' + entityStatus);
             }
-        } else if ($('#assembly-' + assemblyId).length == 0) {
-            $('.panel-default-assembly').clone(true, true).appendTo('#assembly_group').attr('id', 'assembly-' + assemblyId).removeClass('panel-default-assembly').show();
-            $('#assembly-' + assemblyId + ' .panel-title span').text(assemblyName);
-            $('#assembly-' + assemblyId).attr('assembly-status', assemblyStatus);
-            $('#assembly-' + assemblyId + ' .panel-title a').append('&nbsp;<span class="status-' + assemblyStatus + '">');
-            $('#assembly-' + assemblyId + ' .panel-title a').attr('href', '#assembly-' + assemblyId);
-            $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly-' + assemblyId + '.panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-            $('#assembly-' + assemblyId + ' .dropdown-menu a').attr('obj_id', assemblyId);
-            $('#assembly-' + assemblyId + ' .dropdown-menu a').attr('typeName', 'testAssembly');
+        } else if ($('#' + entity + '-' + entityId).length == 0) {
+            if (entity == "assembly") {
+                $('.panel-default-' + entity).clone(true, true).appendTo('#' + entity + '_group').attr('id', entity + '-' + entityId).removeClass('panel-default-' + entity).show();
+            } else {
+                $('.panel-default-' + entity).clone(true, true).appendTo('#' + entity + '_group-' + entityParentId).attr('id', entity + '-' + entityId).removeClass('panel-default-' + entity).show();
+                console.log(('#' + entity + '_group-' + entityParentId));
+            }
+            $('#' + entity + '-' + entityId + ' .panel-title span').text(entityName);
+            $('#' + entity + '-' + entityId).attr('' + entity + '-status', entityStatus);
+            $('#' + entity + '-' + entityId + ' .panel-title a').append('&nbsp;<span class="status-' + entityStatus + '">');
+            $('#' + entity + '-' + entityId + ' .panel-title a').attr('href', '#panel-' + entity + '-' + entityId);
+            $('#' + entity + '-' + entityId + ' .panel-collapse').attr('id', 'panel-' + entity + '-' + entityId);
+            $('#' + entity + '-' + entityId + ' .panel-group').attr('id', childEntity + '_group-' + entityParentId);
+            $('.dropdown-btn-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId + '.panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+            $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('obj_id', entityId);
+            $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('typeName', 'test' + entity);
         }
     }
 
