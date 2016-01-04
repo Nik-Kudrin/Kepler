@@ -106,7 +106,6 @@
 
 <div class="col-md-12 build-panel-one-page build-panel-one-page-hidden">
     <div class="col-md-12 build-panel-one-page-header">
-        <span>1</span>
         <a href="#" class="build-panel-one-page-link" target="_blank">
             <i class="fa fa-link"></i>
         </a>
@@ -247,38 +246,22 @@
             url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
             type: 'GET',
             success: function (data) {
+                var assemblyName = '';
+                var assemblyStatus = '';
+                var assemblyId = '';
                 $.each(data, function (key, value) {
                     $.each(value, function (key, value) {
                         if (key != "TestSuites") {
                             if (key == "Name") {
-                                var assemblyName = value;
+                                assemblyName = value;
                             } else if (key == "Status") {
-                                var assemblyStatus = value;
+                                assemblyStatus = value;
                             } else if (key == "Id") {
-                                var assemblyId = value;
-                            }
-                            console.log($('.assembly-' + assemblyId).length);
-                            if ($('.assembly-' + assemblyId).length && assemblyId != null) {
-                                if ($('.assembly-' + assemblyId).attr('assembly-status') != assemblyStatus) {
-                                    $('.assembly-' + assemblyId + ' .panel-title span').text(assemblyName);
-                                    $('.assembly-' + assemblyId + ' .panel-title a span').attr('class', 'status-' + assemblyStatus);
-                                    $('.assembly-' + assemblyId + ' .panel-title a').attr('href', '#assembly-' + assemblyId);
-                                    $('.assembly-' + assemblyId + ' .panel-collapse').attr('id', 'assembly-' + assemblyId);
-                                    $('.assembly-' + assemblyId + ' .dropdown-menu a').attr('obj_id', assemblyId);
-                                    $('.assembly-' + assemblyId + ' .dropdown-menu a').attr('typeName', 'testAssembly');
-                                }
-                            } else if ($('.assembly-' + assemblyId).length == 0 && assemblyId != null) {
-                                $('.panel-default-assembly').clone(true, true).appendTo('#assembly_group').addClass('.assembly-' + assemblyId).removeClass('panel-default-assembly').show();
-                                $('.assembly-' + assemblyId).attr('assembly-status', assemblyStatus);
-                                $('.assembly-' + assemblyId + ' .panel-title span').text(assemblyName);
-                                $('.assembly-' + assemblyId + ' .panel-title a span').attr('class', 'status-' + assemblyStatus);
-                                $('.assembly-' + assemblyId + ' .panel-title a').attr('href', '#assembly-' + assemblyId);
-                                $('.assembly-' + assemblyId + ' .panel-collapse').attr('id', 'assembly-' + assemblyId);
-                                $('.dropdown-btn-hidden').clone(true, true).appendTo('.assembly-' + assemblyId + '.panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-                                $('.assembly-' + assemblyId + ' .dropdown-menu a').attr('obj_id', assemblyId);
-                                $('.assembly-' + assemblyId + ' .dropdown-menu a').attr('typeName', 'testAssembly');
+                                assemblyId = value;
                             }
                         } else {
+                            assemblyBuilt(assemblyId, assemblyName, assemblyStatus);
+
                             $.each(value, function (key, value) {
                                 $('.panel-default-suite').clone(true, true).appendTo('#assembly_group .test_suite_group:last').removeClass('panel-default-suite').show();
                                 $.each(value, function (key, value) {
@@ -323,9 +306,7 @@
                                                                         $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
                                                                         $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
                                                                         $.each(value, function (key, value) {
-                                                                            if (key == "Key") {
-                                                                                $('#assembly_group .build-panel-one-page-header:last > span').text(value);
-                                                                            } else {
+                                                                            if (key == "Value") {
                                                                                 $.each(value, function (key, value) {
                                                                                     var slashReplaced = "";
 
@@ -384,6 +365,27 @@
                 });
             }
         });
+    }
+
+    function assemblyBuilt(assemblyId, assemblyName, assemblyStatus) {
+        if ($('#assembly-' + assemblyId).length) {
+            if ($('#assembly-' + assemblyId).attr('assembly-status') != assemblyStatus) {
+                $('#assembly-' + assemblyId + ' .panel-title span').text(assemblyName);
+                $('#assembly-' + assemblyId + ' .panel-title a span').attr('class', 'status-' + assemblyStatus);
+                $('#assembly-' + assemblyId + ' .panel-title a').attr('href', '#assembly-' + assemblyId);
+                $('#assembly-' + assemblyId + ' .dropdown-menu a').attr('obj_id', assemblyId);
+                $('#assembly-' + assemblyId + ' .dropdown-menu a').attr('typeName', 'testAssembly');
+            }
+        } else if ($('#assembly-' + assemblyId).length == 0) {
+            $('.panel-default-assembly').clone(true, true).appendTo('#assembly_group').attr('id', 'assembly-' + assemblyId).removeClass('panel-default-assembly').show();
+            $('#assembly-' + assemblyId + ' .panel-title span').text(assemblyName);
+            $('#assembly-' + assemblyId).attr('assembly-status', assemblyStatus);
+            $('#assembly-' + assemblyId + ' .panel-title a').append('&nbsp;<span class="status-' + assemblyStatus + '">');
+            $('#assembly-' + assemblyId + ' .panel-title a').attr('href', '#assembly-' + assemblyId);
+            $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly-' + assemblyId + '.panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+            $('#assembly-' + assemblyId + ' .dropdown-menu a').attr('obj_id', assemblyId);
+            $('#assembly-' + assemblyId + ' .dropdown-menu a').attr('typeName', 'testAssembly');
+        }
     }
 
     //

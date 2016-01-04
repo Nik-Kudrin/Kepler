@@ -301,15 +301,6 @@ label.error {
     margin-bottom: 20px;
 }
 
-    .build-panel-one-page-header span:first-of-type {
-        background: #DDD;
-        padding: 5px;
-        border-radius: 4px;
-        font-size: 11px;
-        margin-bottom: 5px;
-        display: inline;
-    }
-
 .build-panel-screen-base, .build-panel-screen-dif, .build-panel-screen-curr {
     height: 163px;
     background: url("../img/no_image_icon.png") no-repeat center;
