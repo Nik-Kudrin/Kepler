@@ -54,50 +54,50 @@
 <div class="col-md-12">
     <div class="panel panel-default build-panel">
         <div class="panel-body">
-            <div class="panel-group assembly_group" id="assembly_group">
+            <div class="panel-group testAssembly_group" id="testAssembly_group">
 
             </div>
         </div>
     </div>
 </div>
 
-<div class="panel panel-default panel-default-assembly">
+<div class="panel panel-default panel-default-testAssembly">
     <div class="panel-heading">
         <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#assembly_group" href="#assembly" class="collapsed"><i class="fa"></i>&nbsp;<span>Assembly name</span></a>
+            <a data-toggle="collapse" data-parent="#testAssembly_group" href="#testAssembly" class="collapsed"><i class="fa"></i>&nbsp;<span>Assembly name</span></a>
         </h4>
     </div>
-    <div id="assembly" class="panel-collapse collapse" style="height: 0px;">
+    <div id="testAssembly" class="panel-collapse collapse" style="height: 0px;">
         <div class="panel-body">
-            <div class="panel-group test_suite_group" id="test_suite_group">
+            <div class="panel-group testSuite_group" id="testSuite_group">
 
             </div>
         </div>
     </div>
 </div>
 
-<div class="panel panel-default panel-default-test_suite">
+<div class="panel panel-default panel-default-testSuite">
     <div class="panel-heading">
         <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#test_suite_group" href="#test_suite" class="collapsed"><i class="fa"></i>&nbsp;<span>Test suite name</span></a>
+            <a data-toggle="collapse" data-parent="#testSuite_group" href="#testSuite" class="collapsed"><i class="fa"></i>&nbsp;<span>Test suite name</span></a>
         </h4>
     </div>
-    <div id="test_suite" class="panel-collapse collapse" style="height: 0px;">
+    <div id="testSuite" class="panel-collapse collapse" style="height: 0px;">
         <div class="panel-body">
-            <div class="panel-group test_case_group" id="test_case_group">
+            <div class="panel-group testCase_group" id="testCase_group">
 
             </div>
         </div>
     </div>
 </div>
 
-<div class="panel panel-default panel-default-test_case">
+<div class="panel panel-default panel-default-testCase">
     <div class="panel-heading">
         <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#test_case_group11" href="#test_case" class="collapsed"><i class="fa"></i>&nbsp;<span>Test case name</span></a>
+            <a data-toggle="collapse" data-parent="#testCase_group" href="#testCase" class="collapsed"><i class="fa"></i>&nbsp;<span>Test case name</span></a>
         </h4>
     </div>
-    <div id="test_case" class="panel-collapse collapse" style="height: 0px;">
+    <div id="testCase" class="panel-collapse collapse" style="height: 0px;">
         <div class="panel-body">
 
         </div>
@@ -237,6 +237,7 @@
     //
     // Get Assembly
     //
+    getAssemblies();
     var interval = 8000;
     setInterval(getAssemblies, interval);
 
@@ -263,7 +264,7 @@
                                 entityParentId = value;
                             }
                         } else {
-                            entityBuilt(entity = 'assembly', entityParentId, childEntity = 'test_suite', entityId, entityName, entityStatus);
+                            entityBuilt(entity = 'testAssembly', entityParentId, childEntity = 'testSuite', entityId, entityName, entityStatus);
                             $.each(value, function (key, value) {
                                 $.each(value, function (key, value) {
                                     if (key == "Value") {
@@ -279,7 +280,7 @@
                                                     entityParentId = value;
                                                 }
                                             } else {
-                                                entityBuilt(entity = 'test_suite', entityParentId, childEntity = 'test_case', entityId, entityName, entityStatus);
+                                                entityBuilt(entity = 'testSuite', entityParentId, childEntity = 'testCase', entityId, entityName, entityStatus);
                                                 $.each(value, function (key, value) {
                                                     $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_case_group:last').removeClass('panel-default-case').show();
                                                     $.each(value, function (key, value) {
@@ -296,55 +297,55 @@
                                                                         entityParentId = value;
                                                                     }
                                                                 } else {
-                                                                    entityBuilt(entity = 'test_case', entityParentId, childEntity = 'test_case', entityId, entityName, entityStatus);
-                                                                    $.each(value, function (key, value) {
-                                                                        $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
-                                                                        $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
-                                                                        $.each(value, function (key, value) {
-                                                                            if (key == "Value") {
-                                                                                $.each(value, function (key, value) {
-                                                                                    var slashReplaced = "";
+                                                                    entityBuilt(entity = 'testCase', entityParentId, childEntity = 'test_case', entityId, entityName, entityStatus);
+                                                                    //$.each(value, function (key, value) {
+                                                                    //    $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
+                                                                    //    $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
+                                                                    //    $.each(value, function (key, value) {
+                                                                    //        if (key == "Value") {
+                                                                    //            $.each(value, function (key, value) {
+                                                                    //                var slashReplaced = "";
 
-                                                                                    if (key == "Name") {
-                                                                                        $('#assembly_group .build-panel-one-page:last img').attr('title', value);
-                                                                                        $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-gallery', value);
-                                                                                        $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-title', function (i, val) {
-                                                                                            return val + '&nbsp;' + value;
-                                                                                        });
-                                                                                    } else if (key == "Status") {
-                                                                                        $('#assembly_group .build-panel-one-page-header:last').append('&nbsp;<span class="status-' + value + '">');
-                                                                                    } else if (key == "Id") {
-                                                                                        $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .build-panel-one-page-header:last').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-                                                                                        $('#assembly_group .build-panel-one-page-header:last .dropdown-menu a').attr('obj_id', value);
-                                                                                        $('#assembly_group .build-panel-one-page-header:last .dropdown-menu a').attr('typeName', 'screenShot');
-                                                                                    } else if (key == "BaseLineImagePathUrl") {
-                                                                                        slashReplaced = value.replace(/\\/g, "/");
-                                                                                        $('#assembly_group .build-panel-screen-base:last a').attr('href', slashReplaced);
-                                                                                    } else if (key == "BaseLinePreviewPathUrl") {
-                                                                                        slashReplaced = value.replace(/\\/g, "/");
-                                                                                        $('#assembly_group .build-panel-screen-base:last img').attr('src', slashReplaced);
-                                                                                    } else if (key == "DiffImagePathUrl" && value.indexOf('img/') != -1) {
-                                                                                        slashReplaced = value.replace(/\\/g, "/");
-                                                                                        $('#assembly_group .build-panel-screen-dif:last a').attr('href', slashReplaced);
-                                                                                    } else if (key == "DiffPreviewPathUrl" && value.indexOf('img/') != -1) {
-                                                                                        slashReplaced = value.replace(/\\/g, "/");
-                                                                                        $('#assembly_group .build-panel-screen-dif:last img').attr('src', slashReplaced);
-                                                                                    } else if (key == "ImagePathUrl") {
-                                                                                        slashReplaced = value.replace(/\\/g, "/");
-                                                                                        $('#assembly_group .build-panel-screen-curr:last a').attr('href', slashReplaced);
-                                                                                    } else if (key == "PreviewImagePathUrl") {
-                                                                                        slashReplaced = value.replace(/\\/g, "/");
-                                                                                        $('#assembly_group .build-panel-screen-curr:last img').attr('src', slashReplaced);
-                                                                                    } else if (key == "ErrorMessage" && value != null && value != '') {
-                                                                                        $('#assembly_group .build-panel-error-log:last').show();
-                                                                                        $('#assembly_group .build-panel-error-log:last textarea').text(value);
-                                                                                    } else if (key == "Url" && value != null) {
-                                                                                        $('#assembly_group .build-panel-one-page-link:last').attr('href', value).show();
-                                                                                    }
-                                                                                });
-                                                                            }
-                                                                        });
-                                                                    });
+                                                                    //                if (key == "Name") {
+                                                                    //                    $('#assembly_group .build-panel-one-page:last img').attr('title', value);
+                                                                    //                    $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-gallery', value);
+                                                                    //                    $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-title', function (i, val) {
+                                                                    //                        return val + '&nbsp;' + value;
+                                                                    //                    });
+                                                                    //                } else if (key == "Status") {
+                                                                    //                    $('#assembly_group .build-panel-one-page-header:last').append('&nbsp;<span class="status-' + value + '">');
+                                                                    //                } else if (key == "Id") {
+                                                                    //                    $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .build-panel-one-page-header:last').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+                                                                    //                    $('#assembly_group .build-panel-one-page-header:last .dropdown-menu a').attr('obj_id', value);
+                                                                    //                    $('#assembly_group .build-panel-one-page-header:last .dropdown-menu a').attr('typeName', 'screenShot');
+                                                                    //                } else if (key == "BaseLineImagePathUrl") {
+                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
+                                                                    //                    $('#assembly_group .build-panel-screen-base:last a').attr('href', slashReplaced);
+                                                                    //                } else if (key == "BaseLinePreviewPathUrl") {
+                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
+                                                                    //                    $('#assembly_group .build-panel-screen-base:last img').attr('src', slashReplaced);
+                                                                    //                } else if (key == "DiffImagePathUrl" && value.indexOf('img/') != -1) {
+                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
+                                                                    //                    $('#assembly_group .build-panel-screen-dif:last a').attr('href', slashReplaced);
+                                                                    //                } else if (key == "DiffPreviewPathUrl" && value.indexOf('img/') != -1) {
+                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
+                                                                    //                    $('#assembly_group .build-panel-screen-dif:last img').attr('src', slashReplaced);
+                                                                    //                } else if (key == "ImagePathUrl") {
+                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
+                                                                    //                    $('#assembly_group .build-panel-screen-curr:last a').attr('href', slashReplaced);
+                                                                    //                } else if (key == "PreviewImagePathUrl") {
+                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
+                                                                    //                    $('#assembly_group .build-panel-screen-curr:last img').attr('src', slashReplaced);
+                                                                    //                } else if (key == "ErrorMessage" && value != null && value != '') {
+                                                                    //                    $('#assembly_group .build-panel-error-log:last').show();
+                                                                    //                    $('#assembly_group .build-panel-error-log:last textarea').text(value);
+                                                                    //                } else if (key == "Url" && value != null) {
+                                                                    //                    $('#assembly_group .build-panel-one-page-link:last').attr('href', value).show();
+                                                                    //                }
+                                                                    //            });
+                                                                    //        }
+                                                                    //    });
+                                                                    //});
                                                                 }
                                                             });
                                                         }
@@ -364,15 +365,15 @@
 
     function entityBuilt(entity, entityParentId, childEntity, entityId, entityName, entityStatus) {
         if ($('#' + entity + '-' + entityId).length) {
-            if ($('#' + entity + '-' + entityId).attr('' + entity + '-status') != entityStatus) {
-                $('#' + entity + '-' + entityId + ' .panel-title a span').toggleClass('status-' + entityStatus);
-            }
+            if ($('#' + entity + '-' + entityId + ' > .panel-heading a span:last').attr('class') != 'status-' + entityStatus) {
+                $('#' + entity + '-' + entityId + ' > .panel-heading a span:last').removeClass().addClass('status-' + entityStatus);
+                console.log('update');
+            } else { console.log('no'); }
         } else if ($('#' + entity + '-' + entityId).length == 0) {
-            if (entity == "assembly") {
+            if (entity == "testAssembly") {
                 $('.panel-default-' + entity).clone(true, true).appendTo('#' + entity + '_group').attr('id', entity + '-' + entityId).removeClass('panel-default-' + entity).show();
             } else {
                 $('.panel-default-' + entity).clone(true, true).appendTo('#' + entity + '_group-' + entityParentId).attr('id', entity + '-' + entityId).removeClass('panel-default-' + entity).show();
-                console.log(('#' + entity + '_group-' + entityParentId));
             }
             $('#' + entity + '-' + entityId + ' .panel-title span').text(entityName);
             $('#' + entity + '-' + entityId).attr('' + entity + '-status', entityStatus);
@@ -380,9 +381,9 @@
             $('#' + entity + '-' + entityId + ' .panel-title a').attr('href', '#panel-' + entity + '-' + entityId);
             $('#' + entity + '-' + entityId + ' .panel-collapse').attr('id', 'panel-' + entity + '-' + entityId);
             $('#' + entity + '-' + entityId + ' .panel-group').attr('id', childEntity + '_group-' + entityParentId);
-            $('.dropdown-btn-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId + '.panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+            $('.dropdown-btn-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId + ' .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
             $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('obj_id', entityId);
-            $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('typeName', 'test' + entity);
+            $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('typeName', entity);
         }
     }
 

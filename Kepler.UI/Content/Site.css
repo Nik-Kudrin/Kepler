@@ -196,8 +196,8 @@ label.error {
 /*NAVBAR LEFT END*/
 
 /*BUILD LIST PAGE START*/
-.panel-default-assembly, .panel-default-test_suite,
-.panel-default-test_case, .dropdown-btn-hidden,
+.panel-default-testAssembly, .panel-default-testSuite,
+.panel-default-testCase, .dropdown-btn-hidden,
 .build-panel-one-page-hidden, .build-panel-splitter-hidden {
     display: none;
 }
@@ -263,22 +263,22 @@ label.error {
     border: none;
 }
 
-.assembly_group .panel-default,
-.test_suite_group .panel-default,
-.test_case_group .panel-default {
+.testAssembly_group .panel-default,
+.testSuite_group .panel-default,
+.testCase_group .panel-default {
     padding: 10px 10px 10px 10px;
     background: none;
 }
 
-.assembly_group .panel-default {
+.testAssembly_group .panel-default {
     border: 1px dotted #777;
 }
 
-.test_suite_group .panel-default {
+.testSuite_group .panel-default {
     border: 1px dotted #999;
 }
 
-.test_case_group .panel-default {
+.testCase_group .panel-default {
     border: 1px dotted #CCC;
 }
 
@@ -287,13 +287,13 @@ label.error {
     font-size: 18px;
 }
 
-.assembly_group .panel-body,
-.test_suite_group .panel-body,
-.test_case_group .panel-body {
+.testAssembly_group .panel-body,
+.testSuite_group .panel-body,
+.testCase_group .panel-body {
     padding: 10px 0px 5px 15px;
 }
 
-.test_case_group .panel-body {
+.testCase_group .panel-body {
     padding: 10px 0px;
 }
 
