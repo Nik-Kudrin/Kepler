@@ -233,11 +233,11 @@ body {
     =============================================*/
 
 @media (max-width:1160px) {
-.build-panel-screen-base, .build-panel-screen-dif, .build-panel-screen-curr {
+.screenShot-base, .screenShot-dif, .screenShot-curr {
     height: 122px;
 }
 
-    .build-panel-screen-base img, .build-panel-screen-dif img, .build-panel-screen-curr img {
+    .screenShot-base img, .screenShot-dif img, .screenShot-curr img {
         width: 150px;
         height: 122px;
     }

@@ -198,7 +198,7 @@ label.error {
 /*BUILD LIST PAGE START*/
 .panel-default-testAssembly, .panel-default-testSuite,
 .panel-default-testCase, .dropdown-btn-hidden,
-.build-panel-one-page-hidden, .build-panel-splitter-hidden {
+.screenShot-hidden, .screenShot-splitter-hidden {
     display: none;
 }
 
@@ -282,7 +282,7 @@ label.error {
     border: 1px dotted #CCC;
 }
 
-.build-panel-one-page-link {
+.screenShot-link {
     display: none;
     font-size: 18px;
 }
@@ -297,18 +297,18 @@ label.error {
     padding: 10px 0px;
 }
 
-.build-panel-one-page-header {
+.screenShot-header {
     margin-bottom: 20px;
 }
 
-.build-panel-screen-base, .build-panel-screen-dif, .build-panel-screen-curr {
+.screenShot-base, .screenShot-dif, .screenShot-curr {
     height: 163px;
     background: url("../img/no_image_icon.png") no-repeat center;
     background-size: 117px 95px;
     text-align: center;
 }
 
-    .build-panel-screen-base img, .build-panel-screen-dif img, .build-panel-screen-curr img {
+    .screenShot-base img, .screenShot-dif img, .screenShot-curr img {
         width: 200px;
         height: 163px;
         display: inline;
@@ -316,12 +316,12 @@ label.error {
         border: 1px solid #BCDEFB;
     }
 
-.build-panel-error-log {
+.screenShot-error-log {
     display: none;
     padding-top: 20px;
 }
 
-.build-panel-splitter hr {
+.screenShot-splitter hr {
     border-top: 1px dotted #CCC;
 }
 

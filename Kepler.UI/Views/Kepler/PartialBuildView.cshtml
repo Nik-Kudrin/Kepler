@@ -104,35 +104,35 @@
     </div>
 </div>
 
-<div class="col-md-12 build-panel-one-page build-panel-one-page-hidden">
-    <div class="col-md-12 build-panel-one-page-header">
-        <a href="#" class="build-panel-one-page-link" target="_blank">
+<div class="col-md-12 screenShot screenShot-hidden">
+    <div class="col-md-12 screenShot-header">
+        <a href="#" class="screenShot-link" target="_blank">
             <i class="fa fa-link"></i>
         </a>
     </div>
     <div class="col-md-12">
-        <div class="col-md-4 build-panel-screen-base">
+        <div class="col-md-4 screenShot-base">
             <a data-toggle="lightbox" data-gallery="multiimages" data-title="Base line" href="">
                 <img src="">
             </a>
         </div>
-        <div class="col-md-4 build-panel-screen-dif">
+        <div class="col-md-4 screenShot-dif">
             <a data-toggle="lightbox" data-gallery="multiimages" data-title="Difference" href="">
                 <img src="">
             </a>
         </div>
-        <div class="col-md-4 build-panel-screen-curr">
+        <div class="col-md-4 screenShot-curr">
             <a data-toggle="lightbox" data-gallery="multiimages" data-title="Original" href="">
                 <img src="">
             </a>
         </div>
     </div>
-    <div class="col-md-12 build-panel-error-log">
+    <div class="col-md-12 screenShot-error-log">
         <textarea class="form-control" rows="2"></textarea>
     </div>
 </div>
 
-<div class="col-md-12 build-panel-splitter build-panel-splitter-hidden">
+<div class="col-md-12 screenShot-splitter screenShot-splitter-hidden">
     <hr>
 </div>
 
@@ -251,6 +251,15 @@
                 var entityStatus = '';
                 var entityId = '';
                 var entityParentId = '';
+                var BaseLineImagePathUrl = '';
+                var BaseLinePreviewPathUrl = '';
+                var DiffImagePathUrl = '';
+                var DiffPreviewPathUrl = '';
+                var ImagePathUrl = '';
+                var PreviewImagePathUrl = '';
+                var ErrorMessage = '';
+                var Url = '';
+
                 $.each(data, function (key, value) {
                     $.each(value, function (key, value) {
                         if (key != "TestSuites") {
@@ -297,55 +306,43 @@
                                                                         entityParentId = value;
                                                                     }
                                                                 } else {
-                                                                    entityBuilt(entity = 'testCase', entityParentId, childEntity = 'test_case', entityId, entityName, entityStatus);
-                                                                    //$.each(value, function (key, value) {
-                                                                    //    $('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
-                                                                    //    $('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
-                                                                    //    $.each(value, function (key, value) {
-                                                                    //        if (key == "Value") {
-                                                                    //            $.each(value, function (key, value) {
-                                                                    //                var slashReplaced = "";
-
-                                                                    //                if (key == "Name") {
-                                                                    //                    $('#assembly_group .build-panel-one-page:last img').attr('title', value);
-                                                                    //                    $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-gallery', value);
-                                                                    //                    $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-title', function (i, val) {
-                                                                    //                        return val + '&nbsp;' + value;
-                                                                    //                    });
-                                                                    //                } else if (key == "Status") {
-                                                                    //                    $('#assembly_group .build-panel-one-page-header:last').append('&nbsp;<span class="status-' + value + '">');
-                                                                    //                } else if (key == "Id") {
-                                                                    //                    $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .build-panel-one-page-header:last').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-                                                                    //                    $('#assembly_group .build-panel-one-page-header:last .dropdown-menu a').attr('obj_id', value);
-                                                                    //                    $('#assembly_group .build-panel-one-page-header:last .dropdown-menu a').attr('typeName', 'screenShot');
-                                                                    //                } else if (key == "BaseLineImagePathUrl") {
-                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
-                                                                    //                    $('#assembly_group .build-panel-screen-base:last a').attr('href', slashReplaced);
-                                                                    //                } else if (key == "BaseLinePreviewPathUrl") {
-                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
-                                                                    //                    $('#assembly_group .build-panel-screen-base:last img').attr('src', slashReplaced);
-                                                                    //                } else if (key == "DiffImagePathUrl" && value.indexOf('img/') != -1) {
-                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
-                                                                    //                    $('#assembly_group .build-panel-screen-dif:last a').attr('href', slashReplaced);
-                                                                    //                } else if (key == "DiffPreviewPathUrl" && value.indexOf('img/') != -1) {
-                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
-                                                                    //                    $('#assembly_group .build-panel-screen-dif:last img').attr('src', slashReplaced);
-                                                                    //                } else if (key == "ImagePathUrl") {
-                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
-                                                                    //                    $('#assembly_group .build-panel-screen-curr:last a').attr('href', slashReplaced);
-                                                                    //                } else if (key == "PreviewImagePathUrl") {
-                                                                    //                    slashReplaced = value.replace(/\\/g, "/");
-                                                                    //                    $('#assembly_group .build-panel-screen-curr:last img').attr('src', slashReplaced);
-                                                                    //                } else if (key == "ErrorMessage" && value != null && value != '') {
-                                                                    //                    $('#assembly_group .build-panel-error-log:last').show();
-                                                                    //                    $('#assembly_group .build-panel-error-log:last textarea').text(value);
-                                                                    //                } else if (key == "Url" && value != null) {
-                                                                    //                    $('#assembly_group .build-panel-one-page-link:last').attr('href', value).show();
-                                                                    //                }
-                                                                    //            });
-                                                                    //        }
-                                                                    //    });
-                                                                    //});
+                                                                    entityBuilt(entity = 'testCase', entityParentId, childEntity = 'screenShot', entityId, entityName, entityStatus);
+                                                                    $.each(value, function (key, value) {
+                                                                        $.each(value, function (key, value) {
+                                                                            if (key == "Value") {
+                                                                                $.each(value, function (key, value) {
+                                                                                    if (key == "Name") {
+                                                                                        entityName = value;
+                                                                                    } else if (key == "Status") {
+                                                                                        entityStatus = value;
+                                                                                    } else if (key == "Id") {
+                                                                                        entityId = value;
+                                                                                    } else if (key == "ParentObjId") {
+                                                                                        entityParentId = value;
+                                                                                    } else if (key == "BaseLineImagePathUrl") {
+                                                                                        BaseLineImagePathUrl = value.replace(/\\/g, "/");
+                                                                                    } else if (key == "BaseLinePreviewPathUrl") {
+                                                                                        BaseLinePreviewPathUrl = value.replace(/\\/g, "/");
+                                                                                    } else if (key == "DiffImagePathUrl" && value.indexOf('img/') != -1) {
+                                                                                        DiffImagePathUrl = value.replace(/\\/g, "/");
+                                                                                    } else if (key == "DiffPreviewPathUrl" && value.indexOf('img/') != -1) {
+                                                                                        DiffPreviewPathUrl = value.replace(/\\/g, "/");
+                                                                                    } else if (key == "ImagePathUrl") {
+                                                                                        ImagePathUrl = value.replace(/\\/g, "/");
+                                                                                    } else if (key == "PreviewImagePathUrl") {
+                                                                                        PreviewImagePathUrl = value.replace(/\\/g, "/");
+                                                                                    } else if (key == "ErrorMessage") {
+                                                                                        ErrorMessage = value; 
+                                                                                    } else if (key == "Url") {
+                                                                                        Url = value;
+                                                                                    }
+                                                                                });
+                                                                                entityBuilt(entity = 'screenShot', entityParentId, childEntity, entityId, entityName, entityStatus,
+                                                                                    BaseLineImagePathUrl, BaseLinePreviewPathUrl, DiffImagePathUrl, DiffPreviewPathUrl,
+                                                                                    ImagePathUrl, PreviewImagePathUrl, ErrorMessage, Url);
+                                                                            }
+                                                                        });
+                                                                    });
                                                                 }
                                                             });
                                                         }
@@ -363,13 +360,66 @@
         });
     }
 
-    function entityBuilt(entity, entityParentId, childEntity, entityId, entityName, entityStatus) {
-        if ($('#' + entity + '-' + entityId).length) {
+
+
+
+    //$('.build-panel-one-page-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-one-page-hidden').show();
+    //$('.build-panel-splitter-hidden').clone(true, true).appendTo('#assembly_group .test_case_group:last .panel-default:last .panel-body').removeClass('build-panel-splitter-hidden').show();
+
+    //var slashReplaced = "";
+
+    //if (key == "Name") {
+    //    $('#assembly_group .build-panel-one-page:last img').attr('title', value);
+    //    $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-gallery', value);
+    //    $('#assembly_group .build-panel-one-page:last > div:nth-of-type(2) a').attr('data-title', function (i, val) {
+    //        return val + '&nbsp;' + value;
+    //    });
+    //} else if (key == "Status") {
+    //    $('#assembly_group .build-panel-one-page-header:last').append('&nbsp;<span class="status-' + value + '">');
+    //} else if (key == "Id") {
+    //    $('.dropdown-btn-hidden').clone(true, true).appendTo('#assembly_group .build-panel-one-page-header:last').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+    //    $('#assembly_group .build-panel-one-page-header:last .dropdown-menu a').attr('obj_id', value);
+    //    $('#assembly_group .build-panel-one-page-header:last .dropdown-menu a').attr('typeName', 'screenShot');
+    //} else if (key == "BaseLineImagePathUrl") {
+    //    slashReplaced = value.replace(/\\/g, "/");
+    //    $('#assembly_group .build-panel-screen-base:last a').attr('href', slashReplaced);
+    //} else if (key == "BaseLinePreviewPathUrl") {
+    //    slashReplaced = value.replace(/\\/g, "/");
+    //    $('#assembly_group .build-panel-screen-base:last img').attr('src', slashReplaced);
+    //} else if (key == "DiffImagePathUrl" && value.indexOf('img/') != -1) {
+    //    slashReplaced = value.replace(/\\/g, "/");
+    //    $('#assembly_group .build-panel-screen-dif:last a').attr('href', slashReplaced);
+    //} else if (key == "DiffPreviewPathUrl" && value.indexOf('img/') != -1) {
+    //    slashReplaced = value.replace(/\\/g, "/");
+    //    $('#assembly_group .build-panel-screen-dif:last img').attr('src', slashReplaced);
+    //} else if (key == "ImagePathUrl") {
+    //    slashReplaced = value.replace(/\\/g, "/");
+    //    $('#assembly_group .build-panel-screen-curr:last a').attr('href', slashReplaced);
+    //} else if (key == "PreviewImagePathUrl") {
+    //    slashReplaced = value.replace(/\\/g, "/");
+    //    $('#assembly_group .build-panel-screen-curr:last img').attr('src', slashReplaced);
+    //} else if (key == "ErrorMessage" && value != null && value != '') {
+    //    $('#assembly_group .build-panel-error-log:last').show();
+    //    $('#assembly_group .build-panel-error-log:last textarea').text(value);
+    //} else if (key == "Url" && value != null) {
+    //    $('#assembly_group .build-panel-one-page-link:last').attr('href', value).show();
+    //}
+
+
+
+
+
+    //
+    // Builder for testAssembly | testSuite | testCase
+    //
+    function entityBuilt(entity, entityParentId, childEntity, entityId, entityName, entityStatus,
+        BaseLineImagePathUrl, BaseLinePreviewPathUrl, DiffImagePathUrl, DiffPreviewPathUrl,
+        ImagePathUrl, PreviewImagePathUrl, ErrorMessage, Url) {
+        if ($('#' + entity + '-' + entityId).length && entity != 'screenShot') {
             if ($('#' + entity + '-' + entityId + ' > .panel-heading a span:last').attr('class') != 'status-' + entityStatus) {
                 $('#' + entity + '-' + entityId + ' > .panel-heading a span:last').removeClass().addClass('status-' + entityStatus);
-                console.log('update');
-            } else { console.log('no'); }
-        } else if ($('#' + entity + '-' + entityId).length == 0) {
+            }
+        } else if ($('#' + entity + '-' + entityId).length == 0 && entity != 'screenShot') {
             if (entity == "testAssembly") {
                 $('.panel-default-' + entity).clone(true, true).appendTo('#' + entity + '_group').attr('id', entity + '-' + entityId).removeClass('panel-default-' + entity).show();
             } else {
@@ -384,6 +434,39 @@
             $('.dropdown-btn-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId + ' .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
             $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('obj_id', entityId);
             $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('typeName', entity);
+        } else if ($('#' + entity + '-' + entityId).length && entity == 'screenShot') {
+            if ($('#' + entity + '-' + entityId + ' > .screenShot-header span:last').attr('class') != 'status-' + entityStatus) {
+                $('#' + entity + '-' + entityId + ' > .screenShot-header span:last').removeClass().addClass('status-' + entityStatus);
+            }
+        } else if ($('#' + entity + '-' + entityId).length == 0 && entity == 'screenShot') {
+            $('.screenShot-hidden').clone(true, true).appendTo('#panel-testCase-' + entityParentId + ' > .panel-body').attr('id', entity + '-' + entityId).removeClass('screenShot-hidden').show();
+            $('.screenShot-splitter-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId).removeClass('screenShot-splitter-hidden').show();
+            $('#' + entity + '-' + entityId + ' img').attr('title', entityName);
+            $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-gallery', entityName);
+            $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-title', function (i, val) {
+                return val + '&nbsp;' + entityName;
+            });
+            $('#' + entity + '-' + entityId + ' .screenShot-header').append('&nbsp;<span class="status-' + entityStatus + '">');
+            $('.dropdown-btn-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId + ' .screenShot-header').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+            $('#' + entity + '-' + entityId + ' .screenShot-header .dropdown-menu a').attr('obj_id', entityId);
+            $('#' + entity + '-' + entityId + ' .screenShot-header .dropdown-menu a').attr('typeName', 'screenShot');
+            $('#' + entity + '-' + entityId + ' .screenShot-base a').attr('href', BaseLineImagePathUrl);
+            $('#' + entity + '-' + entityId + ' .screenShot-base img').attr('src', BaseLinePreviewPathUrl);
+            if (DiffImagePathUrl.indexOf('img/') != -1) {
+                $('#' + entity + '-' + entityId + ' .screenShot-dif a').attr('href', DiffImagePathUrl);
+            }
+            if (DiffPreviewPathUrl.indexOf('img/') != -1) {
+                $('#' + entity + '-' + entityId + ' .screenShot-dif img').attr('src', DiffPreviewPathUrl);
+            }
+            $('#' + entity + '-' + entityId + ' .screenShot-curr a').attr('href', ImagePathUrl);
+            $('#' + entity + '-' + entityId + ' .screenShot-curr img').attr('src', PreviewImagePathUrl);
+            if (ErrorMessage != null && ErrorMessage != '') {
+                $('#' + entity + '-' + entityId + ' .screenShot-error-log').show();
+                $('#' + entity + '-' + entityId + ' .screenShot-error-log textarea').text(ErrorMessage);
+            }
+            if (Url != null) {
+                $('#' + entity + '-' + entityId + ' .screenShot-link').attr('href', Url).show();
+            }
         }
     }
 
