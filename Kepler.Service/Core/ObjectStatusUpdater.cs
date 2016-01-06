@@ -143,7 +143,9 @@ namespace Kepler.Service.Core
                     continue;
                 }
 
-                if (childItems.All(item => item.Status == ObjectStatus.Passed))
+                var successItemsCount = childItems.Count(item => item.Status == ObjectStatus.Stopped ||
+                                                                 item.Status == ObjectStatus.Passed);
+                if (successItemsCount == childItems.Count())
                 {
                     baseItem.Status = ObjectStatus.Passed;
                 }
