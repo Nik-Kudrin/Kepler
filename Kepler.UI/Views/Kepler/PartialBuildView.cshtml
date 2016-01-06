@@ -161,6 +161,8 @@
         $(this).ekkoLightbox();
     });
 
+    var interval = 8000; //timer interval default 8sec.
+
     //
     // Expand/Collapse accordions
     //
@@ -180,6 +182,7 @@
     // Get Build
     //
     getBuild();
+    setInterval(getBuild, interval);
     function getBuild() {
         $.ajax({
             url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
@@ -238,7 +241,6 @@
     // Get Assembly
     //
     getAssemblies();
-    var interval = 8000;
     setInterval(getAssemblies, interval);
 
     function getAssemblies() {
