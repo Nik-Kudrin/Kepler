@@ -161,8 +161,6 @@
         $(this).ekkoLightbox();
     });
 
-    var interval = 8000; //timer interval default 8sec.
-
     //
     // Expand/Collapse accordions
     //
@@ -182,7 +180,8 @@
     // Get Build
     //
     getBuild();
-    setInterval(getBuild, interval);
+    interval = setInterval(getBuild, 8000);
+
     function getBuild() {
         $.ajax({
             url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
@@ -198,6 +197,9 @@
                     }
                 });
                 updateBuildInfo();
+            },
+            error: function (xhr) {
+                clearInterval(interval);
             }
         });
     }
@@ -241,7 +243,7 @@
     // Get Assembly
     //
     getAssemblies();
-    setInterval(getAssemblies, interval);
+    interval = setInterval(getAssemblies, 8000);
 
     function getAssemblies() {
         $('#assembly_group .panel-default').addClass('panel-default-remove');
@@ -358,12 +360,15 @@
                         }
                     });
                 });
+            },
+            error: function (xhr) {
+                clearInterval(interval);
             }
         });
     }
 
     //
-    // Builder for testAssembly | testSuite | testCase
+    // Builder for testAssembly | testSuite | testCase | screenShot
     //
     function entityBuilt(entity, entityParentId, childEntity, entityId, entityName, entityStatus,
         BaseLineImagePathUrl, BaseLinePreviewPathUrl, DiffImagePathUrl, DiffPreviewPathUrl,

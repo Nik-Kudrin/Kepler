@@ -22,7 +22,7 @@
 
 <table style="display: none;">
     <tbody>
-        <tr class="branch_sample">
+        <tr class="build_sample">
             <td>
                 <a class="build-list-item" href="" linkUrl=""></a>
             </td>
@@ -58,46 +58,64 @@
 </table>
 
 <script type="text/javascript">
-    var interval = 8000; //timer interval default 8sec.
-
     //
     // Load branch info
     //
     getBranch();
-    setInterval(getBranch, interval);
+    interval = setInterval(getBranch, 8000);
 
     function getBranch() {
-        $('.builds_table > tbody').empty();
         $.ajax({
             url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
             type: 'GET',
             success: function (data) {
                 $.each(data, function (key, value) {
+                    var entityId = '';
+                    var entityStatus = '';
+
                     if (key == 'Name') {
                         $('.panel-heading h3').html(value);
                     } else if (key != 'Builds') {
                         $('.panel-heading h3').attr(key, value);
                     } else if (key == 'Builds') {
                         $.each(value, function (key, value) {
-                            $('tr.branch_sample').clone(true, true).appendTo('.builds_table > tbody').removeClass('branch_sample').addClass('build_row').show();
                             $.each(value, function (key, value) {
                                 if (key == 'Value') {
                                     $.each(value, function (key, value) {
                                         if (key == 'Id') {
-                                            $('.build_row:last td:nth-of-type(1) a').html(value);
-                                            $('.build_row:last td:nth-of-type(1) a').attr('linkurl', '/build?id=' + value);
-                                            $('.build_row:last td:nth-of-type(3) a').attr('obj_id', value);
+                                            entityId = value;
                                         } else if (key == 'Status') {
-                                            $('.build_row:last td:nth-of-type(2)').html('<div class="status-' + value + '">');
+                                            entityStatus = value;
                                         }
                                     });
+                                    entityBuilt(entity = 'build', entityId, entityStatus);
                                 }
                             });
                         });
                     }
                 });
+            },
+            error: function (xhr) {
+                clearInterval(interval);
             }
         });
+    }
+
+    //
+    // Builder for build
+    //
+    function entityBuilt(entity, entityId, entityStatus) {
+        if ($('#' + entity + '-' + entityId).length) {
+            if ($('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').attr('class') != 'status-' + entityStatus) {
+                $('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').removeClass().addClass('status-' + entityStatus);
+            }
+        } else if ($('#' + entity + '-' + entityId).length == 0) {
+            $('tr.build_sample').clone(true, true).appendTo('.builds_table > tbody').removeClass('build_sample').attr('id', entity + '-' + entityId).show();
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').html(entityId);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('linkurl', '/build?id=' + entityId);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(3) a').attr('obj_id', entityId);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(2)').html('<div class="status-' + entityStatus + '">');
+        }
     }
 
     //
