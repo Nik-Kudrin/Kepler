@@ -58,10 +58,13 @@
 </table>
 
 <script type="text/javascript">
+    var interval = 8000; //timer interval default 8sec.
+
     //
     // Load branch info
     //
     getBranch();
+    setInterval(getBranch, interval);
 
     function getBranch() {
         $('.builds_table > tbody').empty();
