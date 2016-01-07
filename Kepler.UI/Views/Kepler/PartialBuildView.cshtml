@@ -156,6 +156,8 @@
 </div>
 
 <script>
+    var PartialBuildInterval = null; // timer
+
     $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
         event.preventDefault();
         $(this).ekkoLightbox();
@@ -180,28 +182,27 @@
     // Get Build
     //
     getBuild();
-    interval = setInterval(getBuild, 8000);
+    PartialBuildInterval = setInterval(getBuild, 8000);
 
     function getBuild() {
-        $.ajax({
-            url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
-            type: 'GET',
-            success: function (data) {
-                $.each(data, function (key, value) {
-                    if (value != null) {
-                        if (key == 'Id') {
-                            $('.build_action_menu a').attr('obj_id', value);
-                        } else {
-                            $('.icon-build-info').attr(key, value);
+        if (getParameterByName('id') != '') {
+            $.ajax({
+                url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
+                type: 'GET',
+                success: function (data) {
+                    $.each(data, function (key, value) {
+                        if (value != null) {
+                            if (key == 'Id') {
+                                $('.build_action_menu a').attr('obj_id', value);
+                            } else {
+                                $('.icon-build-info').attr(key, value);
+                            }
                         }
-                    }
-                });
-                updateBuildInfo();
-            },
-            error: function (xhr) {
-                clearInterval(interval);
-            }
-        });
+                    });
+                    updateBuildInfo();
+                }
+            });
+        }
     }
 
     //
@@ -243,128 +244,127 @@
     // Get Assembly
     //
     getAssemblies();
-    interval = setInterval(getAssemblies, 8000);
+    PartialBuildInterval = setInterval(getAssemblies, 8000);
 
     function getAssemblies() {
-        $('#assembly_group .panel-default').addClass('panel-default-remove');
-        $.ajax({
-            url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
-            type: 'GET',
-            success: function (data) {
-                var entityName = '';
-                var entityStatus = '';
-                var entityId = '';
-                var entityParentId = '';
-                var BaseLineImagePathUrl = '';
-                var BaseLinePreviewPathUrl = '';
-                var DiffImagePathUrl = '';
-                var DiffPreviewPathUrl = '';
-                var ImagePathUrl = '';
-                var PreviewImagePathUrl = '';
-                var ErrorMessage = '';
-                var Url = '';
+        if (getParameterByName('id') != '') {
+            $('#assembly_group .panel-default').addClass('panel-default-remove');
+            $.ajax({
+                url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
+                type: 'GET',
+                success: function (data) {
+                    var entityName = '';
+                    var entityStatus = '';
+                    var entityId = '';
+                    var entityParentId = '';
+                    var BaseLineImagePathUrl = '';
+                    var BaseLinePreviewPathUrl = '';
+                    var DiffImagePathUrl = '';
+                    var DiffPreviewPathUrl = '';
+                    var ImagePathUrl = '';
+                    var PreviewImagePathUrl = '';
+                    var ErrorMessage = '';
+                    var Url = '';
 
-                $.each(data, function (key, value) {
-                    $.each(value, function (key, value) {
-                        if (key != "TestSuites") {
-                            if (key == "Name") {
-                                entityName = value;
-                            } else if (key == "Status") {
-                                entityStatus = value;
-                            } else if (key == "Id") {
-                                entityId = value;
-                            } else if (key == "ParentObjId") {
-                                entityParentId = value;
-                            }
-                        } else {
-                            entityBuilt(entity = 'testAssembly', entityParentId, childEntity = 'testSuite', entityId, entityName, entityStatus);
-                            $.each(value, function (key, value) {
+                    $.each(data, function (key, value) {
+                        $.each(value, function (key, value) {
+                            if (key != "TestSuites") {
+                                if (key == "Name") {
+                                    entityName = value;
+                                } else if (key == "Status") {
+                                    entityStatus = value;
+                                } else if (key == "Id") {
+                                    entityId = value;
+                                } else if (key == "ParentObjId") {
+                                    entityParentId = value;
+                                }
+                            } else {
+                                entityBuilt(entity = 'testAssembly', entityParentId, childEntity = 'testSuite', entityId, entityName, entityStatus);
                                 $.each(value, function (key, value) {
-                                    if (key == "Value") {
-                                        $.each(value, function (key, value) {
-                                            if (key != "TestCases") {
-                                                if (key == "Name") {
-                                                    entityName = value;
-                                                } else if (key == "Status") {
-                                                    entityStatus = value;
-                                                } else if (key == "Id") {
-                                                    entityId = value;
-                                                } else if (key == "ParentObjId") {
-                                                    entityParentId = value;
-                                                }
-                                            } else {
-                                                entityBuilt(entity = 'testSuite', entityParentId, childEntity = 'testCase', entityId, entityName, entityStatus);
-                                                $.each(value, function (key, value) {
-                                                    $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_case_group:last').removeClass('panel-default-case').show();
+                                    $.each(value, function (key, value) {
+                                        if (key == "Value") {
+                                            $.each(value, function (key, value) {
+                                                if (key != "TestCases") {
+                                                    if (key == "Name") {
+                                                        entityName = value;
+                                                    } else if (key == "Status") {
+                                                        entityStatus = value;
+                                                    } else if (key == "Id") {
+                                                        entityId = value;
+                                                    } else if (key == "ParentObjId") {
+                                                        entityParentId = value;
+                                                    }
+                                                } else {
+                                                    entityBuilt(entity = 'testSuite', entityParentId, childEntity = 'testCase', entityId, entityName, entityStatus);
                                                     $.each(value, function (key, value) {
-                                                        if (key == "Value") {
-                                                            $.each(value, function (key, value) {
-                                                                if (key != "ScreenShots") {
-                                                                    if (key == "Name") {
-                                                                        entityName = value;
-                                                                    } else if (key == "Status") {
-                                                                        entityStatus = value;
-                                                                    } else if (key == "Id") {
-                                                                        entityId = value;
-                                                                    } else if (key == "ParentObjId") {
-                                                                        entityParentId = value;
-                                                                    }
-                                                                } else {
-                                                                    entityBuilt(entity = 'testCase', entityParentId, childEntity = 'screenShot', entityId, entityName, entityStatus);
-                                                                    $.each(value, function (key, value) {
+                                                        $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_case_group:last').removeClass('panel-default-case').show();
+                                                        $.each(value, function (key, value) {
+                                                            if (key == "Value") {
+                                                                $.each(value, function (key, value) {
+                                                                    if (key != "ScreenShots") {
+                                                                        if (key == "Name") {
+                                                                            entityName = value;
+                                                                        } else if (key == "Status") {
+                                                                            entityStatus = value;
+                                                                        } else if (key == "Id") {
+                                                                            entityId = value;
+                                                                        } else if (key == "ParentObjId") {
+                                                                            entityParentId = value;
+                                                                        }
+                                                                    } else {
+                                                                        entityBuilt(entity = 'testCase', entityParentId, childEntity = 'screenShot', entityId, entityName, entityStatus);
                                                                         $.each(value, function (key, value) {
-                                                                            if (key == "Value") {
-                                                                                $.each(value, function (key, value) {
-                                                                                    if (key == "Name") {
-                                                                                        entityName = value;
-                                                                                    } else if (key == "Status") {
-                                                                                        entityStatus = value;
-                                                                                    } else if (key == "Id") {
-                                                                                        entityId = value;
-                                                                                    } else if (key == "ParentObjId") {
-                                                                                        entityParentId = value;
-                                                                                    } else if (key == "BaseLineImagePathUrl") {
-                                                                                        BaseLineImagePathUrl = value.replace(/\\/g, "/");
-                                                                                    } else if (key == "BaseLinePreviewPathUrl") {
-                                                                                        BaseLinePreviewPathUrl = value.replace(/\\/g, "/");
-                                                                                    } else if (key == "DiffImagePathUrl" && value.indexOf('img/') != -1) {
-                                                                                        DiffImagePathUrl = value.replace(/\\/g, "/");
-                                                                                    } else if (key == "DiffPreviewPathUrl" && value.indexOf('img/') != -1) {
-                                                                                        DiffPreviewPathUrl = value.replace(/\\/g, "/");
-                                                                                    } else if (key == "ImagePathUrl") {
-                                                                                        ImagePathUrl = value.replace(/\\/g, "/");
-                                                                                    } else if (key == "PreviewImagePathUrl") {
-                                                                                        PreviewImagePathUrl = value.replace(/\\/g, "/");
-                                                                                    } else if (key == "ErrorMessage") {
-                                                                                        ErrorMessage = value; 
-                                                                                    } else if (key == "Url") {
-                                                                                        Url = value;
-                                                                                    }
-                                                                                });
-                                                                                entityBuilt(entity = 'screenShot', entityParentId, childEntity, entityId, entityName, entityStatus,
-                                                                                    BaseLineImagePathUrl, BaseLinePreviewPathUrl, DiffImagePathUrl, DiffPreviewPathUrl,
-                                                                                    ImagePathUrl, PreviewImagePathUrl, ErrorMessage, Url);
-                                                                            }
+                                                                            $.each(value, function (key, value) {
+                                                                                if (key == "Value") {
+                                                                                    $.each(value, function (key, value) {
+                                                                                        if (key == "Name") {
+                                                                                            entityName = value;
+                                                                                        } else if (key == "Status") {
+                                                                                            entityStatus = value;
+                                                                                        } else if (key == "Id") {
+                                                                                            entityId = value;
+                                                                                        } else if (key == "ParentObjId") {
+                                                                                            entityParentId = value;
+                                                                                        } else if (key == "BaseLineImagePathUrl") {
+                                                                                            BaseLineImagePathUrl = value.replace(/\\/g, "/");
+                                                                                        } else if (key == "BaseLinePreviewPathUrl") {
+                                                                                            BaseLinePreviewPathUrl = value.replace(/\\/g, "/");
+                                                                                        } else if (key == "DiffImagePathUrl" && value.indexOf('img/') != -1) {
+                                                                                            DiffImagePathUrl = value.replace(/\\/g, "/");
+                                                                                        } else if (key == "DiffPreviewPathUrl" && value.indexOf('img/') != -1) {
+                                                                                            DiffPreviewPathUrl = value.replace(/\\/g, "/");
+                                                                                        } else if (key == "ImagePathUrl") {
+                                                                                            ImagePathUrl = value.replace(/\\/g, "/");
+                                                                                        } else if (key == "PreviewImagePathUrl") {
+                                                                                            PreviewImagePathUrl = value.replace(/\\/g, "/");
+                                                                                        } else if (key == "ErrorMessage") {
+                                                                                            ErrorMessage = value;
+                                                                                        } else if (key == "Url") {
+                                                                                            Url = value;
+                                                                                        }
+                                                                                    });
+                                                                                    entityBuilt(entity = 'screenShot', entityParentId, childEntity, entityId, entityName, entityStatus,
+                                                                                        BaseLineImagePathUrl, BaseLinePreviewPathUrl, DiffImagePathUrl, DiffPreviewPathUrl,
+                                                                                        ImagePathUrl, PreviewImagePathUrl, ErrorMessage, Url);
+                                                                                }
+                                                                            });
                                                                         });
-                                                                    });
-                                                                }
-                                                            });
-                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
                                                     });
-                                                });
-                                            }
-                                        });
-                                    }
+                                                }
+                                            });
+                                        }
+                                    });
                                 });
-                            });
-                        }
+                            }
+                        });
                     });
-                });
-            },
-            error: function (xhr) {
-                clearInterval(interval);
-            }
-        });
+                }
+            });
+        }
     }
 
     //

@@ -58,47 +58,48 @@
 </table>
 
 <script type="text/javascript">
+    var PartialBranchInterval = null; // timer
+
     //
     // Load branch info
     //
     getBranch();
-    interval = setInterval(getBranch, 8000);
+    PartialBranchInterval = setInterval(getBranch, 8000);
 
     function getBranch() {
-        $.ajax({
-            url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
-            type: 'GET',
-            success: function (data) {
-                $.each(data, function (key, value) {
-                    var entityId = '';
-                    var entityStatus = '';
+        if (getParameterByName('branchId') != '') {
+            $.ajax({
+                url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
+                type: 'GET',
+                success: function (data) {
+                    $.each(data, function (key, value) {
+                        var entityId = '';
+                        var entityStatus = '';
 
-                    if (key == 'Name') {
-                        $('.panel-heading h3').html(value);
-                    } else if (key != 'Builds') {
-                        $('.panel-heading h3').attr(key, value);
-                    } else if (key == 'Builds') {
-                        $.each(value, function (key, value) {
+                        if (key == 'Name') {
+                            $('.panel-heading h3').html(value);
+                        } else if (key != 'Builds') {
+                            $('.panel-heading h3').attr(key, value);
+                        } else if (key == 'Builds') {
                             $.each(value, function (key, value) {
-                                if (key == 'Value') {
-                                    $.each(value, function (key, value) {
-                                        if (key == 'Id') {
-                                            entityId = value;
-                                        } else if (key == 'Status') {
-                                            entityStatus = value;
-                                        }
-                                    });
-                                    entityBuilt(entity = 'build', entityId, entityStatus);
-                                }
+                                $.each(value, function (key, value) {
+                                    if (key == 'Value') {
+                                        $.each(value, function (key, value) {
+                                            if (key == 'Id') {
+                                                entityId = value;
+                                            } else if (key == 'Status') {
+                                                entityStatus = value;
+                                            }
+                                        });
+                                        entityBuilt(entity = 'build', entityId, entityStatus);
+                                    }
+                                });
                             });
-                        });
-                    }
-                });
-            },
-            error: function (xhr) {
-                clearInterval(interval);
-            }
-        });
+                        }
+                    });
+                }
+            });
+        }
     }
 
     //
