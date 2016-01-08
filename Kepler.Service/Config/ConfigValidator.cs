@@ -14,7 +14,9 @@ namespace Kepler.Service.Config
         private static string NameValidator<T>(ErrorMessage.ErorCode errorCode, List<T> configObjects)
             where T : InfoObject
         {
-            if (configObjects.Select(item => item.Name.Trim()).Any(itemName => itemName == ""))
+            var configObjectNames = configObjects.Select(item => item.Name.Trim());
+
+            if (configObjectNames.Any(itemName => itemName == ""))
             {
                 return new ErrorMessage()
                 {
@@ -23,7 +25,7 @@ namespace Kepler.Service.Config
                 }.ToString();
             }
 
-            if (configObjects.Distinct().Count() != configObjects.Count)
+            if (configObjectNames.Distinct().Count() != configObjects.Count)
             {
                 return $"There are duplicated names in config for {typeof (T).Name}";
             }
@@ -31,7 +33,7 @@ namespace Kepler.Service.Config
             return "";
         }
 
-        private static string EmptyListValidator<T>(ErrorMessage.ErorCode errorCode, List<T> configObjects)
+        private static string EmptyListValidator<T>(List<T> configObjects)
             where T : InfoObject
         {
             if (configObjects == null || configObjects.Count == 0)
@@ -49,7 +51,7 @@ namespace Kepler.Service.Config
 
         public static string ValidateProjects(List<Project> projects)
         {
-            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.ProjectDontHaveAName, projects);
+            var validationMessage = EmptyListValidator(projects);
             if (validationMessage != "")
                 return validationMessage;
 
@@ -58,7 +60,7 @@ namespace Kepler.Service.Config
 
         public static string ValidateBranches(List<Branch> branches)
         {
-            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.BranchDontHaveAName, branches);
+            var validationMessage = EmptyListValidator(branches);
             if (validationMessage != "")
                 return validationMessage;
 
@@ -67,7 +69,7 @@ namespace Kepler.Service.Config
 
         public static string ValidateTestAssemblies(List<TestAssembly> assemblies)
         {
-            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.AssemblyDontHaveAName, assemblies);
+            var validationMessage = EmptyListValidator(assemblies);
             if (validationMessage != "")
                 return validationMessage;
 
@@ -76,7 +78,7 @@ namespace Kepler.Service.Config
 
         public static string ValidateTestSuites(List<TestSuite> suites)
         {
-            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.SuiteDontHaveAName, suites);
+            var validationMessage = EmptyListValidator(suites);
             if (validationMessage != "")
                 return validationMessage;
 
@@ -85,7 +87,7 @@ namespace Kepler.Service.Config
 
         public static string ValidateTestCases(List<TestCase> cases)
         {
-            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.CaseDontHaveAName, cases);
+            var validationMessage = EmptyListValidator(cases);
             if (validationMessage != "")
                 return validationMessage;
 
@@ -94,7 +96,7 @@ namespace Kepler.Service.Config
 
         public static string ValidateScreenshots(List<ScreenShot> screenShots)
         {
-            var validationMessage = EmptyListValidator(ErrorMessage.ErorCode.ProjectDontHaveAName, screenShots);
+            var validationMessage = EmptyListValidator(screenShots);
             if (validationMessage != "")
                 return validationMessage;
 
@@ -107,7 +109,7 @@ namespace Kepler.Service.Config
                 }.ToString());
             }
 
-            return "";
+            return NameValidator(ErrorMessage.ErorCode.ScreenShotDoesntHaveAName, screenShots);
         }
     }
 }

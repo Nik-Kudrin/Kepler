@@ -5,22 +5,7 @@ namespace Kepler.Common.Repository
 {
     public class TestAssemblyRepository : BuildObjectRepository<TestAssembly>
     {
-        private static TestAssemblyRepository _repoInstance;
-
-        public static TestAssemblyRepository Instance
-        {
-            get
-            {
-                if (_repoInstance == null)
-                {
-                    var dbContext = new KeplerDataContext();
-                    _repoInstance = new TestAssemblyRepository(dbContext);
-                }
-
-                return _repoInstance;
-            }
-        }
-
+        public static TestAssemblyRepository Instance => new TestAssemblyRepository(new KeplerDataContext());
 
         private TestAssemblyRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.TestAssemblies)
         {

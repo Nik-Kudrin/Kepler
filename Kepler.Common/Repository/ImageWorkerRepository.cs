@@ -7,21 +7,7 @@ namespace Kepler.Common.Repository
 {
     public class ImageWorkerRepository : BaseRepository<ImageWorker>
     {
-        private static ImageWorkerRepository _repoInstance;
-
-        public static ImageWorkerRepository Instance
-        {
-            get
-            {
-                if (_repoInstance == null)
-                {
-                    var dbContext = new KeplerDataContext();
-                    _repoInstance = new ImageWorkerRepository(dbContext);
-                }
-
-                return _repoInstance;
-            }
-        }
+        public static ImageWorkerRepository Instance => new ImageWorkerRepository(new KeplerDataContext());
 
         private ImageWorkerRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.ImageWorkers)
         {
@@ -29,7 +15,7 @@ namespace Kepler.Common.Repository
 
         public override IEnumerable<ImageWorker> Find(string workerServiceUrl)
         {
-            return _dbSet.Where(worker => worker.WorkerServiceUrl == workerServiceUrl);
+            return DbSet.Where(worker => worker.WorkerServiceUrl == workerServiceUrl);
         }
     }
 }

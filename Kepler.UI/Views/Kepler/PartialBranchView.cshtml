@@ -1,0 +1,267 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        <div>
+            <h3></h3>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-hover builds_table">
+                <thead>
+                    <tr>
+                        <th>Build</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<table style="display: none;">
+    <tbody>
+        <tr class="build_sample">
+            <td>
+                <a class="build-list-item" href="" linkUrl=""></a>
+            </td>
+            <td>
+                <div class="status-queued"></div>
+            </td>
+            <td>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                        60%
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="btn-group">
+                    <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="" data-act="run_obj" typeName="build">Run</a>
+                        </li>
+                        <li>
+                            <a href="" data-act="stop_obj" typeName="build">Stop</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="" data-act="set_passed_obj" typeName="build">Set passed</a>
+                        </li>
+                        <li>
+                            <a href="" data-act="set_failed_obj" typeName="build">Set failed</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="" data-toggle="modal" data-target="#crud-modal" data-act="delete_build">Delete</a>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    var intervalGetBranch = null;
+    var intervalUpdateProgressBar = null;
+
+    //
+    // Load branch info
+    //
+    getBranch();
+    intervalGetBranch = setInterval(getBranch, 1000);
+
+    function getBranch() {
+        if (getParameterByName('branchId') != '') {
+            $.ajax({
+                url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
+                type: 'GET',
+                success: function (data) {
+                    $.each(data, function (key, value) {
+                        var entityId = '';
+                        var entityStatus = '';
+                        var entityPredictedDuration = '';
+                        var entityStartTime = '';
+
+                        if (key == 'Name') {
+                            $('.panel-heading h3').html(value);
+                        } else if (key != 'Builds') {
+                            $('.panel-heading h3').attr(key, value);
+                        } else if (key == 'Builds') {
+                            $.each(value, function (key, value) {
+                                $.each(value, function (key, value) {
+                                    if (key == 'Value') {
+                                        $.each(value, function (key, value) {
+                                            if (key == 'Id') {
+                                                entityId = value;
+                                            } else if (key == 'Status') {
+                                                entityStatus = value;
+                                            } else if (key == 'PredictedDuration') {
+                                                if (value == null) {
+                                                    entityPredictedDuration = 0;
+                                                } else {
+                                                    entityPredictedDuration = value;
+                                                }
+                                            } else if (key == 'StartDate') {
+                                                if (value == null) {
+                                                    entityStartTime = 0;
+                                                } else {
+                                                    entityStartTime = value;
+                                                }
+                                            }
+                                        });
+                                        entityBuilt(entity = 'build', entityId, entityStatus, entityPredictedDuration, entityStartTime);
+                                    }
+                                });
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    //
+    // Builder for build
+    //
+    function entityBuilt(entity, entityId, entityStatus, entityPredictedDuration, entityStartTime) {
+        if ($('#' + entity + '-' + entityId).length) {
+            if ($('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').attr('class') != 'status-' + entityStatus) {
+                $('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').removeClass().addClass('status-' + entityStatus);    
+            }
+        } else if ($('#' + entity + '-' + entityId).length == 0) {
+            $('tr.build_sample').clone(true, true).appendTo('.builds_table > tbody').removeClass('build_sample').attr('id', entity + '-' + entityId).show();
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').html(entityId);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('linkurl', '/build?id=' + entityId);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('entityPredictedDuration', entityPredictedDuration);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('entityStartTime', entityStartTime);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(4) a').attr('obj_id', entityId);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(2)').html('<div class="status-' + entityStatus + '">');
+        }
+
+        updateProgressBar(entityId, entityStatus, entityPredictedDuration, entityStartTime);
+    }
+    
+    //
+    // Update progress bar
+    //
+    function updateProgressBar(entityId, entityStatus, entityPredictedDuration, entityStartTime) {
+        var formatDateString = "YYYY-MM-DD hh:mm:ssA";
+
+        if (entityStatus == '3') {
+            var duration = 0;
+            var timeDiff = 0;
+            var predictedDuration = entityPredictedDuration.replace("PT", "").replace("H", "").replace("M", "").replace("S", "");
+            var startTime = moment(entityStartTime).format(formatDateString);
+            var progressPercent = 0;
+            var currentTime = moment().format(formatDateString);
+
+            if (startTime != 0) {
+                timeDiff = moment(currentTime, formatDateString).diff(moment(startTime, formatDateString));
+                duration = moment.duration(timeDiff).asSeconds();
+
+                if (predictedDuration == 0) {
+                   predictedDuration = 1.2 * duration;
+                }
+
+                progressPercent = Math.round(duration / predictedDuration * 100 + 1);
+            }
+
+            if (progressPercent > 100) {
+                progressPercent = 100;
+            }
+
+            $('#build-' + entityId + ' .progress').show();
+            $('#build-' + entityId + ' .progress-bar').attr('aria-valuenow', progressPercent);
+            $('#build-' + entityId + ' .progress-bar').css('width', progressPercent + '%');
+            $('#build-' + entityId + ' .progress-bar').html(progressPercent + '%');
+        } else {
+            $('#build-' + entityId + ' .progress-bar').attr('aria-valuenow', 100);
+            $('#build-' + entityId + ' .progress-bar').css('width', '100%');
+            $('#build-' + entityId + ' .progress-bar').html('100%');
+            $('#build-' + entityId + ' .progress').fadeOut();
+        }
+    }
+
+    //
+    // Link switch
+    //
+    var obj_act = ""; // Variable with action
+    var obj_act_with_param = ""; // Variable with parameters for operations and status change
+    var typeName = "";
+    var objId = "";
+    var operationName = "";
+
+    $(document).on('click', '.builds_table a', function (e) {
+        switch ($(this).attr('data-act')) {
+            case 'stop_obj':
+                obj_act = "RunOperation?";
+                typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                objId = 'objId=' + $(this).attr('obj_id') + '&';
+                operationName = 'operationName=stop';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                modal_ajax_call();
+                break;
+            case 'run_obj':
+                obj_act = "RunOperation?";
+                typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                objId = 'objId=' + $(this).attr('obj_id') + '&';
+                operationName = 'operationName=run';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                modal_ajax_call();
+                break;
+            case 'set_passed_obj':
+                obj_act = "SetObjectsStatus?";
+                typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                objId = 'objId=' + $(this).attr('obj_id') + '&';
+                operationName = 'newStatus=passed';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                modal_ajax_call();
+                break;
+            case 'set_failed_obj':
+                obj_act = "SetObjectsStatus?";
+                typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                objId = 'objId=' + $(this).attr('obj_id') + '&';
+                operationName = 'newStatus=failed';
+                obj_act_with_param = obj_act + typeName + objId + operationName;
+                modal_ajax_call();
+                break;
+            case 'delete_build':
+                obj_act = "DeleteBuild";
+                $('.modal-title').text('Delete build ' + $(this).attr('obj_id'));
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('obj_id') + '">' +
+                    'Are you sure?');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Yes</button>');
+                break;
+        }
+    });
+
+    //
+    // Ajax call for modal popup
+    //
+    function modal_ajax_call() {
+        var url_parameters = "";
+        if (obj_act_with_param != "") {
+            url_parameters = obj_act_with_param;
+        } else {
+            url_parameters = obj_act + '?' + $('#modal_form').serialize();
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: KeplerServiceUrl + url_parameters,
+            success: function (data) {
+                $('#modal_form .alert-warning').hide();
+                $('#crud-modal button.close').click();
+                getBranch();
+                obj_act_with_param = "";
+            },
+            error: function (xhr) {
+                $('#modal_form .alert-warning').show().text(xhr.responseText);
+            }
+        });
+    }
+</script>

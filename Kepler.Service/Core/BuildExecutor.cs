@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Timers;
+using AutoMapper.Internal;
 using Kepler.Common.CommunicationContracts;
+using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
 using Kepler.Service.RestWorkerClient;
+using Kepler.Service.Scheduler;
 using RestSharp;
 using Timer = System.Timers.Timer;
 
@@ -16,15 +22,13 @@ namespace Kepler.Service.Core
     {
         private static BuildExecutor _executor;
         private static Timer _sendScreenShotsForProcessingTimer;
-        private static Timer _updateObjectStatusesTimer;
-        public static string DiffImageSavingPath { get; set; }
+
+        public static string KeplerServiceUrl { get; set; }
 
         static BuildExecutor()
         {
             GetExecutor();
-            DiffImageSavingPath = new KeplerService().GetDiffImageSavingPath();
         }
-
 
         public static BuildExecutor GetExecutor()
         {
@@ -34,48 +38,68 @@ namespace Kepler.Service.Core
 
         private BuildExecutor()
         {
-            _sendScreenShotsForProcessingTimer = new Timer();
-            _sendScreenShotsForProcessingTimer.Interval = 5000; //every 10 sec
-            _sendScreenShotsForProcessingTimer.Elapsed += SendComparisonInfoToWorkers;
-            _sendScreenShotsForProcessingTimer.Enabled = true;
+            KeplerServiceUrl = new KeplerService().GetKeplerServiceUrl();
 
-            _updateObjectStatusesTimer = new Timer();
-            _updateObjectStatusesTimer.Interval = 15000; //every 30 sec
-            _updateObjectStatusesTimer.Elapsed += UpdateObjectsStatuses;
-            _updateObjectStatusesTimer.Enabled = true;
+            var checkWorkersScheduler = CheckWorkersScheduler.GetScheduler;
+            checkWorkersScheduler.Enable();
+            checkWorkersScheduler.Invoke();
+
+            UpdateObjectStatusesScheduler.GetScheduler.Enable();
 
             UpdateKeplerServiceUrlOnWorkers();
+            UpdateDiffImagePath();
+
+            ReinitHangedBuilds();
+
+            _sendScreenShotsForProcessingTimer = new Timer {Interval = 5000}; //every 5 sec
+            _sendScreenShotsForProcessingTimer.Elapsed += SendComparisonInfoToWorkers;
+            _sendScreenShotsForProcessingTimer.Enabled = true;
         }
 
-        public void UpdateKeplerServiceUrlOnWorkers()
+        private void ReinitHangedBuilds()
         {
-            var workers = ImageWorkerRepository.Instance.FindAll()
-                .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
+            var inprogressBuilds = BuildRepository.Instance.GetBuildsByStatus(ObjectStatus.InProgress);
 
-            foreach (var imageWorker in workers)
+            inprogressBuilds.Each(build =>
             {
-                var restImageProcessorClient = new RestImageProcessorClient(imageWorker.WorkerServiceUrl);
-                restImageProcessorClient.SetDiffImagePath();
-            }
+                build.Status = ObjectStatus.InQueue;
+                BuildRepository.Instance.UpdateAndFlashChanges(build);
+                var screenShotRepo = ScreenShotRepository.Instance;
+
+                var screenShots = screenShotRepo.Find(item => item.BuildId == build.Id &&
+                                                              item.Status == ObjectStatus.InQueue);
+                screenShots.Each(item =>
+                {
+                    item.Status = ObjectStatus.InQueue;
+                    screenShotRepo.UpdateAndFlashChanges(item);
+                });
+            });
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        private void UpdateObjectsStatuses(object sender, ElapsedEventArgs eventArgs)
-        {
-            ObjectStatusUpdater.UpdateAllObjectStatusesToActual();
-        }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void SendComparisonInfoToWorkers(object sender, ElapsedEventArgs eventArgs)
         {
+            // if there is already executing build
+            if (BuildRepository.Instance.GetBuildsByStatus(ObjectStatus.InProgress).Any())
+                return;
+
             var workers = ImageWorkerRepository.Instance.FindAll()
                 .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
 
-            var screenShots = ScreenShotRepository.Instance.GetAllInQueueScreenShots();
-            var imageComparisonContainers = ConvertScreenShotsToImageComparison(screenShots).ToList();
-
             if (workers.Count == 0)
                 return;
+
+            var buildInQueue = BuildRepository.Instance.GetBuildsByStatus(ObjectStatus.InQueue).FirstOrDefault();
+            if (buildInQueue == null)
+                return;
+
+            var screenShots = ScreenShotRepository.Instance.GetInQueueScreenShotsForBuild(buildInQueue.Id);
+            screenShots.Each(item => item.Status = ObjectStatus.InProgress);
+            ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShots);
+            UpdateObjectStatusesScheduler.GetScheduler.Invoke();
+
+            var imageComparisonContainers = ConvertScreenShotsToImageComparison(screenShots).ToList();
 
             // split all screenshots for comparison uniformly for all workers
             var imgComparisonPerWorker = imageComparisonContainers.Count()/workers.Count();
@@ -83,7 +107,7 @@ namespace Kepler.Service.Core
                 imgComparisonPerWorker = imageComparisonContainers.Count();
 
 
-            int workerIndex = 0;
+            var workerIndex = 0;
             while (imageComparisonContainers.Any())
             {
                 var jsonMessage = new ImageComparisonContract()
@@ -91,20 +115,41 @@ namespace Kepler.Service.Core
                     ImageComparisonList = imageComparisonContainers.Take(imgComparisonPerWorker).ToList()
                 };
 
-                if (imageComparisonContainers.Count() < imgComparisonPerWorker)
-                    imageComparisonContainers.Clear();
-                else
+                var requestIsSuccessfull = true;
+                try
                 {
-                    imageComparisonContainers.RemoveRange(0, imgComparisonPerWorker);
+                    var client = new RestClient(workers[workerIndex++].WorkerServiceUrl);
+                    var request = new RestRequest("AddImagesForDiffGeneration", Method.POST);
+
+                    request.RequestFormat = DataFormat.Json;
+                    request.AddJsonBody(jsonMessage);
+
+                    var response = client.Execute(request);
+                    var responseErrorMessage = RestImageProcessorClient.GetResponseErrorMessage(response);
+
+                    if (!String.IsNullOrEmpty(responseErrorMessage))
+                        throw new WebException(responseErrorMessage);
+                }
+                catch (Exception ex)
+                {
+                    requestIsSuccessfull = false;
+
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                    {
+                        ExceptionMessage =
+                            $"Error happend when process is tried to send images for comparison to worker: '{workers[workerIndex++].Name}'.  {ex.Message}"
+                    });
                 }
 
-                var client = new RestClient(workers[workerIndex++].WorkerServiceUrl);
-                var request = new RestRequest("AddImagesForDiffGeneration", Method.POST);
-
-                request.RequestFormat = DataFormat.Json;
-                request.AddJsonBody(jsonMessage);
-
-                client.Execute(request);
+                if (requestIsSuccessfull)
+                {
+                    if (imageComparisonContainers.Count() < imgComparisonPerWorker)
+                        imageComparisonContainers.Clear();
+                    else
+                    {
+                        imageComparisonContainers.RemoveRange(0, imgComparisonPerWorker);
+                    }
+                }
 
                 if (workerIndex == workers.Count)
                     workerIndex = 0;
@@ -133,26 +178,8 @@ namespace Kepler.Service.Core
 
                 var newScreenShotsForProcessing = newBaselineScreenShot.AsEnumerable().ToList();
 
-                // if baseline is "empty" - just set screenshots as "passed"
-                if (oldPassedBaselineScreenShots == null || !oldPassedBaselineScreenShots.Any())
-                {
-                    newScreenShotsForProcessing.ForEach(item =>
-                    {
-                        item.Status = ObjectStatus.Passed;
-                        item.IsLastPassed = true;
-                    });
-                    ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
-                }
-                else
-                {
-                    newScreenShotsForProcessing.ForEach(item => item.Status = ObjectStatus.InProgress);
-                    ScreenShotRepository.Instance.Update(newScreenShotsForProcessing);
-
-                    imagesComparisonContainer.AddRange(GenerateImageComparison(newScreenShotsForProcessing,
-                        oldPassedBaselineScreenShots.ToList()));
-                }
-
-                ScreenShotRepository.Instance.FlushChanges();
+                imagesComparisonContainer.AddRange(GenerateImageComparison(newScreenShotsForProcessing,
+                    oldPassedBaselineScreenShots.ToList()));
             }
 
             return imagesComparisonContainer;
@@ -173,30 +200,97 @@ namespace Kepler.Service.Core
             {
                 var oldScreenShot = oldPassedBaselineScreenShots.Find(oldScreen => oldScreen.Name == newScreenShot.Name);
 
+                ImageComparisonInfo imageComparison = null;
+
+                // if there is no old screenshots => it's first build and first uploaded screenshots.
+                // Just set screenshots as passed
                 if (oldScreenShot == null)
                 {
-                    newScreenShot.Status = ObjectStatus.Passed;
-                    newScreenShot.IsLastPassed = true;
-                    ScreenShotRepository.Instance.Update(newScreenShot);
+                    newScreenShot.BaseLineImagePath = newScreenShot.ImagePath;
+                    var screenShotPreviewImagePath = newScreenShot.PreviewImagePath ?? "";
+
+                    imageComparison = new ImageComparisonInfo()
+                    {
+                        ScreenShotName = newScreenShot.Name,
+                        LastPassedScreenShotId = newScreenShot.Id,
+                        FirstImagePath = newScreenShot.ImagePath,
+                        FirstPreviewPath = screenShotPreviewImagePath,
+                        SecondImagePath = newScreenShot.ImagePath,
+                        SecondPreviewPath = screenShotPreviewImagePath,
+                        DiffImagePath = newScreenShot.DiffImagePath,
+                        DiffPreviewPath = newScreenShot.DiffPreviewPath,
+                        ScreenShotId = newScreenShot.Id,
+                    };
                 }
                 else
                 {
-                    var imageComparison = new ImageComparisonInfo()
+                    imageComparison = new ImageComparisonInfo()
                     {
+                        ScreenShotName = newScreenShot.Name,
                         LastPassedScreenShotId = oldScreenShot.Id,
                         FirstImagePath = oldScreenShot.ImagePath,
+                        FirstPreviewPath = oldScreenShot.PreviewImagePath,
                         SecondImagePath = newScreenShot.ImagePath,
-                        DiffImgPathToSave = DiffImageSavingPath,
+                        SecondPreviewPath = newScreenShot.PreviewImagePath,
+                        DiffImagePath = newScreenShot.DiffImagePath,
+                        DiffPreviewPath = newScreenShot.DiffPreviewPath,
                         ScreenShotId = newScreenShot.Id,
                     };
 
-                    resultImagesForComparison.Add(imageComparison);
+                    newScreenShot.BaseLineImagePath = oldScreenShot.ImagePath;
+                }
+                resultImagesForComparison.Add(imageComparison);
+                ScreenShotRepository.Instance.UpdateAndFlashChanges(newScreenShot);
+            }
+
+            return resultImagesForComparison;
+        }
+
+        public void UpdateKeplerServiceUrlOnWorkers()
+        {
+            var workers = ImageWorkerRepository.Instance.FindAll()
+                .Where(worker => worker.WorkerStatus == ImageWorker.StatusOfWorker.Available).ToList();
+
+            foreach (var imageWorker in workers)
+            {
+                var restImageProcessorClient = new RestImageProcessorClient(imageWorker.WorkerServiceUrl);
+                restImageProcessorClient.SetKeplerServiceUrl();
+            }
+        }
+
+        public void UpdateDiffImagePath()
+        {
+            var keplerService = new KeplerService();
+
+            var diffImageSavingPath = keplerService.GetDiffImageSavingPath();
+            var previewImageSavingPath = keplerService.GetPreviewSavingPath();
+
+            if (String.IsNullOrEmpty(diffImageSavingPath))
+                return;
+
+            if (!Directory.Exists(diffImageSavingPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(diffImageSavingPath);
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = ex.Message});
                 }
             }
 
-            ScreenShotRepository.Instance.FlushChanges();
-
-            return resultImagesForComparison;
+            if (!Directory.Exists(previewImageSavingPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(previewImageSavingPath);
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = ex.Message});
+                }
+            }
         }
     }
 }

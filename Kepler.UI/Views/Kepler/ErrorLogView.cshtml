@@ -1,0 +1,109 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        <div>
+            <h3>Error log</h3>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-hover error_log_table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Date</th>
+                        <th>Text</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<table style="display: none;">
+    <tbody>
+        <tr class="error_sample">
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    //
+    // Load error log
+    //
+    getErrorLogLastMonth();
+
+    function getErrorLogLastMonth() {
+        var monthAgoDate = moment(); // Get current time
+        monthAgoDate.subtract(1, 'months'); // Current date subtract 1 month
+        monthAgoDate = monthAgoDate.toISOString();
+
+        $('.error_log_table > tbody').empty();
+        $.ajax({
+            url: KeplerServiceUrl + 'GetErrors?fromTime=' + monthAgoDate,
+            type: 'GET',
+            success: function (data) {
+                $.each(data, function (key, value) {
+                    $('tr.error_sample').clone(true, true).appendTo('.error_log_table > tbody').removeClass('error_sample').addClass('error_log_row').show();
+                    $.each(value, function (key, value) {
+                        if (key == 'Time') {
+                            $('.error_log_row:last td:nth-of-type(2)').html(moment(value).format("YYYY-MM-DD hh:mma"));
+                        } else if (key == 'ExceptionMessage') {
+                            $('.error_log_row:last td:nth-of-type(3)').html(value);
+                        } else if (key == 'Code') {
+                            $('.error_log_row:last').addClass("error_type_" + value).addClass('error_viewed');
+                        } else if (key == 'Id') {
+                            $('.error_log_row:last').attr('obj_id', value);
+                        }
+                    });
+                });
+            }
+        });
+    }
+
+    //
+    // Load last viewed errors
+    //
+    getErrorsSinceLastViewed();
+
+    function getErrorsSinceLastViewed() {
+        $.ajax({
+            url: KeplerServiceUrl + 'GetErrorsSinceLastViewed',
+            type: 'GET',
+            success: function (data) {
+                if (data != '') {
+                    $.each(data, function (key, value) {
+                        if (key == '0') { // Check first error in array and SetLastViewed
+                            $.each(value, function (key, value) {
+                                if (key == 'Id') {
+                                    setLastViewedError(value);
+                                    $('.error_log_row[obj_id="' + value + '"]').removeClass('error_viewed');
+                                }
+                            });
+                        } else { // Check other errors in array
+                            $.each(value, function (key, value) {
+                                if (key == 'Id') {
+                                    $('.error_log_row[obj_id="' + value + '"]').removeClass('error_viewed');
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    //
+    // Set last viewed error
+    //
+    function setLastViewedError(lastViewedId) {
+        $.ajax({
+            url: KeplerServiceUrl + 'SetLastViewedError?errorId=' + lastViewedId,
+            type: 'GET'
+        });
+    }
+
+</script>

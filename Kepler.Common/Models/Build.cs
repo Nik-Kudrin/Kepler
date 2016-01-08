@@ -12,16 +12,33 @@ namespace Kepler.Common.Models
         public DateTime? StartDate { get; set; }
 
         [DataMember]
+        [DataType(DataType.DateTime)]
+        public DateTime? StopDate { get; set; }
+
+        [DataMember]
         [DataType(DataType.Time)]
         public TimeSpan? Duration { get; set; }
+
+        [DataMember]
+        [DataType(DataType.Time)]
+        public TimeSpan? PredictedDuration { get; set; }
 
         [DataMember]
         public long? BranchId { get; set; }
 
         [DataMember]
-        public long TestCount { get; set; }
+        public long NumberTestAssemblies { get; set; }
 
         [DataMember]
-        public long TestsFailed { get; set; }
+        public long NumberTestSuites { get; set; }
+
+        [DataMember]
+        public long NumberTestCase { get; set; }
+
+        [DataMember]
+        public long NumberScreenshots { get; set; }
+
+        [DataMember]
+        public long NumberFailedScreenshots { get; set; }
     }
 }

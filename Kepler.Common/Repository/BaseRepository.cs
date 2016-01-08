@@ -3,97 +3,150 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Kepler.Common.DB;
+using Kepler.Common.Error;
 using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
     public class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : InfoObject
     {
-        protected readonly KeplerDataContext _dbContext;
-        protected readonly DbSet<TEntity> _dbSet;
+        protected readonly KeplerDataContext DbContext;
+        protected readonly DbSet<TEntity> DbSet;
 
 
         protected BaseRepository(KeplerDataContext dbContext, DbSet<TEntity> dbSet)
         {
-            _dbContext = dbContext;
-            _dbSet = dbSet;
+            DbContext = dbContext;
+            DbSet = dbSet;
         }
 
         public virtual TEntity Get(long id)
         {
-            return _dbSet.FirstOrDefault(x => x.Id == id);
-        }
-
-        public void Add(TEntity entity)
-        {
-            if (entity != null)
-                _dbSet.Add(entity);
-        }
-
-        public void Update(TEntity entity)
-        {
-            if (entity != null)
+            try
             {
-                _dbSet.Attach(entity);
-                _dbContext.Entry(entity).State = EntityState.Modified;
+                return DbSet.FirstOrDefault(x => x.Id == id);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
+                return null;
             }
         }
 
-        public void Update(IEnumerable<TEntity> entities)
+        public virtual void Add(TEntity entity)
         {
-            foreach (var entity in entities)
+            if (entity != null)
+                DbSet.Add(entity);
+        }
+
+        public virtual void Update(TEntity entity)
+        {
+            if (entity != null)
             {
-                _dbSet.Attach(entity);
-                _dbContext.Entry(entity).State = EntityState.Modified;
+                DbSet.Attach(entity);
+                DbContext.Entry(entity).State = EntityState.Modified;
             }
         }
 
-        public void UpdateAndFlashChanges(TEntity entity)
+        public virtual void Update(IEnumerable<TEntity> entities)
         {
-            Update(entity);
-            FlushChanges();
+            entities.ToList().ForEach(Update);
         }
 
-        public void UpdateAndFlashChanges(IEnumerable<TEntity> entities)
+        public virtual void UpdateAndFlashChanges(TEntity entity)
         {
-            Update(entities);
-            FlushChanges();
+            try
+            {
+                Update(entity);
+                FlushChanges();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
+            }
         }
 
-        public void Insert(TEntity entity)
+        public virtual void UpdateAndFlashChanges(IEnumerable<TEntity> entities)
         {
-            Add(entity);
-            FlushChanges();
+            try
+            {
+                Update(entities);
+                FlushChanges();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
+            }
+        }
+
+        public virtual void Insert(TEntity entity)
+        {
+            try
+            {
+                Add(entity);
+                FlushChanges();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
+            }
         }
 
         public virtual void FlushChanges()
         {
-            _dbContext.SaveChanges();
+            DbContext.SaveChanges();
         }
 
-        public void Remove(TEntity entity)
+        public virtual void Delete(TEntity entity)
         {
-            if (_dbContext.Entry(entity).State == EntityState.Detached)
+            try
             {
-                _dbSet.Attach(entity);
-            }
+                if (DbContext.Entry(entity).State == EntityState.Detached)
+                {
+                    DbSet.Attach(entity);
+                }
 
-            _dbSet.Remove(entity);
+                DbSet.Remove(entity);
+                FlushChanges();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                {
+                    ExceptionMessage = $"Trying to delete object: {ex.Message}"
+                });
+            }
+        }
+
+        public virtual void Delete(IEnumerable<TEntity> entities)
+        {
+            try
+            {
+                DbSet.RemoveRange(entities);
+                FlushChanges();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                {
+                    ExceptionMessage = $"Trying to delete range of objects: {ex.Message}"
+                });
+            }
         }
 
         public virtual IEnumerable<TEntity> FindAll()
         {
-            return _dbSet.ToList();
+            return DbSet.ToList();
         }
 
         public virtual IEnumerable<TEntity> Find(string name)
         {
-            return _dbSet.Where(x => x.Name == name).ToList();
+            return DbSet.Where(x => x.Name == name).ToList();
         }
 
         public virtual IEnumerable<TEntity> Find(Func<TEntity, bool> filterCondition)
         {
-            return _dbSet.Where(filterCondition).ToList();
+            return DbSet.Where(filterCondition).ToList();
         }
     }
 }

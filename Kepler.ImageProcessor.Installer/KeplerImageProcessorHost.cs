@@ -1,5 +1,6 @@
 ﻿using System.ServiceModel;
 using System.ServiceProcess;
+using Kepler.ImageProcessor.Service;
 
 namespace Kepler.ImageProcessor.Installer
 {
@@ -16,7 +17,7 @@ namespace Kepler.ImageProcessor.Installer
         {
             if (serviceHost != null) serviceHost.Close();
 
-            serviceHost = new ServiceHost(typeof (Kepler.ImageProcessor.Service.KeplerImageProcessorService));
+            serviceHost = new ServiceHost(typeof (KeplerImageProcessorService));
             serviceHost.Open();
         }
 

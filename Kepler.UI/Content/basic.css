@@ -232,6 +232,17 @@ body {
     MEDIA QUERIES     
     =============================================*/
 
+@media (max-width:1160px) {
+.screenShot-base, .screenShot-dif, .screenShot-curr {
+    height: 122px;
+}
+
+    .screenShot-base img, .screenShot-dif img, .screenShot-curr img {
+        width: 150px;
+        height: 122px;
+    }
+}
+
 @media (min-width:768px) {
     #page-wrapper {
         margin: 0 0 0 260px;

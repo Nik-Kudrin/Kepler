@@ -1,0 +1,76 @@
+﻿<div class="col-md-12 source-service-url">
+    <div class="col-md-12">
+        <div class="col-md-10">
+            <div class="form-group">
+                <input id="service_url" class="form-control" type="text" readonly>
+                <p class="help-block">Service Url</p>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-lg edit_service_url" data-toggle="modal" data-target="#crud-modal" data-act="service_url_edit">Edit</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //
+    // Ajax loader
+    //
+    loadPath('GetKeplerServiceUrl');
+
+    function loadPath(pathType) {
+        $.ajax({
+            url: KeplerServiceUrl + pathType,
+            type: 'GET',
+            success: function (data) {
+                switch (pathType) {
+                    case 'GetKeplerServiceUrl':
+                        $('#service_url').val(data);
+                        break;
+                }
+
+            }
+        });
+    }
+
+    //
+    // Popup for edit diff img path
+    //
+    var obj_act = "";
+    $(document).on('click', '.source-service-url button', function (e) {
+        switch ($(this).attr('data-act')) {
+            case 'service_url_edit':
+                obj_act = "SetKeplerServiceUrl";
+                $('.modal-title').text('Edit service url');
+                $('.modal-body').empty().append('<div class="form-group"><label>Url</label>' +
+                    '<input class="form-control" name="url" type="text"></div>' +
+                            '<div class="alert alert-warning"></div>');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+                break;
+        }
+    });
+
+
+    //
+    // Ajax call for modal popup
+    //
+    function modal_ajax_call() {
+        var url_parameters = obj_act + '?' + $('#modal_form').serialize();
+        $.ajax({
+            type: 'GET',
+            url: KeplerServiceUrl + url_parameters,
+            success: function (data) {
+                $('#modal_form .alert-warning').hide();
+                $('#crud-modal button.close').click();
+                switch (obj_act) {
+                    case 'SetKeplerServiceUrl':
+                        loadPath('GetKeplerServiceUrl');
+                        break;
+                }
+            },
+            error: function (xhr) {
+                $('#modal_form .alert-warning').show().text(xhr.responseText);
+            }
+        });
+    }
+</script>

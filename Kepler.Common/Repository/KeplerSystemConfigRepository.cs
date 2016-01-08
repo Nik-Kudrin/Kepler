@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Kepler.Common.DB;
+using Kepler.Common.Error;
 using Kepler.Common.Models;
 
 namespace Kepler.Common.Repository
@@ -12,17 +13,7 @@ namespace Kepler.Common.Repository
         protected readonly KeplerDataContext _dbContext;
         protected readonly DbSet<KeplerSystemConfig> _dbSet;
 
-        private static KeplerSystemConfigRepository _repoInstance;
-
-        public static KeplerSystemConfigRepository Instance
-        {
-            get
-            {
-                _repoInstance = _repoInstance ?? new KeplerSystemConfigRepository();
-                return _repoInstance;
-            }
-        }
-
+        public static KeplerSystemConfigRepository Instance => new KeplerSystemConfigRepository();
 
         protected KeplerSystemConfigRepository()
         {
@@ -40,10 +31,11 @@ namespace Kepler.Common.Repository
             _dbSet.Add(entity);
         }
 
-        public void Update(KeplerSystemConfig entity)
+        public void UpdateAndFlushChanges(KeplerSystemConfig entity)
         {
             _dbSet.Attach(entity);
             _dbContext.Entry(entity).State = EntityState.Modified;
+            FlushChanges();
         }
 
         public void Insert(KeplerSystemConfig entity)
@@ -57,14 +49,25 @@ namespace Kepler.Common.Repository
             _dbContext.SaveChanges();
         }
 
-        public void Remove(KeplerSystemConfig entity)
+        public void Delete(KeplerSystemConfig entity)
         {
-            if (_dbContext.Entry(entity).State == EntityState.Detached)
+            try
             {
-                _dbSet.Attach(entity);
-            }
+                if (_dbContext.Entry(entity).State == EntityState.Detached)
+                {
+                    _dbSet.Attach(entity);
+                }
 
-            _dbSet.Remove(entity);
+                _dbSet.Remove(entity);
+                FlushChanges();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                {
+                    ExceptionMessage = $"Trying to delete object: {ex.Message}"
+                });
+            }
         }
 
         public IEnumerable<KeplerSystemConfig> FindAll()

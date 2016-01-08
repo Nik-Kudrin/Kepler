@@ -1,31 +1,13 @@
 ﻿<div class="sidebar-collapse">
     <ul class="nav" id="main-menu">
         <li>
-            <a href="#" linkUrl="@Url.Action("ImageWorkersView", "Admin")" class="main-menu-item">Image Workers</a>
+            <a href="" linkUrl="/admin/image-workers" class="main-menu-item">Image Workers</a>
         </li>
         <li>
-            <a href="#" linkUrl="@Url.Action("DiffImageView", "Admin")" class="main-menu-item">Diff Image</a>
+            <a href="" linkUrl="/admin/service-url" class="main-menu-item">Service Url</a>
+        </li>
+        <li>
+            <a href="" linkUrl="/admin/source-image-path" class="main-menu-item">Source Image Path</a>
         </li>
     </ul>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.main-menu-item').click(function () {
-
-            $('.main-menu-item').removeClass("current");
-            $(this).addClass("current");
-
-            var linkUrl = $(this).attr('linkUrl');
-
-            $.ajax({
-                url: linkUrl,
-                type: 'GET',
-                success: function (data) {
-                    $('#page-inner').html(data);
-                }
-            });
-        });
-    });
-
-</script>

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.ServiceModel.Web;
 using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
-using Kepler.Service.Config;
+using Kepler.Service.Core;
 using Newtonsoft.Json;
 
-namespace Kepler.Service
+namespace Kepler.Service.Config
 {
     public class ConfigImporter
     {
@@ -19,23 +22,25 @@ namespace Kepler.Service
         /// </summary>
         /// <param name="jsonConfig"></param>
         /// <returns>Return empty string, if import was 'Ok', otherwise - error message</returns>
-        public string ImportConfig(string jsonConfig)
+        public void ImportConfig(string jsonConfig)
         {
-            TestImportConfig importedConfig;
+            ImportConfigModel importedConfig;
             try
             {
-                importedConfig = JsonConvert.DeserializeObject<TestImportConfig>(jsonConfig);
+                importedConfig = JsonConvert.DeserializeObject<ImportConfigModel>(jsonConfig);
             }
             catch (Exception ex)
             {
-                return
-                    new ErrorMessage() {Code = ErrorMessage.ErorCode.ParsingFileError, ExceptionMessage = ex.Message}
-                        .ToString();
+                throw new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.ParsingFileError,
+                    ExceptionMessage = ex.Message
+                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
             }
 
             var validationErrorMessage = ValidateImportedConfigObjects(importedConfig);
             if (validationErrorMessage != "")
-                return validationErrorMessage;
+                throw new WebFaultException<string>(validationErrorMessage, HttpStatusCode.InternalServerError);
 
             var mappedProjects = mapper.GetProjects(importedConfig.Projects).ToList();
 
@@ -45,7 +50,7 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                throw new WebFaultException<string>(ex.Message, HttpStatusCode.InternalServerError);
             }
 
             List<Branch> branches = null;
@@ -55,7 +60,7 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                throw new WebFaultException<string>(ex.Message, HttpStatusCode.InternalServerError);
             }
 
             var builds = BindImportedBranchesWithBuilds(branches);
@@ -64,11 +69,12 @@ namespace Kepler.Service
             BindTestCasesWithSuites(importedConfig, assemblies);
             BindScreenshotsWithTestCases(importedConfig, branches, assemblies);
 
-            return "";
+            UpdateBuildStatusesToInQueue(builds);
+            UpdateBuildsCountersFields(builds);
         }
 
 
-        private string ValidateImportedConfigObjects(TestImportConfig importedConfig)
+        private string ValidateImportedConfigObjects(ImportConfigModel importedConfig)
         {
             var mapper = new ConfigMapper();
             var mappedProjects = mapper.GetProjects(importedConfig.Projects).ToList();
@@ -156,7 +162,7 @@ namespace Kepler.Service
             return mappedProjects;
         }
 
-        private List<Branch> BindBranchesWithProjects(TestImportConfig importedConfig, List<Project> mappedProjects)
+        private List<Branch> BindBranchesWithProjects(ImportConfigModel importedConfig, List<Project> mappedProjects)
         {
             var branches = new List<Branch>();
 
@@ -239,7 +245,12 @@ namespace Kepler.Service
 
             foreach (var branch in branches)
             {
-                var build = new Build() {Status = ObjectStatus.InQueue, BranchId = branch.Id};
+                var build = new Build()
+                {
+                    Status = ObjectStatus.Pending,
+                    BranchId = branch.Id,
+                    ParentObjId = branch.Id
+                };
 
                 BuildRepository.Instance.Insert(build);
                 builds.Add(build);
@@ -259,7 +270,7 @@ namespace Kepler.Service
         /// <param name="importedConfig"></param>
         /// <param name="branches"></param>
         /// <returns>List of new bounded assemblies</returns>
-        private List<TestAssembly> BindTestAssembliesWithBuilds(TestImportConfig importedConfig,
+        private List<TestAssembly> BindTestAssembliesWithBuilds(ImportConfigModel importedConfig,
             IEnumerable<Branch> branches)
         {
             var assemblies = new List<TestAssembly>();
@@ -295,7 +306,7 @@ namespace Kepler.Service
         /// <param name="importedConfig"></param>
         /// <param name="assemblies"></param>
         /// <returns>Return updated test assemblies (bounded with suites)</returns>
-        private List<TestAssembly> BindTestSuitesWithAssemblies(TestImportConfig importedConfig,
+        private List<TestAssembly> BindTestSuitesWithAssemblies(ImportConfigModel importedConfig,
             List<TestAssembly> assemblies)
         {
             foreach (var projectConfig in importedConfig.Projects)
@@ -333,7 +344,7 @@ namespace Kepler.Service
         /// <param name="importedConfig"></param>
         /// <param name="assemblies"></param>
         /// <returns></returns>
-        private void BindTestCasesWithSuites(TestImportConfig importedConfig, List<TestAssembly> assemblies)
+        private void BindTestCasesWithSuites(ImportConfigModel importedConfig, List<TestAssembly> assemblies)
         {
             // map cases
             // bind cases with suites
@@ -377,7 +388,7 @@ namespace Kepler.Service
         /// <param name="importedConfig"></param>
         /// <param name="branches"></param>
         /// <param name="assemblies"></param>
-        private void BindScreenshotsWithTestCases(TestImportConfig importedConfig, List<Branch> branches,
+        private void BindScreenshotsWithTestCases(ImportConfigModel importedConfig, List<Branch> branches,
             List<TestAssembly> assemblies)
         {
             foreach (var projectConfig in importedConfig.Projects)
@@ -399,15 +410,26 @@ namespace Kepler.Service
                                 var currentCase =
                                     currentSuite.Value.TestCases.ToList()
                                         .Find(item => item.Value.Name == testCaseConfig.Name);
+
+                                // Create all directories for the diff and preview screenshots
+                                var pathToSaveScreenShotsDiffs =
+                                    CreateDirectoryTree(Path.Combine(projectConfig.Name, currentBranch.Name,
+                                        currentCase.Value.BuildId.ToString(), currentAssembly.Name,
+                                        currentSuite.Value.Name, currentCase.Value.Name));
+
                                 var screenShots = testCaseConfig.ScreenShots;
 
                                 for (int index = 0; index < screenShots.Count; index++)
                                 {
                                     var screenShot = screenShots[index];
+
                                     screenShot.BuildId = currentCase.Value.BuildId;
                                     screenShot.ParentObjId = currentCase.Key;
                                     screenShot.BaseLineId = currentBranch.BaseLineId.Value;
                                     screenShot.Status = ObjectStatus.InQueue;
+
+                                    screenShot.DiffImagePath = pathToSaveScreenShotsDiffs.Item1;
+                                    screenShot.DiffPreviewPath = pathToSaveScreenShotsDiffs.Item2;
 
                                     ScreenShotRepository.Instance.Insert(screenShot);
                                 }
@@ -419,6 +441,44 @@ namespace Kepler.Service
                     }
                 }
             }
+        }
+
+        private void UpdateBuildStatusesToInQueue(List<Build> builds)
+        {
+            foreach (var build in builds)
+            {
+                build.Status = ObjectStatus.InQueue;
+                BuildRepository.Instance.UpdateAndFlashChanges(build);
+            }
+        }
+
+
+        private void UpdateBuildsCountersFields(List<Build> builds)
+        {
+            foreach (var build in builds)
+            {
+                build.NumberTestAssemblies = TestAssemblyRepository.Instance.FindByBuildId(build.Id).Count();
+                build.NumberTestSuites = TestSuiteRepository.Instance.FindByBuildId(build.Id).Count();
+                build.NumberTestCase = TestCaseRepository.Instance.FindByBuildId(build.Id).Count();
+                build.NumberScreenshots = ScreenShotRepository.Instance.FindByBuildId(build.Id).Count();
+
+                BuildRepository.Instance.UpdateAndFlashChanges(build);
+            }
+        }
+
+
+        /// <summary>
+        /// Recursively create all the neccessary directories (project, branch, build ...) inside "Diff" directory
+        /// </summary>
+        /// <param name="directoriesPath"></param>
+        private Tuple<string, string> CreateDirectoryTree(string directoriesPath)
+        {
+            var diffPath = Path.Combine(UrlPathGenerator.DiffImagePath, directoriesPath);
+            var previewPath = Path.Combine(UrlPathGenerator.PreviewImagePath, directoriesPath);
+
+            Directory.CreateDirectory(diffPath);
+            Directory.CreateDirectory(previewPath);
+            return new Tuple<string, string>(diffPath, previewPath);
         }
     }
 }

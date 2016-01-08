@@ -1,7 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Text;
+using System.Web.Script.Serialization;
 using FluentAssertions;
+using Kepler.Common.Error;
 using Newtonsoft.Json;
+using NLog.Fluent;
 using NUnit.Framework;
 using RestSharp;
 
@@ -34,6 +39,8 @@ namespace Kepler.Tests.Test
         {
             var buildConfigFile = File.ReadAllText(Path.Combine(BaseResourcePath, "test_config.json"));
 
+//            Console.WriteLine(JsonConvert.SerializeObject(buildConfigFile));
+
             var client = new RestClient("http://localhost:8733/Kepler.Service/");
             var request = new RestRequest("ImportTestConfig", Method.POST);
 
@@ -44,6 +51,7 @@ namespace Kepler.Tests.Test
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
         }
 
+
         [Test]
         public void InitDatabaseContent()
         {
@@ -52,9 +60,25 @@ namespace Kepler.Tests.Test
             // Set diff image path
             var request = new RestRequest("SetDiffImageSavingPath", Method.GET);
             request.RequestFormat = DataFormat.Json;
-            request.AddQueryParameter("diffImageSavingPath", "e:\\Temp\\ScreenCompareResult\\");
+            request.AddQueryParameter("diffImageSavingPath", "\\\\NEON-PC\\ScreenCompareResult");
 
             var response = client.Execute(request);
+            response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
+
+            // Set source image path
+            request = new RestRequest("SetSourceImageSavingPath", Method.GET);
+            request.RequestFormat = DataFormat.Json;
+            request.AddQueryParameter("sourceImageSavingPath", "\\\\NEON-PC\\ScreenSource");
+
+            response = client.Execute(request);
+            response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
+
+            // Set KeplerService url
+            request = new RestRequest("SetKeplerServiceUrl", Method.GET);
+            request.RequestFormat = DataFormat.Json;
+            request.AddQueryParameter("url", "http://localhost:8733/Kepler.Service");
+
+            response = client.Execute(request);
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
 
             // Create project
@@ -77,7 +101,7 @@ namespace Kepler.Tests.Test
             // Set branch as main
             request = new RestRequest("UpdateBranch", Method.GET);
             request.RequestFormat = DataFormat.Json;
-            request.AddQueryParameter("name", "Develop");
+            request.AddQueryParameter("id", "1");
             request.AddQueryParameter("newName", "Develop");
             request.AddQueryParameter("isMainBranch", "true");
 
@@ -92,6 +116,19 @@ namespace Kepler.Tests.Test
 
             response = client.Execute(request);
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
+        }
+
+
+        [Test]
+        public void GetDiffImageSavingPath()
+        {
+            var client = new RestClient("http://localhost:8733/Kepler.Service");
+            var request = new RestRequest("GetPreviewSavingPath", Method.GET);
+
+            request.RequestFormat = DataFormat.Json;
+
+            var response = client.Execute(request);
+            Console.WriteLine(response.Content);
         }
     }
 }

@@ -1,29 +1,16 @@
 ﻿/*GLOBAL START*/
 h3 {
     margin: 0px;
+    white-space: nowrap;
+    font-size: 20px;
 }
 
-.status-failed, .status-passed, .status-queued {
-    display: inline-block;
-    height: 16px;
-    width: 16px;
+.table > thead > tr > th {
+    border-bottom: 1px solid #ddd;
 }
 
-.build-panel .status-failed, .build-panel .status-passed, .build-panel .status-queued {
-    width: 16px;
-    vertical-align: text-bottom;
-}
-
-.status-failed {
-    background: url("../img/progress_red.png");
-}
-
-.status-passed {
-    background: url("../img/progress_green.png");
-}
-
-.status-queued {
-    background: url("../img/progress_blue.gif");
+.table > tbody > tr > td {
+    vertical-align: middle;
 }
 
 .btn {
@@ -31,6 +18,17 @@ h3 {
     padding: 3px 12px;
     vertical-align: baseline;
 }
+
+.fa.fa-cog {
+    opacity: 0.5;
+    font-size: 18px;
+    cursor: pointer;
+    color: #000;
+}
+
+    .fa.fa-cog:hover {
+        opacity: 1;
+    }
 
 .dropdown-btn {
     position: relative;
@@ -56,28 +54,160 @@ label.error {
     font-size: 12px;
     font-weight: normal;
 }
+
+.header-log-btn i {
+    font-size: 16px;
+}
+
+#modal_form .alert-warning {
+    display: none;
+}
+
+.progress {
+    display: none;
+    margin-bottom: 0px;
+}
+
 /*GLOBAL END*/
+
+/*STATUS START*/
+
+/*
+    0 - Undefined
+    1 - Skipped
+    2 - Pending
+    3 - InProgress
+    4 - InQueue
+    5 - Passed
+    6 - Failed
+    7 - Stopped
+
+    for image workers: 
+    0 - available 
+    1 - offline
+*/
+
+.status-1, .status-2, .status-3,
+.status-4, .status-5, .status-6,
+.status-7, .worker-status-0, .worker-status-1 {
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+.build-panel .status-1, .build-panel .status-2,
+.build-panel .status-3, .build-panel .status-4,
+.build-panel .status-5, .build-panel .status-6,
+.build-panel .status-7, .worker-status-0, .worker-status-1 {
+    width: 16px;
+    vertical-align: text-bottom;
+}
+
+    .status-1::before, .status-2::before, .status-3::before,
+    .status-4::before, .status-5::before, .status-6::before,
+    .status-7::before, .worker-status-0:before, .worker-status-1:before {
+        display: none;
+        position: absolute;
+        margin: -2px 0px 0px 20px;
+        font-size: 12px;
+        line-height: 12px;
+        background: #E4E4E4;
+        color: #000;
+        border: 1px solid #CECECE;
+        padding: 3px;
+    }
+
+    .status-1:hover::before, .status-2:hover::before, .status-3:hover::before,
+    .status-4:hover::before, .status-5:hover::before, .status-6:hover::before,
+    .status-7:hover::before, .worker-status-0:hover::before, .worker-status-1:hover::before {
+        display: block;
+        z-index: 100;
+    }
+
+.status-3 {
+    background: url("../img/progress_inprogress.gif");
+}
+
+    .status-3::before {
+        content: 'In progress';
+    }
+
+.status-4 {
+    background: url("../img/progress_inqueue.png");
+}
+
+    .status-4::before {
+        content: 'In queue';
+    }
+
+.status-5 {
+    background: url("../img/progress_passed.png");
+}
+
+    .status-5::before {
+        content: 'Passed';
+    }
+
+.status-6 {
+    background: url("../img/progress_failed.png");
+}
+
+    .status-6::before {
+        content: 'Failed';
+    }
+
+.status-7 {
+    background: url("../img/progress_stoped.png");
+}
+
+    .status-7::before {
+        content: 'Stoped';
+    }
+
+.worker-status-0 {
+    background: url("../img/progress_passed.png");
+}
+
+    .worker-status-0::before {
+        content: 'Available';
+    }
+
+.worker-status-1 {
+    background: url("../img/progress_failed.png");
+}
+
+    .worker-status-1::before {
+        content: 'Offline';
+    }
+
+/*STATUS END*/
 
 /*NAVBAR LEFT START*/
 .main-menu-conf {
     position: absolute;
     right: 30px;
-    top: 20px;
+    top: 18px;
 }
 
 .navbar-side .fa-cog {
-    font-size: 18px;
-    cursor: pointer;
+    opacity: 0.3;
     color: #FFF;
 }
 
 .navbar-side .fa.arrow {
     line-height: 26px;
     width: 9px;
+    opacity: 0.3;
 }
 /*NAVBAR LEFT END*/
 
 /*BUILD LIST PAGE START*/
+.panel-default-testAssembly, .panel-default-testSuite,
+.panel-default-testCase, .dropdown-btn-hidden,
+.screenShot-hidden, .screenShot-splitter-hidden {
+    display: none;
+}
+
 .panel-default .panel-heading {
     padding-bottom: 0px;
 }
@@ -107,6 +237,10 @@ label.error {
     .panel-default .table-responsive .btn .caret {
         margin-left: 5px;
     }
+
+.builds_table tr > td:nth-of-type(3) {
+    min-width: 200px;
+}
 /*BUILD LIST PAGE END*/
 
 /*BUILD PAGE START*/
@@ -118,7 +252,12 @@ label.error {
 
 .build-info-popup {
     padding-left: 10px;
+    padding-right: 10px;
 }
+
+    .build-info-popup li {
+        white-space: nowrap;
+    }
 
 .build-panel {
     margin: 20px 0px;
@@ -134,71 +273,65 @@ label.error {
     border: none;
 }
 
-.assembly_group .panel-default,
-.test_suite_group .panel-default,
-.test_case_group .panel-default {
+.testAssembly_group .panel-default,
+.testSuite_group .panel-default,
+.testCase_group .panel-default {
     padding: 10px 10px 10px 10px;
     background: none;
 }
 
-.assembly_group .panel-default {
+.testAssembly_group .panel-default {
     border: 1px dotted #777;
 }
 
-.test_suite_group .panel-default {
+.testSuite_group .panel-default {
     border: 1px dotted #999;
 }
 
-.test_case_group .panel-default {
+.testCase_group .panel-default {
     border: 1px dotted #CCC;
 }
 
-.build-panel-one-page-link {
+.screenShot-link {
+    display: none;
     font-size: 18px;
-    float: right;
 }
 
-.assembly_group .panel-body,
-.test_suite_group .panel-body,
-.test_case_group .panel-body {
+.testAssembly_group .panel-body,
+.testSuite_group .panel-body,
+.testCase_group .panel-body {
     padding: 10px 0px 5px 15px;
 }
 
-.test_case_group .panel-body {
+.testCase_group .panel-body {
     padding: 10px 0px;
 }
 
-.build-panel-one-page-header {
+.screenShot-header {
     margin-bottom: 20px;
 }
 
-    .build-panel-one-page-header span {
-        background: #DDD;
-        padding: 5px;
-        border-radius: 4px;
-        font-size: 11px;
-        margin-bottom: 5px;
-        display: inline;
-    }
-
-.build-panel-screen-base, .build-panel-screen-dif, .build-panel-screen-curr {
-    height: 96px;
+.screenShot-base, .screenShot-dif, .screenShot-curr {
+    height: 163px;
     background: url("../img/no_image_icon.png") no-repeat center;
     background-size: 117px 95px;
     text-align: center;
 }
 
-    .build-panel-screen-base img, .build-panel-screen-dif img, .build-panel-screen-curr img {
-        width: 118px;
-        height: 96px;
+    .screenShot-base img, .screenShot-dif img, .screenShot-curr img {
+        width: 200px;
+        height: 163px;
         display: inline;
+        font-size: 0px;
+        border: 1px solid #BCDEFB;
     }
 
-.build-panel-error-log {
+.screenShot-error-log {
+    display: none;
     padding-top: 20px;
 }
 
-.build-panel-splitter hr {
+.screenShot-splitter hr {
     border-top: 1px dotted #CCC;
 }
 
@@ -241,13 +374,172 @@ label.error {
 }
 
 .panel-title a.collapsed i.fa:before {
-    content: "\f01a";
+    content: "\f196";
     color: #337AB7;
 }
 
 .panel-title a i.fa:before {
-    content: "\f01b";
-    color: #a94442;
+    content: "\f147";
+    color: #337AB7;
 }
 
 /*BUILD PAGE END*/
+
+/*ERROR LOG PAGE START*/
+.error_log_row td:nth-of-type(1) {
+    padding: 2px;
+}
+
+.error_log_row td:nth-of-type(2) {
+    white-space: nowrap;
+}
+
+.error_log_row td:nth-of-type(3) {
+    word-break: break-word;
+}
+
+.error_viewed {
+    opacity: 0.7;
+}
+
+.error_viewed:hover {
+    opacity: 1;
+}
+
+.error_type_1 > td:nth-of-type(1) {
+    background: #EADCD6;
+}
+
+.error_type_1 > td {
+    border: 1px solid #EADCD6;
+}
+
+.error_type_2 > td:nth-of-type(1) {
+    background: #EFE0CF;
+}
+
+.error_type_2 > td {
+    border: 1px solid #EFE0CF;
+}
+
+.error_type_3 > td:nth-of-type(1) {
+    background: #F0E4BA;
+}
+
+.error_type_3 > td {
+    border: 1px solid #F0E4BA;
+}
+
+.error_type_4 > td:nth-of-type(1) {
+    background: #DBE2AF;
+}
+
+.error_type_4 > td {
+    border: 1px solid #DBE2AF;
+}
+
+.error_type_5 > td:nth-of-type(1) {
+    background: #DAE5C8;
+}
+
+.error_type_5 > td {
+    border: 1px solid #DAE5C8;
+}
+
+.error_type_6 > td:nth-of-type(1) {
+    background: #CBE7BE;
+}
+
+.error_type_6 > td {
+    border: 1px solid #CBE7BE;
+}
+
+.error_type_7 > td:nth-of-type(1) {
+    background: #CBE7CA;
+}
+
+.error_type_7 > td {
+    border: 1px solid #CBE7CA;
+}
+
+.error_type_8 > td:nth-of-type(1) {
+    background: #D7E4DA;
+}
+
+.error_type_8 > td {
+    border: 1px solid #D7E4DA;
+}
+
+.error_type_9 > td:nth-of-type(1) {
+    background: #A0E6CD;
+}
+
+.error_type_9 > td {
+    border: 1px solid #A0E6CD;
+}
+
+.error_type_10 > td:nth-of-type(1) {
+    background: #A5E2DE;
+}
+
+.error_type_10 > td {
+    border: 1px solid #A5E2DE;
+}
+
+.error_type_11 > td:nth-of-type(1) {
+    background: #AFE3E3;
+}
+
+.error_type_11 > td {
+    border: 1px solid #AFE3E3;
+}
+
+.error_type_12 > td:nth-of-type(1) {
+    background: #DFEBF1;
+}
+
+.error_type_12 > td {
+    border: 1px solid #DFEBF1;
+}
+
+.error_type_13 > td:nth-of-type(1) {
+    background: #E6EEF4;
+}
+
+.error_type_13 > td {
+    border: 1px solid #E6EEF4;
+}
+
+.error_type_14 > td:nth-of-type(1) {
+    background: #E2EBEF;
+}
+
+.error_type_14 > td {
+    border: 1px solid #E2EBEF;
+}
+
+.error_type_15 > td:nth-of-type(1) {
+    background: #E9EFF3;
+}
+
+.error_type_15 > td {
+    border: 1px solid #E9EFF3;
+}
+
+.error_type_16 > td:nth-of-type(1) {
+    background: #FBD3F0;
+}
+
+.error_type_16 > td {
+    border: 1px solid #FBD3F0;
+}
+
+.error_type_17 > td:nth-of-type(1) {
+    background: #C5AFE3;
+}
+
+.error_type_17 > td {
+    border: 1px solid #C5AFE3;
+}
+
+/*ERROR LOG PAGE END*/

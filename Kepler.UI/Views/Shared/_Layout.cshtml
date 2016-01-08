@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var KeplerServiceUrl = Startup.KeplerServiceUrl;
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -13,6 +17,9 @@
 
 </head>
 <body>
+    <script type="text/javascript">
+        var KeplerServiceUrl = '@KeplerServiceUrl';
+    </script>
     <div id="wrapper">
         <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
@@ -21,6 +28,9 @@
 
             <div class="header-right">
                 <a class="btn btn-default" href="/admin">Admin</a>
+                <a class="btn btn-default header-log-btn" title="Error log" href="" linkUrl="/error-log">
+                    <i class="fa fa-exclamation-circle fa-2x"></i>
+                </a>
             </div>
         </nav>
         <!-- /. NAV TOP -->
@@ -33,13 +43,12 @@
             }
             else
             {
-                @RenderPage("~/Views/Home/LeftMenu.cshtml")
+                @RenderPage("~/Views/Kepler/LeftMenu.cshtml")
             }
 
 
         </nav>
         <!-- /. NAV SIDE -->
-
 
         <div id="page-wrapper">
             <div id="page-inner">
@@ -51,7 +60,7 @@
     </div>
     <!-- /. WRAPPER -->
     <div id="footer-sec">
-    &copy; 2015 Kepler.ws | Design By : <a href="http://www.binarytheme.com/" target="_blank">BinaryTheme.com</a>
+        &copy; 2015 Kepler.ws | Design By : <a href="http://www.binarytheme.com/" target="_blank">BinaryTheme.com</a>
     </div>
 
     <!-- /. MODAL WINDOW -->
@@ -62,9 +71,9 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h4 class="modal-title" id="myModalLabel"></h4>
                 </div>
-                <form id="modal_form" action="" method="post">
+                <form id="modal_form" action="javascript:void(null);" onsubmit="">
                     <div class="modal-body">
-                    </div>                    
+                    </div>
                     <div class="modal-footer">
                     </div>
                 </form>
@@ -72,7 +81,84 @@
         </div>
     </div>
 
-    <script src="/Scripts/custom.js"></script>
+    <script src="/Scripts/modal_win.js"></script>
+
+    <script type="text/javascript">
+        //
+        // Get parameter value from url
+        //
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        //
+        // Bind ajax loader on A with attr linkUrl
+        //
+
+
+        $(document).on('click', 'a[href=""]', function (e) {
+            e.preventDefault();
+
+            var path = $(this).attr('linkUrl');
+
+            if (path != null) {
+                history.pushState(null, null, path);
+                ajax_loader();
+            }
+        });
+
+        //
+        // Url parse
+        //
+        function url_parse() {
+            var link_action = location.pathname;
+            switch (link_action) {
+                case '/branch':
+                    return '/Kepler/PartialBranchView';
+                    break;
+                case '/build':
+                    return '/Kepler/PartialBuildView';
+                    break;
+                case '/error-log':
+                    return '/Kepler/ErrorLogView';
+                    break;
+                case '/admin/image-workers':
+                    return '/Admin/ImageWorkersView';
+                    break;
+                case '/admin/service-url':
+                    return '/Admin/ServiceUrlView';
+                    break;
+                case '/admin/source-image-path':
+                    return '/Admin/SourceImagePathView';
+                    break;
+            }
+        }
+
+        //
+        // Ajax loader
+        //
+        function ajax_loader() {
+            $.ajax({
+                url: url_parse(),
+                type: 'GET',
+                success: function (data) {
+                    $('#page-inner').html(data);
+                }
+            });
+        }
+
+        //
+        // Run Ajax loader on document ready, if url path != null
+        //
+        $(document).ready(function () {
+            if (url_parse() != null) {
+                ajax_loader();
+            }
+        });
+    </script>
 
 </body>
 </html>

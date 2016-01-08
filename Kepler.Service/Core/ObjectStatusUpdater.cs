@@ -9,6 +9,83 @@ namespace Kepler.Service.Core
 {
     public class ObjectStatusUpdater
     {
+        /// <summary>
+        /// Update StartDate, StopDate, Duration, PredictedDuration, based on changed build status
+        /// </summary>
+        /// <param name="buildId"></param>
+        public static void UpdateBuildDurationFields(long buildId)
+        {
+            var build = BuildRepository.Instance.Get(buildId);
+            if (build == null) return;
+
+            switch (build.Status)
+            {
+                case ObjectStatus.InProgress:
+                    // if StartDate already set, just get out of here
+                    if (build.StartDate.HasValue) return;
+                    SetBuildStartDate(build);
+
+                    var builds = BuildRepository.Instance.Find(
+                        item => item.BranchId == build.BranchId && item.Id != buildId);
+
+                    var averagePredictedBuildRunTicks = 0.0;
+
+                    if (builds.Any())
+                        averagePredictedBuildRunTicks = builds.Average(item => item.Duration?.Ticks ?? 0);
+
+                    var longAverageTicks = Convert.ToInt64(averagePredictedBuildRunTicks);
+                    build.PredictedDuration = TimeSpan.FromTicks(longAverageTicks);
+                    break;
+
+                case ObjectStatus.Failed:
+                    SetBuildStartDate(build);
+
+                    // if StopDate already set, just get out of here
+                    if (build.StopDate.HasValue) return;
+
+                    var numberNotProcessedScreenShots =
+                        ScreenShotRepository.Instance.Find(item => item.BuildId == buildId &&
+                                                                   (item.Status == ObjectStatus.InProgress ||
+                                                                    item.Status == ObjectStatus.InQueue)).Count();
+                    // if build still in processing
+                    if (numberNotProcessedScreenShots > 0) return;
+
+                    UpdateBuildFailedScreenshotsNumber(build);
+                    break;
+
+                case ObjectStatus.Passed:
+                    SetBuildStartDate(build);
+                    // if StopDate already set, just get out of here
+                    if (build.StopDate.HasValue) return;
+
+                    build.StopDate = DateTime.Now;
+                    build.Duration = build.StopDate - build.StartDate;
+                    break;
+
+                case ObjectStatus.Stopped:
+                    SetBuildStartDate(build);
+                    // if StopDate already set, just get out of here
+                    if (build.StopDate.HasValue) return;
+                    UpdateBuildFailedScreenshotsNumber(build);
+                    break;
+            }
+
+            BuildRepository.Instance.UpdateAndFlashChanges(build);
+        }
+
+        private static void SetBuildStartDate(Build build)
+        {
+            if (!build.StartDate.HasValue)
+                build.StartDate = DateTime.Now;
+        }
+
+        private static void UpdateBuildFailedScreenshotsNumber(Build build)
+        {
+            build.StopDate = DateTime.Now;
+            build.Duration = build.StopDate - build.StartDate;
+            build.NumberFailedScreenshots = ScreenShotRepository.Instance.FindFailedInBuild(build.Id).Count();
+        }
+
         // select all In progress, In queue Test Cases
         // select In queue, In progress screenshots
         // if > 0 in progress screenshtos, then set status = In progress .
@@ -52,28 +129,37 @@ namespace Kepler.Service.Core
             {
                 var childItems = childObjectRepository.Find(item => item.ParentObjId == baseItem.Id);
 
-                if (childItems.Any(item => item.Status == ObjectStatus.Failed))
-                {
-                    baseItem.Status = ObjectStatus.Failed;
-                    continue;
-                }
-
                 if (childItems.Any(item => item.Status == ObjectStatus.InProgress))
                 {
                     baseItem.Status = ObjectStatus.InProgress;
+                    baseObjectRepository.UpdateAndFlashChanges(baseItem);
                     continue;
                 }
 
-                if (childItems.All(item => item.Status == ObjectStatus.Passed))
+                if (childItems.Any(item => item.Status == ObjectStatus.Failed))
+                {
+                    baseItem.Status = ObjectStatus.Failed;
+                    baseObjectRepository.UpdateAndFlashChanges(baseItem);
+                    continue;
+                }
+
+                var successItemsCount = childItems.Count(item => item.Status == ObjectStatus.Stopped ||
+                                                                 item.Status == ObjectStatus.Passed);
+                if (successItemsCount == childItems.Count())
                 {
                     baseItem.Status = ObjectStatus.Passed;
                 }
 
-                baseObjectRepository.Update(baseItem);
+                baseObjectRepository.UpdateAndFlashChanges(baseItem);
             }
 
-            baseObjectRepository.FlushChanges();
+            if (typeof (TEntityBase) != typeof (Build)) return;
+            foreach (var baseItem in baseItems)
+            {
+                UpdateBuildDurationFields(baseItem.Id);
+            }
         }
+
 
         /// <summary>
         /// Set status for all objects in sub tree of element with provided ObjectId and Type
@@ -88,13 +174,14 @@ namespace Kepler.Service.Core
             bool updateParentObj = true)
             where TEntityBase : BuildObject
         {
-            List<ScreenShot> affectedScreenShots = null;
+            var affectedScreenShots = new List<ScreenShot>();
 
             if (typeof (TEntityBase) == typeof (Build))
             {
                 if (updateParentObj)
                 {
                     SetParentObjStatus<BuildRepository, Build>(BuildRepository.Instance, objectId, newStatus);
+                    UpdateBuildDurationFields(objectId);
                 }
                 var childObjects =
                     SetChildObjStatuses<TestAssemblyRepository, TestAssembly>(TestAssemblyRepository.Instance,
@@ -154,7 +241,7 @@ namespace Kepler.Service.Core
             return new List<ScreenShot>();
         }
 
-        private static void SetParentObjStatus<T, TEntity>(T objectRepository, long objectId,
+        public static void SetParentObjStatus<T, TEntity>(T objectRepository, long objectId,
             ObjectStatus newStatus)
             where T : BaseRepository<TEntity>
             where TEntity : BuildObject
@@ -168,7 +255,7 @@ namespace Kepler.Service.Core
         }
 
 
-        private static List<TEntityChild> SetChildObjStatuses<T, TEntityChild>(T childObjectRepository,
+        public static List<TEntityChild> SetChildObjStatuses<T, TEntityChild>(T childObjectRepository,
             long parentObjId,
             ObjectStatus newStatus)
             where T : BaseRepository<TEntityChild>
@@ -179,7 +266,7 @@ namespace Kepler.Service.Core
             childItems.ForEach(item => item.Status = newStatus);
             childObjectRepository.UpdateAndFlashChanges(childItems);
 
-            return childItems.ToList();
+            return childItems;
         }
 
 
@@ -188,22 +275,30 @@ namespace Kepler.Service.Core
             switch (typeName.ToLowerInvariant())
             {
                 case "build":
-                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<Build>(objId, newStatus);
-                case "testAssembly":
-                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<TestAssembly>(objId, newStatus);
-                case "testSuite":
-                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<TestSuite>(objId, newStatus);
-                case "testCase":
-                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<TestCase>(objId, newStatus);
-                case "screenShot":
-                    return ObjectStatusUpdater.RecursiveSetObjectsStatus<ScreenShot>(objId, newStatus);
+                    if (newStatus == ObjectStatus.InQueue)
+                    {
+                        var build = BuildRepository.Instance.Get(objId);
+                        build.Duration = null;
+                        build.StartDate = null;
+                        build.StopDate = null;
+                        build.PredictedDuration = null;
+                        BuildRepository.Instance.UpdateAndFlashChanges(build);
+                    }
+
+                    return RecursiveSetObjectsStatus<Build>(objId, newStatus);
+                case "testassembly":
+                    return RecursiveSetObjectsStatus<TestAssembly>(objId, newStatus);
+                case "testsuite":
+                    return RecursiveSetObjectsStatus<TestSuite>(objId, newStatus);
+                case "testcase":
+                    return RecursiveSetObjectsStatus<TestCase>(objId, newStatus);
+                case "screenshot":
+                    return RecursiveSetObjectsStatus<ScreenShot>(objId, newStatus);
 
                 default:
                     throw new ArgumentException(
                         $"TypeName {typeName} is not recognized. Possible values: build, testCase, testSuite, testAssembly, screenShot");
             }
-
-            return null;
         }
     }
 }

@@ -1,7 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Runtime.Serialization;
+using System.ServiceModel.Web;
 
 namespace Kepler.Common.Error
 {
+    [DataContract]
     public class ErrorMessage
     {
         public enum ErorCode
@@ -18,15 +23,48 @@ namespace Kepler.Common.Error
             ScreenShotHasEmptyFilePath,
             EmptyListOfObjects,
 
-            UndefinedError,
             ObjectNotFoundInDb,
             NotUniqueObjects,
 
-            AddTaskToImageWorkerError
+            RunOperationError,
+            StopOperationError,
+            SetObjectStatusError,
+
+            AddTaskToImageWorkerError,
+            ScreenShotDoesntHaveAName,
+
+            UndefinedError
         }
 
+        public ErrorMessage()
+        {
+            Code = ErorCode.UndefinedError;
+            Time = DateTime.Now;
+        }
+
+        [DataMember]
+        [Key]
+        public long Id { get; set; }
+
+        [DataMember]
+        [DataType(DataType.DateTime)]
+        public DateTime? Time { get; set; }
+
+        [DataMember]
         public ErorCode Code { get; set; }
-        public string ExceptionMessage { get; set; }
+
+        [DataMember]
+        public bool IsLastViewed { get; set; }
+
+        private string _exceptionMessage;
+
+        [DataMember]
+        public string ExceptionMessage
+        {
+            get { return ToString(); }
+            set { _exceptionMessage = value; }
+        }
+
 
         public override string ToString()
         {
@@ -38,22 +76,25 @@ namespace Kepler.Common.Error
                     codeMessage = "Config file parsing error";
                     break;
                 case ErorCode.ProjectDontHaveAName:
-                    codeMessage = "Project don't have a name";
+                    codeMessage = "Project doesn't have a name";
                     break;
                 case ErorCode.BranchDontHaveAName:
-                    codeMessage = "Branch don't have a name";
+                    codeMessage = "Branch doesn't have a name";
                     break;
                 case ErorCode.ProjectDontHaveMainBranch:
-                    codeMessage = "Project don't have main branch";
+                    codeMessage = "Project doesn't have main branch";
                     break;
                 case ErorCode.AssemblyDontHaveAName:
-                    codeMessage = "TestAssembly don't have a name";
+                    codeMessage = "TestAssembly doesn't have a name";
                     break;
                 case ErorCode.SuiteDontHaveAName:
-                    codeMessage = "TestSuite don't have a name";
+                    codeMessage = "TestSuite doesn't have a name";
                     break;
                 case ErorCode.CaseDontHaveAName:
-                    codeMessage = "TestCase don't have a name";
+                    codeMessage = "TestCase doesn't have a name";
+                    break;
+                case ErorCode.ScreenShotDoesntHaveAName:
+                    codeMessage = "ScreenShot doesn't have a name";
                     break;
                 case ErorCode.ScreenShotHasEmptyFilePath:
                     codeMessage = "Screenshot has empty file path";
@@ -70,6 +111,15 @@ namespace Kepler.Common.Error
                 case ErorCode.AddTaskToImageWorkerError:
                     codeMessage = "Error happend in process to add images for diff comparison";
                     break;
+                case ErorCode.RunOperationError:
+                    codeMessage = "Error happend during run operation";
+                    break;
+                case ErorCode.StopOperationError:
+                    codeMessage = "Error happend during stop operation";
+                    break;
+                case ErorCode.SetObjectStatusError:
+                    codeMessage = "Error happend during set status for object";
+                    break;
                 case ErorCode.UndefinedError:
                     codeMessage = "Undefined error";
                     break;
@@ -78,7 +128,17 @@ namespace Kepler.Common.Error
                     return "Detailed text about this type of error isn't written";
             }
 
-            return $"Error: {codeMessage}. {ExceptionMessage}";
+            codeMessage = $"Error: {codeMessage}. ";
+
+            if (_exceptionMessage.StartsWith(codeMessage))
+                return _exceptionMessage;
+
+            return codeMessage + _exceptionMessage;
+        }
+
+        public WebFaultException<string> ConvertToWebFaultException(HttpStatusCode statusCode)
+        {
+            return new WebFaultException<string>(ToString(), statusCode);
         }
     }
 }

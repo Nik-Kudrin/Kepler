@@ -13,7 +13,7 @@ namespace Kepler.ImageProcessor.Service.TaskManager
 {
     public class TaskGenerator
     {
-        private static string KeplerServiceUrl;
+        public static string KeplerServiceUrl { get; set; }
         private static TaskGenerator _taskGenerator;
         private List<ImageTaskWorker> _taskWorkers = new List<ImageTaskWorker>();
         private static int MaxCountWorkers;
@@ -38,17 +38,12 @@ namespace Kepler.ImageProcessor.Service.TaskManager
             return MaxCountWorkers;
         }
 
-        public void SetKeplerServiceUrl(string url)
-        {
-            KeplerServiceUrl = url;
-        }
-
         private TaskGenerator()
         {
             InitTaskWorkers();
 
             _timer = new Timer();
-            _timer.Interval = 10000; //every 10 sec
+            _timer.Interval = 5000; //every 5 sec
             _timer.Elapsed += RunWorkers;
             _timer.Elapsed += SendProcessedImagesToKeplerService;
             _timer.Enabled = true;

@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Net;
+using System.ServiceModel;
+using System.ServiceModel.Activation;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Error;
 using Kepler.ImageProcessor.Service.TaskManager;
 
 namespace Kepler.ImageProcessor.Service
 {
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     public class KeplerImageProcessorService : IKeplerImageProcessorService
     {
         public int GetMaxCountWorkers()
@@ -12,7 +17,7 @@ namespace Kepler.ImageProcessor.Service
             return TaskGenerator.GetMaxCountWorkers();
         }
 
-        public string AddImagesForDiffGeneration(ImageComparisonContract imagesToProcess)
+        public void AddImagesForDiffGeneration(ImageComparisonContract imagesToProcess)
         {
             try
             {
@@ -20,20 +25,17 @@ namespace Kepler.ImageProcessor.Service
             }
             catch (Exception ex)
             {
-                return
-                    new ErrorMessage()
-                    {
-                        Code = ErrorMessage.ErorCode.AddTaskToImageWorkerError,
-                        ExceptionMessage = ex.Message
-                    }.ToString();
+                throw new ErrorMessage()
+                {
+                    Code = ErrorMessage.ErorCode.AddTaskToImageWorkerError,
+                    ExceptionMessage = ex.Message
+                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
             }
-
-            return "";
         }
 
         public void SetKeplerServiceUrl(string url)
         {
-            TaskGenerator.GetTaskGenerator.SetKeplerServiceUrl(url);
+            TaskGenerator.KeplerServiceUrl = url;
         }
 
         public void StopDiffGeneration(ImageComparisonContract imagesToStopProcessing)

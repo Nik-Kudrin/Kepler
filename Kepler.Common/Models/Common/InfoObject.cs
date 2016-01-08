@@ -4,13 +4,13 @@ using System.Runtime.Serialization;
 namespace Kepler.Common.Models.Common
 {
     [DataContract]
-    public class InfoObject
+    public abstract class InfoObject
     {
         [Key]
         [DataMember]
         public long Id { get; set; }
 
-        [StringLength(500)]
+        [StringLength(700)]
         [DataMember]
         public string Name { get; set; }
 

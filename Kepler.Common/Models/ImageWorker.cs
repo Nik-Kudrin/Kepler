@@ -21,7 +21,7 @@ namespace Kepler.Common.Models
 
         public ImageWorker()
         {
-            WorkerStatus = StatusOfWorker.Available;
+            WorkerStatus = StatusOfWorker.Offline;
         }
     }
 }

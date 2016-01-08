@@ -2,8 +2,7 @@
 using System.IO;
 using ImageMagick;
 using Kepler.Common.CommunicationContracts;
-using Kepler.Common.Error;
-using Kepler.Common.Models;
+using Kepler.ImageProcessor.Service.RestKeplerClient;
 
 namespace Kepler.ImageProcessor.Service.ImgProcessor
 {
@@ -27,39 +26,98 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
             using (var secondImage = new MagickImage(ImageComparisonInfo.SecondImagePath))
             {
                 ImageComparisonInfo.IsImagesDifferent = false;
+                var previewSuffix = "_preview.png";
+                var diffFileName = $"{ImageComparisonInfo.ScreenShotName}_{Guid.NewGuid()}";
 
-                if (!Directory.Exists(ImageComparisonInfo.DiffImgPathToSave))
+                // in case - rerun build just use old generated paths
+                if (!ImageComparisonInfo.DiffImagePath.Contains(ImageComparisonInfo.ScreenShotName))
                 {
-                    ImageComparisonInfo.ErrorMessage =
-                        $"Path for saving screenshots '{ImageComparisonInfo.DiffImgPathToSave}' doesn't exist";
-                    return ImageComparisonInfo;
+                    ImageComparisonInfo.DiffImagePath = Path.Combine(ImageComparisonInfo.DiffImagePath,
+                        diffFileName + ".png");
+                    ImageComparisonInfo.DiffPreviewPath = Path.Combine(ImageComparisonInfo.DiffPreviewPath,
+                        diffFileName + previewSuffix);
                 }
+                var errorMessage = "";
 
-                ImageComparisonInfo.DiffImgPathToSave = Path.Combine(ImageComparisonInfo.DiffImgPathToSave,
-                    Guid.NewGuid().ToString() + ".png");
+                //Write preview for first image (old screenshot - baseline)
+
+                // in case - rerun build just use old generated paths
+                if (ImageComparisonInfo.FirstPreviewPath == null ||
+                    !ImageComparisonInfo.FirstPreviewPath.EndsWith(previewSuffix))
+                {
+                    ImageComparisonInfo.FirstPreviewPath = ImageComparisonInfo.FirstImagePath + "_preview.png";
+                    ImageComparisonInfo.SecondPreviewPath = ImageComparisonInfo.SecondImagePath + "_preview.png";
+                }
+                WritePreviewImage(firstImage, ImageComparisonInfo.FirstPreviewPath);
+                WritePreviewImage(secondImage, ImageComparisonInfo.SecondPreviewPath);
 
                 if (firstImage.GetHashCode() == secondImage.GetHashCode())
                 {
                     // because images are equal, just save first image
-                    firstImage.Write(ImageComparisonInfo.DiffImgPathToSave);
+                    errorMessage = WriteImageWithPreview(firstImage, ImageComparisonInfo.DiffImagePath,
+                        ImageComparisonInfo.DiffPreviewPath);
+                    if (errorMessage != "")
+                    {
+                        ImageComparisonInfo.ErrorMessage = errorMessage;
+                    }
+
                     return ImageComparisonInfo;
                 }
 
+                // Generate Diff
                 firstImage.Composite(secondImage, CompositeOperator.Difference);
-                try
+
+                errorMessage = WriteImageWithPreview(firstImage, ImageComparisonInfo.DiffImagePath,
+                    ImageComparisonInfo.DiffPreviewPath);
+                if (errorMessage != "")
                 {
-                    firstImage.Write(ImageComparisonInfo.DiffImgPathToSave);
-                }
-                catch (Exception ex)
-                {
-                    ImageComparisonInfo.ErrorMessage =
-                        $"Something bad happend in attempt to write file with diff screenshot '{ImageComparisonInfo.DiffImgPathToSave}'. {ex.Message}";
+                    ImageComparisonInfo.ErrorMessage = errorMessage;
                     return ImageComparisonInfo;
                 }
 
                 ImageComparisonInfo.IsImagesDifferent = true;
                 return ImageComparisonInfo;
             }
+        }
+
+        private string WriteImageWithPreview(MagickImage image, string imagePathToSave, string previewPathToSave)
+        {
+            var errorMessage = WriteImage(image, imagePathToSave);
+            errorMessage += WritePreviewImage(image, previewPathToSave);
+
+            return errorMessage;
+        }
+
+        private string WriteImage(MagickImage image, string pathToSave)
+        {
+            try
+            {
+                image.Write(pathToSave);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage =
+                    $"Attempt to write file with diff screenshot failed. '{pathToSave}'. {ex.Message} {ex.StackTrace}";
+                new RestKeplerServiceClient().LogError(errorMessage);
+
+                return errorMessage;
+            }
+            return "";
+        }
+
+        private string WritePreviewImage(MagickImage image, string pathToSave)
+        {
+            using (var clonedImage = image.Clone())
+            {
+                clonedImage.Resize(new ImageMagick.MagickGeometry("200x163!"));
+
+                var errorMessage = WriteImage(clonedImage, pathToSave);
+                if (errorMessage != "")
+                {
+                    return errorMessage;
+                }
+            }
+            return "";
         }
 
         public ImageComparisonInfo GetCompareImageDiff()
@@ -74,7 +132,7 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
                     return ImageComparisonInfo;
 
                 firstImage.Compare(secondImage, ErrorMetric.Absolute, diffImage, Channels.Index);
-                diffImage.Write(ImageComparisonInfo.DiffImgPathToSave);
+                diffImage.Write(ImageComparisonInfo.DiffImagePath);
                 return ImageComparisonInfo;
             }
         }

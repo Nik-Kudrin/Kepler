@@ -1,37 +1,92 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.ServiceModel;
+using System.ServiceModel.Activation;
+using AutoMapper.Internal;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
+using Kepler.Common.Util;
+using Kepler.Service.Config;
 using Kepler.Service.Core;
 using Kepler.Service.RestWorkerClient;
+using Kepler.Service.Scheduler;
 
 namespace Kepler.Service
 {
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     public class KeplerService : IKeplerService
     {
-        private BuildRepository buildRepo = BuildRepository.Instance;
-        private TestCaseRepository testCaseRepo = TestCaseRepository.Instance;
-        private TestAssemblyRepository assemblyRepository = TestAssemblyRepository.Instance;
-        private ProjectRepository projectRepository = ProjectRepository.Instance;
-        private TestSuiteRepository testSuiteRepo = TestSuiteRepository.Instance;
-        private ImageWorkerRepository workerRepository = ImageWorkerRepository.Instance;
-
-        // do not remove this field (used for build executor init)
+        // do not remove this field (used for build executor and data clean scheduler init)
         private static BuildExecutor _executor = BuildExecutor.GetExecutor();
+        private static CleanDataSchedulerExecutor _dataCleanExecutor = CleanDataSchedulerExecutor.GetExecutor();
+
+        public void ImportTestConfig(string testConfig)
+        {
+            var configImporter = new ConfigImporter();
+            configImporter.ImportConfig(testConfig);
+        }
+
+        public void UpdateScreenShots(ImageComparisonContract imageComparisonContract)
+        {
+            foreach (var imageComparisonInfo in imageComparisonContract.ImageComparisonList)
+            {
+                var screenShot = ScreenShotRepository.Instance.Get(imageComparisonInfo.ScreenShotId);
+
+                // if current screenshot status = Stopped, then just update diff image path field
+                if (screenShot.Status == ObjectStatus.Stopped)
+                {
+                    screenShot.PreviewImagePath = imageComparisonInfo.SecondPreviewPath;
+                    screenShot.BaseLinePreviewPath = imageComparisonInfo.FirstPreviewPath;
+
+                    // Generate Url paths
+                    UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
+                    ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
+                    continue;
+                }
+
+                // if Failed
+                if (imageComparisonInfo.IsImagesDifferent || imageComparisonInfo.ErrorMessage != "")
+                {
+                    screenShot.Status = ObjectStatus.Failed;
+                    screenShot.ErrorMessage = imageComparisonInfo.ErrorMessage;
+                }
+                else // if Passedd
+                {
+                    if (imageComparisonInfo.LastPassedScreenShotId.HasValue)
+                    {
+                        var oldPassedScreenShot =
+                            ScreenShotRepository.Instance.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
+                        oldPassedScreenShot.IsLastPassed = false;
+                        ScreenShotRepository.Instance.UpdateAndFlashChanges(oldPassedScreenShot);
+                    }
+
+                    screenShot.Status = ObjectStatus.Passed;
+                    screenShot.IsLastPassed = true;
+                }
+
+                screenShot.DiffImagePath = imageComparisonInfo.DiffImagePath;
+                screenShot.DiffPreviewPath = imageComparisonInfo.DiffPreviewPath;
+
+                screenShot.PreviewImagePath = imageComparisonInfo.SecondPreviewPath;
+                screenShot.BaseLinePreviewPath = imageComparisonInfo.FirstPreviewPath;
+
+                // Generate Url paths
+                UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
+
+                ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
+            }
+        }
 
         #region Common Actions
 
-        private long ConvertStringToLong(string number)
-        {
-            return Convert.ToInt64(number);
-        }
-
-        public string RunOperation(string typeName, long objId, string operationName)
+        public void RunOperation(string typeName, long objId, string operationName)
         {
             switch (operationName.ToLowerInvariant())
             {
@@ -39,22 +94,75 @@ namespace Kepler.Service
                     try
                     {
                         ObjectStatusUpdater.SetObjectsStatus(typeName, objId, ObjectStatus.InQueue);
+
+                        if (typeName == "build") return;
+
+                        long? buildId = -1;
+                        switch (typeName.ToLowerInvariant())
+                        {
+                            case "screenshot":
+                                var screenShot = ScreenShotRepository.Instance.Get(objId);
+                                buildId = screenShot.BuildId;
+
+                                var caseRepo = TestCaseRepository.Instance;
+                                ObjectStatusUpdater.SetParentObjStatus<TestCaseRepository, TestCase>(
+                                    caseRepo, screenShot.ParentObjId.Value, ObjectStatus.InQueue);
+                                var suiteId = caseRepo.Get(screenShot.ParentObjId.Value).ParentObjId.Value;
+
+                                var repoSuite = TestSuiteRepository.Instance;
+                                ObjectStatusUpdater.SetParentObjStatus<TestSuiteRepository, TestSuite>(
+                                    repoSuite, suiteId, ObjectStatus.InQueue);
+                                var assembId = repoSuite.Get(suiteId).ParentObjId.Value;
+
+                                ObjectStatusUpdater.SetParentObjStatus<TestAssemblyRepository, TestAssembly>(
+                                    TestAssemblyRepository.Instance, assembId, ObjectStatus.InQueue);
+
+                                break;
+                            case "testcase":
+                                var testCase = TestCaseRepository.Instance.Get(objId);
+                                buildId = testCase.BuildId;
+
+                                var suiteRepo = TestSuiteRepository.Instance;
+                                ObjectStatusUpdater.SetParentObjStatus<TestSuiteRepository, TestSuite>(
+                                    suiteRepo, testCase.ParentObjId.Value, ObjectStatus.InQueue);
+                                var assemblyId = suiteRepo.Get(testCase.ParentObjId.Value).ParentObjId.Value;
+
+                                ObjectStatusUpdater.SetParentObjStatus<TestAssemblyRepository, TestAssembly>(
+                                    TestAssemblyRepository.Instance, assemblyId, ObjectStatus.InQueue);
+
+                                break;
+                            case "testsuite":
+                                var suite = TestSuiteRepository.Instance.Get(objId);
+                                buildId = suite.BuildId;
+
+                                ObjectStatusUpdater.SetParentObjStatus<TestAssemblyRepository, TestAssembly>(
+                                    TestAssemblyRepository.Instance, suite.ParentObjId.Value, ObjectStatus.InQueue);
+
+                                break;
+                            case "testassembly":
+                                buildId = TestAssemblyRepository.Instance.Get(objId).BuildId;
+                                break;
+                        }
+
+                        var build = BuildRepository.Instance.Get(buildId.Value);
+                        build.Status = ObjectStatus.InQueue;
+                        BuildRepository.Instance.UpdateAndFlashChanges(build);
                     }
                     catch (Exception ex)
                     {
-                        return ex.Message;
+                        LogErrorMessage(ErrorMessage.ErorCode.RunOperationError, ex);
                     }
                     break;
-                case "stop":
-                    List<ScreenShot> affectedScreenShots;
 
+                case "stop":
+                    var affectedScreenShots = new List<ScreenShot>();
                     try
                     {
                         affectedScreenShots = ObjectStatusUpdater.SetObjectsStatus(typeName, objId, ObjectStatus.Stopped);
                     }
                     catch (Exception ex)
                     {
-                        return ex.Message;
+                        LogErrorMessage(ErrorMessage.ErorCode.StopOperationError, ex);
                     }
 
                     var workers = ImageWorkerRepository.Instance.FindAll()
@@ -66,16 +174,16 @@ namespace Kepler.Service
                         restImageProcessorClient.StopStopDiffGeneration(affectedScreenShots);
                     }
                     break;
-                default:
-                    return
-                        $"OperationName {operationName} is not recognized. Possible values: run, stop";
-            }
 
-            return "";
+                default:
+                    LogErrorMessage(ErrorMessage.ErorCode.RunOperationError,
+                        $"OperationName {operationName} is not recognized. Possible values: run, stop");
+                    return;
+            }
         }
 
 
-        public string SetObjectsStatus(string typeName, long objId, string newStatus)
+        public void SetObjectsStatus(string typeName, long objId, string newStatus)
         {
             ObjectStatus status;
             switch (newStatus.ToLowerInvariant())
@@ -87,8 +195,9 @@ namespace Kepler.Service
                     status = ObjectStatus.Passed;
                     break;
                 default:
-                    return
-                        $"Status {newStatus} is not recognized. Possible values: failed, passed";
+                    LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError,
+                        $"Status {newStatus} is not recognized. Possible values: failed, passed");
+                    return;
             }
 
             try
@@ -97,122 +206,216 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError, ex);
             }
-
-            return "";
         }
 
         #endregion
 
-        public Build GetBuild(string id)
+        #region Scheduler
+
+        public DataSchedulerContract GetCleanDataScheduler(string schedulerName)
         {
-            return buildRepo.Get(ConvertStringToLong(id));
+            // check scheduler name
+            switch (schedulerName)
+            {
+                case "buildCleanScheduler":
+                case "logCleanScheduler":
+                    break;
+                default:
+                    LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError,
+                        $"Scheduler name {schedulerName} is not recognized. Possible values: buildCleanScheduler, logCleanScheduler");
+                    return null;
+            }
+
+            var schedulerProperty = GetKeplerConfigProperty(schedulerName);
+
+            // if scheduler is'n initialized (first time, when applications start)
+            if (!string.IsNullOrEmpty(schedulerProperty))
+                return new RestSharpDataContractJsonDeserializer().Deserialize<DataSchedulerContract>(schedulerProperty);
+
+            var scheduler = new DataSchedulerContract()
+            {
+                Name = schedulerName,
+                SchedulePeriod = TimeSpan.FromDays(30),
+                NextStartTime = DateTime.Now,
+                HistoryItemsNumberToPreserve = 3
+            };
+
+            var serializer = new RestSharpDataContractJsonSerializer();
+            var serializedProperty = serializer.Serialize(scheduler);
+            SetKeplerConfigProperty(schedulerName, serializedProperty);
+
+            return scheduler;
         }
 
-        public IEnumerable<Build> GetBuilds()
+
+        public void UpdateCleanDataScheduler(DataSchedulerContract scheduler)
         {
-            try
-            {
-                return buildRepo.FindAll();
-            }
-            catch (Exception ex)
-            {
-                EventLog.WriteEntry("Kepler.Service", $"Build error message: {ex.Message}. StackTrace: {ex.StackTrace}");
-            }
-            return null;
+            if (scheduler.SchedulePeriod < TimeSpan.FromMinutes(20))
+                LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError,
+                    $"Period for data cleaning must be more then 10 min");
+
+            var serializer = new RestSharpDataContractJsonSerializer();
+            var serializedProperty = serializer.Serialize(scheduler);
+            SetKeplerConfigProperty(scheduler.Name, serializedProperty);
         }
+
+        #endregion
+
+        #region Build
+
+        public Build GetBuild(long id)
+        {
+            var build = BuildRepository.Instance.Get(id);
+            if (build == null)
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Build with ID {id} was not found");
+
+            return build;
+        }
+
+        public IEnumerable<Build> GetBuilds(long branchId)
+        {
+            return BuildRepository.Instance.Find(item => item.BranchId == branchId);
+        }
+
+        public void DeleteBuild(long id)
+        {
+            RunOperation("build", id, "stop");
+            DataCleaner.DeleteObjectsTreeRecursively<Build>(id, true);
+        }
+
+        #endregion
+
+        #region ScreenShot
+
+        public ScreenShot GetScreenShot(long id)
+        {
+            return ScreenShotRepository.Instance.Get(id);
+        }
+
+        public IEnumerable<ScreenShot> GetScreenShots(long testCaseId)
+        {
+            return ScreenShotRepository.Instance.Find(item => item.ParentObjId == testCaseId);
+        }
+
+        #endregion
 
         #region TestCase
 
-        public TestCase GetTestCase(string id)
+        public TestCase GetTestCase(long id)
         {
-            return testCaseRepo.Get(ConvertStringToLong(id));
+            return TestCaseRepository.Instance.GetCompleteObject(id);
         }
 
-        public IEnumerable<TestCase> GetTestCases(string testSuiteId)
+        public IEnumerable<TestCase> GetTestCases(long testSuiteId)
         {
-            return testCaseRepo.Find(ConvertStringToLong(testSuiteId));
+            return TestCaseRepository.Instance.GetObjectsTreeByParentId(testSuiteId);
         }
 
         #endregion
 
         #region TestSuite
 
-        public TestSuite GetTestSuite(string id)
+        public TestSuite GetTestSuite(long id)
         {
-            return testSuiteRepo.Get(ConvertStringToLong(id));
+            return TestSuiteRepository.Instance.GetCompleteObject(id);
         }
 
-        public IEnumerable<TestSuite> GetTestSuites(string assemblyId)
+        public IEnumerable<TestSuite> GetTestSuites(long assemblyId)
         {
-            return testSuiteRepo.Find(ConvertStringToLong(assemblyId));
+            return TestSuiteRepository.Instance.GetObjectsTreeByParentId(assemblyId);
         }
 
         #endregion
 
         #region TestAssembly
 
-        public TestAssembly GetTestAssembly(string assemblyId)
+        public TestAssembly GetTestAssembly(long id)
         {
-            return assemblyRepository.Get(ConvertStringToLong(assemblyId));
+            return TestAssemblyRepository.Instance.GetCompleteObject(id);
         }
 
 
-        public IEnumerable<TestAssembly> GetTestAssemblies(string buildId)
+        public IEnumerable<TestAssembly> GetTestAssemblies(long buildId)
         {
-            return assemblyRepository.Find(ConvertStringToLong(buildId));
+            return TestAssemblyRepository.Instance.GetObjectsTreeByParentId(buildId);
         }
 
         #endregion
 
         #region Project
 
-        public Project GetProject(string id)
+        public Project GetProject(long id)
         {
-            return projectRepository.Get(ConvertStringToLong(id));
+            return ProjectRepository.Instance.GetCompleteObject(id);
         }
 
         public IEnumerable<Project> GetProjects()
         {
-            return projectRepository.FindAll();
+            var projectRepo = ProjectRepository.Instance;
+            var projects = projectRepo.FindAll();
+            projects.Each(project => projectRepo.GetCompleteObject(project.Id));
+
+            return projects;
         }
 
-        public string CreateProject(string name)
+        public void CreateProject(string name)
         {
-            if (projectRepository.Find(name).Any())
-                return new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
-                    ExceptionMessage = $"Project with name {name} already exist"
-                }.ToString();
+            var projectRepo = ProjectRepository.Instance;
+            if (projectRepo.Find(name).Any())
+                LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Project with name {name} already exist");
 
             try
             {
-                var project = new Project() {Name = name};
-                projectRepository.Insert(project);
+                var project = new Project {Name = name};
+                projectRepo.Insert(project);
             }
             catch (Exception ex)
             {
-                return new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.UndefinedError,
-                    ExceptionMessage = $"Something bad happend. Exception: {ex.Message} {ex.StackTrace}"
-                }.ToString();
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, ex);
+            }
+        }
+
+        public void UpdateProject(long id, string newName)
+        {
+            var project = ProjectRepository.Instance.Get(id);
+
+            if (project == null)
+            {
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Project with Id={id} doesn't exist");
             }
 
-            return string.Empty;
+            if (project.Name != newName)
+            {
+                if (ProjectRepository.Instance.Find(newName).Any())
+                {
+                    LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Project with name {newName} already exist");
+                }
+            }
+
+            project.Name = newName;
+            ProjectRepository.Instance.UpdateAndFlashChanges(project);
+        }
+
+        public void DeleteProject(long id)
+        {
+            var branches = GetBranches(id);
+            var builds = new List<long>();
+            branches.Each(item => builds.AddRange(item.Builds.Keys));
+
+            // Stop all builds
+            builds.Each(buildId => RunOperation("build", buildId, "stop"));
+            DataCleaner.DeleteObjectsTreeRecursively<Project>(id, true);
         }
 
         #endregion
 
         #region Branch
 
-        public string CreateBranch(string name, long projectId)
+        public void CreateBranch(string name, long projectId)
         {
-            var validationMessage = ValidateBranchBeforeCreation(name, projectId);
-            if (validationMessage != "")
-                return validationMessage;
+            ValidateBranchBeforeCreation(name, projectId);
 
             var project = ProjectRepository.Instance.Get(projectId);
             try
@@ -220,7 +423,12 @@ namespace Kepler.Service
                 var baseline = new BaseLine();
                 BaseLineRepository.Instance.Insert(baseline);
 
-                var branch = new Branch() {Name = name, BaseLineId = baseline.Id, ProjectId = projectId};
+                var branch = new Branch
+                {
+                    Name = name,
+                    BaseLineId = baseline.Id,
+                    ProjectId = projectId
+                };
                 BranchRepository.Instance.Insert(branch);
 
                 baseline.BranchId = branch.Id;
@@ -245,80 +453,51 @@ namespace Kepler.Service
             }
             catch (Exception ex)
             {
-                return new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.UndefinedError,
-                    ExceptionMessage = $"Something bad happend. Exception: {ex.Message} {ex.StackTrace}"
-                }.ToString();
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, ex);
             }
-
-            return string.Empty;
         }
 
 
-        private string ValidateBranchBeforeCreation(string branchName, long projectId)
+        private void ValidateBranchBeforeCreation(string branchName, long projectId)
         {
-            var branchExistMessage = IsBranchAlreadyExist(branchName);
-            if (branchExistMessage != "")
-                return branchExistMessage;
+            IsBranchAlreadyExist(branchName);
 
             var project = ProjectRepository.Instance.Get(projectId);
             if (project == null)
             {
-                return new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
-                    ExceptionMessage = $"Project with specified projectID {projectId} doesn't exist"
-                }.ToString();
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb,
+                    $"Project with specified projectID {projectId} doesn't exist");
             }
 
 
             if (!project.MainBranchId.HasValue &&
                 BranchRepository.Instance.Find(branch => branch.ProjectId == project.Id).Any())
             {
-                return new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.ProjectDontHaveMainBranch,
-                    ExceptionMessage =
-                        $"Project '{project.Name}' don't have main branch. Please, manually specify for project which branch should be considered as main."
-                }.ToString();
+                LogErrorMessage(ErrorMessage.ErorCode.ProjectDontHaveMainBranch,
+                    $"Project '{project.Name}' don't have main branch. Please, manually specify for project which branch should be considered as main.");
             }
-
-            return string.Empty;
         }
 
-        private string IsBranchAlreadyExist(string branchName)
+        private void IsBranchAlreadyExist(string branchName)
         {
             if (BranchRepository.Instance.Find(branchName).Any())
             {
-                return new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
-                    ExceptionMessage = $"Branch with name {branchName} already exist"
-                }.ToString();
+                LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Branch with name {branchName} already exist");
             }
-
-            return string.Empty;
         }
 
-        public string UpdateBranch(string name, string newName, bool isMainBranch)
+        public void UpdateBranch(long id, string newName, bool isMainBranch)
         {
-            if (name != newName)
-            {
-                var branchExistMessage = IsBranchAlreadyExist(newName);
-                if (branchExistMessage != "")
-                    return branchExistMessage;
-            }
-
-            var branch = BranchRepository.Instance.Find(name).FirstOrDefault();
+            var branch = BranchRepository.Instance.Get(id);
 
             if (branch == null)
             {
-                return new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
-                    ExceptionMessage = $"Branch with name {name} doesn't exist"
-                }.ToString();
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Branch with Id={id} doesn't exist");
+            }
+
+            if (branch.Name != newName)
+            {
+                IsBranchAlreadyExist(newName);
             }
 
             if (isMainBranch)
@@ -327,7 +506,7 @@ namespace Kepler.Service
                     BranchRepository.Instance.Find(item => item.ProjectId == branch.ProjectId).ToList();
 
                 allProjectBranches.ForEach(item => item.IsMainBranch = false);
-                BranchRepository.Instance.Update(allProjectBranches);
+                BranchRepository.Instance.UpdateAndFlashChanges(allProjectBranches);
 
                 var project = ProjectRepository.Instance.Get(branch.ProjectId.Value);
                 project.MainBranchId = branch.Id;
@@ -337,140 +516,241 @@ namespace Kepler.Service
             branch.Name = newName;
             branch.IsMainBranch = isMainBranch;
             BranchRepository.Instance.UpdateAndFlashChanges(branch);
+        }
 
-            return string.Empty;
+        public Branch GetBranch(long id)
+        {
+            var branch = BranchRepository.Instance.GetCompleteObject(id);
+            if (branch == null)
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Branch with ID {id} was not found");
+
+            return branch;
+        }
+
+        public IEnumerable<Branch> GetBranches(long projectId)
+        {
+            var branches = BranchRepository.Instance.Find(branch => branch.ProjectId == projectId);
+            branches.Each(branch => branch.InitChildObjectsFromDb());
+
+            return branches;
+        }
+
+        public void DeleteBranch(long id)
+        {
+            var builds = GetBuilds(id);
+            // Stop all builds
+            builds.Each(item => RunOperation("build", item.Id, "stop"));
+            DataCleaner.DeleteObjectsTreeRecursively<Branch>(id, true);
         }
 
         #endregion
-
-        public string ImportTestConfig(string testConfig)
-        {
-            var configImporter = new ConfigImporter();
-            return configImporter.ImportConfig(testConfig);
-        }
-
-        public void UpdateScreenShots(ImageComparisonContract imageComparisonContract)
-        {
-            foreach (var imageComparisonInfo in imageComparisonContract.ImageComparisonList)
-            {
-                var screenShot = ScreenShotRepository.Instance.Get(imageComparisonInfo.ScreenShotId);
-
-                // if current screenshot status = Stopped, then just update diff image path field
-                if (screenShot.Status == ObjectStatus.Stopped)
-                {
-                    screenShot.DiffImagePath = imageComparisonInfo.DiffImgPathToSave;
-                    ScreenShotRepository.Instance.Update(screenShot);
-                    continue;
-                }
-
-                if (imageComparisonInfo.IsImagesDifferent || imageComparisonInfo.ErrorMessage != "")
-                {
-                    screenShot.Status = ObjectStatus.Failed;
-                    screenShot.ErrorMessage = imageComparisonInfo.ErrorMessage;
-                }
-                else
-                {
-                    screenShot.Status = ObjectStatus.Passed;
-                    screenShot.IsLastPassed = true;
-
-                    if (imageComparisonInfo.LastPassedScreenShotId.HasValue)
-                    {
-                        var oldPassedScreenShot =
-                            ScreenShotRepository.Instance.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
-                        oldPassedScreenShot.IsLastPassed = false;
-                        ScreenShotRepository.Instance.Update(oldPassedScreenShot);
-                    }
-                }
-
-                screenShot.DiffImagePath = imageComparisonInfo.DiffImgPathToSave;
-                ScreenShotRepository.Instance.Update(screenShot);
-            }
-
-            ScreenShotRepository.Instance.FlushChanges();
-        }
 
         #region ImageWorkers
 
         public IEnumerable<ImageWorker> GetImageWorkers()
         {
-            return workerRepository.FindAll();
+            return ImageWorkerRepository.Instance.FindAll();
         }
 
 
-        public string RegisterImageWorker(string name, string imageWorkerServiceUrl)
+        public void RegisterImageWorker(string name, string imageWorkerServiceUrl)
         {
-            if (!workerRepository.Find(imageWorkerServiceUrl).Any())
+            var workerRepo = ImageWorkerRepository.Instance;
+            if (!workerRepo.Find(imageWorkerServiceUrl).Any())
             {
-                workerRepository.Insert(new ImageWorker()
+                workerRepo.Insert(new ImageWorker
                 {
                     Name = name,
                     WorkerServiceUrl = imageWorkerServiceUrl
                 });
 
                 var restImageWorkerClient = new RestImageProcessorClient(imageWorkerServiceUrl);
-                restImageWorkerClient.SetDiffImagePath();
+                restImageWorkerClient.SetKeplerServiceUrl();
             }
             else
             {
-                return new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.NotUniqueObjects,
-                    ExceptionMessage = $"Image worker with the same URL {imageWorkerServiceUrl} already exist"
-                }.ToString();
+                LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects,
+                    "Image worker with the same URL {imageWorkerServiceUrl} already exist");
             }
-
-            return string.Empty;
         }
 
-        public string UpdateImageWorker(string name, string newName, string newWorkerServiceUrl)
+        public void UpdateImageWorker(string name, string newName, string newWorkerServiceUrl)
         {
-            var worker = workerRepository.Find(item => item.Name == name).FirstOrDefault();
+            var workerRepo = ImageWorkerRepository.Instance;
+            var worker = workerRepo.Find(item => item.Name == name).FirstOrDefault();
 
             if (worker == null)
             {
-                return new ErrorMessage()
-                {
-                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
-                    ExceptionMessage = $"Image worker with name {name} not found"
-                }.ToString();
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Image worker with name {name} not found");
             }
             else
             {
                 worker.Name = newName;
                 worker.WorkerServiceUrl = newWorkerServiceUrl;
+                workerRepo.UpdateAndFlashChanges(worker);
+            }
+        }
 
-                workerRepository.UpdateAndFlashChanges(worker);
+        public void DeleteImageWorker(long id)
+        {
+            var workerRepo = ImageWorkerRepository.Instance;
+            var worker = workerRepo.Get(id);
+
+            if (worker == null)
+            {
+                LogErrorMessage(ErrorMessage.ErorCode.ObjectNotFoundInDb, $"Image worker with ID {id} not found");
             }
 
-            return string.Empty;
+            try
+            {
+                workerRepo.Delete(worker);
+            }
+            catch (Exception ex)
+            {
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, ex);
+            }
         }
 
         #endregion
 
         #region Kepler Configs
 
+        private string GetKeplerConfigProperty(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName))
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, "Kepler config property name must be non emtpy");
+
+            var property = KeplerSystemConfigRepository.Instance.Find(propertyName);
+            return property == null ? "" : property.Value;
+        }
+
+        private void SetKeplerConfigProperty(string propertyName, string propertyValue)
+        {
+            var property = KeplerSystemConfigRepository.Instance.Find(propertyName);
+
+            if (property == null)
+            {
+                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig(propertyName, propertyValue));
+            }
+            else
+            {
+                property.Value = propertyValue;
+                KeplerSystemConfigRepository.Instance.UpdateAndFlushChanges(property);
+            }
+        }
+
         public string GetDiffImageSavingPath()
         {
-            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImgPathToSave");
-            return diffImgPathToSaveProperty == null ? "" : diffImgPathToSaveProperty.Value;
+            return GetKeplerConfigProperty("DiffImagePath");
+        }
+
+        public string GetPreviewSavingPath()
+        {
+            return GetKeplerConfigProperty("PreviewPath");
         }
 
         public void SetDiffImageSavingPath(string diffImageSavingPath)
         {
-            var diffImgPathToSaveProperty = KeplerSystemConfigRepository.Instance.Find("DiffImgPathToSave");
+            diffImageSavingPath = diffImageSavingPath.ToLowerInvariant();
+            var previewPath = Path.Combine(diffImageSavingPath, "Preview");
 
-            if (diffImgPathToSaveProperty == null)
-                KeplerSystemConfigRepository.Instance.Insert(new KeplerSystemConfig("DiffImgPathToSave",
-                    diffImageSavingPath));
-            else
+            SetKeplerConfigProperty("DiffImagePath", diffImageSavingPath);
+            SetKeplerConfigProperty("PreviewPath", previewPath);
+
+            BuildExecutor.GetExecutor().UpdateKeplerServiceUrlOnWorkers();
+            BuildExecutor.GetExecutor().UpdateDiffImagePath();
+            UrlPathGenerator.DiffImagePath = new KeplerService().GetDiffImageSavingPath();
+            UrlPathGenerator.PreviewImagePath = new KeplerService().GetPreviewSavingPath();
+        }
+
+        public string GetSourceImagePath()
+        {
+            return GetKeplerConfigProperty("SourceImagePath");
+        }
+
+        public void SetSourceImageSavingPath(string sourceImageSavingPath)
+        {
+            sourceImageSavingPath = sourceImageSavingPath.ToLowerInvariant();
+            SetKeplerConfigProperty("SourceImagePath", sourceImageSavingPath);
+
+            UrlPathGenerator.SourceImagePath = new KeplerService().GetSourceImagePath();
+        }
+
+        public string GetKeplerServiceUrl()
+        {
+            return GetKeplerConfigProperty("KeplerServiceUrl");
+        }
+
+        public void SetKeplerServiceUrl(string url)
+        {
+            SetKeplerConfigProperty("KeplerServiceUrl", url);
+
+            BuildExecutor.KeplerServiceUrl = url;
+        }
+
+        #endregion
+
+        #region Errors Logging
+
+        public IEnumerable<ErrorMessage> GetErrors(DateTime fromTime)
+        {
+            return ErrorMessageRepository.Instance.Find(item => item.Time >= fromTime)
+                .OrderByDescending(item => item.Id);
+        }
+
+        public IEnumerable<ErrorMessage> GetErrorsSinceLastViewed()
+        {
+            var lastViewedError = ErrorMessageRepository.Instance.Find(item => item.IsLastViewed).FirstOrDefault();
+
+            if (lastViewedError == null)
             {
-                diffImgPathToSaveProperty.Value = diffImageSavingPath;
-                KeplerSystemConfigRepository.Instance.Update(diffImgPathToSaveProperty);
-                KeplerSystemConfigRepository.Instance.FlushChanges();
+                return ErrorMessageRepository.Instance.FindAll().OrderByDescending(item => item.Id);
             }
 
-            BuildExecutor.DiffImageSavingPath = diffImageSavingPath;
-            BuildExecutor.GetExecutor().UpdateKeplerServiceUrlOnWorkers();
+            return
+                ErrorMessageRepository.Instance.Find(item => item.Id > lastViewedError.Id)
+                    .OrderByDescending(item => item.Id);
+        }
+
+        public void SetLastViewedError(long errorId)
+        {
+            var error = ErrorMessageRepository.Instance.Get(errorId);
+            if (error == null)
+                throw new ErrorMessage
+                {
+                    Code = ErrorMessage.ErorCode.ObjectNotFoundInDb,
+                    ExceptionMessage = $"Error message with id={errorId} not found"
+                }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+
+
+            var allLastViewedItems = ErrorMessageRepository.Instance.Find(item => item.IsLastViewed);
+            allLastViewedItems.Each(item => item.IsLastViewed = false);
+            ErrorMessageRepository.Instance.UpdateAndFlashChanges(allLastViewedItems);
+
+            error.IsLastViewed = true;
+            ErrorMessageRepository.Instance.UpdateAndFlashChanges(error);
+        }
+
+        private void LogErrorMessage(ErrorMessage.ErorCode errorCode, string exceptionMessage)
+        {
+            var error = new ErrorMessage
+            {
+                Code = errorCode,
+                ExceptionMessage = exceptionMessage
+            };
+            LogError(error);
+
+            throw error.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
+        }
+
+        private void LogErrorMessage(ErrorMessage.ErorCode errorCode, Exception exception)
+        {
+            LogErrorMessage(errorCode, $"{exception.Message}  {exception.StackTrace}");
+        }
+
+        public void LogError(ErrorMessage error)
+        {
+            ErrorMessageRepository.Instance.Insert(error);
         }
 
         #endregion

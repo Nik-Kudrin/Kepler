@@ -1,44 +1,132 @@
-﻿<div class="panel panel-default">
+﻿<div class="panel panel-default image-workers-table">
     <div class="panel-heading">
         <div>
             <h3>Image workers</h3>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#crud-modal" data-content="add_image_worker">Add</button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#crud-modal" data-act="add_worker">Add</button>
         </div>
     </div>
     <div class="panel-body">
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover workers_table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th></th>
+                        <th>Id</th>
                         <th>Name</th>
                         <th>Url</th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Worker name</td>
-                        <td>http://...</td>
-                        <td>
-                            <div class="btn-group">
-                                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="edit_image_worker">Edit</a></li>
-                                    <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-content="remove_image_worker">Delete</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
 </div>
 
+
+<table style="display: none;">
+    <tbody>
+        <tr class="worker_sample">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <div class="btn-group">
+                    <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="edit_worker">Edit</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#crud-modal" data-act="delete_worker">Delete</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
 <script type="text/javascript">
-    $('button:not([data-content=""]), a:not([data-content=""])').click(function () {
-        loadModalWin('', $(this).attr('data-content'));
+    //
+    // Load image workers
+    //
+    loadWorkers();
+
+    function loadWorkers() {
+        $('.workers_table > tbody').empty();
+        $.ajax({
+            url: KeplerServiceUrl + 'GetImageWorkers',
+            type: 'GET',
+            success: function (data) {
+                $.each(data, function (key, value) {
+                    $('tr.worker_sample').clone(true, true).appendTo('.workers_table > tbody').removeClass('worker_sample').addClass('worker_row').show();
+                    $.each(value, function (key, value) {
+                        if (key == 'WorkerStatus') {
+                            $('.worker_row:last td:nth-of-type(1)').html('<div class="worker-status-' + value + '">');
+                        } else if (key == 'Id') {
+                            $('.worker_row:last td:nth-of-type(2)').html(value);
+                            $('.worker_row:last td:nth-of-type(5) a').attr('worker_id', value);
+                        } else if (key == 'Name') {
+                            $('.worker_row:last td:nth-of-type(3)').html(value);
+                            $('.worker_row:last td:nth-of-type(5) a').attr('worker_name', value);
+                        } else if (key == 'WorkerServiceUrl') {
+                            $('.worker_row:last td:nth-of-type(4)').html(value);
+                        }
+                    });
+                });
+            }
+        });
+    }
+
+    //
+    // Popup switch
+    //
+    var obj_act = ""; // Variable with action
+
+    $(document).on('click', '.image-workers-table a, .image-workers-table button', function (e) {
+        switch ($(this).attr('data-act')) {
+            case 'edit_worker':
+                obj_act = "UpdateImageWorker";
+                $('.modal-title').text('Edit image worker');
+                $('.modal-body').empty().append('<input class="form-control" name="name" type="hidden" value="' + $(this).attr('worker_name') + '">' +
+                    '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
+                    '<div class="form-group"><label>Url</label><input class="form-control" name="newWorkerServiceUrl" type="text"></div>' +
+                    '<div class="alert alert-warning"></div>');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+                break;
+            case 'delete_worker':
+                obj_act = "DeleteImageWorker";
+                $('.modal-title').text('Delete Image Worker ' + $(this).attr('worker_name'));
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('worker_id') + '">' +
+                    'Are you sure?');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Yes</button>');
+                break;
+            case 'add_worker':
+                obj_act = "RegisterImageWorker";
+                $('.modal-title').text('Add image worker');
+                $('.modal-body').empty().append('<div class="form-group"><label>Name</label><input class="form-control" name="name" type="text"></div>' +
+                    '<div class="form-group"><label>Url</label><input class="form-control" name="imageWorkerServiceUrl" type="text"></div>' +
+                    '<div class="alert alert-warning"></div>');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+                break;
+        }
     });
+
+    //
+    // Ajax call for modal popup
+    //
+    function modal_ajax_call() {
+        var url_parameters = obj_act + '?' + $('#modal_form').serialize();
+        $.ajax({
+            type: 'GET',
+            url: KeplerServiceUrl + url_parameters,
+            success: function (data) {
+                $('#modal_form .alert-warning').hide();
+                $('#crud-modal button.close').click();
+                loadWorkers();
+            },
+            error: function (xhr) {
+                $('#modal_form .alert-warning').show().text(xhr.responseText);
+            }
+        });
+    }
 </script>

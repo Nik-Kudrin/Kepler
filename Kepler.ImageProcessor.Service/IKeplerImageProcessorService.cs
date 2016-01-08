@@ -8,7 +8,7 @@ namespace Kepler.ImageProcessor.Service
     public interface IKeplerImageProcessorService
     {
         [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "/GetMaxCountWorkers")]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetMaxCountWorkers")]
         int GetMaxCountWorkers();
 
         /// <summary>
@@ -18,8 +18,8 @@ namespace Kepler.ImageProcessor.Service
         /// <returns>Return empty string if everything is OK, otherwise - error message</returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "/AddImagesForDiffGeneration")]
-        string AddImagesForDiffGeneration(ImageComparisonContract imagesToProcess);
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "AddImagesForDiffGeneration")]
+        void AddImagesForDiffGeneration(ImageComparisonContract imagesToProcess);
 
         [OperationContract]
         [WebGet(RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
@@ -28,7 +28,7 @@ namespace Kepler.ImageProcessor.Service
 
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "/StopDiffGeneration")]
+            BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "StopDiffGeneration")]
         void StopDiffGeneration(ImageComparisonContract imagesToStopProcessing);
     }
 }
