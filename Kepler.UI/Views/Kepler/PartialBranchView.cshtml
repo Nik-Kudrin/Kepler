@@ -154,8 +154,7 @@
         if (entityStatus == '3') {
             var duration = 0;
             var timeDiff = 0;
-            var predictedDuration_orig = entityPredictedDuration.replace("PT", "").replace("H", "").replace("M", "").replace("S", "");
-            var predictedDuration = predictedDuration_orig;
+            var predictedDuration = entityPredictedDuration.replace("PT", "").replace("H", "").replace("M", "").replace("S", "");
             var startTime = moment(entityStartTime).format(formatDateString);
             var progressPercent = 0;
             var currentTime = moment().format(formatDateString);
@@ -164,7 +163,7 @@
                 timeDiff = moment(currentTime, formatDateString).diff(moment(startTime, formatDateString));
                 duration = moment.duration(timeDiff).asSeconds();
 
-                if (predictedDuration_orig == 0 || predictedDuration_orig < duration) {
+                if (predictedDuration == 0) {
                    predictedDuration = 1.2 * duration;
                 }
 
@@ -174,9 +173,6 @@
             if (progressPercent > 100) {
                 progressPercent = 100;
             }
-            
-            console.log('duration:' + duration, 'PredictedDuration_orig:' + predictedDuration_orig,
-                'PredictedDuration:' + predictedDuration, 'progressPercent:' + progressPercent);
 
             $('#build-' + entityId + ' .progress').show();
             $('#build-' + entityId + ' .progress-bar').attr('aria-valuenow', progressPercent);
