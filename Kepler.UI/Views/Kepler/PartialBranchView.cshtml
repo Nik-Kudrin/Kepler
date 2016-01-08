@@ -72,7 +72,7 @@
     // Load branch info
     //
     getBranch();
-    intervalGetBranch = setInterval(getBranch, 8000);
+    intervalGetBranch = setInterval(getBranch, 1000);
 
     function getBranch() {
         if (getParameterByName('branchId') != '') {
@@ -83,6 +83,8 @@
                     $.each(data, function (key, value) {
                         var entityId = '';
                         var entityStatus = '';
+                        var entityPredictedDuration = '';
+                        var entityStartTime = '';
 
                         if (key == 'Name') {
                             $('.panel-heading h3').html(value);
@@ -97,13 +99,21 @@
                                                 entityId = value;
                                             } else if (key == 'Status') {
                                                 entityStatus = value;
-                                            } else if (key == 'Duration') {
-                                                $('.panel-heading h3').attr(key, value);
                                             } else if (key == 'PredictedDuration') {
-                                                $('.panel-heading h3').attr(key, value);
+                                                if (value == null) {
+                                                    entityPredictedDuration = 0;
+                                                } else {
+                                                    entityPredictedDuration = value;
+                                                }
+                                            } else if (key == 'StartDate') {
+                                                if (value == null) {
+                                                    entityStartTime = 0;
+                                                } else {
+                                                    entityStartTime = value;
+                                                }
                                             }
                                         });
-                                        entityBuilt(entity = 'build', entityId, entityStatus);
+                                        entityBuilt(entity = 'build', entityId, entityStatus, entityPredictedDuration, entityStartTime);
                                     }
                                 });
                             });
@@ -117,54 +127,65 @@
     //
     // Builder for build
     //
-    function entityBuilt(entity, entityId, entityStatus) {
+    function entityBuilt(entity, entityId, entityStatus, entityPredictedDuration, entityStartTime) {
         if ($('#' + entity + '-' + entityId).length) {
             if ($('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').attr('class') != 'status-' + entityStatus) {
-                $('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').removeClass().addClass('status-' + entityStatus);
-                updateProgressBar(entityId, entityStatus);
+                $('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').removeClass().addClass('status-' + entityStatus);    
             }
         } else if ($('#' + entity + '-' + entityId).length == 0) {
             $('tr.build_sample').clone(true, true).appendTo('.builds_table > tbody').removeClass('build_sample').attr('id', entity + '-' + entityId).show();
             $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').html(entityId);
             $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('linkurl', '/build?id=' + entityId);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('entityPredictedDuration', entityPredictedDuration);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('entityStartTime', entityStartTime);
             $('#' + entity + '-' + entityId + ' td:nth-of-type(4) a').attr('obj_id', entityId);
             $('#' + entity + '-' + entityId + ' td:nth-of-type(2)').html('<div class="status-' + entityStatus + '">');
         }
-    }
 
+        updateProgressBar(entityId, entityStatus, entityPredictedDuration, entityStartTime);
+    }
+    
     //
     // Update progress bar
     //
-    function updateProgressBar(entityId, entityStatus) {
+    function updateProgressBar(entityId, entityStatus, entityPredictedDuration, entityStartTime) {
+        var formatDateString = "YYYY-MM-DD hh:mm:ssA";
+
         if (entityStatus == '3') {
-            var duration_orig = Math.round($('.panel-heading h3').attr('duration').replace("PT", "").replace("H", "").replace("M", "").replace("S", ""));
-            var PredictedDuration_orig = Math.round($('.panel-heading h3').attr('PredictedDuration').replace("PT", "").replace("H", "").replace("M", "").replace("S", ""));
-            var duration = Math.round(duration_orig);
-            var PredictedDuration = Math.round(PredictedDuration_orig);
+            var duration = 0;
+            var timeDiff = 0;
+            var predictedDuration_orig = entityPredictedDuration.replace("PT", "").replace("H", "").replace("M", "").replace("S", "");
+            var predictedDuration = predictedDuration_orig;
+            var startTime = moment(entityStartTime).format(formatDateString);
             var progressPercent = 0;
+            var currentTime = moment().format(formatDateString);
 
-            if (PredictedDuration_orig == 0) {
-                PredictedDuration = duration + 600000;
+            if (startTime != 0) {
+                timeDiff = moment(currentTime, formatDateString).diff(moment(startTime, formatDateString));
+                duration = moment.duration(timeDiff).asSeconds();
+
+                if (predictedDuration_orig == 0 || predictedDuration_orig < duration) {
+                   predictedDuration = 1.2 * duration;
+                }
+
+                progressPercent = Math.round(duration / predictedDuration * 100 + 1);
             }
-
-            if (duration_orig >= PredictedDuration_orig) {
-                PredictedDuration = duration + 600000;
-            }
-
-            progressPercent = Math.round(duration / PredictedDuration * 100 + 1);
 
             if (progressPercent > 100) {
                 progressPercent = 100;
             }
-
-            console.log('duration_orig:' + duration_orig, 'duration:' + duration, 'PredictedDuration_orig:' + PredictedDuration_orig,
-                'PredictedDuration:' + PredictedDuration, 'progressPercent:' + progressPercent);
+            
+            console.log('duration:' + duration, 'PredictedDuration_orig:' + predictedDuration_orig,
+                'PredictedDuration:' + predictedDuration, 'progressPercent:' + progressPercent);
 
             $('#build-' + entityId + ' .progress').show();
             $('#build-' + entityId + ' .progress-bar').attr('aria-valuenow', progressPercent);
             $('#build-' + entityId + ' .progress-bar').css('width', progressPercent + '%');
             $('#build-' + entityId + ' .progress-bar').html(progressPercent + '%');
         } else {
+            $('#build-' + entityId + ' .progress-bar').attr('aria-valuenow', 100);
+            $('#build-' + entityId + ' .progress-bar').css('width', '100%');
+            $('#build-' + entityId + ' .progress-bar').html('100%');
             $('#build-' + entityId + ' .progress').fadeOut();
         }
     }

@@ -215,10 +215,18 @@
 
         $('.build-info-popup').empty();
 
-        var startdate = moment($('.icon-build-info').attr('startdate')).format("YYYY-MM-DD hh:mmA");
-        var stopdate = moment($('.icon-build-info').attr('stopdate')).format("YYYY-MM-DD hh:mmA");
-        var duration = $('.icon-build-info').attr('duration').replace("PT", "").replace("H", " hours ").replace("M", " minutes ").replace("S", " seconds");
-        var predictedduration = $('.icon-build-info').attr('predictedduration').replace("PT", "").replace("H", " hours ").replace("M", " minutes ").replace("S", " seconds");
+        if ($('.icon-build-info').attr('startdate') != null) {
+            var startdate = moment($('.icon-build-info').attr('startdate')).format("YYYY-MM-DD hh:mmA");
+        }
+        if ($('.icon-build-info').attr('stopdate') != null) {
+            var stopdate = moment($('.icon-build-info').attr('stopdate')).format("YYYY-MM-DD hh:mmA");
+        }
+        if ($('.icon-build-info').attr('duration') != null) {
+            var duration = $('.icon-build-info').attr('duration').replace("PT", "").replace("H", " hours ").replace("M", " minutes ").replace("S", " seconds");
+        }
+        if ($('.icon-build-info').attr('predictedduration') != null) {
+            var predictedduration = $('.icon-build-info').attr('predictedduration').replace("PT", "").replace("H", " hours ").replace("M", " minutes ").replace("S", " seconds");
+        }
 
         $('.build-info-popup').append($('<li>').text('Start: ' + startdate));
         $('.build-info-popup').append($('<li>').text('Stop: ' + stopdate));
@@ -325,17 +333,21 @@
                                                                                             entityId = value;
                                                                                         } else if (key == "ParentObjId") {
                                                                                             entityParentId = value;
-                                                                                        } else if (key == "BaseLineImagePathUrl") {
+                                                                                        } else if (key == "BaseLineImagePathUrl" && value != null) {
                                                                                             BaseLineImagePathUrl = value.replace(/\\/g, "/");
-                                                                                        } else if (key == "BaseLinePreviewPathUrl") {
+                                                                                        } else if (key == "BaseLinePreviewPathUrl" && value != null) {
                                                                                             BaseLinePreviewPathUrl = value.replace(/\\/g, "/");
-                                                                                        } else if (key == "DiffImagePathUrl" && value.indexOf('img/') != -1) {
-                                                                                            DiffImagePathUrl = value.replace(/\\/g, "/");
-                                                                                        } else if (key == "DiffPreviewPathUrl" && value.indexOf('img/') != -1) {
-                                                                                            DiffPreviewPathUrl = value.replace(/\\/g, "/");
-                                                                                        } else if (key == "ImagePathUrl") {
+                                                                                        } else if (key == "DiffImagePathUrl" && value != null) {
+                                                                                            if (value.indexOf('img/') != -1) {
+                                                                                                DiffImagePathUrl = value.replace(/\\/g, "/");
+                                                                                            }
+                                                                                        } else if (key == "DiffPreviewPathUrl" && value != null) {
+                                                                                            if (value.indexOf('img/') != -1) {
+                                                                                                DiffPreviewPathUrl = value.replace(/\\/g, "/");
+                                                                                            }
+                                                                                        } else if (key == "ImagePathUrl" && value != null) {
                                                                                             ImagePathUrl = value.replace(/\\/g, "/");
-                                                                                        } else if (key == "PreviewImagePathUrl") {
+                                                                                        } else if (key == "PreviewImagePathUrl" && value != null) {
                                                                                             PreviewImagePathUrl = value.replace(/\\/g, "/");
                                                                                         } else if (key == "ErrorMessage") {
                                                                                             ErrorMessage = value;
