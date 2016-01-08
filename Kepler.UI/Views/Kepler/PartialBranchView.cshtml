@@ -30,6 +30,13 @@
                 <div class="status-queued"></div>
             </td>
             <td>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                        60%
+                    </div>
+                </div>
+            </td>
+            <td>
                 <div class="btn-group">
                     <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
                     <ul class="dropdown-menu">
@@ -58,13 +65,14 @@
 </table>
 
 <script type="text/javascript">
-    var PartialBranchInterval = null; // timer
+    var intervalGetBranch = null;
+    var intervalUpdateProgressBar = null;
 
     //
     // Load branch info
     //
     getBranch();
-    PartialBranchInterval = setInterval(getBranch, 8000);
+    intervalGetBranch = setInterval(getBranch, 8000);
 
     function getBranch() {
         if (getParameterByName('branchId') != '') {
@@ -89,6 +97,10 @@
                                                 entityId = value;
                                             } else if (key == 'Status') {
                                                 entityStatus = value;
+                                            } else if (key == 'Duration') {
+                                                $('.panel-heading h3').attr(key, value);
+                                            } else if (key == 'PredictedDuration') {
+                                                $('.panel-heading h3').attr(key, value);
                                             }
                                         });
                                         entityBuilt(entity = 'build', entityId, entityStatus);
@@ -109,13 +121,51 @@
         if ($('#' + entity + '-' + entityId).length) {
             if ($('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').attr('class') != 'status-' + entityStatus) {
                 $('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').removeClass().addClass('status-' + entityStatus);
+                updateProgressBar(entityId, entityStatus);
             }
         } else if ($('#' + entity + '-' + entityId).length == 0) {
             $('tr.build_sample').clone(true, true).appendTo('.builds_table > tbody').removeClass('build_sample').attr('id', entity + '-' + entityId).show();
             $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').html(entityId);
             $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('linkurl', '/build?id=' + entityId);
-            $('#' + entity + '-' + entityId + ' td:nth-of-type(3) a').attr('obj_id', entityId);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(4) a').attr('obj_id', entityId);
             $('#' + entity + '-' + entityId + ' td:nth-of-type(2)').html('<div class="status-' + entityStatus + '">');
+        }
+    }
+
+    //
+    // Update progress bar
+    //
+    function updateProgressBar(entityId, entityStatus) {
+        if (entityStatus == '3') {
+            var duration_orig = Math.round($('.panel-heading h3').attr('duration').replace("PT", "").replace("H", "").replace("M", "").replace("S", ""));
+            var PredictedDuration_orig = Math.round($('.panel-heading h3').attr('PredictedDuration').replace("PT", "").replace("H", "").replace("M", "").replace("S", ""));
+            var duration = Math.round(duration_orig);
+            var PredictedDuration = Math.round(PredictedDuration_orig);
+            var progressPercent = 0;
+
+            if (PredictedDuration_orig == 0) {
+                PredictedDuration = duration + 600000;
+            }
+
+            if (duration_orig >= PredictedDuration_orig) {
+                PredictedDuration = duration + 600000;
+            }
+
+            progressPercent = Math.round(duration / PredictedDuration * 100 + 1);
+
+            if (progressPercent > 100) {
+                progressPercent = 100;
+            }
+
+            console.log('duration_orig:' + duration_orig, 'duration:' + duration, 'PredictedDuration_orig:' + PredictedDuration_orig,
+                'PredictedDuration:' + PredictedDuration, 'progressPercent:' + progressPercent);
+
+            $('#build-' + entityId + ' .progress').show();
+            $('#build-' + entityId + ' .progress-bar').attr('aria-valuenow', progressPercent);
+            $('#build-' + entityId + ' .progress-bar').css('width', progressPercent + '%');
+            $('#build-' + entityId + ' .progress-bar').html(progressPercent + '%');
+        } else {
+            $('#build-' + entityId + ' .progress').fadeOut();
         }
     }
 

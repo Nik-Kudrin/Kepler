@@ -62,6 +62,12 @@ label.error {
 #modal_form .alert-warning {
     display: none;
 }
+
+.progress {
+    display: none;
+    margin-bottom: 0px;
+}
+
 /*GLOBAL END*/
 
 /*STATUS START*/
@@ -231,6 +237,10 @@ label.error {
     .panel-default .table-responsive .btn .caret {
         margin-left: 5px;
     }
+
+.builds_table tr > td:nth-of-type(3) {
+    min-width: 200px;
+}
 /*BUILD LIST PAGE END*/
 
 /*BUILD PAGE START*/

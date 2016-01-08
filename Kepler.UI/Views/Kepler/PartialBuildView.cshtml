@@ -156,7 +156,7 @@
 </div>
 
 <script>
-    var PartialBuildInterval = null; // timer
+    var interval = null; // timer
 
     $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
         event.preventDefault();
@@ -182,7 +182,7 @@
     // Get Build
     //
     getBuild();
-    PartialBuildInterval = setInterval(getBuild, 8000);
+    interval = setInterval(getBuild, 8000);
 
     function getBuild() {
         if (getParameterByName('id') != '') {
@@ -223,7 +223,7 @@
         $('.build-info-popup').append($('<li>').text('Start: ' + startdate));
         $('.build-info-popup').append($('<li>').text('Stop: ' + stopdate));
         $('.build-info-popup').append($('<li>').text('Duration: ' + duration));
-        $('.build-info-popup').append($('<li>').text('Predicted duration: ' + predictedduration));
+        $('.build-info-popup').append($('<li>').text('Estimated duration: ' + predictedduration));
 
         var numberscreenshots = $('.icon-build-info').attr('numberscreenshots');
         var numberfailedscreenshots = $('.icon-build-info').attr('numberfailedscreenshots');
@@ -244,7 +244,7 @@
     // Get Assembly
     //
     getAssemblies();
-    PartialBuildInterval = setInterval(getAssemblies, 8000);
+    interval = setInterval(getAssemblies, 8000);
 
     function getAssemblies() {
         if (getParameterByName('id') != '') {
