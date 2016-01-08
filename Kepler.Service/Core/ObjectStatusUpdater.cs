@@ -275,6 +275,16 @@ namespace Kepler.Service.Core
             switch (typeName.ToLowerInvariant())
             {
                 case "build":
+                    if (newStatus == ObjectStatus.InQueue)
+                    {
+                        var build = BuildRepository.Instance.Get(objId);
+                        build.Duration = null;
+                        build.StartDate = null;
+                        build.StopDate = null;
+                        build.PredictedDuration = null;
+                        BuildRepository.Instance.UpdateAndFlashChanges(build);
+                    }
+
                     return RecursiveSetObjectsStatus<Build>(objId, newStatus);
                 case "testassembly":
                     return RecursiveSetObjectsStatus<TestAssembly>(objId, newStatus);
