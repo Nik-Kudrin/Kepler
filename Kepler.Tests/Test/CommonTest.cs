@@ -1,4 +1,5 @@
-﻿using Kepler.Common.Models;
+﻿using System;
+using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
 using Kepler.Service.Core;
@@ -89,6 +90,12 @@ namespace Kepler.Tests.Test
         public void UpdateObjectsTypeTests()
         {
             ObjectStatusUpdater.RecursiveSetObjectsStatus<Build>(2, ObjectStatus.Stopped);
+        }
+
+        [Test]
+        public void ProcessorsCount()
+        {
+            Console.WriteLine("Number Of Logical Processors: {0}", Environment.ProcessorCount);
         }
     }
 }
