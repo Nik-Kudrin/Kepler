@@ -80,7 +80,7 @@
                 url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
                 type: 'GET',
                 success: function (data) {
-                    $('.builds_table tr').attr('remove_entity', '1');
+                    $('.builds_table tbody tr').attr('remove_entity', '1');
                     $.each(data, function (key, value) {
                         var entityId = '';
                         var entityStatus = '';
@@ -123,7 +123,7 @@
                 }
             });
         }
-        $('.builds_table tr[remove_entity="1"]').remove();
+        $('.builds_table tbody tr[remove_entity="1"]').remove();
     }
 
     //

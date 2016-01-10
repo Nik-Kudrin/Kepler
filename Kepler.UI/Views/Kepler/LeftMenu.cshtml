@@ -140,8 +140,15 @@
                 $('.modal-title').text('Edit branch');
                 $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('branch_id') + '">' +
                     '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
+                    '<div class="checkbox"><label><input type="checkbox" name="isMainBranch" value="0">Main Branch</label></div>' +
+                    '<p class="help-block">Main branch is using in case, when you create a new branch and Kepler' + 
+                    'should find a baseline screenshots for comparison for very first buid. ' + 
+                    'Project can have only 1 main branch. Usually in Git-flow main branch is "master".</p>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
+                if ($(this).attr('type') === 'checkbox') {
+                    value = +$(this).is(':checked');
+                }
                 break;
             case 'delete_branch':
                 obj_act = "DeleteBranch";
@@ -162,6 +169,7 @@
             type: 'GET',
             url: KeplerServiceUrl + url_parameters,
             success: function (data) {
+                console.log(KeplerServiceUrl + url_parameters);
                 $('#modal_form .alert-warning').hide();
                 $('#crud-modal button.close').click();
                 loadLeftMenu();
