@@ -256,7 +256,6 @@
 
     function getAssemblies() {
         if (getParameterByName('id') != '') {
-            $('#assembly_group .panel-default').addClass('panel-default-remove');
             $.ajax({
                 url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
                 type: 'GET',

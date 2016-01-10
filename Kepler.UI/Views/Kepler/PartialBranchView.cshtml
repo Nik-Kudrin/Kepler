@@ -22,7 +22,7 @@
 
 <table style="display: none;">
     <tbody>
-        <tr class="build_sample">
+        <tr class="build_sample" remove_entity="0">
             <td>
                 <a class="build-list-item" href="" linkUrl=""></a>
             </td>
@@ -72,7 +72,7 @@
     // Load branch info
     //
     getBranch();
-    intervalGetBranch = setInterval(getBranch, 1000);
+    intervalGetBranch = setInterval(getBranch, 8000);
 
     function getBranch() {
         if (getParameterByName('branchId') != '') {
@@ -80,6 +80,7 @@
                 url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
                 type: 'GET',
                 success: function (data) {
+                    $('.builds_table tr').attr('remove_entity', '1');
                     $.each(data, function (key, value) {
                         var entityId = '';
                         var entityStatus = '';
@@ -122,13 +123,16 @@
                 }
             });
         }
+        $('.builds_table tr[remove_entity="1"]').remove();
     }
 
     //
     // Builder for build
     //
     function entityBuilt(entity, entityId, entityStatus, entityPredictedDuration, entityStartTime) {
+
         if ($('#' + entity + '-' + entityId).length) {
+            $('#' + entity + '-' + entityId).attr('remove_entity', '0');
             if ($('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').attr('class') != 'status-' + entityStatus) {
                 $('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').removeClass().addClass('status-' + entityStatus);    
             }
