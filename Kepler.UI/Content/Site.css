@@ -59,6 +59,10 @@ label.error {
     font-size: 16px;
 }
 
+.navbar-brand {
+    border-bottom: 1px solid #2F2E31;
+}
+
 #modal_form .alert-warning {
     display: none;
 }

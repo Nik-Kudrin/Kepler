@@ -49,7 +49,7 @@
     loadLeftMenu();
 
     function loadLeftMenu() {
-        $('.sidebar-collapse').empty().append('<ul class="nav" id="main-menu"></ul>');
+        $('#main-menu').empty();
         $.ajax({
             url: KeplerServiceUrl + 'GetProjects',
             type: 'GET',
@@ -141,8 +141,8 @@
                 $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('branch_id') + '">' +
                     '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
                     '<div class="checkbox"><label><input type="checkbox" name="isMainBranch" value="true">Main Branch</label></div>' +
-                    '<p class="help-block">Main branch is using in case, when you create a new branch and Kepler' + 
-                    'should find a baseline screenshots for comparison for very first buid. ' + 
+                    '<p class="help-block">Main branch is using in case, when you create a new branch and Kepler' +
+                    'should find a baseline screenshots for comparison for very first buid. ' +
                     'Project can have only 1 main branch. Usually in Git-flow main branch is "master".</p>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
@@ -160,7 +160,7 @@
     //
     // Ajax call for modal popup (Create project, edit branch, etc.)
     //
-    function modal_ajax_call() {
+    function modalAjaxCall() {
         var url_parameters = obj_act + '?' + $('#modal_form').serialize();
         $.ajax({
             type: 'GET',

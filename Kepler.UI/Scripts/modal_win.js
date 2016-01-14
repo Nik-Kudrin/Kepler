@@ -115,7 +115,7 @@ $("#modal_form").submit(function (e) {
         },
     },
     submitHandler: function (form) {
-        modal_ajax_call();
+        modalAjaxCall();
         return false;  //This doesn't prevent the form from submitting.
     }
 });
