@@ -105,6 +105,7 @@ label.error {
 .build-panel .status-7, .worker-status-0, .worker-status-1 {
     width: 16px;
     vertical-align: text-bottom;
+    margin-left: 5px;
 }
 
     .status-1::before, .status-2::before, .status-3::before,
@@ -296,10 +297,18 @@ label.error {
     border: 1px dotted #CCC;
 }
 
+.screenShot .col-md-12:nth-of-type(2) {
+    padding-left: 0px;
+}
+
 .screenShot-link {
     display: none;
     font-size: 18px;
 }
+
+    .screenShot-link:hover {
+        text-decoration: none;
+    }
 
 .testAssembly_group .panel-body,
 .testSuite_group .panel-body,
@@ -330,6 +339,11 @@ label.error {
         border: 1px solid #BCDEFB;
     }
 
+    .screenShot-base span, .screenShot-dif span, .screenShot-curr span {
+        position: absolute;
+        top: -22px;
+    }
+
 .screenShot-error-log {
     display: none;
     padding-top: 20px;
@@ -346,6 +360,10 @@ label.error {
     .panel-group .panel-heading + .panel-collapse > .panel-body, .panel-group .panel-heading + .panel-collapse > .list-group {
         border-top: none;
     }
+
+.testCase_group .panel-collapse {
+    border-top: 1px dotted #CCC;
+}
 
 .panel-collapse {
     clear: both;
