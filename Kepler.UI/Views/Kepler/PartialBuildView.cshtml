@@ -399,7 +399,6 @@
             }
             $('#' + entity + '-' + entityId + ' .panel-title span').text(entityName);
             $('#' + entity + '-' + entityId).attr('' + entity + '-status', entityStatus);
-            //$('#' + entity + '-' + entityId + ' .panel-title a').append('&nbsp;<span class="status-' + entityStatus + '">');
             $('<span class="status-' + entityStatus + '">').insertAfter('#' + entity + '-' + entityId + ' .panel-title a i');
             $('#' + entity + '-' + entityId + ' .panel-title a').attr('href', '#panel-' + entity + '-' + entityId);
             $('#' + entity + '-' + entityId + ' .panel-collapse').attr('id', 'panel-' + entity + '-' + entityId);
