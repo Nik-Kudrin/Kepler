@@ -24,7 +24,7 @@ namespace Kepler.Service.Extension
 
             requiredHeaders.Add("Access-Control-Allow-Origin", "*");
             requiredHeaders.Add("Access-Control-Request-Method", "POST,GET,PUT,DELETE,OPTIONS");
-            requiredHeaders.Add("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+            requiredHeaders.Add("Access-Control-Allow-Headers", "Origin,Accept,Authorization,X-Ellucian-Media-Type,X-Requested-With,Content-Type");
 
             endpointDispatcher.DispatchRuntime.MessageInspectors.Add(new CustomHeaderMessageInspector(requiredHeaders));
         }
