@@ -168,9 +168,7 @@
     var LastStartTime = '';
     var NextStartTime = '';
     var BuildLastStartTime = '';
-    var BuildNextStartTime = '';
     var LogLastStartTime = '';
-    var LogNextStartTime = '';
     GetCleanDataScheduler('buildCleanScheduler');
     GetCleanDataScheduler('logCleanScheduler');
 
@@ -179,35 +177,28 @@
             url: KeplerServiceUrl + 'GetCleanDataScheduler?schedulerName=' + schedulerName,
             type: 'GET',
             success: function (data) {
-                console.log(data);
                 switch (schedulerName) {
                     case 'buildCleanScheduler':
                         $.each(data, function (key, value) {
                             if (key == 'HistoryItemsNumberToPreserve') {
-                                $('.build_schedule .select_items_preserve').val(value);
+                                $('.build_schedule .select_items_preserve:not(.changed)').val(value);
                             } else if (key == 'LastStartTime') {
                                 $('.build_schedule .panel-heading small').empty().append('(last clean: ' + moment(value).format(formatDateString) + ' / ');
                                 BuildLastStartTime = value;
-                            } else if (key == 'NextStartTime') {
-                                $('.build_schedule .panel-heading small').append('next clean: ' + moment(value).format(formatDateString) + ')');
-                                BuildNextStartTime = value;
                             } else if (key == 'SchedulePeriod') {
-                                $('.build_schedule .select_period').val(value);
+                                $('.build_schedule .select_period:not(.changed)').val(value);
                             }
                         });
                         break;
                     case 'logCleanScheduler':
                         $.each(data, function (key, value) {
                             if (key == 'HistoryItemsNumberToPreserve') {
-                                $('.log_schedule .select_items_preserve').val(value);
+                                $('.log_schedule .select_items_preserve:not(.changed)').val(value);
                             } else if (key == 'LastStartTime') {
-                                $('.log_schedule .panel-heading small').append('(last clean: ' + moment(value).format(formatDateString) + ' / ');
+                                $('.log_schedule .panel-heading small').empty().append('(last clean: ' + moment(value).format(formatDateString) + ' / ');
                                 LogLastStartTime = value;
-                            } else if (key == 'NextStartTime') {
-                                $('.log_schedule .panel-heading small').append('next clean: ' + moment(value).format(formatDateString) + ')');
-                                LogNextStartTime = value;
                             } else if (key == 'SchedulePeriod') {
-                                $('.log_schedule .select_period').val(value);
+                                $('.log_schedule .select_period:not(.changed)').val(value);
                             }
                         });
                         break;
@@ -223,18 +214,20 @@
         switch ($(this).attr('data-act')) {
             case 'set_build_scheduler':
                 GetCleanDataScheduler('buildCleanScheduler');
-                HistoryItemsNumberToPreserve = parseInt($('.log_schedule .select_items_preserve').val());
+                HistoryItemsNumberToPreserve = $('.build_schedule .select_items_preserve').val();
                 SchedulePeriod = $('.build_schedule .select_period').val();
                 LastStartTime = BuildLastStartTime;
-                NextStartTime = BuildNextStartTime;
+                NextStartTime = moment(LastStartTime).add(moment.duration(SchedulePeriod).asDays(), 'day');
+                NextStartTime = moment(NextStartTime).toASP();
                 UpdateCleanDataScheduler(HistoryItemsNumberToPreserve, LastStartTime, 'buildCleanScheduler', NextStartTime, SchedulePeriod);
                 break;
             case 'set_log_scheduler':
                 GetCleanDataScheduler('logCleanScheduler');
-                HistoryItemsNumberToPreserve = parseInt($('.log_schedule .select_items_preserve').val());
-                SchedulePeriod = $('.build_schedule .select_period').val();
+                HistoryItemsNumberToPreserve = $('.log_schedule .select_items_preserve').val();
+                SchedulePeriod = $('.log_schedule .select_period').val();
                 LastStartTime = LogLastStartTime;
-                NextStartTime = LogNextStartTime;
+                NextStartTime = moment(LastStartTime).add(moment.duration(SchedulePeriod).asDays(), 'day');
+                NextStartTime = moment(NextStartTime).toASP();
                 UpdateCleanDataScheduler(HistoryItemsNumberToPreserve, LastStartTime, 'logCleanScheduler', NextStartTime, SchedulePeriod);
                 break;
         }
@@ -242,20 +235,38 @@
 
     function UpdateCleanDataScheduler(HistoryItemsNumberToPreserve, LastStartTime, Name, NextStartTime, SchedulePeriod) {
         ScheduleParameters = {'HistoryItemsNumberToPreserve': HistoryItemsNumberToPreserve, 'LastStartTime': LastStartTime, 
-            'Name': Name, 'NextStartTime': NextStartTime, 'SchedulePeriod': SchedulePeriod};
-        console.log(JSON.stringify(ScheduleParameters));
+            'Name': Name, 'NextStartTime': NextStartTime, 'SchedulePeriod': SchedulePeriod
+        };
+
         $.ajax({
             type: 'POST',
             url: KeplerServiceUrl + 'UpdateCleanDataScheduler',
             data: JSON.stringify(ScheduleParameters),
             contentType: "application/json",
             success: function (data) {
-                //console.log(data);
+                if (Name == 'buildCleanScheduler') {
+                    $('.build_schedule select').removeClass('changed');
+                    GetCleanDataScheduler('buildCleanScheduler');
+                } else if (Name == 'logCleanScheduler') {
+                    $('.log_schedule select').removeClass('changed');
+                    GetCleanDataScheduler('logCleanScheduler');
+                }
             },
             error: function (xhr) {
                 console.log(xhr.responseText);
             }
         });
+    }
+
+    $('select').change(function () {
+        $(this).addClass('changed');
+    });
+
+    //
+    // Date to ASP.Net json date
+    //
+    moment.fn.toASP = function () {
+        return '/Date(' + (+this) + this.format('ZZ') + ')/';
     }
 
 </script>
