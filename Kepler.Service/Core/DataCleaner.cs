@@ -80,7 +80,9 @@ namespace Kepler.Service.Core
 
                 parentObjRepo.Delete(branchForDelete);
 
-                project.MainBranchId = null;
+                if (branchForDelete.IsMainBranch)
+                    project.MainBranchId = null;
+
                 ProjectRepository.Instance.UpdateAndFlashChanges(project);
             }
             else if (typeof (TEntityBase) == typeof (Build))

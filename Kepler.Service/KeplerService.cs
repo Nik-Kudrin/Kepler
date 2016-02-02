@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.ServiceModel.Web;
 using AutoMapper.Internal;
 using Kepler.Common.CommunicationContracts;
 using Kepler.Common.Error;
@@ -252,6 +253,12 @@ namespace Kepler.Service
 
         public void UpdateCleanDataScheduler(DataSchedulerContract scheduler)
         {
+            if (WebOperationContext.Current.IncomingRequest.Method == "OPTIONS")
+            {
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.OK;
+                return;
+            }
+
             if (scheduler.SchedulePeriod < TimeSpan.FromMinutes(20))
                 LogErrorMessage(ErrorMessage.ErorCode.SetObjectStatusError,
                     $"Period for data cleaning must be more then 10 min");

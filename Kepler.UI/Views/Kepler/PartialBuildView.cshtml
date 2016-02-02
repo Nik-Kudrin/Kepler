@@ -1,4 +1,10 @@
-﻿<div class="col-md-12">
+﻿<script type="text/javascript">
+    $(document).ready(function() {
+        document.title = 'Build - Kepler';
+    });
+</script>
+
+<div class="col-md-12">
     <div class="col-md-6">
         <div class="col-md-1">
             <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
@@ -11,8 +17,8 @@
         </div>
         <div id="build-info-block" class="col-md-5">
             <h3>
-                Build <span></span>&nbsp;
                 <div class=""></div>
+                Build <span></span>&nbsp;
             </h3>
         </div>
     </div>
@@ -112,16 +118,19 @@
     </div>
     <div class="col-md-12">
         <div class="col-md-4 screenShot-base">
+            <span>Baseline</span>
             <a data-toggle="lightbox" data-gallery="multiimages" data-title="Base line" href="">
                 <img src="">
             </a>
         </div>
         <div class="col-md-4 screenShot-dif">
+            <span>Difference</span>
             <a data-toggle="lightbox" data-gallery="multiimages" data-title="Difference" href="">
                 <img src="">
             </a>
         </div>
         <div class="col-md-4 screenShot-curr">
+            <span>Original</span>
             <a data-toggle="lightbox" data-gallery="multiimages" data-title="Original" href="">
                 <img src="">
             </a>
@@ -256,7 +265,6 @@
 
     function getAssemblies() {
         if (getParameterByName('id') != '') {
-            $('#assembly_group .panel-default').addClass('panel-default-remove');
             $.ajax({
                 url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
                 type: 'GET',
@@ -386,8 +394,8 @@
         BaseLineImagePathUrl, BaseLinePreviewPathUrl, DiffImagePathUrl, DiffPreviewPathUrl,
         ImagePathUrl, PreviewImagePathUrl, ErrorMessage, Url) {
         if ($('#' + entity + '-' + entityId).length && entity != 'screenShot') {
-            if ($('#' + entity + '-' + entityId + ' > .panel-heading a span:last').attr('class') != 'status-' + entityStatus) {
-                $('#' + entity + '-' + entityId + ' > .panel-heading a span:last').removeClass().addClass('status-' + entityStatus);
+            if ($('#' + entity + '-' + entityId + ' > .panel-heading a span:first').attr('class') != 'status-' + entityStatus) {
+                $('#' + entity + '-' + entityId + ' > .panel-heading a span:first').removeClass().addClass('status-' + entityStatus);
             }
         } else if ($('#' + entity + '-' + entityId).length == 0 && entity != 'screenShot') {
             if (entity == "testAssembly") {
@@ -397,7 +405,7 @@
             }
             $('#' + entity + '-' + entityId + ' .panel-title span').text(entityName);
             $('#' + entity + '-' + entityId).attr('' + entity + '-status', entityStatus);
-            $('#' + entity + '-' + entityId + ' .panel-title a').append('&nbsp;<span class="status-' + entityStatus + '">');
+            $('<span class="status-' + entityStatus + '">').insertAfter('#' + entity + '-' + entityId + ' .panel-title a i');
             $('#' + entity + '-' + entityId + ' .panel-title a').attr('href', '#panel-' + entity + '-' + entityId);
             $('#' + entity + '-' + entityId + ' .panel-collapse').attr('id', 'panel-' + entity + '-' + entityId);
             $('#' + entity + '-' + entityId + ' .panel-group').attr('id', childEntity + '_group-' + entityParentId);

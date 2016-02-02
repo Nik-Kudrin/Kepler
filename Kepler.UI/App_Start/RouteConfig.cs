@@ -33,6 +33,12 @@ namespace Kepler.UI
                 defaults: new { controller = "Admin", action = "Index", parameter = UrlParameter.Optional }
                 );
 
+			routes.MapRoute(
+                name: "Admin-Scheduler",
+                url: "admin/scheduler",
+                defaults: new { controller = "Admin", action = "Index", parameter = UrlParameter.Optional }
+                );
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{*parameter}",

@@ -2,7 +2,7 @@
     <ul class="nav" id="main-menu"></ul>
 </div>
 
-<li class="main-menu-li-1-lvl" style="display: none">
+<li class="main-menu-li-1-lvl" style="display: none;">
     <a href="" class="main-menu-item"><span class="fa arrow"></span></a>
     <div class="main-menu-conf">
         <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
@@ -17,7 +17,17 @@
     <ul class="nav nav-second-level"></ul>
 </li>
 
-<li class="main-menu-li-2-lvl" style="display: none">
+<li class="main-menu-li-1-lvl-clean" style="display: none;">
+    <a href="" class="main-menu-item">No projects</a>
+    <div class="main-menu-conf">
+        <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
+        <ul class="dropdown-menu">
+            <li><a href="" data-toggle="modal" data-target="#crud-modal" data-act="create_proj">Create</a></li>
+        </ul>
+    </div>
+</li>
+
+<li class="main-menu-li-2-lvl" style="display: none;">
     <a class="left-nav-link main-menu-item" href="" linkUrl="/branch?branchId=" linkBranch="master"></a>
     <div class="main-menu-conf">
         <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
@@ -28,6 +38,10 @@
     </div>
 </li>
 
+<li class="main-menu-li-2-lvl-clean" style="display: none;">
+    <a class="left-nav-link main-menu-item" href="" linkUrl="" linkBranch="">No branches</a>
+</li>
+
 <script type="text/javascript">
     //
     // Load left menu
@@ -35,42 +49,50 @@
     loadLeftMenu();
 
     function loadLeftMenu() {
-        $('.sidebar-collapse').empty().append('<ul class="nav" id="main-menu"></ul>');
+        $('#main-menu').empty();
         $.ajax({
             url: KeplerServiceUrl + 'GetProjects',
             type: 'GET',
             success: function (data) {
-                $.each(data, function (key, value) {
-                    $('.main-menu-li-1-lvl').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl').show();
-                    $.each(value, function (key, value) {
-                        if (key != "Branches") {
-                            if (key == "Name") {
-                                $('#main-menu > li:last > .main-menu-item').prepend(value);
-                            }
-                            $('#main-menu > li:last > .main-menu-item').attr("proj_" + key, value);
-                            $('#main-menu > li:last .dropdown-menu a').attr("proj_" + key, value);
-                        } else {
-                            $.each(value, function (key, value) {
-                                $.each(value, function (key, value) {
-                                    if (key == "Value") {
-                                        $('.main-menu-li-2-lvl').clone(true, true).appendTo('#main-menu > li:last .nav-second-level').removeClass('main-menu-li-2-lvl').show();
+                if (data == '') {
+                    $('.main-menu-li-1-lvl-clean').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl-clean').show();
+                } else {
+                    $.each(data, function (key, value) {
+                        $('.main-menu-li-1-lvl').clone(true, true).appendTo('#main-menu').removeClass('main-menu-li-1-lvl').show();
+                        $.each(value, function (key, value) {
+                            if (key != "Branches") {
+                                if (key == "Name") {
+                                    $('#main-menu > li:last > .main-menu-item').prepend(value);
+                                }
+                                $('#main-menu > li:last > .main-menu-item').attr("proj_" + key, value);
+                                $('#main-menu > li:last .dropdown-menu a').attr("proj_" + key, value);
+                            } else {
+                                if (value == '') {
+                                    $('.main-menu-li-2-lvl-clean').clone(true, true).appendTo('#main-menu > li:last .nav-second-level').removeClass('main-menu-li-2-lvl-clean').show();
+                                } else {
+                                    $.each(value, function (key, value) {
                                         $.each(value, function (key, value) {
-                                            if (key == "Name") {
-                                                $('#main-menu > li:last .nav-second-level > li:last > a').prepend(value);
-                                            } else if (key == "Id") {
-                                                $('#main-menu > li:last .nav-second-level > li:last > a').attr('linkUrl', function (index, currentvalue) {
-                                                    return currentvalue + value;
+                                            if (key == "Value") {
+                                                $('.main-menu-li-2-lvl').clone(true, true).appendTo('#main-menu > li:last .nav-second-level').removeClass('main-menu-li-2-lvl').show();
+                                                $.each(value, function (key, value) {
+                                                    if (key == "Name") {
+                                                        $('#main-menu > li:last .nav-second-level > li:last > a').prepend(value);
+                                                    } else if (key == "Id") {
+                                                        $('#main-menu > li:last .nav-second-level > li:last > a').attr('linkUrl', function (index, currentvalue) {
+                                                            return currentvalue + value;
+                                                        });
+                                                    }
+                                                    $('#main-menu > li:last .nav-second-level > li:last > a').attr("branch_" + key, value);
+                                                    $('#main-menu > li:last .nav-second-level > li:last .dropdown-menu a').attr("branch_" + key, value);
                                                 });
                                             }
-                                            $('#main-menu > li:last .nav-second-level > li:last > a').attr("branch_" + key, value);
-                                            $('#main-menu > li:last .nav-second-level > li:last .dropdown-menu a').attr("branch_" + key, value);
                                         });
-                                    }
-                                });
-                            });
-                        }
+                                    });
+                                }
+                            }
+                        });
                     });
-                });
+                }
                 $('#main-menu').metisMenu();
             }
         });
@@ -118,6 +140,10 @@
                 $('.modal-title').text('Edit branch');
                 $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('branch_id') + '">' +
                     '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
+                    '<div class="checkbox"><label><input type="checkbox" name="isMainBranch" value="true">Main Branch</label></div>' +
+                    '<p class="help-block">Main branch is using in case, when you create a new branch and Kepler' +
+                    'should find a baseline screenshots for comparison for very first buid. ' +
+                    'Project can have only 1 main branch. Usually in Git-flow main branch is "master".</p>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
@@ -134,7 +160,7 @@
     //
     // Ajax call for modal popup (Create project, edit branch, etc.)
     //
-    function modal_ajax_call() {
+    function modalAjaxCall() {
         var url_parameters = obj_act + '?' + $('#modal_form').serialize();
         $.ajax({
             type: 'GET',
