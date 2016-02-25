@@ -76,6 +76,7 @@
                             $('.worker_row:last td:nth-of-type(5) a').attr('worker_name', value);
                         } else if (key == 'WorkerServiceUrl') {
                             $('.worker_row:last td:nth-of-type(4)').html(value);
+                            $('.worker_row:last td:nth-of-type(5) a').attr('worker_url', value);
                         }
                     });
                 });
@@ -94,8 +95,8 @@
                 obj_act = "UpdateImageWorker";
                 $('.modal-title').text('Edit image worker');
                 $('.modal-body').empty().append('<input class="form-control" name="name" type="hidden" value="' + $(this).attr('worker_name') + '">' +
-                    '<div class="form-group"><label>Name</label><input class="form-control" name="newName" type="text"></div>' +
-                    '<div class="form-group"><label>Url</label><input class="form-control" name="newWorkerServiceUrl" type="text"></div>' +
+                    '<div class="form-group"><label>Name</label><input class="form-control" name="newName" value="' + $(this).attr('worker_name') + '" type="text"></div>' +
+                    '<div class="form-group"><label>Url</label><input class="form-control" name="newWorkerServiceUrl" value="' + $(this).attr('worker_url') + '" type="text"></div>' +
                     '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
