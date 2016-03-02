@@ -408,7 +408,7 @@
             $('<span class="status-' + entityStatus + '">').insertAfter('#' + entity + '-' + entityId + ' .panel-title a i');
             $('#' + entity + '-' + entityId + ' .panel-title a').attr('href', '#panel-' + entity + '-' + entityId);
             $('#' + entity + '-' + entityId + ' .panel-collapse').attr('id', 'panel-' + entity + '-' + entityId);
-            $('#' + entity + '-' + entityId + ' .panel-group').attr('id', childEntity + '_group-' + entityParentId);
+            $('#' + entity + '-' + entityId + ' .panel-group').attr('id', childEntity + '_group-' + entityId);
             $('.dropdown-btn-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId + ' .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
             $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('obj_id', entityId);
             $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('typeName', entity);
