@@ -5,7 +5,7 @@
 </script>
 
 <div class="col-md-12">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="col-md-1">
             <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
             <ul class="dropdown-menu build-info-popup">
@@ -24,16 +24,19 @@
     </div>
 
     <div class="col-md-2">
-        <span class="btn btn-default accordion_col_exp collapsed">Expand all</span>
-    </div>
-    <div class="col-md-2">
         <button data-toggle="dropdown" class="btn dropdown-toggle">Filter <span class="caret"></span></button>
         <ul class="dropdown-menu">
             <li>
-                <a href="#">Failed</a>
+                <a href="#" data-act="show_all">Show all</a>
             </li>
             <li>
-                <a href="#">Passed</a>
+                <a href="#" data-act="hide_all">Hide all</a>
+            </li>
+            <li>
+                <a href="#" data-act="show_failed">Failed</a>
+            </li>
+            <li>
+                <a href="#" data-act="show_passed">Passed</a>
             </li>
         </ul>
     </div>
@@ -170,21 +173,6 @@
     $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
         event.preventDefault();
         $(this).ekkoLightbox();
-    });
-
-    //
-    // Expand/Collapse accordions
-    //
-    $('.accordion_col_exp').click(function () {
-        if ($(this).hasClass('collapsed')) {
-            $('.panel-collapse:not(".in")').collapse('show');
-            $(this).removeClass('collapsed').addClass('expanded');
-            $(this).text('Collapse all');
-        } else {
-            $('.panel-collapse.in').collapse('hide');
-            $(this).removeClass('expanded').addClass('collapsed');
-            $(this).text('Expand all');
-        }
     });
 
     //
@@ -417,7 +405,7 @@
                 $('#' + entity + '-' + entityId + ' > .screenShot-header span:last').removeClass().addClass('status-' + entityStatus);
             }
         } else if ($('#' + entity + '-' + entityId).length == 0 && entity == 'screenShot') {
-            $('.screenShot-hidden').clone(true, true).appendTo('#panel-testCase-' + entityParentId + ' > .panel-body').attr('id', entity + '-' + entityId).removeClass('screenShot-hidden').show();
+            $('.screenShot-hidden').clone(true, true).appendTo('#panel-testCase-' + entityParentId + ' > .panel-body').attr('id', entity + '-' + entityId).attr('testscreenshot-status', entityStatus).removeClass('screenShot-hidden').show();
             $('.screenShot-splitter-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId).removeClass('screenShot-splitter-hidden').show();
             $('#' + entity + '-' + entityId + ' img').attr('title', entityName);
             $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-gallery', entityName);
@@ -456,6 +444,9 @@
     var typeName = "";
     var objId = "";
     var operationName = "";
+    var clean_status = "div[testassembly-status], div[testsuite-status], div[testcase-status], div[testscreenshot-status]";
+    var failed_status = 'div[testassembly-status="6"], div[testsuite-status="6"], div[testcase-status="6"], div[testscreenshot-status="6"]';
+    var passed_status = 'div[testassembly-status="5"], div[testsuite-status="5"], div[testcase-status="5"], div[testscreenshot-status="5"]';
 
     $(document).on('click', '#page-inner a', function (e) {
         switch ($(this).attr('data-act')) {
@@ -490,6 +481,32 @@
                 operationName = 'newStatus=failed';
                 obj_act_with_param = obj_act + typeName + objId + operationName;
                 modal_ajax_call();
+                break;
+            case 'show_all':
+                $(clean_status).children('.panel-collapse:not(".in")').collapse('show');
+                $(clean_status).parents('.panel-collapse:not(".in")').collapse('show');
+                break;
+            case 'hide_all':
+                $(clean_status).children('.panel-collapse.in').collapse('hide');
+                $(clean_status).parents('.panel-collapse.in').collapse('hide');
+                break;
+            case 'show_passed':
+                $.each($(failed_status), function () {
+                    if ($(this).find(passed_status).length == 0) {
+                        $(this).children('.panel-collapse.in').collapse('hide');
+                    }
+                });
+                $(passed_status).children('.panel-collapse:not(".in")').collapse('show');
+                $(passed_status).parents('.panel-collapse:not(".in")').collapse('show');
+                break;
+            case 'show_failed':
+                $.each($(passed_status), function () {
+                    if ($(this).find(failed_status).length == 0) {
+                        $(this).children('.panel-collapse.in').collapse('hide');
+                    }
+                });
+                $(failed_status).children('.panel-collapse:not(".in")').collapse('show');
+                $(failed_status).parents('.panel-collapse:not(".in")').collapse('show');
                 break;
         }
     });
