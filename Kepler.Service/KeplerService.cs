@@ -21,7 +21,8 @@ using Kepler.Service.Scheduler;
 namespace Kepler.Service
 {
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true, ConcurrencyMode = ConcurrencyMode.Multiple,
+        InstanceContextMode = InstanceContextMode.Single)]
     public class KeplerService : IKeplerService
     {
         // do not remove this field (used for build executor and data clean scheduler init)
@@ -481,7 +482,7 @@ namespace Kepler.Service
                 BranchRepository.Instance.Find(branch => branch.ProjectId == project.Id).Any())
             {
                 LogErrorMessage(ErrorMessage.ErorCode.ProjectDontHaveMainBranch,
-                    $"Project '{project.Name}' don't have main branch. Please, manually specify for project which branch should be considered as main.");
+                    $"Project '{project.Name}' doesn't have main branch. Please, manually specify for project, which branch should be considered as main.");
             }
         }
 
@@ -562,6 +563,8 @@ namespace Kepler.Service
 
         public void RegisterImageWorker(string name, string imageWorkerServiceUrl)
         {
+            imageWorkerServiceUrl = imageWorkerServiceUrl.Trim();
+
             var workerRepo = ImageWorkerRepository.Instance;
             if (!workerRepo.Find(imageWorkerServiceUrl).Any())
             {
@@ -577,7 +580,7 @@ namespace Kepler.Service
             else
             {
                 LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects,
-                    "Image worker with the same URL {imageWorkerServiceUrl} already exist");
+                    $"Image worker with the same URL {imageWorkerServiceUrl} already exist");
             }
         }
 
@@ -625,7 +628,7 @@ namespace Kepler.Service
         private string GetKeplerConfigProperty(string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName))
-                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, "Kepler config property name must be non emtpy");
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, "Kepler config property name must be not emtpy");
 
             var property = KeplerSystemConfigRepository.Instance.Find(propertyName);
             return property == null ? "" : property.Value;

@@ -21,7 +21,7 @@ namespace Kepler.ImageProcessor.Service.TaskManager
 
         static TaskGenerator()
         {
-            MaxCountWorkers = Environment.ProcessorCount; // TODO: license should be placed here
+            MaxCountWorkers = Convert.ToInt32(Environment.ProcessorCount/1.5); // TODO: license should be placed here
         }
 
         public static TaskGenerator GetTaskGenerator
