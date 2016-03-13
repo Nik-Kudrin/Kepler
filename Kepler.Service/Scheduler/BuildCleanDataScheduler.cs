@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Timers;
@@ -28,7 +29,19 @@ namespace Kepler.Service.Scheduler
 
             foreach (var builds in buildInBranches)
             {
-                builds.Skip(SchedulerInfo.HistoryItemsNumberToPreserve)
+                var buildsForRemoving = new List<Build>();
+
+                foreach (var build in builds)
+                {
+                    // if build has any IsLastPassed screenshot - we cannot delete this build, because it contains in BaseLine
+                    if (!ScreenShotRepository.Instance.FindByBuildId(build.Id)
+                        .Any(screenshot => screenshot.IsLastPassed))
+                    {
+                        buildsForRemoving.Add(build);
+                    }
+                }
+
+                buildsForRemoving.Skip(SchedulerInfo.HistoryItemsNumberToPreserve)
                     .Each(item => DataCleaner.DeleteObjectsTreeRecursively<Build>(item.Id, true));
             }
         }

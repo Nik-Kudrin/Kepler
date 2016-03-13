@@ -232,10 +232,10 @@ namespace Kepler.Service
 
             var schedulerProperty = GetKeplerConfigProperty(schedulerName);
 
-            // if scheduler is'n initialized (first time, when applications start)
             if (!string.IsNullOrEmpty(schedulerProperty))
                 return new RestSharpDataContractJsonDeserializer().Deserialize<DataSchedulerContract>(schedulerProperty);
 
+            // if scheduler is'n initialized (first time, when applications start)
             var scheduler = new DataSchedulerContract()
             {
                 Name = schedulerName,
@@ -254,7 +254,7 @@ namespace Kepler.Service
 
         public void UpdateCleanDataScheduler(DataSchedulerContract scheduler)
         {
-            if (WebOperationContext.Current.IncomingRequest.Method == "OPTIONS")
+            if (WebOperationContext.Current != null && WebOperationContext.Current.IncomingRequest.Method == "OPTIONS")
             {
                 WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.OK;
                 return;
