@@ -59,7 +59,7 @@ namespace Kepler.Service
                     screenShot.Status = ObjectStatus.Failed;
                     screenShot.ErrorMessage = imageComparisonInfo.ErrorMessage;
                 }
-                else // if Passedd
+                else // if Passed
                 {
                     if (imageComparisonInfo.LastPassedScreenShotId.HasValue)
                     {

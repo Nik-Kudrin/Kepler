@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Kepler.Common.DB;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
@@ -27,6 +28,13 @@ namespace Kepler.Common.Repository
         public IEnumerable<ScreenShot> GetBaselineScreenShots(long baselineId)
         {
             return Find(item => item.BaseLineId == baselineId && item.IsLastPassed);
+        }
+
+        public ScreenShot GetBaselineScreenShot(long baselineId, string screenShotName)
+        {
+            return Find(item => item.BaseLineId == baselineId &&
+                                item.IsLastPassed && item.Name == screenShotName)
+                .FirstOrDefault();
         }
     }
 }

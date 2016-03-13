@@ -247,10 +247,32 @@ namespace Kepler.Service.Core
             where TEntity : BuildObject
         {
             var item = objectRepository.Get(objectId);
-
             if (item == null) return;
 
             item.Status = newStatus;
+
+            // update baseline for screenshot
+            if (typeof (TEntity) == typeof (ScreenShot) && newStatus == ObjectStatus.Passed)
+            {
+                var screenShotRepo = ScreenShotRepository.Instance;
+                var actualScreenShot = screenShotRepo.Get(item.Id);
+
+                var oldScreenShot = screenShotRepo.GetBaselineScreenShot(actualScreenShot.BaseLineId,
+                    actualScreenShot.Name);
+
+                if (oldScreenShot != null)
+                {
+                    oldScreenShot.IsLastPassed = false;
+                    screenShotRepo.UpdateAndFlashChanges(oldScreenShot);
+                }
+
+                actualScreenShot.IsLastPassed = true;
+                actualScreenShot.Status = ObjectStatus.Passed;
+
+                screenShotRepo.UpdateAndFlashChanges(actualScreenShot);
+                return;
+            }
+
             objectRepository.UpdateAndFlashChanges(item);
         }
 
@@ -261,6 +283,19 @@ namespace Kepler.Service.Core
             where T : BaseRepository<TEntityChild>
             where TEntityChild : BuildObject
         {
+            if (typeof (TEntityChild) == typeof (ScreenShot) && newStatus == ObjectStatus.Passed)
+            {
+                var screenShotRepo = ScreenShotRepository.Instance;
+                var childScreenShots = screenShotRepo.Find(item => item.ParentObjId == parentObjId);
+
+                foreach (var screenShot in childScreenShots)
+                {
+                    SetParentObjStatus<ScreenShotRepository, ScreenShot>(screenShotRepo, screenShot.Id, newStatus);
+                }
+
+                return childObjectRepository.Find(item => item.ParentObjId == parentObjId).ToList();
+            }
+
             var childItems = childObjectRepository.Find(item => item.ParentObjId == parentObjId).ToList();
 
             childItems.ForEach(item => item.Status = newStatus);
