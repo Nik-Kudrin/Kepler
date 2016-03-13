@@ -21,7 +21,8 @@ using Kepler.Service.Scheduler;
 namespace Kepler.Service
 {
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-    [ServiceBehavior(IncludeExceptionDetailInFaults = true, InstanceContextMode = InstanceContextMode.PerCall)]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true, ConcurrencyMode = ConcurrencyMode.Multiple,
+        InstanceContextMode = InstanceContextMode.Single)]
     public class KeplerService : IKeplerService
     {
         // do not remove this field (used for build executor and data clean scheduler init)
