@@ -77,15 +77,14 @@
     //
     // Load branch info
     //
-    getBranch();
-    intervalGetBranch = setInterval(getBranch, 8000);
-
+   
     function getBranch() {
         if (getParameterByName('branchId') != '') {
             $.ajax({
                 url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
                 type: 'GET',
                 success: function (data) {
+                    console.log('data= ' + data);
                     $('.builds_table tbody tr').attr('remove_entity', '1');
                     $.each(data, function (key, value) {
                         var entityId = '';
@@ -130,6 +129,11 @@
             });
         }
         $('.builds_table tbody tr[remove_entity="1"]').remove();
+    }
+
+    getBranch();
+    if (!intervalGetBranch) {
+        intervalGetBranch = setInterval(getBranch, 10000);
     }
 
     //
