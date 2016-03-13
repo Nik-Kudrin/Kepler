@@ -168,7 +168,8 @@
 </div>
 
 <script>
-    var interval = null; // timer
+    var intervalgetAssemblies = null; // timer
+    var intervalgetBuild = null; // timer
 
     $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
         event.preventDefault();
@@ -179,7 +180,10 @@
     // Get Build
     //
     getBuild();
-    interval = setInterval(getBuild, 8000);
+    var timergetBuild = setTimeout(function timergetBuildTick() {
+        getBuild();
+        timergetBuild = setTimeout(timergetBuildTick, 10000);
+    }, 10000);
 
     function getBuild() {
         if (getParameterByName('id') != '') {
@@ -248,6 +252,12 @@
     //
     // Get Assembly
     //
+    getAssemblies();
+    var timergetAssemblies = setTimeout(function timergetAssembliesTick() {
+        getAssemblies();
+        timergetAssemblies = setTimeout(timergetAssembliesTick, 10000);
+    }, 10000);
+
     function getAssemblies() {
         if (getParameterByName('id') != '') {
             $.ajax({
@@ -371,11 +381,6 @@
                 }
             });
         }
-    }
-
-    getAssemblies();
-    if (!interval) {
-        interval = setInterval(getAssemblies, 10000);
     }
 
     //

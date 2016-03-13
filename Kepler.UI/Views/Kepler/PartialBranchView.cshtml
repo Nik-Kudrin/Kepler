@@ -71,12 +71,17 @@
 </table>
 
 <script type="text/javascript">
-    var intervalGetBranch = null;
-    var intervalUpdateProgressBar = null;
+    var timerGetBranch = null;
+    var timerUpdateProgressBar = null;
 
     //
     // Load branch info
     //
+    getBranch();
+    var timerGetBranch = setTimeout(function timerGetBranchTick() {
+        getBranch();
+        intervalGetBranch = setTimeout(timerGetBranchTick, 10000);
+    }, 10000);
    
     function getBranch() {
         if (getParameterByName('branchId') != '') {
@@ -129,11 +134,6 @@
             });
         }
         $('.builds_table tbody tr[remove_entity="1"]').remove();
-    }
-
-    getBranch();
-    if (!intervalGetBranch) {
-        intervalGetBranch = setInterval(getBranch, 10000);
     }
 
     //
