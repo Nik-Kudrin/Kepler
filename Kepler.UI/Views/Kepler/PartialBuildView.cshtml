@@ -248,15 +248,13 @@
     //
     // Get Assembly
     //
-    getAssemblies();
-    interval = setInterval(getAssemblies, 8000);
-
     function getAssemblies() {
         if (getParameterByName('id') != '') {
             $.ajax({
                 url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
                 type: 'GET',
                 success: function (data) {
+                    console.log('data= ' + data);
                     var entityName = '';
                     var entityStatus = '';
                     var entityId = '';
@@ -373,6 +371,11 @@
                 }
             });
         }
+    }
+
+    getAssemblies();
+    if (!interval) {
+        interval = setInterval(getAssemblies, 10000);
     }
 
     //
