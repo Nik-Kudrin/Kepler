@@ -80,7 +80,7 @@
     getBranch();
     var timerGetBranch = setTimeout(function timerGetBranchTick() {
         getBranch();
-        intervalGetBranch = setTimeout(timerGetBranchTick, 10000);
+        timerGetBranch = setTimeout(timerGetBranchTick, 10000);
     }, 10000);
    
     function getBranch() {
@@ -89,7 +89,6 @@
                 url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
                 type: 'GET',
                 success: function (data) {
-                    console.log('data= ' + data);
                     $('.builds_table tbody tr').attr('remove_entity', '1');
                     $.each(data, function (key, value) {
                         var entityId = '';
