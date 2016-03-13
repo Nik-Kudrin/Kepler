@@ -324,6 +324,10 @@ label.error {
     margin-bottom: 20px;
 }
 
+.screenShot-title {
+    margin-left: 5px;
+}
+
 .screenShot-base, .screenShot-dif, .screenShot-curr {
     height: 163px;
     background: url("../img/no_image_icon.png") no-repeat center;

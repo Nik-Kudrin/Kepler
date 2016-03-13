@@ -401,8 +401,8 @@
             $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('obj_id', entityId);
             $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('typeName', entity);
         } else if ($('#' + entity + '-' + entityId).length && entity == 'screenShot') {
-            if ($('#' + entity + '-' + entityId + ' > .screenShot-header span:last').attr('class') != 'status-' + entityStatus) {
-                $('#' + entity + '-' + entityId + ' > .screenShot-header span:last').removeClass().addClass('status-' + entityStatus);
+            if ($('#' + entity + '-' + entityId + ' > .screenShot-header span:first').attr('class') != 'status-' + entityStatus) {
+                $('#' + entity + '-' + entityId + ' > .screenShot-header span:first').removeClass().addClass('status-' + entityStatus);
             }
         } else if ($('#' + entity + '-' + entityId).length == 0 && entity == 'screenShot') {
             $('.screenShot-hidden').clone(true, true).appendTo('#panel-testCase-' + entityParentId + ' > .panel-body').attr('id', entity + '-' + entityId).attr('testscreenshot-status', entityStatus).removeClass('screenShot-hidden').show();
@@ -416,6 +416,7 @@
             $('.dropdown-btn-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId + ' .screenShot-header').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
             $('#' + entity + '-' + entityId + ' .screenShot-header .dropdown-menu a').attr('obj_id', entityId);
             $('#' + entity + '-' + entityId + ' .screenShot-header .dropdown-menu a').attr('typeName', 'screenShot');
+            $('#' + entity + '-' + entityId + ' .screenShot-header').append('<span class="screenShot-title">' + entityName + '</span>');
             $('#' + entity + '-' + entityId + ' .screenShot-base a').attr('href', BaseLineImagePathUrl);
             $('#' + entity + '-' + entityId + ' .screenShot-base img').attr('src', BaseLinePreviewPathUrl);
             if (DiffImagePathUrl.indexOf('img/') != -1) {
