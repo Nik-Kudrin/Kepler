@@ -15,11 +15,14 @@
                 <li class="build-info-failed">Tests failed: <span>45</span></li>
             </ul>
         </div>
-        <div id="build-info-block" class="col-md-5">
+        <div id="build-info-block" class="col-md-4">
             <h3>
                 <div class=""></div>
                 Build <span></span>&nbsp;
             </h3>
+        </div>
+        <div class="col-md-1 refresh_button">
+            <button type="button" class="btn btn-xs btn-primary"><i class="fa fa-refresh"></i></button>
         </div>
     </div>
 
@@ -175,21 +178,25 @@
         $(this).ekkoLightbox();
     });
 
+    $('.refresh_button button').click(function () {
+        getBuild();
+        getAssemblies();
+    });
+
     //
     // Get Build
     //
     getBuild();
-    timer = setTimeout(function timerTick() {
-        getBuild();
-        timer = setTimeout(timerTick, 20000);
-    }, 20000);
+    //timer = setTimeout(function timerTick() {
+    //    getBuild();
+    //    timer = setTimeout(timerTick, 20000);
+    //}, 20000);
 
     function getBuild() {
         if (getParameterByName('id') != '') {
             $.ajax({
                 url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
                 type: 'GET',
-                async: false,
                 success: function (data) {
                     $.each(data, function (key, value) {
                         if (value != null) {
@@ -253,17 +260,16 @@
     // Get Assembly
     //
     getAssemblies();
-    timer = setTimeout(function timerTick() {
-        getAssemblies();
-        timer = setTimeout(timerTick, 10000);
-    }, 10000);
+    //timer = setTimeout(function timerTick() {
+    //    getAssemblies();
+    //    timer = setTimeout(timerTick, 10000);
+    //}, 10000);
 
     function getAssemblies() {
         if (getParameterByName('id') != '') {
             $.ajax({
                 url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
                 type: 'GET',
-                async: false,
                 success: function (data) {
                     var entityName = '';
                     var entityStatus = '';
