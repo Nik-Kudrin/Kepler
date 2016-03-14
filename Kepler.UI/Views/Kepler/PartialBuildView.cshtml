@@ -168,8 +168,7 @@
 </div>
 
 <script>
-    var intervalgetAssemblies = null; // timer
-    var intervalgetBuild = null; // timer
+    var timer;
 
     $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
         event.preventDefault();
@@ -180,16 +179,17 @@
     // Get Build
     //
     getBuild();
-    var timergetBuild = setTimeout(function timergetBuildTick() {
+    timer = setTimeout(function timerTick() {
         getBuild();
-        timergetBuild = setTimeout(timergetBuildTick, 10000);
-    }, 10000);
+        timer = setTimeout(timerTick, 20000);
+    }, 20000);
 
     function getBuild() {
         if (getParameterByName('id') != '') {
             $.ajax({
                 url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
                 type: 'GET',
+                async: false,
                 success: function (data) {
                     $.each(data, function (key, value) {
                         if (value != null) {
@@ -253,9 +253,9 @@
     // Get Assembly
     //
     getAssemblies();
-    var timergetAssemblies = setTimeout(function timergetAssembliesTick() {
+    timer = setTimeout(function timerTick() {
         getAssemblies();
-        timergetAssemblies = setTimeout(timergetAssembliesTick, 10000);
+        timer = setTimeout(timerTick, 10000);
     }, 10000);
 
     function getAssemblies() {
@@ -263,6 +263,7 @@
             $.ajax({
                 url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
                 type: 'GET',
+                async: false,
                 success: function (data) {
                     var entityName = '';
                     var entityStatus = '';
