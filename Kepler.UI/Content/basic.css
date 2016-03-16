@@ -33,7 +33,7 @@ body {
 #page-inner {
     display: inline-block;
     width: 100%;
-    margin: 10px 20px 10px 0px;
+    margin: 75px 20px 10px 0px;
     padding: 10px;
     min-height: 1200px;
 }
@@ -62,7 +62,11 @@ body {
 /*==============================================
     MENU STYLES    
     =============================================*/
-
+nav.navbar.navbar-default.navbar-cls-top {
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
 
 .navbar-cls-top .navbar-brand {
     color: #fff;
@@ -188,6 +192,12 @@ body {
     border-bottom: none;
 }
 
+nav.navbar-default.navbar-side {
+    position: fixed;
+    top: 75px;
+    overflow-y: scroll;
+    height: 75%;
+}
 
 .navbar-default {
     border: 0px solid black;
