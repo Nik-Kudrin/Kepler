@@ -313,12 +313,18 @@ namespace Kepler.Service
 
         public TestCase GetTestCase(long id)
         {
-            return TestCaseRepository.Instance.GetCompleteObject(id);
+            var repo = new RepositoriesContainer();
+            return repo.CaseRepo.GetCompleteObject(repo, id);
         }
 
         public IEnumerable<TestCase> GetTestCases(long testSuiteId)
         {
-            return TestCaseRepository.Instance.GetObjectsTreeByParentId(testSuiteId);
+            var repo = new RepositoriesContainer();
+
+            var cases = repo.CaseRepo.FindByParentId(testSuiteId).ToList();
+            cases.ForEach(item => item.InitChildObjectsFromDb(repo));
+
+            return cases;
         }
 
         #endregion
@@ -327,12 +333,18 @@ namespace Kepler.Service
 
         public TestSuite GetTestSuite(long id)
         {
-            return TestSuiteRepository.Instance.GetCompleteObject(id);
+            var repo = new RepositoriesContainer();
+            return repo.SuiteRepo.GetCompleteObject(repo, id);
         }
 
         public IEnumerable<TestSuite> GetTestSuites(long assemblyId)
         {
-            return TestSuiteRepository.Instance.GetObjectsTreeByParentId(assemblyId);
+            var repo = new RepositoriesContainer();
+
+            var suites = repo.SuiteRepo.FindByParentId(assemblyId).ToList();
+            suites.ForEach(item => item.InitChildObjectsFromDb(repo));
+
+            return suites;
         }
 
         #endregion
@@ -342,11 +354,7 @@ namespace Kepler.Service
         public TestAssembly GetTestAssembly(long id)
         {
             var repo = new RepositoriesContainer();
-
-            var assembly = repo.AssemblyRepo.Get(id); //TestAssemblyRepository.Instance.//GetCompleteObject(id);
-            assembly.InitChildObjectsFromDb(new RepositoriesContainer());
-
-            return assembly;
+            return repo.AssemblyRepo.GetCompleteObject(repo, id);
         }
 
 
@@ -357,8 +365,6 @@ namespace Kepler.Service
             var assemblies = repo.AssemblyRepo.FindByBuildId(buildId).ToList();
             assemblies.ForEach(item => item.InitChildObjectsFromDb(repo));
 
-
-            /*.GetObjectsTreeByParentId(buildId);*/
             return assemblies;
         }
 

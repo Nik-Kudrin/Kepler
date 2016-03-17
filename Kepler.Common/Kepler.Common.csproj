@@ -88,6 +88,7 @@
     <Compile Include="CommunicationContracts\ImageComparisonContract.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\Common\IChildInit.cs" />
+    <Compile Include="Models\Common\ICompleteObject.cs" />
     <Compile Include="Models\KeplerSystemConfig.cs" />
     <Compile Include="Repository\ErrorMessageRepository.cs" />
     <Compile Include="Repository\BaseRepository.cs" />

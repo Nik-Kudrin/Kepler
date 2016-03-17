@@ -2,7 +2,6 @@
 using System.Data.Entity;
 using System.Linq;
 using Kepler.Common.DB;
-using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
@@ -15,24 +14,8 @@ namespace Kepler.Common.Repository
         {
         }
 
-        public TBuildObjEntity GetCompleteObject(long id)
-        {
-            var entity = Get(id);
-            /*(entity as IChildInit).InitChildObjectsFromDb();*/
-           // entity.InitChildObjectsFromDb<TBuildObjEntity>(new RepositoriesContainer());
 
-            return entity;
-        }
-
-        public IEnumerable<TBuildObjEntity> GetObjectsTreeByParentId(long parentObjId)
-        {
-            var items = Find(parentObjId).ToList();
-          //  items.ForEach(item => item.InitChildObjectsFromDb<TBuildObjEntity>(new RepositoriesContainer()));
-
-            return items;
-        }
-
-        public virtual IEnumerable<TBuildObjEntity> Find(long parentObjId)
+        public virtual IEnumerable<TBuildObjEntity> FindByParentId(long parentObjId)
         {
             return DbSet.Where(x => x.ParentObjId == parentObjId);
         }

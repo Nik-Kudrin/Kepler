@@ -30,7 +30,7 @@ namespace Kepler.Common.Models
 
         /*public void InitChildObjectsFromDb()
         {
-            Builds = BuildRepository.Instance.Find(build => build.BranchId == Id)
+            Builds = BuildRepository.Instance.FindByParentId(build => build.BranchId == Id)
                 .ToDictionary(item => item.Id, item => item);
         }*/
 
