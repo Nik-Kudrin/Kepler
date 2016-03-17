@@ -99,6 +99,7 @@
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\BranchRepository.cs" />
     <Compile Include="Repository\ProjectRepository.cs" />
+    <Compile Include="Repository\RepositoriesContainer.cs" />
     <Compile Include="Repository\ScreenShotRepository.cs" />
     <Compile Include="Repository\TestAssemblyRepository.cs" />
     <Compile Include="Repository\TestCaseRepository.cs" />

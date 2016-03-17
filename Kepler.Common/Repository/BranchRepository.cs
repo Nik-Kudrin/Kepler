@@ -15,7 +15,7 @@ namespace Kepler.Common.Repository
         public Branch GetCompleteObject(long id)
         {
             var entity = Get(id);
-            (entity as IChildInit).InitChildObjectsFromDb();
+            (entity as IChildInit).InitChildObjectsFromDb<BuildRepository, Build>(BuildRepository.Instance);
 
             return entity;
         }

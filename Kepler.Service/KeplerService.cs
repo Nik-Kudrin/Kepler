@@ -341,13 +341,25 @@ namespace Kepler.Service
 
         public TestAssembly GetTestAssembly(long id)
         {
-            return TestAssemblyRepository.Instance.GetCompleteObject(id);
+            var repo = new RepositoriesContainer();
+
+            var assembly = repo.AssemblyRepo.Get(id); //TestAssemblyRepository.Instance.//GetCompleteObject(id);
+            assembly.InitChildObjectsFromDb(new RepositoriesContainer());
+
+            return assembly;
         }
 
 
         public IEnumerable<TestAssembly> GetTestAssemblies(long buildId)
         {
-            return TestAssemblyRepository.Instance.GetObjectsTreeByParentId(buildId);
+            var repo = new RepositoriesContainer();
+
+            var assemblies = repo.AssemblyRepo.FindByBuildId(buildId).ToList();
+            assemblies.ForEach(item => item.InitChildObjectsFromDb(repo));
+
+
+            /*.GetObjectsTreeByParentId(buildId);*/
+            return assemblies;
         }
 
         #endregion
@@ -538,7 +550,7 @@ namespace Kepler.Service
         public IEnumerable<Branch> GetBranches(long projectId)
         {
             var branches = BranchRepository.Instance.Find(branch => branch.ProjectId == projectId);
-            branches.Each(branch => branch.InitChildObjectsFromDb());
+            branches.Each(branch => branch.InitChildObjectsFromDb<BuildRepository, Build>(BuildRepository.Instance));
 
             return branches;
         }

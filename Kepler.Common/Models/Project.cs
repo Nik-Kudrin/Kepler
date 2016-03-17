@@ -23,5 +23,12 @@ namespace Kepler.Common.Models
             Branches = BranchRepository.Instance.Find(branch => branch.ProjectId == Id)
                 .ToDictionary(item => item.Id, item => item);
         }
+
+
+        public void InitChildObjectsFromDb<T, TEntityChild>(T childObjectRepository)
+            where T : BaseRepository<TEntityChild> where TEntityChild : BuildObject
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
