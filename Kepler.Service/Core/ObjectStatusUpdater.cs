@@ -312,12 +312,14 @@ namespace Kepler.Service.Core
                 case "build":
                     if (newStatus == ObjectStatus.InQueue)
                     {
-                        var build = BuildRepository.Instance.Get(objId);
+                        var buildRepo = BuildRepository.Instance;
+
+                        var build = buildRepo.Get(objId);
                         build.Duration = null;
                         build.StartDate = null;
                         build.StopDate = null;
                         build.PredictedDuration = null;
-                        BuildRepository.Instance.UpdateAndFlashChanges(build);
+                        buildRepo.UpdateAndFlashChanges(build);
                     }
 
                     return RecursiveSetObjectsStatus<Build>(objId, newStatus);

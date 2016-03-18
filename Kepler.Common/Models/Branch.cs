@@ -27,12 +27,7 @@ namespace Kepler.Common.Models
         {
             Builds = new Dictionary<long, Build>();
         }
-
-        /*public void InitChildObjectsFromDb()
-        {
-            Builds = BuildRepository.Instance.FindByParentId(build => build.BranchId == Id)
-                .ToDictionary(item => item.Id, item => item);
-        }*/
+        
 
         public void InitChildObjectsFromDb<T, TEntityChild>(T childObjectRepository)
             where T : BaseRepository<TEntityChild> where TEntityChild : BuildObject

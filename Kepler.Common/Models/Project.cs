@@ -6,7 +6,7 @@ using Kepler.Common.Repository;
 
 namespace Kepler.Common.Models
 {
-    public class Project : InfoObject, IChildInit
+    public class Project : InfoObject
     {
         public Dictionary<long, Branch> Branches { get; set; }
 
@@ -22,13 +22,6 @@ namespace Kepler.Common.Models
         {
             Branches = BranchRepository.Instance.Find(branch => branch.ProjectId == Id)
                 .ToDictionary(item => item.Id, item => item);
-        }
-
-
-        public void InitChildObjectsFromDb<T, TEntityChild>(T childObjectRepository)
-            where T : BaseRepository<TEntityChild> where TEntityChild : BuildObject
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

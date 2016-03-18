@@ -39,7 +39,9 @@ namespace Kepler.Service
         {
             foreach (var imageComparisonInfo in imageComparisonContract.ImageComparisonList)
             {
-                var screenShot = ScreenShotRepository.Instance.Get(imageComparisonInfo.ScreenShotId);
+                var screenShotRepo = ScreenShotRepository.Instance;
+
+                var screenShot = screenShotRepo.Get(imageComparisonInfo.ScreenShotId);
 
                 // if current screenshot status = Stopped, then just update diff image path field
                 if (screenShot.Status == ObjectStatus.Stopped)
@@ -49,7 +51,7 @@ namespace Kepler.Service
 
                     // Generate Url paths
                     UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
-                    ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
+                    screenShotRepo.UpdateAndFlashChanges(screenShot);
                     continue;
                 }
 
@@ -64,9 +66,9 @@ namespace Kepler.Service
                     if (imageComparisonInfo.LastPassedScreenShotId.HasValue)
                     {
                         var oldPassedScreenShot =
-                            ScreenShotRepository.Instance.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
+                            screenShotRepo.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
                         oldPassedScreenShot.IsLastPassed = false;
-                        ScreenShotRepository.Instance.UpdateAndFlashChanges(oldPassedScreenShot);
+                        screenShotRepo.UpdateAndFlashChanges(oldPassedScreenShot);
                     }
 
                     screenShot.Status = ObjectStatus.Passed;
@@ -82,7 +84,7 @@ namespace Kepler.Service
                 // Generate Url paths
                 UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
 
-                ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
+                screenShotRepo.UpdateAndFlashChanges(screenShot);
             }
         }
 
@@ -146,9 +148,11 @@ namespace Kepler.Service
                                 break;
                         }
 
-                        var build = BuildRepository.Instance.Get(buildId.Value);
+                        var buildRepo = BuildRepository.Instance;
+
+                        var build = buildRepo.Get(buildId.Value);
                         build.Status = ObjectStatus.InQueue;
-                        BuildRepository.Instance.UpdateAndFlashChanges(build);
+                        buildRepo.UpdateAndFlashChanges(build);
                     }
                     catch (Exception ex)
                     {
@@ -405,7 +409,9 @@ namespace Kepler.Service
 
         public void UpdateProject(long id, string newName)
         {
-            var project = ProjectRepository.Instance.Get(id);
+            var projectRepo = ProjectRepository.Instance;
+
+            var project = projectRepo.Get(id);
 
             if (project == null)
             {
@@ -414,14 +420,14 @@ namespace Kepler.Service
 
             if (project.Name != newName)
             {
-                if (ProjectRepository.Instance.Find(newName).Any())
+                if (projectRepo.Find(newName).Any())
                 {
                     LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Project with name {newName} already exist");
                 }
             }
 
             project.Name = newName;
-            ProjectRepository.Instance.UpdateAndFlashChanges(project);
+            projectRepo.UpdateAndFlashChanges(project);
         }
 
         public void DeleteProject(long id)
@@ -728,16 +734,17 @@ namespace Kepler.Service
 
         public IEnumerable<ErrorMessage> GetErrorsSinceLastViewed()
         {
-            var lastViewedError = ErrorMessageRepository.Instance.Find(item => item.IsLastViewed).FirstOrDefault();
+            var errorRepo = ErrorMessageRepository.Instance;
+
+            var lastViewedError = errorRepo.Find(item => item.IsLastViewed).FirstOrDefault();
 
             if (lastViewedError == null)
             {
-                return ErrorMessageRepository.Instance.FindAll().OrderByDescending(item => item.Id);
+                return errorRepo.FindAll().OrderByDescending(item => item.Id);
             }
 
-            return
-                ErrorMessageRepository.Instance.Find(item => item.Id > lastViewedError.Id)
-                    .OrderByDescending(item => item.Id);
+            return errorRepo.Find(item => item.Id > lastViewedError.Id)
+                .OrderByDescending(item => item.Id);
         }
 
         public void SetLastViewedError(long errorId)
