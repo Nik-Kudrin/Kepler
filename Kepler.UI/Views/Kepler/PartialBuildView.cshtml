@@ -125,19 +125,19 @@
     <div class="col-md-12">
         <div class="col-md-4 screenShot-base">
             <span>Baseline</span>
-            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Base line" href="">
+            <a data-lightbox="multiimages" data-title="Base line" href="">
                 <img src="">
             </a>
         </div>
         <div class="col-md-4 screenShot-dif">
             <span>Difference</span>
-            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Difference" href="">
+            <a data-lightbox="multiimages" data-title="Difference" href="">
                 <img src="">
             </a>
         </div>
         <div class="col-md-4 screenShot-curr">
             <span>Original</span>
-            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Original" href="">
+            <a data-lightbox="multiimages" data-title="Original" href="">
                 <img src="">
             </a>
         </div>
@@ -171,12 +171,12 @@
 </div>
 
 <script>
-    var timer;
 
-    $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
-        event.preventDefault();
-        $(this).ekkoLightbox();
-    });
+    lightbox.option({
+        'fitImagesInViewport': false
+    })
+
+    var timer;
 
     $('.refresh_button button').click(function () {
         getBuild();
@@ -422,7 +422,7 @@
             $('.screenShot-hidden').clone(true, true).appendTo('#panel-testCase-' + entityParentId + ' > .panel-body').attr('id', entity + '-' + entityId).attr('testscreenshot-status', entityStatus).removeClass('screenShot-hidden').show();
             $('.screenShot-splitter-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId).removeClass('screenShot-splitter-hidden').show();
             $('#' + entity + '-' + entityId + ' img').attr('title', entityName);
-            $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-gallery', entityName);
+            $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-lightbox', entityName);
             $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-title', function (i, val) {
                 return val + '&nbsp;' + entityName;
             });

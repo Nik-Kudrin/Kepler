@@ -183,9 +183,9 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\custom.css" />
-    <Content Include="Content\ekko-lightbox.css" />
-    <Content Include="Content\ekko-lightbox.min.css" />
     <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\lightbox.css" />
+    <Content Include="Content\lightbox.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -211,8 +211,6 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\custom.js" />
-    <Content Include="Scripts\ekko-lightbox.js" />
-    <Content Include="Scripts\ekko-lightbox.min.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
@@ -222,6 +220,10 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\lightbox-plus-jquery.js" />
+    <Content Include="Scripts\lightbox-plus-jquery.min.js" />
+    <Content Include="Scripts\lightbox.js" />
+    <Content Include="Scripts\lightbox.min.js" />
     <Content Include="Scripts\modal_win.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
@@ -260,6 +262,8 @@
     <Content Include="Views\Admin\ServiceUrlView.cshtml" />
     <Content Include="Views\Kepler\ErrorLogView.cshtml" />
     <Content Include="Views\Admin\SchedulerView.cshtml" />
+    <Content Include="Scripts\lightbox-plus-jquery.min.map" />
+    <Content Include="Scripts\lightbox.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
