@@ -73,72 +73,72 @@
 <script type="text/javascript">
     var timerGetBranch = null;
     var timerUpdateProgressBar = null;
+    var intervalBranch;
 
     //
     // Load branch info
     //
 
-    var xhr;
-
     var getBranch = function () {
-        if (xhr && xhr.readyState != 4) {
-            xhr.abort();
-        }
-        if (getParameterByName('branchId') != '') {
-            xhr = $.ajax({
-                url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
-                type: 'GET',
-                success: function (data) {
-                    $('.builds_table tbody tr').attr('remove_entity', '1');
-                    $.each(data, function (key, value) {
-                        var entityId = '';
-                        var entityStatus = '';
-                        var entityPredictedDuration = '';
-                        var entityStartTime = '';
+        clearInterval(intervalBranch);
+        return $.Deferred(function () {
+            var selfBranch = this;
+            if (getParameterByName('branchId') != '') {
+                xhr = $.ajax({
+                    url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
+                    type: 'GET',
+                    success: function (data) {
+                        $('.builds_table tbody tr').attr('remove_entity', '1');
+                        $.each(data, function (key, value) {
+                            var entityId = '';
+                            var entityStatus = '';
+                            var entityPredictedDuration = '';
+                            var entityStartTime = '';
 
-                        if (key == 'Name') {
-                            $('.panel-heading h3').html(value);
-                        } else if (key != 'Builds') {
-                            $('.panel-heading h3').attr(key, value);
-                        } else if (key == 'Builds') {
-                            $.each(value, function (key, value) {
+                            if (key == 'Name') {
+                                $('.panel-heading h3').html(value);
+                            } else if (key != 'Builds') {
+                                $('.panel-heading h3').attr(key, value);
+                            } else if (key == 'Builds') {
                                 $.each(value, function (key, value) {
-                                    if (key == 'Value') {
-                                        $.each(value, function (key, value) {
-                                            if (key == 'Id') {
-                                                entityId = value;
-                                            } else if (key == 'Status') {
-                                                entityStatus = value;
-                                            } else if (key == 'PredictedDuration') {
-                                                if (value == null) {
-                                                    entityPredictedDuration = 0;
-                                                } else {
-                                                    entityPredictedDuration = value;
+                                    $.each(value, function (key, value) {
+                                        if (key == 'Value') {
+                                            $.each(value, function (key, value) {
+                                                if (key == 'Id') {
+                                                    entityId = value;
+                                                } else if (key == 'Status') {
+                                                    entityStatus = value;
+                                                } else if (key == 'PredictedDuration') {
+                                                    if (value == null) {
+                                                        entityPredictedDuration = 0;
+                                                    } else {
+                                                        entityPredictedDuration = value;
+                                                    }
+                                                } else if (key == 'StartDate') {
+                                                    if (value == null) {
+                                                        entityStartTime = 0;
+                                                    } else {
+                                                        entityStartTime = value;
+                                                    }
                                                 }
-                                            } else if (key == 'StartDate') {
-                                                if (value == null) {
-                                                    entityStartTime = 0;
-                                                } else {
-                                                    entityStartTime = value;
-                                                }
-                                            }
-                                        });
-                                        entityBuilt(entity = 'build', entityId, entityStatus, entityPredictedDuration, entityStartTime);
-                                    }
+                                            });
+                                            entityBuilt(entity = 'build', entityId, entityStatus, entityPredictedDuration, entityStartTime);
+                                        }
+                                    });
                                 });
-                            });
-                        }
-                    });
-                }
-            });
-        }
+                            }
+                        });
+                        selfBranch.resolve();
+                        intervalBranch = setInterval(getBranch, 10000);
+                    }
+                });
+            }
+        });
         $('.builds_table tbody tr[remove_entity="1"]').remove();
     };
 
     getBranch();
 
-    var intervalBranch = setInterval(getBranch, 10000);
-   
     //
     // Builder for build
     //
