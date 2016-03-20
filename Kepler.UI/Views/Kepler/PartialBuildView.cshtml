@@ -171,12 +171,9 @@
 </div>
 
 <script>
-
     lightbox.option({
         'fitImagesInViewport': false
     })
-
-    var timer;
 
     $('.refresh_button button').click(function () {
         getBuild();
@@ -186,15 +183,14 @@
     //
     // Get Build
     //
-    getBuild();
-    //timer = setTimeout(function timerTick() {
-    //    getBuild();
-    //    timer = setTimeout(timerTick, 20000);
-    //}, 20000);
+    var xhr;
 
-    function getBuild() {
+    var getBuild = function () {
+        //if (xhr && xhr.readyState != 4) {
+        //    xhr.abort();
+        //}
         if (getParameterByName('id') != '') {
-            $.ajax({
+            xhr = $.ajax({
                 url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
                 type: 'GET',
                 success: function (data) {
@@ -211,7 +207,11 @@
                 }
             });
         }
-    }
+    };
+
+    getBuild();
+
+    //var intervalBuild = setInterval(getBuild, 2000);
 
     //
     // Update Build info (parse and insert into html)
@@ -259,15 +259,13 @@
     //
     // Get Assembly
     //
-    getAssemblies();
-    //timer = setTimeout(function timerTick() {
-    //    getAssemblies();
-    //    timer = setTimeout(timerTick, 10000);
-    //}, 10000);
 
-    function getAssemblies() {
+    var getAssemblies = function () {
+        //if (xhr && xhr.readyState != 4) {
+        //    xhr.abort();
+        //}
         if (getParameterByName('id') != '') {
-            $.ajax({
+            xhr = $.ajax({
                 url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
                 type: 'GET',
                 success: function (data) {
@@ -387,7 +385,11 @@
                 }
             });
         }
-    }
+    };
+
+    getAssemblies();
+
+    //var intervalAssemblies = setInterval(getAssemblies, 1000);
 
     //
     // Builder for testAssembly | testSuite | testCase | screenShot
