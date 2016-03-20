@@ -171,11 +171,15 @@
 </div>
 
 <script>
-    xhr.abort();
+    var xhr;
+
+    if (xhr) {
+        xhr.abort();
+    }
 
     lightbox.option({
         'fitImagesInViewport': false
-    })
+    });
 
     $('.refresh_button button').click(function () {
         getBuild();

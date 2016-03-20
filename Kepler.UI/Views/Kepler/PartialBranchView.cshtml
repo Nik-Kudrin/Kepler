@@ -71,7 +71,11 @@
 </table>
 
 <script type="text/javascript">
-    xhr.abort();
+    var xhr;
+
+    if (xhr) {
+        xhr.abort();
+    }
 
     var timerGetBranch = null;
     var timerUpdateProgressBar = null;
