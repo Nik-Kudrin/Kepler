@@ -387,6 +387,13 @@ namespace Kepler.Service
             var projects = projectRepo.FindAll();
             projects.Each(project => projectRepo.GetCompleteObject(project.Id));
 
+            foreach (var project in projects)
+            {
+                project.Branches = project.Branches
+                    .OrderBy(branch => branch.Value.Name, StringComparer.InvariantCultureIgnoreCase)
+                    .ToDictionary(item => item.Key, item => item.Value);
+            }
+
             return projects;
         }
 
@@ -564,7 +571,7 @@ namespace Kepler.Service
             var branches = BranchRepository.Instance.Find(branch => branch.ProjectId == projectId);
             branches.Each(branch => branch.InitChildObjectsFromDb<BuildRepository, Build>(BuildRepository.Instance));
 
-            return branches;
+            return branches.OrderBy(item => item.Name, StringComparer.InvariantCultureIgnoreCase);
         }
 
         public void DeleteBranch(long id)
