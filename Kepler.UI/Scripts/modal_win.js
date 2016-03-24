@@ -115,6 +115,7 @@ $("#modal_form").submit(function (e) {
         },
     },
     submitHandler: function (form) {
+        $('.modal_progress_bar_tint, .progress.progress_modal_dialog').show();
         modalAjaxCall();
         return false;  //This doesn't prevent the form from submitting.
     }

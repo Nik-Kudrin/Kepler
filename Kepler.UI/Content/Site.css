@@ -121,12 +121,27 @@ label.error {
 /*SCROLLBAR END*/
 
 /*PROGRESSBAR START*/
-#page-inner .progress.build_page {
+#page-inner .progress.progress_build_page, .progress.progress_modal_dialog {
     position: absolute;
     top: 50%;
     left: 50%;
     width: 10%;
-    display: block;
+}
+
+.progress.progress_modal_dialog {
+    left: auto;
+    width: 20%;
+    margin: 0px 40%;
+}
+
+.modal_progress_bar_tint {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    background: rgba(0,0,0,0.35);
 }
 /*PROGRESSBAR END*/
 

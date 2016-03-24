@@ -281,9 +281,11 @@
                 $('#crud-modal button.close').click();
                 getBranch();
                 obj_act_with_param = "";
+                $('.modal_progress_bar_tint, .progress.progress_modal_dialog').hide();
             },
             error: function (xhr) {
                 $('#modal_form .alert-warning').show().text(xhr.responseText);
+                $('.modal_progress_bar_tint, .progress.progress_modal_dialog').hide();
             }
         });
     }
