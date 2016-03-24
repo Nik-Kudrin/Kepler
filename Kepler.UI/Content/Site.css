@@ -120,6 +120,16 @@ label.error {
 
 /*SCROLLBAR END*/
 
+/*PROGRESSBAR START*/
+#page-inner .progress.build_page {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10%;
+    display: block;
+}
+/*PROGRESSBAR END*/
+
 /*STATUS START*/
 
 /*
