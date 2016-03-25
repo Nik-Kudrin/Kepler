@@ -387,6 +387,8 @@ namespace Kepler.Service
             var projects = projectRepo.FindAll();
             projects.Each(project => projectRepo.GetCompleteObject(project.Id));
 
+            projects = projects.OrderBy(item => item.Name, StringComparer.InvariantCultureIgnoreCase);
+
             foreach (var project in projects)
             {
                 project.Branches = project.Branches
