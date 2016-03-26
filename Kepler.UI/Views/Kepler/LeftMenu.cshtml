@@ -173,11 +173,9 @@
                 $('#modal_form .alert-warning').hide();
                 $('#crud-modal button.close').click();
                 loadLeftMenu();
-                $('.modal_progress_bar_tint, .progress.progress_modal_dialog').hide();
             },
             error: function (xhr) {
                 $('#modal_form .alert-warning').show().text(xhr.responseText);
-                $('.modal_progress_bar_tint, .progress.progress_modal_dialog').hide();
             }
         });
     }

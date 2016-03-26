@@ -4,11 +4,6 @@
     });
 </script>
 
-<div class="progress progress_build_page">
-    <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-    </div>
-</div>
-
 <div class="col-md-12">
     <div class="col-md-8">
         <div class="col-md-1">
@@ -176,10 +171,12 @@
 </div>
 
 <script>
+    $('body').scrollTop(0);
+
     var xhr;
 
-    if (xhr) {
-        xhr.abort();
+    if (xhr) { 
+        xhr.abort(); // Disable requests from previous view
     }
 
     lightbox.option({
@@ -294,8 +291,6 @@
                         var ErrorMessage = '';
                         var Url = '';
 
-                        $('.progress.progress_build_page').hide();
-
                         $.each(data, function (key, value) {
                             $.each(value, function (key, value) {
                                 if (key != "TestSuites") {
@@ -405,7 +400,6 @@
     };
 
     getAssemblies();
-    $('.progress.progress_build_page').show();
 
     //
     // Builder for testAssembly | testSuite | testCase | screenShot
@@ -564,11 +558,9 @@
                 getBuild();
                 getAssemblies();
                 obj_act_with_param = "";
-                $('.modal_progress_bar_tint, .progress.progress_modal_dialog').hide();
             },
             error: function (xhr) {
                 $('#modal_form .alert-warning').show().text(xhr.responseText);
-                $('.modal_progress_bar_tint, .progress.progress_modal_dialog').hide();
             }
         });
     }

@@ -121,11 +121,12 @@ label.error {
 /*SCROLLBAR END*/
 
 /*PROGRESSBAR START*/
-#page-inner .progress.progress_build_page, .progress.progress_modal_dialog {
+#page-inner .progress.progress_content, .progress.progress_modal_dialog {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 10%;
+    width: 25%;
+    z-index: 10;
 }
 
 .progress.progress_modal_dialog {
@@ -142,6 +143,41 @@ label.error {
     top: 0px;
     left: 0px;
     background: rgba(0,0,0,0.35);
+}
+
+.loading_label {
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 50%;
+    height: 25px;
+    width: 120px;
+    z-index: 10000;
+    background: #F3F3F3;
+    padding: 0px 20px;
+    -webkit-border-bottom-right-radius: 20px;
+    -webkit-border-bottom-left-radius: 20px;
+    -moz-border-radius-bottomright: 20px;
+    -moz-border-radius-bottomleft: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+@-webkit-keyframes rotate {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.loading_label i {
+    -webkit-animation-name: rotate;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-transition-timing-function: linear;
 }
 /*PROGRESSBAR END*/
 
