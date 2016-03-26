@@ -158,13 +158,27 @@
         //
         // Ajax spinner
         //
-        $.ajaxSetup({
-            beforeSend: function () {
-                $('.loading_label').fadeIn(1000);
-            },
-            complete: function () {
-                $('.loading_label').fadeOut(1000);
-            }
+        //$.ajaxSetup({
+        //    beforeSend: function () {
+        //        $('.loading_label').fadeIn(1000);
+        //    },
+        //    complete: function () {
+        //        $('.loading_label').fadeOut(1000);
+        //    }
+        //});
+
+        //$(document).ajaxSend(function (event, request, settings) {
+        //    $.active == '1' ? $('.loading_label').fadeIn(1000) : '';
+        //});
+
+        //$(document).ajaxComplete(function (event, request, settings) {
+        //    $.active == '1' ? $('.loading_label').hide() : '';
+        //});
+
+        $(document).ajaxStart(function () {
+            $('.loading_label').fadeIn(1000);
+        }).ajaxStop(function () {
+            $('.loading_label').fadeOut(1000);
         });
 
         //
