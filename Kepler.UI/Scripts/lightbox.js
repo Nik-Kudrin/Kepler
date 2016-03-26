@@ -202,6 +202,10 @@
     }
 
     this.changeImage(imageNumber);
+
+    $('.lightbox').scrollTop(0);
+    console.log('das');
+
   };
 
   // Hide most UI elements in preparation for the animated resizing of the lightbox.
