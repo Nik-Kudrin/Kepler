@@ -87,6 +87,20 @@
 
     <script type="text/javascript">
         //
+        // Ajax spinner
+        //
+        $('.loading_label').fadeIn(1000);
+
+        $(document).on({
+            ajaxStart: function () {
+                $('.loading_label').fadeIn(1000);
+            },
+            ajaxStop: function () {
+                $('.loading_label').fadeOut(1000);
+            }
+        });
+
+        //
         // Get parameter value from url
         //
         function getParameterByName(name) {
@@ -155,36 +169,10 @@
             });
         }
 
-        //
-        // Ajax spinner
-        //
-        //$.ajaxSetup({
-        //    beforeSend: function () {
-        //        $('.loading_label').fadeIn(1000);
-        //    },
-        //    complete: function () {
-        //        $('.loading_label').fadeOut(1000);
-        //    }
-        //});
-
-        //$(document).ajaxSend(function (event, request, settings) {
-        //    $.active == '1' ? $('.loading_label').fadeIn(1000) : '';
-        //});
-
-        //$(document).ajaxComplete(function (event, request, settings) {
-        //    $.active == '1' ? $('.loading_label').hide() : '';
-        //});
-
-        $(document).ajaxStart(function () {
-            $('.loading_label').fadeIn(1000);
-        }).ajaxStop(function () {
-            $('.loading_label').fadeOut(1000);
-        });
-
-        //
-        // Run Ajax loader on document ready, if url path != null
-        //
         $(document).ready(function () {
+            //
+            // Run Ajax loader on document ready, if url path != null
+            //
             if (url_parse() != null) {
                 ajax_loader();
             }
