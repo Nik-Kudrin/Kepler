@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using Kepler.Common.Models.Common;
 
@@ -23,6 +24,7 @@ namespace Kepler.Common.Models
         [DataType(DataType.Time)]
         public TimeSpan? PredictedDuration { get; set; }
 
+        [Index]
         [DataMember]
         public long? BranchId { get; set; }
 

@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="CommunicationContracts\DataSchedulerContract.cs" />
     <Compile Include="CommunicationContracts\ImageComparisonContract.cs" />
+    <Compile Include="Migrations\CreateIndex.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\Common\IChildInit.cs" />
     <Compile Include="Models\Common\ICompleteObject.cs" />

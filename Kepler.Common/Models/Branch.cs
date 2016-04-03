@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
 using Kepler.Common.Models.Common;
@@ -15,6 +16,7 @@ namespace Kepler.Common.Models
         [DataMember]
         public long? LatestBuildId { get; set; }
 
+        [Index]
         [DataMember]
         public long? ProjectId { get; set; }
 
