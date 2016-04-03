@@ -19,14 +19,6 @@ namespace Kepler.Tests.Test
         }
 
         [Test]
-        public void GetScreenShot()
-        {
-            var repo = ScreenShotRepository.Instance;
-
-            var screenShot = repo.Find(item => item.BuildId == 40);
-        }
-
-        [Test]
         public void CreateTestCase()
         {
             var repo = TestCaseRepository.Instance;
