@@ -39,7 +39,7 @@
 </li>
 
 <li class="main-menu-li-2-lvl-clean" style="display: none;">
-    <a class="left-nav-link main-menu-item" href="" linkUrl="" linkBranch="">No branches</a>
+    <a class="left-nav-link main-menu-item" href="javascript:;" linkUrl="" linkBranch="">No branches</a>
 </li>
 
 <script type="text/javascript">
@@ -50,6 +50,7 @@
 
     function loadLeftMenu() {
         $('#main-menu').empty();
+        $('#main-menu').removeData("plugin_metisMenu");
         $.ajax({
             url: KeplerServiceUrl + 'GetProjects',
             type: 'GET',
