@@ -170,7 +170,9 @@ nav.navbar.navbar-default.navbar-cls-top {
         outline: 0;
     }
 
-
+.sidebar-collapse .nav > li > .main-menu-item-focus {
+    background: #0A0A0A;
+}
 
 .nav-second-level > li:last-child > a:after,
 .nav-third-level > li:last-child > a:after {
@@ -194,9 +196,9 @@ nav.navbar.navbar-default.navbar-cls-top {
 
 nav.navbar-default.navbar-side {
     position: fixed;
-    top: 75px;
+    margin-top: 75px;
     overflow-y: scroll;
-    height: 75%;
+    height: 100%;
 }
 
 .navbar-default {
@@ -226,10 +228,11 @@ nav.navbar-default.navbar-side {
     FOOTER  STYLES    
     =============================================*/
 #footer-sec {
-    background-color:#000;
-    padding:20px 50px;
-    color:#fff;
-    font-size:12px;
+    background-color: #000;
+    padding: 20px 50px;
+    color: #fff;
+    font-size: 12px;
+    margin-left: 260px;
 }
 
     #footer-sec a {
