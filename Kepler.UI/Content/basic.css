@@ -197,6 +197,7 @@ nav.navbar.navbar-default.navbar-cls-top {
 nav.navbar-default.navbar-side {
     position: fixed;
     margin-top: 75px;
+    padding-bottom: 75px;
     overflow-y: scroll;
     height: 100%;
 }
