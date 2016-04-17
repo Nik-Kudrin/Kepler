@@ -17,6 +17,7 @@
 body {
     font-family: 'Open Sans', sans-serif;
     line-height:25px;
+    background-color: #F3F3F3;
 }
 
 #wrapper {
@@ -33,9 +34,8 @@ body {
 #page-inner {
     display: inline-block;
     width: 100%;
-    margin: 75px 20px 10px 0px;
+    margin: 75px 20px 40px 0px;
     padding: 10px;
-    min-height: 1200px;
 }
 
 .page-head-line {
@@ -229,8 +229,11 @@ nav.navbar-default.navbar-side {
     FOOTER  STYLES    
     =============================================*/
 #footer-sec {
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+    padding: 5px 50px;
     background-color: #000;
-    padding: 20px 50px;
     color: #fff;
     font-size: 12px;
     margin-left: 260px;
@@ -262,7 +265,6 @@ nav.navbar-default.navbar-side {
     #page-wrapper {
         margin: 0 0 0 260px;
         padding: 15px 30px;
-        min-height: 1200px;
     }
 
 
