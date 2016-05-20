@@ -23,8 +23,6 @@ namespace Kepler.Common.DB
         public KeplerDataContext() : base("name=Kepler")
         {
             this.Configuration.LazyLoadingEnabled = false;
-            this.Configuration.AutoDetectChangesEnabled = false;
-            this.Configuration.ValidateOnSaveEnabled = false;
         }
     }
 }
