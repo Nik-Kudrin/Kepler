@@ -212,6 +212,21 @@
                                     }
                                 }
                             });
+
+                            var branch_id = $('.icon-build-info').attr('BranchId');
+                            var level_1_menu_item = $('#main-menu a[branch_id="' + branch_id + '"].main-menu-item').parent().parent().parent();
+                            var level_2_menu_item = $('#main-menu a[branch_id="' + branch_id + '"].main-menu-item');
+                            if (!level_2_menu_item.hasClass('main-menu-item-focus')) {
+                                if (!level_1_menu_item.hasClass('active')) {
+                                    level_1_menu_item.children('.main-menu-item').click();
+                                }
+                                $('.main-menu-item-focus').removeClass('main-menu-item-focus');
+                                level_2_menu_item.addClass('main-menu-item-focus');
+                                $('nav.navbar-default.navbar-side').animate({
+                                    scrollTop: $(level_2_menu_item).offset().top - 200
+                                }, 500);
+                            }
+
                             updateBuildInfo();
                             selfBuild.resolve();
                             //intervalBuild = setInterval(getBuild, 20000);

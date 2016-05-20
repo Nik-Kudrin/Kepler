@@ -106,6 +106,18 @@
 
                             if (key == 'Name') {
                                 $('.panel-heading h3').html(value);
+                                var level_1_menu_item = $('#main-menu a[branch_name="' + value + '"].main-menu-item').parent().parent().parent();
+                                var level_2_menu_item = $('#main-menu a[branch_name="' + value + '"].main-menu-item');
+                                if (!level_2_menu_item.hasClass('main-menu-item-focus')) {
+                                    if (!level_1_menu_item.hasClass('active')) {
+                                        level_1_menu_item.children('.main-menu-item').click();
+                                    }
+                                    $('.main-menu-item-focus').removeClass('main-menu-item-focus');
+                                    level_2_menu_item.addClass('main-menu-item-focus');
+                                    $('nav.navbar-default.navbar-side').animate({
+                                        scrollTop: $(level_2_menu_item).offset().top - 200
+                                    }, 500);
+                                }
                             } else if (key != 'Builds') {
                                 $('.panel-heading h3').attr(key, value);
                             } else if (key == 'Builds') {
