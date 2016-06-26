@@ -12,9 +12,10 @@ namespace Kepler.Common.Repository
 {
     public abstract class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : InfoObject
     {
-        /*private IDbConnection db;*/
         private string TableName;
+
         private static object _lock = new object();
+        // TODO: we should use Mutex (or some another sync primitive) and Pass Project Id variable (because everything should be locked only inside Project scrope)
 
         protected BaseRepository()
         {
