@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using Kepler.Common.Error;
+﻿using Kepler.Common.Error;
 using Kepler.Common.Models;
 
 namespace Kepler.Common.DB
