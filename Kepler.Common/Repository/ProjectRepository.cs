@@ -8,7 +8,7 @@ namespace Kepler.Common.Repository
     {
         public static ProjectRepository Instance => new ProjectRepository(new KeplerDataContext());
 
-        private ProjectRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.Projects)
+        private ProjectRepository() : base()
         {
         }
 

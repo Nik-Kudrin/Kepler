@@ -9,7 +9,7 @@ namespace Kepler.Common.Repository
     {
         public static ImageWorkerRepository Instance => new ImageWorkerRepository(new KeplerDataContext());
 
-        private ImageWorkerRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.ImageWorkers)
+        private ImageWorkerRepository(KeplerDataContext dbContext) : base(dbContext.ImageWorkers)
         {
         }
 

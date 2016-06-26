@@ -7,7 +7,7 @@ namespace Kepler.Common.Repository
     {
         public static BaseLineRepository Instance => new BaseLineRepository(new KeplerDataContext());
 
-        private BaseLineRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.BaseLines)
+        private BaseLineRepository(KeplerDataContext dbContext) : base(dbContext.BaseLines)
         {
         }
     }

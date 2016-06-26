@@ -109,7 +109,6 @@
     <Compile Include="Repository\TestAssemblyRepository.cs" />
     <Compile Include="Repository\TestCaseRepository.cs" />
     <Compile Include="Repository\TestSuiteRepository.cs" />
-    <Compile Include="DB\KeplerDataContext.cs" />
     <Compile Include="Error\ErrorMessage.cs" />
     <Compile Include="Models\BaseLine.cs" />
     <Compile Include="Models\Build.cs" />

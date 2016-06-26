@@ -9,7 +9,7 @@ namespace Kepler.Common.Repository
     {
         public static BuildRepository Instance => new BuildRepository(new KeplerDataContext());
 
-        private BuildRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.Builds)
+        private BuildRepository(KeplerDataContext dbContext) : base(dbContext.Builds)
         {
         }
 

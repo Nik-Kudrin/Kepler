@@ -10,7 +10,7 @@ namespace Kepler.Common.Repository
         where TBuildObjEntity : BuildObject
     {
         protected BuildObjectRepository(KeplerDataContext dbContext, DbSet<TBuildObjEntity> dbSet)
-            : base(dbContext, dbSet)
+            : base(dbSet)
         {
         }
 

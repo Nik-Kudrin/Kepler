@@ -8,7 +8,7 @@ namespace Kepler.Common.Repository
     {
         public static BranchRepository Instance => new BranchRepository(new KeplerDataContext());
 
-        private BranchRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.Branches)
+        private BranchRepository(KeplerDataContext dbContext) : base(dbContext.Branches)
         {
         }
 

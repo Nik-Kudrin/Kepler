@@ -1,46 +1,93 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
-using Kepler.Common.DB;
+using Dapper;
 using Kepler.Common.Error;
 using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
-    public class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : InfoObject
+    public abstract class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : InfoObject
     {
-        protected readonly KeplerDataContext DbContext;
-        protected readonly DbSet<TEntity> DbSet;
+        /*private IDbConnection db;*/
+        private string TableName;
+        private static object _lock = new object();
 
-
-        protected BaseRepository(KeplerDataContext dbContext, DbSet<TEntity> dbSet)
+        protected BaseRepository()
         {
-            DbContext = dbContext;
-            DbSet = dbSet;
+            TableName = typeof (TEntity).Name;
+        }
+
+        protected SqlConnection CreateConnection()
+        {
+            return new SqlConnection(ConfigurationManager.ConnectionStrings["Kepler"].ConnectionString);
         }
 
         public virtual TEntity Get(long id)
         {
-            try
+            lock (_lock)
             {
-                return DbSet.FirstOrDefault(x => x.Id == id);
-            }
-            catch (Exception ex)
-            {
-                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
-                return null;
+                using (var db = CreateConnection())
+                {
+                    try
+                    {
+                        var query = @"SELECT * FROM @TableName WHERE Id = @Id";
+                        return db.Query<TEntity>(query, new {TableName = TableName, Id = id}).FirstOrDefault();
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                        {
+                            ExceptionMessage = $"DB error: {ex.Message}"
+                        });
+                        return null;
+                    }
+                }
             }
         }
 
         public virtual void Add(TEntity entity)
         {
             if (entity != null)
-                DbSet.Add(entity);
+                return;
+
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                    db.Open();
+                    using (var tran = db.BeginTransaction())
+                    {
+                        try
+                        {
+                            var query = @"INSERT INTO @TableName ";
+                            DbSet.Add(entity);
+
+                            tran.Commit();
+                        }
+                        catch
+                        {
+                            tran.Rollback();
+                            throw;
+                        }
+                    }
+                }
+            }
         }
 
         public virtual void Update(TEntity entity)
         {
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                }
+            }
+
+
             if (entity != null)
             {
                 DbSet.Attach(entity);
@@ -50,11 +97,26 @@ namespace Kepler.Common.Repository
 
         public virtual void Update(IEnumerable<TEntity> entities)
         {
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                }
+            }
+
+
             entities.ToList().ForEach(Update);
         }
 
         public virtual void UpdateAndFlashChanges(TEntity entity)
         {
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                }
+            }
+
             try
             {
                 Update(entity);
@@ -68,6 +130,14 @@ namespace Kepler.Common.Repository
 
         public virtual void UpdateAndFlashChanges(IEnumerable<TEntity> entities)
         {
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                }
+            }
+
+
             try
             {
                 Update(entities);
@@ -81,6 +151,14 @@ namespace Kepler.Common.Repository
 
         public virtual void Insert(TEntity entity)
         {
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                }
+            }
+
+
             try
             {
                 Add(entity);
@@ -94,11 +172,27 @@ namespace Kepler.Common.Repository
 
         public virtual void FlushChanges()
         {
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                }
+            }
+
+
             DbContext.SaveChanges();
         }
 
         public virtual void Delete(TEntity entity)
         {
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                }
+            }
+
+
             try
             {
                 if (DbContext.Entry(entity).State == EntityState.Detached)
@@ -120,6 +214,14 @@ namespace Kepler.Common.Repository
 
         public virtual void Delete(IEnumerable<TEntity> entities)
         {
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                }
+            }
+
+
             try
             {
                 DbSet.RemoveRange(entities);
@@ -136,16 +238,38 @@ namespace Kepler.Common.Repository
 
         public virtual IEnumerable<TEntity> FindAll()
         {
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                }
+            }
+
             return DbSet.ToList();
         }
 
         public virtual IEnumerable<TEntity> Find(string name)
         {
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                }
+            }
+
+
             return DbSet.Where(x => x.Name == name).ToList();
         }
 
         public virtual IEnumerable<TEntity> Find(Func<TEntity, bool> filterCondition)
         {
+            lock (_lock)
+            {
+                using (var db = CreateConnection())
+                {
+                }
+            }
+
             return DbSet.Where(filterCondition).ToList();
         }
     }
