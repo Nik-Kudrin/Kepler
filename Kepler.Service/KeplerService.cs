@@ -51,7 +51,7 @@ namespace Kepler.Service
 
                     // Generate Url paths
                     UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
-                    screenShotRepo.UpdateAndFlashChanges(screenShot);
+                    screenShotRepo.Update(screenShot);
                     continue;
                 }
 
@@ -68,7 +68,7 @@ namespace Kepler.Service
                         var oldPassedScreenShot =
                             screenShotRepo.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
                         oldPassedScreenShot.IsLastPassed = false;
-                        screenShotRepo.UpdateAndFlashChanges(oldPassedScreenShot);
+                        screenShotRepo.Update(oldPassedScreenShot);
                     }
 
                     screenShot.Status = ObjectStatus.Passed;
@@ -84,7 +84,7 @@ namespace Kepler.Service
                 // Generate Url paths
                 UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
 
-                screenShotRepo.UpdateAndFlashChanges(screenShot);
+                screenShotRepo.Update(screenShot);
             }
         }
 
@@ -152,7 +152,7 @@ namespace Kepler.Service
 
                         var build = buildRepo.Get(buildId.Value);
                         build.Status = ObjectStatus.InQueue;
-                        buildRepo.UpdateAndFlashChanges(build);
+                        buildRepo.Update(build);
                     }
                     catch (Exception ex)
                     {
@@ -436,7 +436,7 @@ namespace Kepler.Service
             }
 
             project.Name = newName;
-            projectRepo.UpdateAndFlashChanges(project);
+            projectRepo.Update(project);
         }
 
         public void DeleteProject(long id)
@@ -473,7 +473,7 @@ namespace Kepler.Service
                 BranchRepository.Instance.Insert(branch);
 
                 baseline.BranchId = branch.Id;
-                BaseLineRepository.Instance.UpdateAndFlashChanges(baseline);
+                BaseLineRepository.Instance.Update(baseline);
 
                 long mainBaseLineId;
 
@@ -547,16 +547,16 @@ namespace Kepler.Service
                     BranchRepository.Instance.Find(item => item.ProjectId == branch.ProjectId).ToList();
 
                 allProjectBranches.ForEach(item => item.IsMainBranch = false);
-                BranchRepository.Instance.UpdateAndFlashChanges(allProjectBranches);
+                BranchRepository.Instance.Update(allProjectBranches);
 
                 var project = ProjectRepository.Instance.Get(branch.ProjectId.Value);
                 project.MainBranchId = branch.Id;
-                ProjectRepository.Instance.UpdateAndFlashChanges(project);
+                ProjectRepository.Instance.Update(project);
             }
 
             branch.Name = newName;
             branch.IsMainBranch = isMainBranch;
-            BranchRepository.Instance.UpdateAndFlashChanges(branch);
+            BranchRepository.Instance.Update(branch);
         }
 
         public Branch GetBranch(long id)
@@ -630,7 +630,7 @@ namespace Kepler.Service
             {
                 worker.Name = newName;
                 worker.WorkerServiceUrl = newWorkerServiceUrl;
-                workerRepo.UpdateAndFlashChanges(worker);
+                workerRepo.Update(worker);
             }
         }
 
@@ -769,10 +769,10 @@ namespace Kepler.Service
 
             var allLastViewedItems = ErrorMessageRepository.Instance.Find(item => item.IsLastViewed);
             allLastViewedItems.Each(item => item.IsLastViewed = false);
-            ErrorMessageRepository.Instance.UpdateAndFlashChanges(allLastViewedItems);
+            ErrorMessageRepository.Instance.Update(allLastViewedItems);
 
             error.IsLastViewed = true;
-            ErrorMessageRepository.Instance.UpdateAndFlashChanges(error);
+            ErrorMessageRepository.Instance.Update(error);
         }
 
         private void LogErrorMessage(ErrorMessage.ErorCode errorCode, string exceptionMessage)

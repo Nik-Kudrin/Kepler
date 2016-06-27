@@ -2,7 +2,7 @@
 
 namespace Kepler.Common.Repository
 {
-    public class ProjectRepository : BaseRepository<Project>
+    public class ProjectRepository : BaseObjRepository<Project>
     {
         public static ProjectRepository Instance => new ProjectRepository();
 

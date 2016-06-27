@@ -35,7 +35,7 @@ namespace Kepler.Common.Models
 
 
         public void InitChildObjectsFromDb<T, TEntityChild>(T childObjectRepository)
-            where T : BaseRepository<TEntityChild> where TEntityChild : BuildObject
+            where T : BaseObjRepository<TEntityChild> where TEntityChild : BuildObject
         {
             Builds = (childObjectRepository as BuildRepository)
                 .Find(build => build.BranchId == Id)

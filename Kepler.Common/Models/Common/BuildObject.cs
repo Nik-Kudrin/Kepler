@@ -26,7 +26,7 @@ namespace Kepler.Common.Models.Common
         }
 
         public Dictionary<long, TEntityChild> InitChildObjectsFromDb<T, TEntityChild>(T childObjectRepository)
-            where T : BaseRepository<TEntityChild>
+            where T : BaseObjRepository<TEntityChild>
             where TEntityChild : BuildObject
         {
             return childObjectRepository.Find(item => item.ParentObjId == this.Id)

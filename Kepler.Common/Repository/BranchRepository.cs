@@ -3,7 +3,7 @@ using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
-    public class BranchRepository : BaseRepository<Branch>
+    public class BranchRepository : BaseObjRepository<Branch>
     {
         public static BranchRepository Instance => new BranchRepository();
 

@@ -4,7 +4,7 @@ using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
-    public class BuildRepository : BaseRepository<Build>
+    public class BuildRepository : BaseObjRepository<Build>
     {
         public static BuildRepository Instance => new BuildRepository();
 

@@ -204,7 +204,7 @@ namespace Kepler.Service.Config
                         BaseLineRepository.Instance.Insert(baseline);
 
                         importedBranch.BaseLineId = baseline.Id;
-                        BranchRepository.Instance.UpdateAndFlashChanges(importedBranch);
+                        BranchRepository.Instance.Update(importedBranch);
 
                         CopyScreenShotsFromMainBranchBaselineToNewBaseline(baseline, mainBranchBaselineScreenShots);
                     }
@@ -258,7 +258,7 @@ namespace Kepler.Service.Config
                 branch.Builds.Add(build.Id, build);
                 branch.LatestBuildId = build.Id;
 
-                BranchRepository.Instance.UpdateAndFlashChanges(branch);
+                BranchRepository.Instance.Update(branch);
             }
 
             return builds;
@@ -448,7 +448,7 @@ namespace Kepler.Service.Config
             foreach (var build in builds)
             {
                 build.Status = ObjectStatus.InQueue;
-                BuildRepository.Instance.UpdateAndFlashChanges(build);
+                BuildRepository.Instance.Update(build);
             }
         }
 
@@ -462,7 +462,7 @@ namespace Kepler.Service.Config
                 build.NumberTestCase = TestCaseRepository.Instance.FindByBuildId(build.Id).Count();
                 build.NumberScreenshots = ScreenShotRepository.Instance.FindByBuildId(build.Id).Count();
 
-                BuildRepository.Instance.UpdateAndFlashChanges(build);
+                BuildRepository.Instance.Update(build);
             }
         }
 

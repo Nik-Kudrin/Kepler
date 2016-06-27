@@ -4,14 +4,14 @@ using System.Configuration;
 using System.Data.SqlClient;
 using Dapper;
 using Kepler.Common.Error;
-using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
-    public abstract class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : InfoObject
+    public abstract class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : class
     {
         /* private static object _lock = new object();*/
-        // TODO: we should use Mutex (or some another sync primitive) and Pass Project Id variable (because everything should be locked only inside Project scrope)
+        // TODO: we should use Mutex (or some another sync primitive) 
+        // and Pass Project Id variable (because everything should be locked only inside Project scrope)
 
         protected BaseRepository()
         {

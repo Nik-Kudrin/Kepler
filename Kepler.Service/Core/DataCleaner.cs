@@ -83,7 +83,7 @@ namespace Kepler.Service.Core
                 if (branchForDelete.IsMainBranch)
                     project.MainBranchId = null;
 
-                ProjectRepository.Instance.UpdateAndFlashChanges(project);
+                ProjectRepository.Instance.Update(project);
             }
             else if (typeof (TEntityBase) == typeof (Build))
             {
@@ -139,7 +139,7 @@ namespace Kepler.Service.Core
 
 
         private static List<TEntityChild> GetChildObjects<T, TEntityChild>(T childObjectRepository, long parentObjId)
-            where T : BaseRepository<TEntityChild>
+            where T : BaseObjRepository<TEntityChild>
             where TEntityChild : BuildObject
         {
             return childObjectRepository.Find(item => item.ParentObjId == parentObjId).ToList();

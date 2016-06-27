@@ -70,7 +70,7 @@ namespace Kepler.Service.Core
                     break;
             }
 
-            BuildRepository.Instance.UpdateAndFlashChanges(build);
+            BuildRepository.Instance.Update(build);
         }
 
         private static void SetBuildStartDate(Build build)
@@ -116,8 +116,8 @@ namespace Kepler.Service.Core
 
         private static void UpdateObjectStatusToActual<T, M, TEntityBase, TEntityChild>(T baseObjectRepository,
             M childObjectRepository)
-            where T : BaseRepository<TEntityBase>
-            where M : BaseRepository<TEntityChild>
+            where T : BaseObjRepository<TEntityBase>
+            where M : BaseObjRepository<TEntityChild>
             where TEntityBase : BuildObject
             where TEntityChild : BuildObject
         {
@@ -132,14 +132,14 @@ namespace Kepler.Service.Core
                 if (childItems.Any(item => item.Status == ObjectStatus.InProgress))
                 {
                     baseItem.Status = ObjectStatus.InProgress;
-                    baseObjectRepository.UpdateAndFlashChanges(baseItem);
+                    baseObjectRepository.Update(baseItem);
                     continue;
                 }
 
                 if (childItems.Any(item => item.Status == ObjectStatus.Failed))
                 {
                     baseItem.Status = ObjectStatus.Failed;
-                    baseObjectRepository.UpdateAndFlashChanges(baseItem);
+                    baseObjectRepository.Update(baseItem);
                     continue;
                 }
 
@@ -150,7 +150,7 @@ namespace Kepler.Service.Core
                     baseItem.Status = ObjectStatus.Passed;
                 }
 
-                baseObjectRepository.UpdateAndFlashChanges(baseItem);
+                baseObjectRepository.Update(baseItem);
             }
 
             if (typeof (TEntityBase) != typeof (Build)) return;
@@ -243,7 +243,7 @@ namespace Kepler.Service.Core
 
         public static void SetParentObjStatus<T, TEntity>(T objectRepository, long objectId,
             ObjectStatus newStatus)
-            where T : BaseRepository<TEntity>
+            where T : BaseObjRepository<TEntity>
             where TEntity : BuildObject
         {
             var item = objectRepository.Get(objectId);
@@ -263,24 +263,24 @@ namespace Kepler.Service.Core
                 if (oldScreenShot != null)
                 {
                     oldScreenShot.IsLastPassed = false;
-                    screenShotRepo.UpdateAndFlashChanges(oldScreenShot);
+                    screenShotRepo.Update(oldScreenShot);
                 }
 
                 actualScreenShot.IsLastPassed = true;
                 actualScreenShot.Status = ObjectStatus.Passed;
 
-                screenShotRepo.UpdateAndFlashChanges(actualScreenShot);
+                screenShotRepo.Update(actualScreenShot);
                 return;
             }
 
-            objectRepository.UpdateAndFlashChanges(item);
+            objectRepository.Update(item);
         }
 
 
         public static List<TEntityChild> SetChildObjStatuses<T, TEntityChild>(T childObjectRepository,
             long parentObjId,
             ObjectStatus newStatus)
-            where T : BaseRepository<TEntityChild>
+            where T : BaseObjRepository<TEntityChild>
             where TEntityChild : BuildObject
         {
             if (typeof (TEntityChild) == typeof (ScreenShot) && newStatus == ObjectStatus.Passed)
@@ -299,7 +299,7 @@ namespace Kepler.Service.Core
             var childItems = childObjectRepository.Find(item => item.ParentObjId == parentObjId).ToList();
 
             childItems.ForEach(item => item.Status = newStatus);
-            childObjectRepository.UpdateAndFlashChanges(childItems);
+            childObjectRepository.Update(childItems);
 
             return childItems;
         }
@@ -319,7 +319,7 @@ namespace Kepler.Service.Core
                         build.StartDate = null;
                         build.StopDate = null;
                         build.PredictedDuration = null;
-                        buildRepo.UpdateAndFlashChanges(build);
+                        buildRepo.Update(build);
                     }
 
                     return RecursiveSetObjectsStatus<Build>(objId, newStatus);
