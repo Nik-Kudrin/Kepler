@@ -663,13 +663,13 @@ namespace Kepler.Service
             if (string.IsNullOrEmpty(propertyName))
                 LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, "Kepler config property name must be not emtpy");
 
-            var property = KeplerSystemConfigRepository.Instance.Find(propertyName);
+            var property = KeplerSystemConfigRepository.Instance.Find(propertyName).FirstOrDefault();
             return property == null ? "" : property.Value;
         }
 
         private void SetKeplerConfigProperty(string propertyName, string propertyValue)
         {
-            var property = KeplerSystemConfigRepository.Instance.Find(propertyName);
+            var property = KeplerSystemConfigRepository.Instance.Find(propertyName).FirstOrDefault();
 
             if (property == null)
             {
@@ -678,7 +678,7 @@ namespace Kepler.Service
             else
             {
                 property.Value = propertyValue;
-                KeplerSystemConfigRepository.Instance.UpdateAndFlushChanges(property);
+                KeplerSystemConfigRepository.Instance.Update(property);
             }
         }
 

@@ -330,7 +330,6 @@ namespace Kepler.Service.Config
                         }
 
                         currentAssembly.TestSuites = mappedSuites.ToDictionary(item => item.Id, item => item);
-                        TestAssemblyRepository.Instance.FlushChanges();
                     }
                 }
             }
@@ -375,7 +374,6 @@ namespace Kepler.Service.Config
                             }
 
                             currentSuite.Value.TestCases = mappedCases.ToDictionary(item => item.Id, item => item);
-                            TestSuiteRepository.Instance.FlushChanges();
                         }
                     }
                 }
@@ -435,7 +433,6 @@ namespace Kepler.Service.Config
                                 }
 
                                 currentCase.Value.ScreenShots = screenShots.ToDictionary(item => item.Id, item => item);
-                                TestCaseRepository.Instance.FlushChanges();
                             }
                         }
                     }
