@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Kepler.Common.DB;
 using Kepler.Common.Models;
 
 namespace Kepler.Common.Repository
 {
     public class ImageWorkerRepository : BaseRepository<ImageWorker>
     {
-        public static ImageWorkerRepository Instance => new ImageWorkerRepository(new KeplerDataContext());
+        public static ImageWorkerRepository Instance => new ImageWorkerRepository();
 
-        private ImageWorkerRepository(KeplerDataContext dbContext) : base(dbContext.ImageWorkers)
+        private ImageWorkerRepository()
         {
         }
 

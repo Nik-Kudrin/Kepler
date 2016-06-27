@@ -11,10 +11,12 @@ namespace Kepler.Common.Models
 
         [StringLength(500)]
         [DataMember]
+        [Editable(true)]
         public string Name { get; set; }
 
         [StringLength(500)]
         [DataMember]
+        [Editable(true)]
         public string Value { get; set; }
 
         public KeplerSystemConfig()

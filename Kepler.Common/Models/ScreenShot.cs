@@ -8,34 +8,42 @@ namespace Kepler.Common.Models
     {
         [DataMember]
         [StringLength(700)]
+        [Editable(true)]
         public string ImagePath { get; set; }
 
         [DataMember]
         [StringLength(700)]
+        [Editable(true)]
         public string ImagePathUrl { get; set; }
 
         [DataMember]
         [StringLength(700)]
+        [Editable(true)]
         public string PreviewImagePath { get; set; }
 
         [DataMember]
         [StringLength(700)]
+        [Editable(true)]
         public string PreviewImagePathUrl { get; set; }
 
         [DataMember]
         [StringLength(1000)]
+        [Editable(true)]
         public string DiffImagePath { get; set; }
 
         [DataMember]
         [StringLength(1000)]
+        [Editable(true)]
         public string DiffImagePathUrl { get; set; }
 
         [DataMember]
         [StringLength(1000)]
+        [Editable(true)]
         public string DiffPreviewPath { get; set; }
 
         [DataMember]
         [StringLength(1000)]
+        [Editable(true)]
         public string DiffPreviewPathUrl { get; set; }
 
         [DataMember]
@@ -44,29 +52,36 @@ namespace Kepler.Common.Models
 
         [DataMember]
         [StringLength(700)]
+        [Editable(true)]
         public string BaseLineImagePathUrl { get; set; }
 
         [DataMember]
         [StringLength(700)]
+        [Editable(true)]
         public string BaseLinePreviewPath { get; set; }
 
         [DataMember]
         [StringLength(700)]
+        [Editable(true)]
         public string BaseLinePreviewPathUrl { get; set; }
 
         [DataMember]
         [StringLength(500)]
+        [Editable(true)]
         public string Url { get; set; }
 
         [DataMember]
         [IgnoreDataMember]
+        [Editable(true)]
         public long BaseLineId { get; set; }
 
         [DataMember]
         [IgnoreDataMember]
+        [Editable(true)]
         public bool IsLastPassed { get; set; }
 
         [DataMember]
+        [Editable(true)]
         public string ErrorMessage { get; set; }
 
         public ScreenShot()

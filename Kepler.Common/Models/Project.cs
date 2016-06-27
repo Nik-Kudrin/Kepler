@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
 using Kepler.Common.Models.Common;
@@ -11,6 +12,7 @@ namespace Kepler.Common.Models
         public Dictionary<long, Branch> Branches { get; set; }
 
         [DataMember]
+        [Editable(true)]
         public long? MainBranchId { get; set; }
 
         public Project()

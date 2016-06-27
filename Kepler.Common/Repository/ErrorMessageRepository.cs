@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using Kepler.Common.DB;
 using Kepler.Common.Error;
 
 namespace Kepler.Common.Repository

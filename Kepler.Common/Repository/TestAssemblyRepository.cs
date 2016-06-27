@@ -1,14 +1,13 @@
-﻿using Kepler.Common.DB;
-using Kepler.Common.Models;
+﻿using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
     public class TestAssemblyRepository : BuildObjectRepository<TestAssembly>, ICompleteObject<TestAssembly>
     {
-        public static TestAssemblyRepository Instance => new TestAssemblyRepository(new KeplerDataContext());
+        public static TestAssemblyRepository Instance => new TestAssemblyRepository();
 
-        private TestAssemblyRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.TestAssemblies)
+        private TestAssemblyRepository()
         {
         }
 

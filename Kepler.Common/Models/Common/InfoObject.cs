@@ -12,9 +12,11 @@ namespace Kepler.Common.Models.Common
 
         [StringLength(700)]
         [DataMember]
+        [Editable(true)]
         public string Name { get; set; }
 
         [DataMember]
+        [Editable(true)]
         public ObjectStatus Status { get; set; }
 
         public InfoObject()

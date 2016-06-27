@@ -8,9 +8,11 @@ namespace Kepler.Common.Models
     {
         [StringLength(600)]
         [DataMember]
+        [Editable(true)]
         public string WorkerServiceUrl { get; set; }
 
         [DataMember]
+        [Editable(true)]
         public StatusOfWorker WorkerStatus { get; set; }
 
         public enum StatusOfWorker

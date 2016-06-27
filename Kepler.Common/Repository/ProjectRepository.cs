@@ -1,14 +1,12 @@
-﻿using Kepler.Common.DB;
-using Kepler.Common.Models;
-using Kepler.Common.Models.Common;
+﻿using Kepler.Common.Models;
 
 namespace Kepler.Common.Repository
 {
     public class ProjectRepository : BaseRepository<Project>
     {
-        public static ProjectRepository Instance => new ProjectRepository(new KeplerDataContext());
+        public static ProjectRepository Instance => new ProjectRepository();
 
-        private ProjectRepository() : base()
+        private ProjectRepository()
         {
         }
 

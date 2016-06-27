@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Kepler.Common.DB;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 
@@ -8,9 +7,9 @@ namespace Kepler.Common.Repository
 {
     public class ScreenShotRepository : BuildObjectRepository<ScreenShot>
     {
-        public static ScreenShotRepository Instance => new ScreenShotRepository(new KeplerDataContext());
+        public static ScreenShotRepository Instance => new ScreenShotRepository();
 
-        private ScreenShotRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.ScreenShots)
+        private ScreenShotRepository()
         {
         }
 
