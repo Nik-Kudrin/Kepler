@@ -129,19 +129,41 @@ SET @SQL_SCRIPT = REPLACE(@COMMAND_TEMPLATE, '{DBNAME}', @DbName)
 EXECUTE (@SQL_SCRIPT)
 
 
-/****** Object:  Table [dbo].[BaseLines]    Script Date: 5/31/2016 8:42:14 PM ******/
+/****** Object:  Table [dbo].[BaseLine]    Script Date: 5/31/2016 8:42:14 PM ******/
 
 SET @COMMAND_TEMPLATE='USE {DBNAME};
 SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 
 
-CREATE TABLE {DBNAME}.[dbo].[BaseLines](
+CREATE TABLE {DBNAME}.[dbo].[BaseLine](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[BranchId] [bigint] NOT NULL,
 	[Name] [nvarchar](700) NULL,
 	[Status] [int] NOT NULL,
- CONSTRAINT [PK_dbo.BaseLines] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_dbo.BaseLine] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]'
+
+SET @SQL_SCRIPT = REPLACE(@COMMAND_TEMPLATE, '{DBNAME}', @DbName)
+EXECUTE (@SQL_SCRIPT)
+
+/****** Object:  Table [dbo].[Branch]    Script Date: 6/28/2016 11:02:52 PM ******/
+SET @COMMAND_TEMPLATE='USE {DBNAME};
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+
+CREATE TABLE [dbo].[Branch](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[BaseLineId] [bigint] NULL,
+	[LatestBuildId] [bigint] NULL,
+	[ProjectId] [bigint] NULL,
+	[IsMainBranch] [bit] NOT NULL,
+	[Name] [nvarchar](700) NULL,
+	[Status] [int] NOT NULL,
+ CONSTRAINT [PK_dbo.Branch] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -151,13 +173,13 @@ SET @SQL_SCRIPT = REPLACE(@COMMAND_TEMPLATE, '{DBNAME}', @DbName)
 EXECUTE (@SQL_SCRIPT)
 
 
-/****** Object:  Table [dbo].[Builds]    Script Date: 5/31/2016 8:42:14 PM ******/
+/****** Object:  Table [dbo].[Build]    Script Date: 5/31/2016 8:42:14 PM ******/
 SET @COMMAND_TEMPLATE='USE {DBNAME};
 SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 
 
-CREATE TABLE {DBNAME}.[dbo].[Builds](
+CREATE TABLE {DBNAME}.[dbo].[Build](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[StartDate] [datetime] NULL,
 	[StopDate] [datetime] NULL,
@@ -173,7 +195,7 @@ CREATE TABLE {DBNAME}.[dbo].[Builds](
 	[ParentObjId] [bigint] NULL,
 	[Name] [nvarchar](700) NULL,
 	[Status] [int] NOT NULL,
- CONSTRAINT [PK_dbo.Builds] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_dbo.Build] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -183,18 +205,18 @@ SET @SQL_SCRIPT = REPLACE(@COMMAND_TEMPLATE, '{DBNAME}', @DbName)
 EXECUTE (@SQL_SCRIPT)
 
 
-/****** Object:  Table [dbo].[ErrorMessages]    Script Date: 5/31/2016 8:42:14 PM ******/
+/****** Object:  Table [dbo].[ErrorMessage]    Script Date: 5/31/2016 8:42:14 PM ******/
 SET @COMMAND_TEMPLATE='USE {DBNAME};
 SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 
-CREATE TABLE {DBNAME}.[dbo].[ErrorMessages](
+CREATE TABLE {DBNAME}.[dbo].[ErrorMessage](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[Time] [datetime] NULL,
 	[Code] [int] NOT NULL,
 	[IsLastViewed] [bit] NOT NULL,
 	[ExceptionMessage] [nvarchar](max) NULL,
- CONSTRAINT [PK_dbo.ErrorMessages] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_dbo.ErrorMessage] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -204,18 +226,18 @@ SET @SQL_SCRIPT = REPLACE(@COMMAND_TEMPLATE, '{DBNAME}', @DbName)
 EXECUTE (@SQL_SCRIPT)
 
 
-/****** Object:  Table [dbo].[ImageWorkers]    Script Date: 5/31/2016 8:42:14 PM ******/
+/****** Object:  Table [dbo].[ImageWorker]    Script Date: 5/31/2016 8:42:14 PM ******/
 SET @COMMAND_TEMPLATE='USE {DBNAME};
 SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 
-CREATE TABLE {DBNAME}.[dbo].[ImageWorkers](
+CREATE TABLE {DBNAME}.[dbo].[ImageWorker](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[WorkerServiceUrl] [nvarchar](600) NULL,
 	[WorkerStatus] [int] NOT NULL,
 	[Name] [nvarchar](700) NULL,
 	[Status] [int] NOT NULL,
- CONSTRAINT [PK_dbo.ImageWorkers] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_dbo.ImageWorker] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -225,16 +247,16 @@ SET @SQL_SCRIPT = REPLACE(@COMMAND_TEMPLATE, '{DBNAME}', @DbName)
 EXECUTE (@SQL_SCRIPT)
 
 
-/****** Object:  Table [dbo].[KeplerSystemConfigs]    Script Date: 5/31/2016 8:42:14 PM ******/
+/****** Object:  Table [dbo].[KeplerSystemConfig]    Script Date: 5/31/2016 8:42:14 PM ******/
 SET @COMMAND_TEMPLATE='USE {DBNAME};
 SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 
-CREATE TABLE {DBNAME}.[dbo].[KeplerSystemConfigs](
+CREATE TABLE {DBNAME}.[dbo].[KeplerSystemConfig](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](500) NULL,
 	[Value] [nvarchar](500) NULL,
- CONSTRAINT [PK_dbo.KeplerSystemConfigs] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_dbo.KeplerSystemConfig] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -245,17 +267,17 @@ EXECUTE (@SQL_SCRIPT)
 
 
 
-/****** Object:  Table [dbo].[Projects]    Script Date: 5/31/2016 8:42:14 PM ******/
+/****** Object:  Table [dbo].[Project]    Script Date: 5/31/2016 8:42:14 PM ******/
 SET @COMMAND_TEMPLATE='USE {DBNAME};
 SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 
-CREATE TABLE {DBNAME}.[dbo].[Projects](
+CREATE TABLE {DBNAME}.[dbo].[Project](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[MainBranchId] [bigint] NULL,
 	[Name] [nvarchar](700) NULL,
 	[Status] [int] NOT NULL,
- CONSTRAINT [PK_dbo.Projects] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_dbo.Project] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -266,12 +288,12 @@ EXECUTE (@SQL_SCRIPT)
 
 
 
-/****** Object:  Table [dbo].[ScreenShots]    Script Date: 5/31/2016 8:42:14 PM ******/
+/****** Object:  Table [dbo].[ScreenShot]    Script Date: 5/31/2016 8:42:14 PM ******/
 SET @COMMAND_TEMPLATE='USE {DBNAME};
 SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 
-CREATE TABLE {DBNAME}.[dbo].[ScreenShots](
+CREATE TABLE {DBNAME}.[dbo].[ScreenShot](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[ImagePath] [nvarchar](700) NULL,
 	[ImagePathUrl] [nvarchar](700) NULL,
@@ -293,7 +315,7 @@ CREATE TABLE {DBNAME}.[dbo].[ScreenShots](
 	[ParentObjId] [bigint] NULL,
 	[Name] [nvarchar](700) NULL,
 	[Status] [int] NOT NULL,
- CONSTRAINT [PK_dbo.ScreenShots] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_dbo.ScreenShot] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -304,18 +326,18 @@ EXECUTE (@SQL_SCRIPT)
 
 
 
-/****** Object:  Table [dbo].[TestAssemblies]    Script Date: 5/31/2016 8:42:14 PM ******/
+/****** Object:  Table [dbo].[TestAssembly]    Script Date: 5/31/2016 8:42:14 PM ******/
 SET @COMMAND_TEMPLATE='USE {DBNAME};
 SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 
-CREATE TABLE {DBNAME}.[dbo].[TestAssemblies](
+CREATE TABLE {DBNAME}.[dbo].[TestAssembly](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[BuildId] [bigint] NULL,
 	[ParentObjId] [bigint] NULL,
 	[Name] [nvarchar](700) NULL,
 	[Status] [int] NOT NULL,
- CONSTRAINT [PK_dbo.TestAssemblies] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_dbo.TestAssembly] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -326,18 +348,18 @@ EXECUTE (@SQL_SCRIPT)
 
 
 
-/****** Object:  Table [dbo].[TestCases]    Script Date: 5/31/2016 8:42:14 PM ******/
+/****** Object:  Table [dbo].[TestCase]    Script Date: 5/31/2016 8:42:14 PM ******/
 SET @COMMAND_TEMPLATE='USE {DBNAME};
 SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 
-CREATE TABLE {DBNAME}.[dbo].[TestCases](
+CREATE TABLE {DBNAME}.[dbo].[TestCase](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[BuildId] [bigint] NULL,
 	[ParentObjId] [bigint] NULL,
 	[Name] [nvarchar](700) NULL,
 	[Status] [int] NOT NULL,
- CONSTRAINT [PK_dbo.TestCases] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_dbo.TestCase] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -348,18 +370,18 @@ EXECUTE (@SQL_SCRIPT)
 
 
 
-/****** Object:  Table [dbo].[TestSuites]    Script Date: 5/31/2016 8:42:14 PM ******/
+/****** Object:  Table [dbo].[TestSuite]    Script Date: 5/31/2016 8:42:14 PM ******/
 SET @COMMAND_TEMPLATE='USE {DBNAME};
 SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 
-CREATE TABLE {DBNAME}.[dbo].[TestSuites](
+CREATE TABLE {DBNAME}.[dbo].[TestSuite](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[BuildId] [bigint] NULL,
 	[ParentObjId] [bigint] NULL,
 	[Name] [nvarchar](700) NULL,
 	[Status] [int] NOT NULL,
- CONSTRAINT [PK_dbo.TestSuites] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_dbo.TestSuite] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
