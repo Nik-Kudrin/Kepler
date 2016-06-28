@@ -229,6 +229,7 @@ nav.navbar-default.navbar-side {
     FOOTER  STYLES    
     =============================================*/
 #footer-sec {
+    display: none;
     position: fixed;
     width: 100%;
     bottom: 0px;
