@@ -24,8 +24,8 @@ namespace Kepler.Service.Scheduler
 
 
             var buildInBranches =
-                BuildRepository.Instance.Find(string.Format("WHERE StartDate IS NOT NULL AND StartDate < {0}",
-                    DateTime.Now - SchedulerInfo.SchedulePeriod))
+                BuildRepository.Instance.Find(string.Format("WHERE StartDate IS NOT NULL AND StartDate < '{0}'",
+                    (DateTime.Now - SchedulerInfo.SchedulePeriod).ToString("yyyy-MM-dd HH:mm:ss")))
                     .GroupBy(item => item.BranchId);
 
             foreach (var builds in buildInBranches)

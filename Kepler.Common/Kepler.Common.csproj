@@ -61,12 +61,8 @@
       <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Dapper.FluentMap, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.FluentMap.1.4.1\lib\net40\Dapper.FluentMap.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Dapper.SimpleCRUD, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.SimpleCRUD.1.10.0\lib\net45\Dapper.SimpleCRUD.dll</HintPath>
+    <Reference Include="Dapper.SimpleCRUD, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.SimpleCRUD.1.11.1\lib\net45\Dapper.SimpleCRUD.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">

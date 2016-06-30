@@ -737,7 +737,8 @@ namespace Kepler.Service
 
         public IEnumerable<ErrorMessage> GetErrors(DateTime fromTime)
         {
-            return ErrorMessageRepository.Instance.Find(string.Format("WHERE Time >= {0}", fromTime))
+            return ErrorMessageRepository.Instance.Find(string.Format("WHERE Time >= '{0}'",
+                fromTime.ToString("yyyy-MM-dd HH:mm:ss")))
                 .OrderByDescending(item => item.Id);
         }
 

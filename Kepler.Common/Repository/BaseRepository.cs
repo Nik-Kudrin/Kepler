@@ -9,10 +9,6 @@ namespace Kepler.Common.Repository
 {
     public abstract class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : class
     {
-        /* private static object _lock = new object();*/
-        // TODO: we should use Mutex (or some another sync primitive) 
-        // and Pass Project Id variable (because everything should be locked only inside Project scrope)
-
         protected BaseRepository()
         {
         }
@@ -29,7 +25,7 @@ namespace Kepler.Common.Repository
                 db.Open();
                 try
                 {
-                    return db.Get<TEntity>(id);
+                    return SimpleCRUD.Get<TEntity>(db, id);
                 }
                 catch (Exception ex)
                 {
@@ -53,7 +49,7 @@ namespace Kepler.Common.Repository
                 {
                     try
                     {
-                        db.Update(entity, tran);
+                        SimpleCRUD.Update(db, entity, tran);
                         tran.Commit();
                     }
                     catch (Exception ex)
@@ -67,22 +63,12 @@ namespace Kepler.Common.Repository
 
         public virtual void Update(IEnumerable<TEntity> entities)
         {
-            using (var db = CreateConnection())
+            if (entities == null)
+                return;
+
+            foreach (var entity in entities)
             {
-                db.Open();
-                using (var tran = db.BeginTransaction())
-                {
-                    try
-                    {
-                        db.Update(entities, tran);
-                        tran.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        tran.Rollback();
-                        LogErrorMessage(typeof (TEntity), ex);
-                    }
-                }
+                Update(entity);
             }
         }
 
@@ -99,7 +85,7 @@ namespace Kepler.Common.Repository
                 {
                     try
                     {
-                        db.Insert(entity, tran);
+                        SimpleCRUD.Insert(db, entity, tran);
                         tran.Commit();
                     }
                     catch (Exception ex)
@@ -120,7 +106,7 @@ namespace Kepler.Common.Repository
                 {
                     try
                     {
-                        db.Delete(entity, tran);
+                        SimpleCRUD.Delete(db, entity, tran);
                         tran.Commit();
                     }
                     catch (Exception ex)
@@ -141,7 +127,7 @@ namespace Kepler.Common.Repository
                 {
                     try
                     {
-                        db.Delete(entities, tran);
+                        SimpleCRUD.Delete(db, entities, tran);
                         tran.Commit();
                     }
                     catch (Exception ex)
@@ -178,7 +164,7 @@ namespace Kepler.Common.Repository
                 db.Open();
                 try
                 {
-                    return db.GetList<TEntity>(filterCondition);
+                    return SimpleCRUD.GetList<TEntity>(db, filterCondition);
                 }
                 catch (Exception ex)
                 {
