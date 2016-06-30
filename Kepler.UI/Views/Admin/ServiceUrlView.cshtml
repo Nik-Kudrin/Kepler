@@ -32,6 +32,7 @@
                 switch (pathType) {
                     case 'GetKeplerServiceUrl':
                         $('#service_url').val(data);
+                        $('.edit_service_url').attr('service_url', data);
                         break;
                 }
 
@@ -49,7 +50,7 @@
                 obj_act = "SetKeplerServiceUrl";
                 $('.modal-title').text('Edit service url');
                 $('.modal-body').empty().append('<div class="form-group"><label>Url</label>' +
-                    '<input class="form-control" name="url" type="text"></div>' +
+                    '<input class="form-control" name="url" value="' + $(this).attr('service_url') + '" type="text"></div>' +
                             '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
@@ -60,7 +61,7 @@
     //
     // Ajax call for modal popup
     //
-    function modal_ajax_call() {
+    function modalAjaxCall() {
         var url_parameters = obj_act + '?' + $('#modal_form').serialize();
         $.ajax({
             type: 'GET',

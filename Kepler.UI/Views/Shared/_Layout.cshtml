@@ -81,7 +81,25 @@
         </div>
     </div>
 
+    <div class="loading_label">
+        <span><i class="fa fa-refresh"></i> Loading...</span>
+    </div>
+
     <script type="text/javascript">
+        //
+        // Ajax spinner
+        //
+        $('.loading_label').fadeIn(1000);
+
+        $(document).on({
+            ajaxStart: function () {
+                $('.loading_label').fadeIn(1000);
+            },
+            ajaxStop: function () {
+                $('.loading_label').fadeOut(1000);
+            }
+        });
+
         //
         // Get parameter value from url
         //
@@ -123,6 +141,9 @@
                 case '/error-log':
                     return '/Kepler/ErrorLogView';
                     break;
+                case '/admin':
+                    return '/Admin/IndexView';
+                    break;
                 case '/admin/image-workers':
                     return '/Admin/ImageWorkersView';
                     break;
@@ -151,10 +172,10 @@
             });
         }
 
-        //
-        // Run Ajax loader on document ready, if url path != null
-        //
         $(document).ready(function () {
+            //
+            // Run Ajax loader on document ready, if url path != null
+            //
             if (url_parse() != null) {
                 ajax_loader();
             }
@@ -162,6 +183,7 @@
     </script>
 
     <script src="/Scripts/modal_win.js"></script>
+    <script src="/Scripts/lightbox.js"></script>
 
 </body>
 </html>

@@ -21,7 +21,8 @@ using Kepler.Service.Scheduler;
 namespace Kepler.Service
 {
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true, ConcurrencyMode = ConcurrencyMode.Multiple,
+        InstanceContextMode = InstanceContextMode.Single)]
     public class KeplerService : IKeplerService
     {
         // do not remove this field (used for build executor and data clean scheduler init)
@@ -38,7 +39,9 @@ namespace Kepler.Service
         {
             foreach (var imageComparisonInfo in imageComparisonContract.ImageComparisonList)
             {
-                var screenShot = ScreenShotRepository.Instance.Get(imageComparisonInfo.ScreenShotId);
+                var screenShotRepo = ScreenShotRepository.Instance;
+
+                var screenShot = screenShotRepo.Get(imageComparisonInfo.ScreenShotId);
 
                 // if current screenshot status = Stopped, then just update diff image path field
                 if (screenShot.Status == ObjectStatus.Stopped)
@@ -48,7 +51,7 @@ namespace Kepler.Service
 
                     // Generate Url paths
                     UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
-                    ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
+                    screenShotRepo.Update(screenShot);
                     continue;
                 }
 
@@ -58,14 +61,14 @@ namespace Kepler.Service
                     screenShot.Status = ObjectStatus.Failed;
                     screenShot.ErrorMessage = imageComparisonInfo.ErrorMessage;
                 }
-                else // if Passedd
+                else // if Passed
                 {
                     if (imageComparisonInfo.LastPassedScreenShotId.HasValue)
                     {
                         var oldPassedScreenShot =
-                            ScreenShotRepository.Instance.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
+                            screenShotRepo.Get(imageComparisonInfo.LastPassedScreenShotId.Value);
                         oldPassedScreenShot.IsLastPassed = false;
-                        ScreenShotRepository.Instance.UpdateAndFlashChanges(oldPassedScreenShot);
+                        screenShotRepo.Update(oldPassedScreenShot);
                     }
 
                     screenShot.Status = ObjectStatus.Passed;
@@ -81,7 +84,7 @@ namespace Kepler.Service
                 // Generate Url paths
                 UrlPathGenerator.ReplaceFilePathWithUrl(screenShot);
 
-                ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShot);
+                screenShotRepo.Update(screenShot);
             }
         }
 
@@ -145,9 +148,11 @@ namespace Kepler.Service
                                 break;
                         }
 
-                        var build = BuildRepository.Instance.Get(buildId.Value);
+                        var buildRepo = BuildRepository.Instance;
+
+                        var build = buildRepo.Get(buildId.Value);
                         build.Status = ObjectStatus.InQueue;
-                        BuildRepository.Instance.UpdateAndFlashChanges(build);
+                        buildRepo.Update(build);
                     }
                     catch (Exception ex)
                     {
@@ -231,10 +236,10 @@ namespace Kepler.Service
 
             var schedulerProperty = GetKeplerConfigProperty(schedulerName);
 
-            // if scheduler is'n initialized (first time, when applications start)
             if (!string.IsNullOrEmpty(schedulerProperty))
                 return new RestSharpDataContractJsonDeserializer().Deserialize<DataSchedulerContract>(schedulerProperty);
 
+            // if scheduler is'n initialized (first time, when applications start)
             var scheduler = new DataSchedulerContract()
             {
                 Name = schedulerName,
@@ -253,7 +258,7 @@ namespace Kepler.Service
 
         public void UpdateCleanDataScheduler(DataSchedulerContract scheduler)
         {
-            if (WebOperationContext.Current.IncomingRequest.Method == "OPTIONS")
+            if (WebOperationContext.Current != null && WebOperationContext.Current.IncomingRequest.Method == "OPTIONS")
             {
                 WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.OK;
                 return;
@@ -283,7 +288,7 @@ namespace Kepler.Service
 
         public IEnumerable<Build> GetBuilds(long branchId)
         {
-            return BuildRepository.Instance.Find(item => item.BranchId == branchId);
+            return BuildRepository.Instance.Find(new {BranchId = branchId});
         }
 
         public void DeleteBuild(long id)
@@ -303,7 +308,7 @@ namespace Kepler.Service
 
         public IEnumerable<ScreenShot> GetScreenShots(long testCaseId)
         {
-            return ScreenShotRepository.Instance.Find(item => item.ParentObjId == testCaseId);
+            return ScreenShotRepository.Instance.Find(new {ParentObjId = testCaseId});
         }
 
         #endregion
@@ -312,12 +317,18 @@ namespace Kepler.Service
 
         public TestCase GetTestCase(long id)
         {
-            return TestCaseRepository.Instance.GetCompleteObject(id);
+            var repo = new RepositoriesContainer();
+            return repo.CaseRepo.GetCompleteObject(repo, id);
         }
 
         public IEnumerable<TestCase> GetTestCases(long testSuiteId)
         {
-            return TestCaseRepository.Instance.GetObjectsTreeByParentId(testSuiteId);
+            var repo = new RepositoriesContainer();
+
+            var cases = repo.CaseRepo.FindByParentId(testSuiteId).ToList();
+            cases.ForEach(item => item.InitChildObjectsFromDb(repo));
+
+            return cases;
         }
 
         #endregion
@@ -326,12 +337,18 @@ namespace Kepler.Service
 
         public TestSuite GetTestSuite(long id)
         {
-            return TestSuiteRepository.Instance.GetCompleteObject(id);
+            var repo = new RepositoriesContainer();
+            return repo.SuiteRepo.GetCompleteObject(repo, id);
         }
 
         public IEnumerable<TestSuite> GetTestSuites(long assemblyId)
         {
-            return TestSuiteRepository.Instance.GetObjectsTreeByParentId(assemblyId);
+            var repo = new RepositoriesContainer();
+
+            var suites = repo.SuiteRepo.FindByParentId(assemblyId).ToList();
+            suites.ForEach(item => item.InitChildObjectsFromDb(repo));
+
+            return suites;
         }
 
         #endregion
@@ -340,13 +357,19 @@ namespace Kepler.Service
 
         public TestAssembly GetTestAssembly(long id)
         {
-            return TestAssemblyRepository.Instance.GetCompleteObject(id);
+            var repo = new RepositoriesContainer();
+            return repo.AssemblyRepo.GetCompleteObject(repo, id);
         }
 
 
         public IEnumerable<TestAssembly> GetTestAssemblies(long buildId)
         {
-            return TestAssemblyRepository.Instance.GetObjectsTreeByParentId(buildId);
+            var repo = new RepositoriesContainer();
+
+            var assemblies = repo.AssemblyRepo.FindByBuildId(buildId).ToList();
+            assemblies.ForEach(item => item.InitChildObjectsFromDb(repo));
+
+            return assemblies;
         }
 
         #endregion
@@ -362,7 +385,16 @@ namespace Kepler.Service
         {
             var projectRepo = ProjectRepository.Instance;
             var projects = projectRepo.FindAll();
-            projects.Each(project => projectRepo.GetCompleteObject(project.Id));
+            projects.Each(project => project.InitChildObjectsFromDb());
+
+            projects = projects.OrderBy(item => item.Name, StringComparer.InvariantCultureIgnoreCase);
+
+            foreach (var project in projects)
+            {
+                project.Branches = project.Branches
+                    .OrderBy(branch => branch.Value.Name, StringComparer.InvariantCultureIgnoreCase)
+                    .ToDictionary(item => item.Key, item => item.Value);
+            }
 
             return projects;
         }
@@ -370,7 +402,7 @@ namespace Kepler.Service
         public void CreateProject(string name)
         {
             var projectRepo = ProjectRepository.Instance;
-            if (projectRepo.Find(name).Any())
+            if (projectRepo.Find(new {Name = name}).Any())
                 LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Project with name {name} already exist");
 
             try
@@ -386,7 +418,9 @@ namespace Kepler.Service
 
         public void UpdateProject(long id, string newName)
         {
-            var project = ProjectRepository.Instance.Get(id);
+            var projectRepo = ProjectRepository.Instance;
+
+            var project = projectRepo.Get(id);
 
             if (project == null)
             {
@@ -395,14 +429,14 @@ namespace Kepler.Service
 
             if (project.Name != newName)
             {
-                if (ProjectRepository.Instance.Find(newName).Any())
+                if (projectRepo.Find(new {Name = newName}).Any())
                 {
                     LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Project with name {newName} already exist");
                 }
             }
 
             project.Name = newName;
-            ProjectRepository.Instance.UpdateAndFlashChanges(project);
+            projectRepo.Update(project);
         }
 
         public void DeleteProject(long id)
@@ -439,7 +473,7 @@ namespace Kepler.Service
                 BranchRepository.Instance.Insert(branch);
 
                 baseline.BranchId = branch.Id;
-                BaseLineRepository.Instance.UpdateAndFlashChanges(baseline);
+                BaseLineRepository.Instance.Update(baseline);
 
                 long mainBaseLineId;
 
@@ -478,16 +512,16 @@ namespace Kepler.Service
 
 
             if (!project.MainBranchId.HasValue &&
-                BranchRepository.Instance.Find(branch => branch.ProjectId == project.Id).Any())
+                BranchRepository.Instance.Find(new {ProjectId = project.Id}).Any())
             {
                 LogErrorMessage(ErrorMessage.ErorCode.ProjectDontHaveMainBranch,
-                    $"Project '{project.Name}' don't have main branch. Please, manually specify for project which branch should be considered as main.");
+                    $"Project '{project.Name}' doesn't have main branch. Please, manually specify for project, which branch should be considered as main.");
             }
         }
 
         private void IsBranchAlreadyExist(string branchName)
         {
-            if (BranchRepository.Instance.Find(branchName).Any())
+            if (BranchRepository.Instance.Find(new {Name = branchName}).Any())
             {
                 LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Branch with name {branchName} already exist");
             }
@@ -510,19 +544,19 @@ namespace Kepler.Service
             if (isMainBranch)
             {
                 var allProjectBranches =
-                    BranchRepository.Instance.Find(item => item.ProjectId == branch.ProjectId).ToList();
+                    BranchRepository.Instance.Find(new {ProjectId = branch.ProjectId}).ToList();
 
                 allProjectBranches.ForEach(item => item.IsMainBranch = false);
-                BranchRepository.Instance.UpdateAndFlashChanges(allProjectBranches);
+                BranchRepository.Instance.Update(allProjectBranches);
 
                 var project = ProjectRepository.Instance.Get(branch.ProjectId.Value);
                 project.MainBranchId = branch.Id;
-                ProjectRepository.Instance.UpdateAndFlashChanges(project);
+                ProjectRepository.Instance.Update(project);
             }
 
             branch.Name = newName;
             branch.IsMainBranch = isMainBranch;
-            BranchRepository.Instance.UpdateAndFlashChanges(branch);
+            BranchRepository.Instance.Update(branch);
         }
 
         public Branch GetBranch(long id)
@@ -536,10 +570,10 @@ namespace Kepler.Service
 
         public IEnumerable<Branch> GetBranches(long projectId)
         {
-            var branches = BranchRepository.Instance.Find(branch => branch.ProjectId == projectId);
-            branches.Each(branch => branch.InitChildObjectsFromDb());
+            var branches = BranchRepository.Instance.Find(new {ProjectId = projectId});
+            branches.Each(branch => branch.InitChildObjectsFromDb<BuildRepository, Build>(BuildRepository.Instance));
 
-            return branches;
+            return branches.OrderBy(item => item.Name, StringComparer.InvariantCultureIgnoreCase);
         }
 
         public void DeleteBranch(long id)
@@ -562,8 +596,10 @@ namespace Kepler.Service
 
         public void RegisterImageWorker(string name, string imageWorkerServiceUrl)
         {
+            imageWorkerServiceUrl = imageWorkerServiceUrl.Trim();
+
             var workerRepo = ImageWorkerRepository.Instance;
-            if (!workerRepo.Find(imageWorkerServiceUrl).Any())
+            if (!workerRepo.Find(new {Name = imageWorkerServiceUrl}).Any())
             {
                 workerRepo.Insert(new ImageWorker
                 {
@@ -577,14 +613,14 @@ namespace Kepler.Service
             else
             {
                 LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects,
-                    "Image worker with the same URL {imageWorkerServiceUrl} already exist");
+                    $"Image worker with the same URL {imageWorkerServiceUrl} already exist");
             }
         }
 
         public void UpdateImageWorker(string name, string newName, string newWorkerServiceUrl)
         {
             var workerRepo = ImageWorkerRepository.Instance;
-            var worker = workerRepo.Find(item => item.Name == name).FirstOrDefault();
+            var worker = workerRepo.Find(new {Name = name}).FirstOrDefault();
 
             if (worker == null)
             {
@@ -594,7 +630,7 @@ namespace Kepler.Service
             {
                 worker.Name = newName;
                 worker.WorkerServiceUrl = newWorkerServiceUrl;
-                workerRepo.UpdateAndFlashChanges(worker);
+                workerRepo.Update(worker);
             }
         }
 
@@ -625,15 +661,15 @@ namespace Kepler.Service
         private string GetKeplerConfigProperty(string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName))
-                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, "Kepler config property name must be non emtpy");
+                LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, "Kepler config property name must be not emtpy");
 
-            var property = KeplerSystemConfigRepository.Instance.Find(propertyName);
+            var property = KeplerSystemConfigRepository.Instance.Find(new {Name = propertyName}).FirstOrDefault();
             return property == null ? "" : property.Value;
         }
 
         private void SetKeplerConfigProperty(string propertyName, string propertyValue)
         {
-            var property = KeplerSystemConfigRepository.Instance.Find(propertyName);
+            var property = KeplerSystemConfigRepository.Instance.Find(new {Name = propertyName}).FirstOrDefault();
 
             if (property == null)
             {
@@ -642,7 +678,7 @@ namespace Kepler.Service
             else
             {
                 property.Value = propertyValue;
-                KeplerSystemConfigRepository.Instance.UpdateAndFlushChanges(property);
+                KeplerSystemConfigRepository.Instance.Update(property);
             }
         }
 
@@ -701,22 +737,24 @@ namespace Kepler.Service
 
         public IEnumerable<ErrorMessage> GetErrors(DateTime fromTime)
         {
-            return ErrorMessageRepository.Instance.Find(item => item.Time >= fromTime)
+            return ErrorMessageRepository.Instance.Find(string.Format("WHERE Time >= '{0}'",
+                fromTime.ToString("yyyy-MM-dd HH:mm:ss")))
                 .OrderByDescending(item => item.Id);
         }
 
         public IEnumerable<ErrorMessage> GetErrorsSinceLastViewed()
         {
-            var lastViewedError = ErrorMessageRepository.Instance.Find(item => item.IsLastViewed).FirstOrDefault();
+            var errorRepo = ErrorMessageRepository.Instance;
+
+            var lastViewedError = errorRepo.Find(new {IsLastViewed = true}).FirstOrDefault();
 
             if (lastViewedError == null)
             {
-                return ErrorMessageRepository.Instance.FindAll().OrderByDescending(item => item.Id);
+                return errorRepo.FindAll().OrderByDescending(item => item.Id);
             }
 
-            return
-                ErrorMessageRepository.Instance.Find(item => item.Id > lastViewedError.Id)
-                    .OrderByDescending(item => item.Id);
+            return errorRepo.Find(string.Format("WHERE Id > {0}", lastViewedError.Id))
+                .OrderByDescending(item => item.Id);
         }
 
         public void SetLastViewedError(long errorId)
@@ -730,12 +768,12 @@ namespace Kepler.Service
                 }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
 
 
-            var allLastViewedItems = ErrorMessageRepository.Instance.Find(item => item.IsLastViewed);
+            var allLastViewedItems = ErrorMessageRepository.Instance.Find(new {IsLastViewed = true});
             allLastViewedItems.Each(item => item.IsLastViewed = false);
-            ErrorMessageRepository.Instance.UpdateAndFlashChanges(allLastViewedItems);
+            ErrorMessageRepository.Instance.Update(allLastViewedItems);
 
             error.IsLastViewed = true;
-            ErrorMessageRepository.Instance.UpdateAndFlashChanges(error);
+            ErrorMessageRepository.Instance.Update(error);
         }
 
         private void LogErrorMessage(ErrorMessage.ErorCode errorCode, string exceptionMessage)

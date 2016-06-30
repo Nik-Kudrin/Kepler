@@ -65,7 +65,7 @@ namespace Kepler.Service.Scheduler
                 }
                 finally
                 {
-                    ImageWorkerRepository.Instance.UpdateAndFlashChanges(imageWorker);
+                    ImageWorkerRepository.Instance.Update(imageWorker);
                 }
             }
         }

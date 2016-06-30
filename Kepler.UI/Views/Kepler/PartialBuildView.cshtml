@@ -1,11 +1,11 @@
 ﻿<script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         document.title = 'Build - Kepler';
     });
 </script>
 
-<div class="col-md-12">
-    <div class="col-md-6">
+<div class="col-md-12 list-fixed-panel">
+    <div class="col-md-8">
         <div class="col-md-1">
             <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
             <ul class="dropdown-menu build-info-popup">
@@ -15,25 +15,31 @@
                 <li class="build-info-failed">Tests failed: <span>45</span></li>
             </ul>
         </div>
-        <div id="build-info-block" class="col-md-5">
+        <div id="build-info-block" class="col-md-4">
             <h3>
                 <div class=""></div>
                 Build <span></span>&nbsp;
             </h3>
         </div>
+        <div class="col-md-1 refresh_button">
+            <button type="button" class="btn btn-xs btn-primary"><i class="fa fa-refresh"></i></button>
+        </div>
     </div>
 
-    <div class="col-md-2">
-        <span class="btn btn-default accordion_col_exp collapsed">Expand all</span>
-    </div>
     <div class="col-md-2">
         <button data-toggle="dropdown" class="btn dropdown-toggle">Filter <span class="caret"></span></button>
         <ul class="dropdown-menu">
             <li>
-                <a href="#">Failed</a>
+                <a href="#" data-act="show_all">Show all</a>
             </li>
             <li>
-                <a href="#">Passed</a>
+                <a href="#" data-act="hide_all">Hide all</a>
+            </li>
+            <li>
+                <a href="#" data-act="show_failed">Failed</a>
+            </li>
+            <li>
+                <a href="#" data-act="show_passed">Passed</a>
             </li>
         </ul>
     </div>
@@ -57,7 +63,7 @@
     </div>
 </div>
 
-<div class="col-md-12">
+<div class="col-md-12 entity-list">
     <div class="panel panel-default build-panel">
         <div class="panel-body">
             <div class="panel-group testAssembly_group" id="testAssembly_group">
@@ -119,19 +125,19 @@
     <div class="col-md-12">
         <div class="col-md-4 screenShot-base">
             <span>Baseline</span>
-            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Base line" href="">
+            <a data-lightbox="multiimages" data-title="Base line" href="">
                 <img src="">
             </a>
         </div>
         <div class="col-md-4 screenShot-dif">
             <span>Difference</span>
-            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Difference" href="">
+            <a data-lightbox="multiimages" data-title="Difference" href="">
                 <img src="">
             </a>
         </div>
         <div class="col-md-4 screenShot-curr">
             <span>Original</span>
-            <a data-toggle="lightbox" data-gallery="multiimages" data-title="Original" href="">
+            <a data-lightbox="multiimages" data-title="Original" href="">
                 <img src="">
             </a>
         </div>
@@ -165,360 +171,420 @@
 </div>
 
 <script>
-    var interval = null; // timer
+    $(document).ready(function () {
+        $('body').scrollTop(0);
 
-    $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
-        event.preventDefault();
-        $(this).ekkoLightbox();
-    });
+        var xhr;
 
-    //
-    // Expand/Collapse accordions
-    //
-    $('.accordion_col_exp').click(function () {
-        if ($(this).hasClass('collapsed')) {
-            $('.panel-collapse:not(".in")').collapse('show');
-            $(this).removeClass('collapsed').addClass('expanded');
-            $(this).text('Collapse all');
-        } else {
-            $('.panel-collapse.in').collapse('hide');
-            $(this).removeClass('expanded').addClass('collapsed');
-            $(this).text('Expand all');
+        if (xhr) {
+            xhr.abort(); // Disable requests from previous view
         }
-    });
 
-    //
-    // Get Build
-    //
-    getBuild();
-    interval = setInterval(getBuild, 8000);
+        lightbox.option({
+            'fitImagesInViewport': false,
+            'disableScrolling': true
+        });
 
-    function getBuild() {
-        if (getParameterByName('id') != '') {
-            $.ajax({
-                url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
-                type: 'GET',
-                success: function (data) {
-                    $.each(data, function (key, value) {
-                        if (value != null) {
-                            if (key == 'Id') {
-                                $('.build_action_menu a').attr('obj_id', value);
-                            } else {
-                                $('.icon-build-info').attr(key, value);
+        $('.refresh_button button').click(function () {
+            getBuild();
+            getAssemblies();
+        });
+
+        //
+        // Get Build
+        //
+        var intervalBuild;
+        var getBuild = function () {
+            clearInterval(intervalBuild);
+            return $.Deferred(function () {
+                var selfBuild = this;
+                if (getParameterByName('id') != '') {
+                    xhr = $.ajax({
+                        url: KeplerServiceUrl + 'GetBuild?id=' + getParameterByName('id'),
+                        type: 'GET',
+                        success: function (data) {
+                            $.each(data, function (key, value) {
+                                if (value != null) {
+                                    if (key == 'Id') {
+                                        $('.build_action_menu a').attr('obj_id', value);
+                                    } else {
+                                        $('.icon-build-info').attr(key, value);
+                                    }
+                                }
+                            });
+
+                            var branch_id = $('.icon-build-info').attr('BranchId');
+                            var level_1_menu_item = $('#main-menu a[branch_id="' + branch_id + '"].main-menu-item').parent().parent().parent();
+                            var level_2_menu_item = $('#main-menu a[branch_id="' + branch_id + '"].main-menu-item');
+                            if (!level_2_menu_item.hasClass('main-menu-item-focus')) {
+                                if (!level_1_menu_item.hasClass('active')) {
+                                    level_1_menu_item.children('.main-menu-item').click();
+                                }
+                                $('.main-menu-item-focus').removeClass('main-menu-item-focus');
+                                level_2_menu_item.addClass('main-menu-item-focus');
+                                $('nav.navbar-default.navbar-side').animate({
+                                    scrollTop: $(level_2_menu_item).offset().top - 200
+                                }, 500);
                             }
+
+                            updateBuildInfo();
+                            selfBuild.resolve();
+                            //intervalBuild = setInterval(getBuild, 20000);
                         }
                     });
-                    updateBuildInfo();
                 }
             });
+        };
+
+        getBuild();
+
+        //
+        // Update Build info (parse and insert into html)
+        //
+        function updateBuildInfo() {
+            $('h3 > div').removeClass('status-3 status-4 status-5 status-6 status-7').addClass('status-' + $('.icon-build-info').attr('status'));
+
+            $('h3 > span').html(getParameterByName('id'));
+
+            $('.build-info-popup').empty();
+
+            if ($('.icon-build-info').attr('startdate') != null) {
+                var startdate = moment($('.icon-build-info').attr('startdate')).format("YYYY-MM-DD hh:mmA");
+            }
+            if ($('.icon-build-info').attr('stopdate') != null) {
+                var stopdate = moment($('.icon-build-info').attr('stopdate')).format("YYYY-MM-DD hh:mmA");
+            }
+            if ($('.icon-build-info').attr('duration') != null) {
+                var duration = $('.icon-build-info').attr('duration').replace("PT", "").replace("H", " hours ").replace("M", " minutes ").replace("S", " seconds");
+            }
+            if ($('.icon-build-info').attr('predictedduration') != null) {
+                var predictedduration = $('.icon-build-info').attr('predictedduration').replace("PT", "").replace("H", " hours ").replace("M", " minutes ").replace("S", " seconds");
+            }
+
+            $('.build-info-popup').append($('<li>').text('Start: ' + startdate));
+            $('.build-info-popup').append($('<li>').text('Stop: ' + stopdate));
+            $('.build-info-popup').append($('<li>').text('Duration: ' + duration));
+            $('.build-info-popup').append($('<li>').text('Estimated duration: ' + predictedduration));
+
+            var numberscreenshots = $('.icon-build-info').attr('numberscreenshots');
+            var numberfailedscreenshots = $('.icon-build-info').attr('numberfailedscreenshots');
+            var numbertestassemblies = $('.icon-build-info').attr('numbertestassemblies');
+            var numbertestcase = $('.icon-build-info').attr('numbertestcase');
+            var numbertestsuites = $('.icon-build-info').attr('numbertestsuites');
+
+            $('.build-info-popup').append($('<li class="divider">'));
+
+            $('.build-info-popup').append($('<li>').text('Screenshots: ' + numberscreenshots));
+            $('.build-info-popup').append($('<li>').text('Failed screenshots: ' + numberfailedscreenshots));
+            $('.build-info-popup').append($('<li>').text('Test assemblies: ' + numbertestassemblies));
+            $('.build-info-popup').append($('<li>').text('Test cases: ' + numbertestcase));
+            $('.build-info-popup').append($('<li>').text('Test suites: ' + numbertestsuites));
         }
-    }
 
-    //
-    // Update Build info (parse and insert into html)
-    //
-    function updateBuildInfo() {
-        $('h3 > div').removeClass('status-3 status-4 status-5 status-6 status-7').addClass('status-' + $('.icon-build-info').attr('status'));
+        //
+        // Get Assembly
+        //
+        var intervalAssemblies;
+        var getAssemblies = function () {
+            clearInterval(intervalAssemblies);
+            return $.Deferred(function () {
+                var selfBuild = this;
+                if (getParameterByName('id') != '') {
+                    xhr = $.ajax({
+                        url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
+                        type: 'GET',
+                        success: function (data) {
+                            var entityName = '';
+                            var entityStatus = '';
+                            var entityId = '';
+                            var entityParentId = '';
+                            var BaseLineImagePathUrl = '';
+                            var BaseLinePreviewPathUrl = '';
+                            var DiffImagePathUrl = '';
+                            var DiffPreviewPathUrl = '';
+                            var ImagePathUrl = '';
+                            var PreviewImagePathUrl = '';
+                            var ErrorMessage = '';
+                            var Url = '';
 
-        $('h3 > span').html(getParameterByName('id'));
-
-        $('.build-info-popup').empty();
-
-        if ($('.icon-build-info').attr('startdate') != null) {
-            var startdate = moment($('.icon-build-info').attr('startdate')).format("YYYY-MM-DD hh:mmA");
-        }
-        if ($('.icon-build-info').attr('stopdate') != null) {
-            var stopdate = moment($('.icon-build-info').attr('stopdate')).format("YYYY-MM-DD hh:mmA");
-        }
-        if ($('.icon-build-info').attr('duration') != null) {
-            var duration = $('.icon-build-info').attr('duration').replace("PT", "").replace("H", " hours ").replace("M", " minutes ").replace("S", " seconds");
-        }
-        if ($('.icon-build-info').attr('predictedduration') != null) {
-            var predictedduration = $('.icon-build-info').attr('predictedduration').replace("PT", "").replace("H", " hours ").replace("M", " minutes ").replace("S", " seconds");
-        }
-
-        $('.build-info-popup').append($('<li>').text('Start: ' + startdate));
-        $('.build-info-popup').append($('<li>').text('Stop: ' + stopdate));
-        $('.build-info-popup').append($('<li>').text('Duration: ' + duration));
-        $('.build-info-popup').append($('<li>').text('Estimated duration: ' + predictedduration));
-
-        var numberscreenshots = $('.icon-build-info').attr('numberscreenshots');
-        var numberfailedscreenshots = $('.icon-build-info').attr('numberfailedscreenshots');
-        var numbertestassemblies = $('.icon-build-info').attr('numbertestassemblies');
-        var numbertestcase = $('.icon-build-info').attr('numbertestcase');
-        var numbertestsuites = $('.icon-build-info').attr('numbertestsuites');
-
-        $('.build-info-popup').append($('<li class="divider">'));
-
-        $('.build-info-popup').append($('<li>').text('Screenshots: ' + numberscreenshots));
-        $('.build-info-popup').append($('<li>').text('Failed screenshots: ' + numberfailedscreenshots));
-        $('.build-info-popup').append($('<li>').text('Test assemblies: ' + numbertestassemblies));
-        $('.build-info-popup').append($('<li>').text('Test cases: ' + numbertestcase));
-        $('.build-info-popup').append($('<li>').text('Test suites: ' + numbertestsuites));
-    }
-
-    //
-    // Get Assembly
-    //
-    getAssemblies();
-    interval = setInterval(getAssemblies, 8000);
-
-    function getAssemblies() {
-        if (getParameterByName('id') != '') {
-            $.ajax({
-                url: KeplerServiceUrl + 'GetTestAssemblies?buildId=' + getParameterByName('id'),
-                type: 'GET',
-                success: function (data) {
-                    var entityName = '';
-                    var entityStatus = '';
-                    var entityId = '';
-                    var entityParentId = '';
-                    var BaseLineImagePathUrl = '';
-                    var BaseLinePreviewPathUrl = '';
-                    var DiffImagePathUrl = '';
-                    var DiffPreviewPathUrl = '';
-                    var ImagePathUrl = '';
-                    var PreviewImagePathUrl = '';
-                    var ErrorMessage = '';
-                    var Url = '';
-
-                    $.each(data, function (key, value) {
-                        $.each(value, function (key, value) {
-                            if (key != "TestSuites") {
-                                if (key == "Name") {
-                                    entityName = value;
-                                } else if (key == "Status") {
-                                    entityStatus = value;
-                                } else if (key == "Id") {
-                                    entityId = value;
-                                } else if (key == "ParentObjId") {
-                                    entityParentId = value;
-                                }
-                            } else {
-                                entityBuilt(entity = 'testAssembly', entityParentId, childEntity = 'testSuite', entityId, entityName, entityStatus);
+                            $.each(data, function (key, value) {
                                 $.each(value, function (key, value) {
-                                    $.each(value, function (key, value) {
-                                        if (key == "Value") {
+                                    if (key != "TestSuites") {
+                                        if (key == "Name") {
+                                            entityName = value;
+                                        } else if (key == "Status") {
+                                            entityStatus = value;
+                                        } else if (key == "Id") {
+                                            entityId = value;
+                                        } else if (key == "ParentObjId") {
+                                            entityParentId = value;
+                                        }
+                                    } else {
+                                        entityBuilt(entity = 'testAssembly', entityParentId, childEntity = 'testSuite', entityId, entityName, entityStatus);
+                                        $.each(value, function (key, value) {
                                             $.each(value, function (key, value) {
-                                                if (key != "TestCases") {
-                                                    if (key == "Name") {
-                                                        entityName = value;
-                                                    } else if (key == "Status") {
-                                                        entityStatus = value;
-                                                    } else if (key == "Id") {
-                                                        entityId = value;
-                                                    } else if (key == "ParentObjId") {
-                                                        entityParentId = value;
-                                                    }
-                                                } else {
-                                                    entityBuilt(entity = 'testSuite', entityParentId, childEntity = 'testCase', entityId, entityName, entityStatus);
+                                                if (key == "Value") {
                                                     $.each(value, function (key, value) {
-                                                        $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_case_group:last').removeClass('panel-default-case').show();
-                                                        $.each(value, function (key, value) {
-                                                            if (key == "Value") {
+                                                        if (key != "TestCases") {
+                                                            if (key == "Name") {
+                                                                entityName = value;
+                                                            } else if (key == "Status") {
+                                                                entityStatus = value;
+                                                            } else if (key == "Id") {
+                                                                entityId = value;
+                                                            } else if (key == "ParentObjId") {
+                                                                entityParentId = value;
+                                                            }
+                                                        } else {
+                                                            entityBuilt(entity = 'testSuite', entityParentId, childEntity = 'testCase', entityId, entityName, entityStatus);
+                                                            $.each(value, function (key, value) {
+                                                                $('.panel-default-case').clone(true, true).appendTo('#assembly_group .test_case_group:last').removeClass('panel-default-case').show();
                                                                 $.each(value, function (key, value) {
-                                                                    if (key != "ScreenShots") {
-                                                                        if (key == "Name") {
-                                                                            entityName = value;
-                                                                        } else if (key == "Status") {
-                                                                            entityStatus = value;
-                                                                        } else if (key == "Id") {
-                                                                            entityId = value;
-                                                                        } else if (key == "ParentObjId") {
-                                                                            entityParentId = value;
-                                                                        }
-                                                                    } else {
-                                                                        entityBuilt(entity = 'testCase', entityParentId, childEntity = 'screenShot', entityId, entityName, entityStatus);
+                                                                    if (key == "Value") {
                                                                         $.each(value, function (key, value) {
-                                                                            $.each(value, function (key, value) {
-                                                                                if (key == "Value") {
+                                                                            if (key != "ScreenShots") {
+                                                                                if (key == "Name") {
+                                                                                    entityName = value;
+                                                                                } else if (key == "Status") {
+                                                                                    entityStatus = value;
+                                                                                } else if (key == "Id") {
+                                                                                    entityId = value;
+                                                                                } else if (key == "ParentObjId") {
+                                                                                    entityParentId = value;
+                                                                                }
+                                                                            } else {
+                                                                                entityBuilt(entity = 'testCase', entityParentId, childEntity = 'screenShot', entityId, entityName, entityStatus);
+                                                                                $.each(value, function (key, value) {
                                                                                     $.each(value, function (key, value) {
-                                                                                        if (key == "Name") {
-                                                                                            entityName = value;
-                                                                                        } else if (key == "Status") {
-                                                                                            entityStatus = value;
-                                                                                        } else if (key == "Id") {
-                                                                                            entityId = value;
-                                                                                        } else if (key == "ParentObjId") {
-                                                                                            entityParentId = value;
-                                                                                        } else if (key == "BaseLineImagePathUrl" && value != null) {
-                                                                                            BaseLineImagePathUrl = value.replace(/\\/g, "/");
-                                                                                        } else if (key == "BaseLinePreviewPathUrl" && value != null) {
-                                                                                            BaseLinePreviewPathUrl = value.replace(/\\/g, "/");
-                                                                                        } else if (key == "DiffImagePathUrl" && value != null) {
-                                                                                            if (value.indexOf('img/') != -1) {
-                                                                                                DiffImagePathUrl = value.replace(/\\/g, "/");
-                                                                                            }
-                                                                                        } else if (key == "DiffPreviewPathUrl" && value != null) {
-                                                                                            if (value.indexOf('img/') != -1) {
-                                                                                                DiffPreviewPathUrl = value.replace(/\\/g, "/");
-                                                                                            }
-                                                                                        } else if (key == "ImagePathUrl" && value != null) {
-                                                                                            ImagePathUrl = value.replace(/\\/g, "/");
-                                                                                        } else if (key == "PreviewImagePathUrl" && value != null) {
-                                                                                            PreviewImagePathUrl = value.replace(/\\/g, "/");
-                                                                                        } else if (key == "ErrorMessage") {
-                                                                                            ErrorMessage = value;
-                                                                                        } else if (key == "Url") {
-                                                                                            Url = value;
+                                                                                        if (key == "Value") {
+                                                                                            $.each(value, function (key, value) {
+                                                                                                if (key == "Name") {
+                                                                                                    entityName = value;
+                                                                                                } else if (key == "Status") {
+                                                                                                    entityStatus = value;
+                                                                                                } else if (key == "Id") {
+                                                                                                    entityId = value;
+                                                                                                } else if (key == "ParentObjId") {
+                                                                                                    entityParentId = value;
+                                                                                                } else if (key == "BaseLineImagePathUrl" && value != null) {
+                                                                                                    BaseLineImagePathUrl = value.replace(/\\/g, "/");
+                                                                                                } else if (key == "BaseLinePreviewPathUrl" && value != null) {
+                                                                                                    BaseLinePreviewPathUrl = value.replace(/\\/g, "/");
+                                                                                                } else if (key == "DiffImagePathUrl" && value != null) {
+                                                                                                    if (value.indexOf('img/') != -1) {
+                                                                                                        DiffImagePathUrl = value.replace(/\\/g, "/");
+                                                                                                    }
+                                                                                                } else if (key == "DiffPreviewPathUrl" && value != null) {
+                                                                                                    if (value.indexOf('img/') != -1) {
+                                                                                                        DiffPreviewPathUrl = value.replace(/\\/g, "/");
+                                                                                                    }
+                                                                                                } else if (key == "ImagePathUrl" && value != null) {
+                                                                                                    ImagePathUrl = value.replace(/\\/g, "/");
+                                                                                                } else if (key == "PreviewImagePathUrl" && value != null) {
+                                                                                                    PreviewImagePathUrl = value.replace(/\\/g, "/");
+                                                                                                } else if (key == "ErrorMessage") {
+                                                                                                    ErrorMessage = value;
+                                                                                                } else if (key == "Url") {
+                                                                                                    Url = value;
+                                                                                                }
+                                                                                            });
+                                                                                            entityBuilt(entity = 'screenShot', entityParentId, childEntity, entityId, entityName, entityStatus,
+                                                                                                BaseLineImagePathUrl, BaseLinePreviewPathUrl, DiffImagePathUrl, DiffPreviewPathUrl,
+                                                                                                ImagePathUrl, PreviewImagePathUrl, ErrorMessage, Url);
                                                                                         }
                                                                                     });
-                                                                                    entityBuilt(entity = 'screenShot', entityParentId, childEntity, entityId, entityName, entityStatus,
-                                                                                        BaseLineImagePathUrl, BaseLinePreviewPathUrl, DiffImagePathUrl, DiffPreviewPathUrl,
-                                                                                        ImagePathUrl, PreviewImagePathUrl, ErrorMessage, Url);
-                                                                                }
-                                                                            });
+                                                                                });
+                                                                            }
                                                                         });
                                                                     }
                                                                 });
-                                                            }
-                                                        });
+                                                            });
+                                                        }
                                                     });
                                                 }
                                             });
-                                        }
-                                    });
+                                        });
+                                    }
                                 });
-                            }
-                        });
+                            });
+                            selfBuild.resolve();
+                            //intervalAssemblies = setInterval(getAssemblies, 20000);
+                        }
                     });
                 }
             });
-        }
-    }
+        };
 
-    //
-    // Builder for testAssembly | testSuite | testCase | screenShot
-    //
-    function entityBuilt(entity, entityParentId, childEntity, entityId, entityName, entityStatus,
-        BaseLineImagePathUrl, BaseLinePreviewPathUrl, DiffImagePathUrl, DiffPreviewPathUrl,
-        ImagePathUrl, PreviewImagePathUrl, ErrorMessage, Url) {
-        if ($('#' + entity + '-' + entityId).length && entity != 'screenShot') {
-            if ($('#' + entity + '-' + entityId + ' > .panel-heading a span:first').attr('class') != 'status-' + entityStatus) {
-                $('#' + entity + '-' + entityId + ' > .panel-heading a span:first').removeClass().addClass('status-' + entityStatus);
-            }
-        } else if ($('#' + entity + '-' + entityId).length == 0 && entity != 'screenShot') {
-            if (entity == "testAssembly") {
-                $('.panel-default-' + entity).clone(true, true).appendTo('#' + entity + '_group').attr('id', entity + '-' + entityId).removeClass('panel-default-' + entity).show();
-            } else {
-                $('.panel-default-' + entity).clone(true, true).appendTo('#' + entity + '_group-' + entityParentId).attr('id', entity + '-' + entityId).removeClass('panel-default-' + entity).show();
-            }
-            $('#' + entity + '-' + entityId + ' .panel-title span').text(entityName);
-            $('#' + entity + '-' + entityId).attr('' + entity + '-status', entityStatus);
-            $('<span class="status-' + entityStatus + '">').insertAfter('#' + entity + '-' + entityId + ' .panel-title a i');
-            $('#' + entity + '-' + entityId + ' .panel-title a').attr('href', '#panel-' + entity + '-' + entityId);
-            $('#' + entity + '-' + entityId + ' .panel-collapse').attr('id', 'panel-' + entity + '-' + entityId);
-            $('#' + entity + '-' + entityId + ' .panel-group').attr('id', childEntity + '_group-' + entityParentId);
-            $('.dropdown-btn-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId + ' .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-            $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('obj_id', entityId);
-            $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('typeName', entity);
-        } else if ($('#' + entity + '-' + entityId).length && entity == 'screenShot') {
-            if ($('#' + entity + '-' + entityId + ' > .screenShot-header span:last').attr('class') != 'status-' + entityStatus) {
-                $('#' + entity + '-' + entityId + ' > .screenShot-header span:last').removeClass().addClass('status-' + entityStatus);
-            }
-        } else if ($('#' + entity + '-' + entityId).length == 0 && entity == 'screenShot') {
-            $('.screenShot-hidden').clone(true, true).appendTo('#panel-testCase-' + entityParentId + ' > .panel-body').attr('id', entity + '-' + entityId).removeClass('screenShot-hidden').show();
-            $('.screenShot-splitter-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId).removeClass('screenShot-splitter-hidden').show();
-            $('#' + entity + '-' + entityId + ' img').attr('title', entityName);
-            $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-gallery', entityName);
-            $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-title', function (i, val) {
-                return val + '&nbsp;' + entityName;
-            });
-            $('#' + entity + '-' + entityId + ' .screenShot-header').append('&nbsp;<span class="status-' + entityStatus + '">');
-            $('.dropdown-btn-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId + ' .screenShot-header').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
-            $('#' + entity + '-' + entityId + ' .screenShot-header .dropdown-menu a').attr('obj_id', entityId);
-            $('#' + entity + '-' + entityId + ' .screenShot-header .dropdown-menu a').attr('typeName', 'screenShot');
-            $('#' + entity + '-' + entityId + ' .screenShot-base a').attr('href', BaseLineImagePathUrl);
-            $('#' + entity + '-' + entityId + ' .screenShot-base img').attr('src', BaseLinePreviewPathUrl);
-            if (DiffImagePathUrl.indexOf('img/') != -1) {
-                $('#' + entity + '-' + entityId + ' .screenShot-dif a').attr('href', DiffImagePathUrl);
-            }
-            if (DiffPreviewPathUrl.indexOf('img/') != -1) {
-                $('#' + entity + '-' + entityId + ' .screenShot-dif img').attr('src', DiffPreviewPathUrl);
-            }
-            $('#' + entity + '-' + entityId + ' .screenShot-curr a').attr('href', ImagePathUrl);
-            $('#' + entity + '-' + entityId + ' .screenShot-curr img').attr('src', PreviewImagePathUrl);
-            if (ErrorMessage != null && ErrorMessage != '') {
-                $('#' + entity + '-' + entityId + ' .screenShot-error-log').show();
-                $('#' + entity + '-' + entityId + ' .screenShot-error-log textarea').text(ErrorMessage);
-            }
-            if (Url != null) {
-                $('#' + entity + '-' + entityId + ' .screenShot-link').attr('href', Url).show();
-            }
-        }
-    }
+        getAssemblies();
 
-    //
-    // Link switch
-    //
-    var obj_act = ""; // Variable with action
-    var obj_act_with_param = ""; // Variable with parameters for operations and status change
-    var typeName = "";
-    var objId = "";
-    var operationName = "";
-
-    $(document).on('click', '#page-inner a', function (e) {
-        switch ($(this).attr('data-act')) {
-            case 'stop_obj':
-                obj_act = "RunOperation?";
-                typeName = 'typeName=' + $(this).attr('typeName') + '&';
-                objId = 'objId=' + $(this).attr('obj_id') + '&';
-                operationName = 'operationName=stop';
-                obj_act_with_param = obj_act + typeName + objId + operationName;
-                modal_ajax_call();
-                break;
-            case 'run_obj':
-                obj_act = "RunOperation?";
-                typeName = 'typeName=' + $(this).attr('typeName') + '&';
-                objId = 'objId=' + $(this).attr('obj_id') + '&';
-                operationName = 'operationName=run';
-                obj_act_with_param = obj_act + typeName + objId + operationName;
-                modal_ajax_call();
-                break;
-            case 'set_passed_obj':
-                obj_act = "SetObjectsStatus?";
-                typeName = 'typeName=' + $(this).attr('typeName') + '&';
-                objId = 'objId=' + $(this).attr('obj_id') + '&';
-                operationName = 'newStatus=passed';
-                obj_act_with_param = obj_act + typeName + objId + operationName;
-                modal_ajax_call();
-                break;
-            case 'set_failed_obj':
-                obj_act = "SetObjectsStatus?";
-                typeName = 'typeName=' + $(this).attr('typeName') + '&';
-                objId = 'objId=' + $(this).attr('obj_id') + '&';
-                operationName = 'newStatus=failed';
-                obj_act_with_param = obj_act + typeName + objId + operationName;
-                modal_ajax_call();
-                break;
-        }
-    });
-
-    //
-    // Ajax call for operations and status change
-    //
-    function modal_ajax_call() {
-        var url_parameters = "";
-        if (obj_act_with_param != "") {
-            url_parameters = obj_act_with_param;
-        } else {
-            url_parameters = obj_act + '?' + $('#modal_form').serialize();
+        //
+        // Builder for testAssembly | testSuite | testCase | screenShot
+        //
+        function entityBuilt(entity, entityParentId, childEntity, entityId, entityName, entityStatus,
+            BaseLineImagePathUrl, BaseLinePreviewPathUrl, DiffImagePathUrl, DiffPreviewPathUrl,
+            ImagePathUrl, PreviewImagePathUrl, ErrorMessage, Url) {
+            if ($('#' + entity + '-' + entityId).length && entity != 'screenShot') {
+                if ($('#' + entity + '-' + entityId + ' > .panel-heading a span:first').attr('class') != 'status-' + entityStatus) {
+                    $('#' + entity + '-' + entityId + ' > .panel-heading a span:first').removeClass().addClass('status-' + entityStatus);
+                }
+            } else if ($('#' + entity + '-' + entityId).length == 0 && entity != 'screenShot') {
+                if (entity == "testAssembly") {
+                    $('.panel-default-' + entity).clone(true, true).appendTo('#' + entity + '_group').attr('id', entity + '-' + entityId).removeClass('panel-default-' + entity).show();
+                } else {
+                    $('.panel-default-' + entity).clone(true, true).appendTo('#' + entity + '_group-' + entityParentId).attr('id', entity + '-' + entityId).removeClass('panel-default-' + entity).show();
+                }
+                $('#' + entity + '-' + entityId + ' .panel-title span').text(entityName);
+                $('#' + entity + '-' + entityId).attr('' + entity + '-status', entityStatus);
+                $('<span class="status-' + entityStatus + '">').insertAfter('#' + entity + '-' + entityId + ' .panel-title a i');
+                $('#' + entity + '-' + entityId + ' .panel-title a').attr('href', '#panel-' + entity + '-' + entityId);
+                $('#' + entity + '-' + entityId + ' .panel-collapse').attr('id', 'panel-' + entity + '-' + entityId);
+                $('#' + entity + '-' + entityId + ' .panel-group').attr('id', childEntity + '_group-' + entityId);
+                $('.dropdown-btn-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId + ' .panel-heading').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+                $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('obj_id', entityId);
+                $('#' + entity + '-' + entityId + ' .dropdown-menu a').attr('typeName', entity);
+            } else if ($('#' + entity + '-' + entityId).length && entity == 'screenShot') {
+                if ($('#' + entity + '-' + entityId + ' > .screenShot-header span:first').attr('class') != 'status-' + entityStatus) {
+                    $('#' + entity + '-' + entityId + ' > .screenShot-header span:first').removeClass().addClass('status-' + entityStatus);
+                }
+            } else if ($('#' + entity + '-' + entityId).length == 0 && entity == 'screenShot') {
+                $('.screenShot-hidden').clone(true, true).appendTo('#panel-testCase-' + entityParentId + ' > .panel-body').attr('id', entity + '-' + entityId).attr('testscreenshot-status', entityStatus).removeClass('screenShot-hidden').show();
+                $('.screenShot-splitter-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId).removeClass('screenShot-splitter-hidden').show();
+                $('#' + entity + '-' + entityId + ' img').attr('title', entityName);
+                $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-lightbox', entityName);
+                $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-title', function (i, val) {
+                    return val + '&nbsp;' + entityName;
+                });
+                $('#' + entity + '-' + entityId + ' .screenShot-header').append('&nbsp;<span class="status-' + entityStatus + '">');
+                $('.dropdown-btn-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId + ' .screenShot-header').removeClass('dropdown-btn-hidden').addClass('dropdown-btn').show();
+                $('#' + entity + '-' + entityId + ' .screenShot-header .dropdown-menu a').attr('obj_id', entityId);
+                $('#' + entity + '-' + entityId + ' .screenShot-header .dropdown-menu a').attr('typeName', 'screenShot');
+                $('#' + entity + '-' + entityId + ' .screenShot-header').append('<span class="screenShot-title">' + entityName + '</span>');
+                $('#' + entity + '-' + entityId + ' .screenShot-base a').attr('href', BaseLineImagePathUrl);
+                $('#' + entity + '-' + entityId + ' .screenShot-base img').attr('src', BaseLinePreviewPathUrl);
+                if (DiffImagePathUrl.indexOf('img/') != -1) {
+                    $('#' + entity + '-' + entityId + ' .screenShot-dif a').attr('href', DiffImagePathUrl);
+                }
+                if (DiffPreviewPathUrl.indexOf('img/') != -1) {
+                    $('#' + entity + '-' + entityId + ' .screenShot-dif img').attr('src', DiffPreviewPathUrl);
+                }
+                $('#' + entity + '-' + entityId + ' .screenShot-curr a').attr('href', ImagePathUrl);
+                $('#' + entity + '-' + entityId + ' .screenShot-curr img').attr('src', PreviewImagePathUrl);
+                if (ErrorMessage != null && ErrorMessage != '') {
+                    $('#' + entity + '-' + entityId + ' .screenShot-error-log').show();
+                    $('#' + entity + '-' + entityId + ' .screenShot-error-log textarea').text(ErrorMessage);
+                }
+                if (Url != null) {
+                    $('#' + entity + '-' + entityId + ' .screenShot-link').attr('href', Url).show();
+                }
+            }
         }
 
-        $.ajax({
-            type: 'GET',
-            url: KeplerServiceUrl + url_parameters,
-            success: function (data) {
-                $('#modal_form .alert-warning').hide();
-                $('#crud-modal button.close').click();
-                getBuild();
-                getAssemblies();
-                obj_act_with_param = "";
-            },
-            error: function (xhr) {
-                $('#modal_form .alert-warning').show().text(xhr.responseText);
+        //
+        // Link switch
+        //
+        var obj_act = ""; // Variable with action
+        var obj_act_with_param = ""; // Variable with parameters for operations and status change
+        var typeName = "";
+        var objId = "";
+        var operationName = "";
+        var clean_status = "div[testassembly-status], div[testsuite-status], div[testcase-status], div[testscreenshot-status]";
+        var failed_status = 'div[testassembly-status="6"], div[testsuite-status="6"], div[testcase-status="6"], div[testscreenshot-status="6"]';
+        var passed_status = 'div[testassembly-status="5"], div[testsuite-status="5"], div[testcase-status="5"], div[testscreenshot-status="5"]';
+
+        $(document).on('click', '#page-inner a', function (e) {
+            switch ($(this).attr('data-act')) {
+                case 'stop_obj':
+                    obj_act = "RunOperation?";
+                    typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                    objId = 'objId=' + $(this).attr('obj_id') + '&';
+                    operationName = 'operationName=stop';
+                    obj_act_with_param = obj_act + typeName + objId + operationName;
+                    modal_ajax_call();
+                    break;
+                case 'run_obj':
+                    obj_act = "RunOperation?";
+                    typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                    objId = 'objId=' + $(this).attr('obj_id') + '&';
+                    operationName = 'operationName=run';
+                    obj_act_with_param = obj_act + typeName + objId + operationName;
+                    modal_ajax_call();
+                    break;
+                case 'set_passed_obj':
+                    obj_act = "SetObjectsStatus?";
+                    typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                    objId = 'objId=' + $(this).attr('obj_id') + '&';
+                    operationName = 'newStatus=passed';
+                    obj_act_with_param = obj_act + typeName + objId + operationName;
+                    modal_ajax_call();
+                    break;
+                case 'set_failed_obj':
+                    obj_act = "SetObjectsStatus?";
+                    typeName = 'typeName=' + $(this).attr('typeName') + '&';
+                    objId = 'objId=' + $(this).attr('obj_id') + '&';
+                    operationName = 'newStatus=failed';
+                    obj_act_with_param = obj_act + typeName + objId + operationName;
+                    modal_ajax_call();
+                    break;
+                case 'show_all':
+                    $(clean_status).children('.panel-collapse:not(".in")').collapse('show');
+                    $(clean_status).parents('.panel-collapse:not(".in")').collapse('show');
+                    $('div[testscreenshot-status]').show();
+                    break;
+                case 'hide_all':
+                    $(clean_status).children('.panel-collapse.in').collapse('hide');
+                    $(clean_status).parents('.panel-collapse.in').collapse('hide');
+                    $('div[testscreenshot-status]').show();
+                    break;
+                case 'show_passed':
+                    $.each($(failed_status), function () {
+                        if ($(this).find(passed_status).length == 0) {
+                            $(this).children('.panel-collapse.in').collapse('hide');
+                        }
+                    });
+                    $(passed_status).children('.panel-collapse:not(".in")').collapse('show');
+                    $(passed_status).parents('.panel-collapse:not(".in")').collapse('show');
+                    $('div[testscreenshot-status="5"]').show();
+                    $('div[testscreenshot-status="6"]').hide();
+                    break;
+                case 'show_failed':
+                    $.each($(passed_status), function () {
+                        if ($(this).find(failed_status).length == 0) {
+                            $(this).children('.panel-collapse.in').collapse('hide');
+                        }
+                    });
+                    $(failed_status).children('.panel-collapse:not(".in")').collapse('show');
+                    $(failed_status).parents('.panel-collapse:not(".in")').collapse('show');
+                    $('div[testscreenshot-status="6"]').show();
+                    $('div[testscreenshot-status="5"]').hide();
+                    break;
             }
         });
-    }
 
+        //
+        // Ajax call for operations and status change
+        //
+        function modal_ajax_call() {
+            var url_parameters = "";
+            if (obj_act_with_param != "") {
+                url_parameters = obj_act_with_param;
+            } else {
+                url_parameters = obj_act + '?' + $('#modal_form').serialize();
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: KeplerServiceUrl + url_parameters,
+                success: function (data) {
+                    $('#modal_form .alert-warning').hide();
+                    $('#crud-modal button.close').click();
+                    getBuild();
+                    getAssemblies();
+                    obj_act_with_param = "";
+                },
+                error: function (xhr) {
+                    $('#modal_form .alert-warning').show().text(xhr.responseText);
+                }
+            });
+        }
+    });
 </script>

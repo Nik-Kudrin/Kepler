@@ -1,14 +1,22 @@
-﻿using Kepler.Common.DB;
-using Kepler.Common.Models;
+﻿using Kepler.Common.Models;
+using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
-    public class TestSuiteRepository : BuildObjectRepository<TestSuite>
+    public class TestSuiteRepository : BuildObjectRepository<TestSuite>, ICompleteObject<TestSuite>
     {
-        public static TestSuiteRepository Instance => new TestSuiteRepository(new KeplerDataContext());
+        public static TestSuiteRepository Instance => new TestSuiteRepository();
 
-        private TestSuiteRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.TestSuites)
+        private TestSuiteRepository()
         {
+        }
+
+        public TestSuite GetCompleteObject(RepositoriesContainer repoContainer, long id)
+        {
+            var suite = repoContainer.SuiteRepo.Get(id);
+            suite.InitChildObjectsFromDb(repoContainer);
+
+            return suite;
         }
     }
 }

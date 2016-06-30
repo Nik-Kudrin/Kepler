@@ -189,6 +189,9 @@
                             if (key == 'HistoryItemsNumberToPreserve') {
                                 $('.build_schedule .select_items_preserve:not(.changed)').val(value);
                             } else if (key == 'LastStartTime') {
+                                if (value == null) {
+                                    value = moment().subtract(1, 'months').toASP();
+                                }
                                 $('.build_schedule .panel-heading small').empty().append('(last clean: ' + moment(value).format(formatDateString) + ' / ');
                                 BuildLastStartTime = value;
                             } else if (key == 'SchedulePeriod') {
@@ -201,6 +204,9 @@
                             if (key == 'HistoryItemsNumberToPreserve') {
                                 $('.log_schedule .select_items_preserve:not(.changed)').val(value);
                             } else if (key == 'LastStartTime') {
+                                if (value == null) {
+                                    value = moment().subtract(1, 'months').toASP();
+                                }
                                 $('.log_schedule .panel-heading small').empty().append('(last clean: ' + moment(value).format(formatDateString) + ' / ');
                                 LogLastStartTime = value;
                             } else if (key == 'SchedulePeriod') {

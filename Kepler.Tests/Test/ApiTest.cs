@@ -1,12 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Web.Script.Serialization;
 using FluentAssertions;
-using Kepler.Common.Error;
+using Kepler.Common.CommunicationContracts;
+using Kepler.Common.Util;
 using Newtonsoft.Json;
-using NLog.Fluent;
 using NUnit.Framework;
 using RestSharp;
 
@@ -126,9 +123,26 @@ namespace Kepler.Tests.Test
             var request = new RestRequest("GetPreviewSavingPath", Method.GET);
 
             request.RequestFormat = DataFormat.Json;
+            var response = client.Execute(request);
+
+            Console.WriteLine(response.Content);
+        }
+
+
+        [Test]
+        public void GetCleanScheduler()
+        {
+            var client = new RestClient("http://localhost:8733/Kepler.Service");
+            var request = new RestRequest("GetCleanDataScheduler", Method.GET);
+            request.RequestFormat = DataFormat.Json;
+            request.AddQueryParameter("schedulerName", "logCleanScheduler");
 
             var response = client.Execute(request);
-            Console.WriteLine(response.Content);
+            var scheduler =
+                new RestSharpDataContractJsonDeserializer().Deserialize<DataSchedulerContract>(response.Content);
+
+            Console.WriteLine(
+                $"Scheduler name {scheduler.Name}; Last start: {scheduler.LastStartTime}; Next start: {scheduler.NextStartTime}; Period: {scheduler.SchedulePeriod}");
         }
     }
 }

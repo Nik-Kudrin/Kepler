@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
 using Kepler.Common.Models.Common;
@@ -10,15 +11,19 @@ namespace Kepler.Common.Models
     {
         [DataMember]
         [IgnoreDataMember]
+        [Dapper.Editable(true)]
         public long? BaseLineId { get; set; }
 
         [DataMember]
+        [Dapper.Editable(true)]
         public long? LatestBuildId { get; set; }
 
         [DataMember]
+        [Dapper.Editable(true)]
         public long? ProjectId { get; set; }
 
         [DataMember]
+        [Dapper.Editable(true)]
         public bool IsMainBranch { get; set; }
 
         public Dictionary<long, Build> Builds { get; set; }
@@ -28,9 +33,12 @@ namespace Kepler.Common.Models
             Builds = new Dictionary<long, Build>();
         }
 
-        public void InitChildObjectsFromDb()
+
+        public void InitChildObjectsFromDb<T, TEntityChild>(T childObjectRepository)
+            where T : BaseObjRepository<TEntityChild> where TEntityChild : BuildObject
         {
-            Builds = BuildRepository.Instance.Find(build => build.BranchId == Id)
+            Builds = (childObjectRepository as BuildRepository)
+                .Find(new {BranchId = Id})
                 .ToDictionary(item => item.Id, item => item);
         }
     }

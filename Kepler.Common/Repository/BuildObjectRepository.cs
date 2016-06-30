@@ -1,48 +1,79 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using Kepler.Common.DB;
+﻿using System;
+using System.Collections.Generic;
+using Dapper;
+using Kepler.Common.Error;
 using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
-    public class BuildObjectRepository<TBuildObjEntity> : BaseRepository<TBuildObjEntity>
+    public class BuildObjectRepository<TBuildObjEntity> : BaseObjRepository<TBuildObjEntity>
         where TBuildObjEntity : BuildObject
     {
-        protected BuildObjectRepository(KeplerDataContext dbContext, DbSet<TBuildObjEntity> dbSet)
-            : base(dbContext, dbSet)
+        protected BuildObjectRepository()
         {
         }
 
-        public TBuildObjEntity GetCompleteObject(long id)
+
+        public virtual IEnumerable<TBuildObjEntity> FindByParentId(long parentObjId)
         {
-            var entity = Get(id);
-            (entity as IChildInit).InitChildObjectsFromDb();
-
-            return entity;
-        }
-
-        public IEnumerable<TBuildObjEntity> GetObjectsTreeByParentId(long parentObjId)
-        {
-            var items = Find(parentObjId).ToList();
-            items.ForEach(item => (item as IChildInit).InitChildObjectsFromDb());
-
-            return items;
-        }
-
-        public virtual IEnumerable<TBuildObjEntity> Find(long parentObjId)
-        {
-            return DbSet.Where(x => x.ParentObjId == parentObjId);
+            using (var db = CreateConnection())
+            {
+                db.Open();
+                try
+                {
+                    return db.GetList<TBuildObjEntity>(new {ParentObjId = parentObjId});
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                    {
+                        ExceptionMessage = $"DB error: {ex.Message}"
+                    });
+                    return null;
+                }
+            }
         }
 
         public virtual IEnumerable<TBuildObjEntity> FindByBuildId(long buildId)
         {
-            return DbSet.Where(item => item.BuildId == buildId);
+            using (var db = CreateConnection())
+            {
+                db.Open();
+                try
+                {
+                    return db.GetList<TBuildObjEntity>(new {BuildId = buildId});
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                    {
+                        ExceptionMessage = $"DB error: {ex.Message}"
+                    });
+                    return null;
+                }
+            }
         }
 
         public virtual IEnumerable<TBuildObjEntity> FindFailedInBuild(long buildId)
         {
-            return DbSet.Where(item => item.BuildId == buildId && item.Status == ObjectStatus.Failed);
+            using (var db = CreateConnection())
+            {
+                db.Open();
+                try
+                {
+                    return db.GetList<TBuildObjEntity>(
+                        new Func<TBuildObjEntity, bool>(
+                            item => item.BuildId == buildId && item.Status == ObjectStatus.Failed));
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                    {
+                        ExceptionMessage = $"DB error: {ex.Message}"
+                    });
+                    return null;
+                }
+            }
         }
     }
 }

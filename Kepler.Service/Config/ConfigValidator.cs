@@ -25,9 +25,11 @@ namespace Kepler.Service.Config
                 }.ToString();
             }
 
-            if (configObjectNames.Distinct().Count() != configObjects.Count)
+            var distinctObjectNames = configObjectNames.Distinct();
+
+            if (distinctObjectNames.Count() != configObjects.Count)
             {
-                return $"There are duplicated names in config for {typeof (T).Name}";
+                return $"There are duplicated names in config for {typeof (T).Name}. Names: {string.Join("; ", configObjectNames)}";
             }
 
             return "";

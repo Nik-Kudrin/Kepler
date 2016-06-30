@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Kepler.Common.DB;
+using System.Linq;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 
@@ -7,26 +7,31 @@ namespace Kepler.Common.Repository
 {
     public class ScreenShotRepository : BuildObjectRepository<ScreenShot>
     {
-        public static ScreenShotRepository Instance => new ScreenShotRepository(new KeplerDataContext());
+        public static ScreenShotRepository Instance => new ScreenShotRepository();
 
-        private ScreenShotRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.ScreenShots)
+        private ScreenShotRepository()
         {
         }
 
         public IEnumerable<ScreenShot> GetInQueueScreenShotsForBuild(long buildId)
         {
-            return Find(screenShot => screenShot.BuildId == buildId &&
-                                      screenShot.Status == ObjectStatus.InQueue);
+            return Find(new {BuildId = buildId, Status = ObjectStatus.InQueue});
         }
 
         public IEnumerable<ScreenShot> GetAllInQueueScreenShots()
         {
-            return Find(screenShot => screenShot.Status == ObjectStatus.InQueue);
+            return Find(new {Status = ObjectStatus.InQueue});
         }
 
         public IEnumerable<ScreenShot> GetBaselineScreenShots(long baselineId)
         {
-            return Find(item => item.BaseLineId == baselineId && item.IsLastPassed);
+            return Find(new {BaseLineId = baselineId, IsLastPassed = true});
+        }
+
+        public ScreenShot GetBaselineScreenShot(long baselineId, string screenShotName)
+        {
+            return Find(new {BaseLineId = baselineId, IsLastPassed = true, Name = screenShotName})
+                .FirstOrDefault();
         }
     }
 }

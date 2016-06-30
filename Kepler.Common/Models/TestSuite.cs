@@ -5,7 +5,7 @@ using Kepler.Common.Repository;
 
 namespace Kepler.Common.Models
 {
-    public class TestSuite : BuildObject, IChildInit
+    public class TestSuite : BuildObject
     {
         public Dictionary<long, TestCase> TestCases { get; set; }
 
@@ -18,10 +18,12 @@ namespace Kepler.Common.Models
             TestCases = new Dictionary<long, TestCase>();
         }
 
-        public void InitChildObjectsFromDb()
+        public void InitChildObjectsFromDb(RepositoriesContainer repoContainer)
         {
-            TestCases = InitChildObjectsFromDb<TestCaseRepository, TestCase>(TestCaseRepository.Instance);
-            TestCases.Values.ToList().ForEach(item => item.InitChildObjectsFromDb());
+            TestCases =
+                base.InitChildObjectsFromDb<TestCaseRepository, TestCase>(repoContainer.CaseRepo);
+
+            TestCases.Values.ToList().ForEach(item => item.InitChildObjectsFromDb(repoContainer));
         }
     }
 }

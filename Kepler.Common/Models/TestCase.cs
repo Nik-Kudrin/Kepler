@@ -4,7 +4,7 @@ using Kepler.Common.Repository;
 
 namespace Kepler.Common.Models
 {
-    public class TestCase : BuildObject, IChildInit
+    public class TestCase : BuildObject
     {
         public Dictionary<long, ScreenShot> ScreenShots { get; set; }
 
@@ -17,9 +17,9 @@ namespace Kepler.Common.Models
             ScreenShots = new Dictionary<long, ScreenShot>();
         }
 
-        public void InitChildObjectsFromDb()
+        public void InitChildObjectsFromDb(RepositoriesContainer repoContainer)
         {
-            ScreenShots = InitChildObjectsFromDb<ScreenShotRepository, ScreenShot>(ScreenShotRepository.Instance);
+            ScreenShots = base.InitChildObjectsFromDb<ScreenShotRepository, ScreenShot>(repoContainer.ScreenShotRepo);
         }
     }
 }

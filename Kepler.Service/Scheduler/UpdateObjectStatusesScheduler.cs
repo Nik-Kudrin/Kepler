@@ -28,7 +28,7 @@ namespace Kepler.Service.Scheduler
 
         public override void Enable()
         {
-            ScheduleTimer = new Timer {Interval = 10000};
+            ScheduleTimer = new Timer {Interval = 15000};
             ScheduleTimer.Elapsed += UpdateObjectsStatuses;
             ScheduleTimer.Enabled = true;
         }

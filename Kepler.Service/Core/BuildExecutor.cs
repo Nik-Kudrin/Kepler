@@ -63,15 +63,14 @@ namespace Kepler.Service.Core
             inprogressBuilds.Each(build =>
             {
                 build.Status = ObjectStatus.InQueue;
-                BuildRepository.Instance.UpdateAndFlashChanges(build);
+                BuildRepository.Instance.Update(build);
                 var screenShotRepo = ScreenShotRepository.Instance;
 
-                var screenShots = screenShotRepo.Find(item => item.BuildId == build.Id &&
-                                                              item.Status == ObjectStatus.InQueue);
+                var screenShots = screenShotRepo.Find(new {BuildId = build.Id, Status = ObjectStatus.InQueue});
                 screenShots.Each(item =>
                 {
                     item.Status = ObjectStatus.InQueue;
-                    screenShotRepo.UpdateAndFlashChanges(item);
+                    screenShotRepo.Update(item);
                 });
             });
         }
@@ -96,7 +95,7 @@ namespace Kepler.Service.Core
 
             var screenShots = ScreenShotRepository.Instance.GetInQueueScreenShotsForBuild(buildInQueue.Id);
             screenShots.Each(item => item.Status = ObjectStatus.InProgress);
-            ScreenShotRepository.Instance.UpdateAndFlashChanges(screenShots);
+            ScreenShotRepository.Instance.Update(screenShots);
             UpdateObjectStatusesScheduler.GetScheduler.Invoke();
 
             var imageComparisonContainers = ConvertScreenShotsToImageComparison(screenShots).ToList();
@@ -137,7 +136,7 @@ namespace Kepler.Service.Core
                     ErrorMessageRepository.Instance.Insert(new ErrorMessage()
                     {
                         ExceptionMessage =
-                            $"Error happend when process is tried to send images for comparison to worker: '{workers[workerIndex++].Name}'.  {ex.Message}"
+                            $"Error happend when process is tried to send images for comparison to worker: '{workers[workerIndex++].Name}'.  {ex.Message} {ex.StackTrace}"
                     });
                 }
 
@@ -240,7 +239,7 @@ namespace Kepler.Service.Core
                     newScreenShot.BaseLineImagePath = oldScreenShot.ImagePath;
                 }
                 resultImagesForComparison.Add(imageComparison);
-                ScreenShotRepository.Instance.UpdateAndFlashChanges(newScreenShot);
+                ScreenShotRepository.Instance.Update(newScreenShot);
             }
 
             return resultImagesForComparison;
@@ -265,7 +264,7 @@ namespace Kepler.Service.Core
             var diffImageSavingPath = keplerService.GetDiffImageSavingPath();
             var previewImageSavingPath = keplerService.GetPreviewSavingPath();
 
-            if (String.IsNullOrEmpty(diffImageSavingPath))
+            if (string.IsNullOrEmpty(diffImageSavingPath))
                 return;
 
             if (!Directory.Exists(diffImageSavingPath))
@@ -276,7 +275,10 @@ namespace Kepler.Service.Core
                 }
                 catch (Exception ex)
                 {
-                    ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = ex.Message});
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                    {
+                        ExceptionMessage = $"{ex.Message} {ex.StackTrace}"
+                    });
                 }
             }
 
@@ -288,7 +290,10 @@ namespace Kepler.Service.Core
                 }
                 catch (Exception ex)
                 {
-                    ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = ex.Message});
+                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                    {
+                        ExceptionMessage = $"{ex.Message} {ex.StackTrace}"
+                    });
                 }
             }
         }

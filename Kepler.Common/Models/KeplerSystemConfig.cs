@@ -5,16 +5,18 @@ namespace Kepler.Common.Models
 {
     public class KeplerSystemConfig
     {
-        [Key]
+        [Dapper.Key]
         [DataMember]
         public long Id { get; set; }
 
         [StringLength(500)]
         [DataMember]
+        [Dapper.Editable(true)]
         public string Name { get; set; }
 
         [StringLength(500)]
         [DataMember]
+        [Dapper.Editable(true)]
         public string Value { get; set; }
 
         public KeplerSystemConfig()

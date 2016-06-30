@@ -18,8 +18,9 @@ namespace Kepler.Service.Scheduler
             base.CleanData(sender, eventArgs);
             var errorRepo = ErrorMessageRepository.Instance;
 
-            var errorsForDelete = errorRepo.Find(
-                item => item.Time.Value < DateTime.Now - SchedulerInfo.SchedulePeriod);
+            var errorsForDelete =
+                errorRepo.Find(string.Format("WHERE Time < '{0}'",
+                    (DateTime.Now - SchedulerInfo.SchedulePeriod).ToString("yyyy-MM-dd HH:mm:ss")));
 
             errorsForDelete.Each(errorRepo.Delete);
         }

@@ -46,8 +46,9 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
                     !ImageComparisonInfo.FirstPreviewPath.EndsWith(previewSuffix))
                 {
                     ImageComparisonInfo.FirstPreviewPath = ImageComparisonInfo.FirstImagePath + "_preview.png";
-                    ImageComparisonInfo.SecondPreviewPath = ImageComparisonInfo.SecondImagePath + "_preview.png";
                 }
+
+                ImageComparisonInfo.SecondPreviewPath = ImageComparisonInfo.SecondImagePath + "_preview.png";
                 WritePreviewImage(firstImage, ImageComparisonInfo.FirstPreviewPath);
                 WritePreviewImage(secondImage, ImageComparisonInfo.SecondPreviewPath);
 

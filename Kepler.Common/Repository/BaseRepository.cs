@@ -1,152 +1,204 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using Kepler.Common.DB;
+using System.Configuration;
+using System.Data.SqlClient;
+using Dapper;
 using Kepler.Common.Error;
-using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
-    public class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : InfoObject
+    public abstract class BaseRepository<TEntity> : IRepository<TEntity, long> where TEntity : class
     {
-        protected readonly KeplerDataContext DbContext;
-        protected readonly DbSet<TEntity> DbSet;
-
-
-        protected BaseRepository(KeplerDataContext dbContext, DbSet<TEntity> dbSet)
+        protected BaseRepository()
         {
-            DbContext = dbContext;
-            DbSet = dbSet;
+        }
+
+        protected SqlConnection CreateConnection()
+        {
+            return new SqlConnection(ConfigurationManager.ConnectionStrings["Kepler"].ConnectionString);
         }
 
         public virtual TEntity Get(long id)
         {
-            try
+            using (var db = CreateConnection())
             {
-                return DbSet.FirstOrDefault(x => x.Id == id);
+                db.Open();
+                try
+                {
+                    return SimpleCRUD.Get<TEntity>(db, id);
+                }
+                catch (Exception ex)
+                {
+                    LogErrorMessage(typeof (TEntity), ex);
+                }
             }
-            catch (Exception ex)
-            {
-                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
-                return null;
-            }
+
+            return null;
         }
 
-        public virtual void Add(TEntity entity)
-        {
-            if (entity != null)
-                DbSet.Add(entity);
-        }
 
         public virtual void Update(TEntity entity)
         {
-            if (entity != null)
+            if (entity == null)
+                return;
+
+            using (var db = CreateConnection())
             {
-                DbSet.Attach(entity);
-                DbContext.Entry(entity).State = EntityState.Modified;
+                db.Open();
+                using (var tran = db.BeginTransaction())
+                {
+                    try
+                    {
+                        SimpleCRUD.Update(db, entity, tran);
+                        tran.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                        LogErrorMessage(typeof (TEntity), ex);
+                    }
+                }
             }
         }
 
         public virtual void Update(IEnumerable<TEntity> entities)
         {
-            entities.ToList().ForEach(Update);
-        }
+            if (entities == null)
+                return;
 
-        public virtual void UpdateAndFlashChanges(TEntity entity)
-        {
-            try
+            foreach (var entity in entities)
             {
                 Update(entity);
-                FlushChanges();
-            }
-            catch (Exception ex)
-            {
-                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
             }
         }
 
-        public virtual void UpdateAndFlashChanges(IEnumerable<TEntity> entities)
-        {
-            try
-            {
-                Update(entities);
-                FlushChanges();
-            }
-            catch (Exception ex)
-            {
-                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
-            }
-        }
 
         public virtual void Insert(TEntity entity)
         {
-            try
-            {
-                Add(entity);
-                FlushChanges();
-            }
-            catch (Exception ex)
-            {
-                ErrorMessageRepository.Instance.Insert(new ErrorMessage() {ExceptionMessage = $"DB error: {ex.Message}"});
-            }
-        }
+            if (entity == null)
+                return;
 
-        public virtual void FlushChanges()
-        {
-            DbContext.SaveChanges();
+            using (var db = CreateConnection())
+            {
+                db.Open();
+                using (var tran = db.BeginTransaction())
+                {
+                    try
+                    {
+                        SimpleCRUD.Insert(db, entity, tran);
+                        tran.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                        LogErrorMessage(typeof (TEntity), ex);
+                    }
+                }
+            }
         }
 
         public virtual void Delete(TEntity entity)
         {
-            try
+            using (var db = CreateConnection())
             {
-                if (DbContext.Entry(entity).State == EntityState.Detached)
+                db.Open();
+                using (var tran = db.BeginTransaction())
                 {
-                    DbSet.Attach(entity);
+                    try
+                    {
+                        SimpleCRUD.Delete(db, entity, tran);
+                        tran.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                        LogErrorMessage(typeof (TEntity), ex);
+                    }
                 }
-
-                DbSet.Remove(entity);
-                FlushChanges();
-            }
-            catch (Exception ex)
-            {
-                ErrorMessageRepository.Instance.Insert(new ErrorMessage()
-                {
-                    ExceptionMessage = $"Trying to delete object: {ex.Message}"
-                });
             }
         }
 
         public virtual void Delete(IEnumerable<TEntity> entities)
         {
-            try
+            using (var db = CreateConnection())
             {
-                DbSet.RemoveRange(entities);
-                FlushChanges();
-            }
-            catch (Exception ex)
-            {
-                ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+                db.Open();
+                using (var tran = db.BeginTransaction())
                 {
-                    ExceptionMessage = $"Trying to delete range of objects: {ex.Message}"
-                });
+                    try
+                    {
+                        SimpleCRUD.Delete(db, entities, tran);
+                        tran.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                        LogErrorMessage(typeof (TEntity), ex);
+                    }
+                }
             }
         }
 
         public virtual IEnumerable<TEntity> FindAll()
         {
-            return DbSet.ToList();
+            using (var db = CreateConnection())
+            {
+                db.Open();
+                try
+                {
+                    return db.GetList<TEntity>();
+                }
+                catch (Exception ex)
+                {
+                    LogErrorMessage(typeof (TEntity), ex);
+                }
+            }
+
+            return new List<TEntity>();
         }
 
-        public virtual IEnumerable<TEntity> Find(string name)
+        public virtual IEnumerable<TEntity> Find(object filterCondition)
         {
-            return DbSet.Where(x => x.Name == name).ToList();
+            using (var db = CreateConnection())
+            {
+                db.Open();
+                try
+                {
+                    return SimpleCRUD.GetList<TEntity>(db, filterCondition);
+                }
+                catch (Exception ex)
+                {
+                    LogErrorMessage(typeof (TEntity), ex);
+                }
+            }
+
+            return new List<TEntity>();
         }
 
-        public virtual IEnumerable<TEntity> Find(Func<TEntity, bool> filterCondition)
+        public virtual IEnumerable<TEntity> Find(string filterCondition)
         {
-            return DbSet.Where(filterCondition).ToList();
+            using (var db = CreateConnection())
+            {
+                db.Open();
+                try
+                {
+                    return db.GetList<TEntity>(filterCondition);
+                }
+                catch (Exception ex)
+                {
+                    LogErrorMessage(typeof (TEntity), ex);
+                }
+            }
+
+            return new List<TEntity>();
+        }
+
+        private void LogErrorMessage(Type entityType, Exception ex)
+        {
+            ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+            {
+                ExceptionMessage = $"DB error: {entityType.FullName} {ex.Message} {ex.StackTrace}"
+            });
         }
     }
 }

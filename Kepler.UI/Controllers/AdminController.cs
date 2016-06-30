@@ -8,9 +8,9 @@ namespace Kepler.UI.Controllers
 {
     public class AdminController : Controller
     {
-        public ActionResult Index()
+        public ActionResult IndexView()
         {
-            return View();
+            return PartialView();
         }
 
         public ActionResult ImageWorkersView()

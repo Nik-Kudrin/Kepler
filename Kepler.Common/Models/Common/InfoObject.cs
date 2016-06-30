@@ -6,15 +6,17 @@ namespace Kepler.Common.Models.Common
     [DataContract]
     public abstract class InfoObject
     {
-        [Key]
+        [Dapper.Key]
         [DataMember]
         public long Id { get; set; }
 
         [StringLength(700)]
         [DataMember]
+        [Dapper.Editable(true)]
         public string Name { get; set; }
 
         [DataMember]
+        [Dapper.Editable(true)]
         public ObjectStatus Status { get; set; }
 
         public InfoObject()

@@ -24,7 +24,6 @@ namespace Kepler.UI
                       "~/Scripts/respond.js",
                       "~/Scripts/bootstrap-fileupload.js",
                       "~/Scripts/jquery.validate.js",
-                      "~/Scripts/ekko-lightbox.js",
                       "~/Scripts/moment.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/statico").Include(
@@ -34,6 +33,7 @@ namespace Kepler.UI
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
                       "~/Content/basic.css",
+					  "~/Content/lightbox.css",
                       "~/Content/custom.css",
                       "~/Content/bootstrap-fileupload.min.css",
                       "~/Content/font-awesome.css"));

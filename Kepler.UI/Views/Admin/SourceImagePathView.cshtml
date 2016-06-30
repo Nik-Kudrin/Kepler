@@ -44,9 +44,11 @@
                 switch (pathType) {
                     case 'GetSourceImagePath':
                         $('#img_saving_path').val(data);
+                        $('.edit_img_path').attr('img_path', data);
                         break;
                     case 'GetDiffImageSavingPath':
                         $('#diff_img_saving_path').val(data);
+                        $('.edit_diff_img_path').attr('diff_img_path', data);
                         break;
                 }
 
@@ -64,7 +66,7 @@
                 obj_act = "SetSourceImageSavingPath";
                 $('.modal-title').text('Edit image path');
                 $('.modal-body').empty().append('<div class="form-group"><label>Image path</label>' +
-                    '<input class="form-control" name="sourceImageSavingPath" type="text"></div>' +
+                    '<input class="form-control" name="sourceImageSavingPath" value="' + $(this).attr('img_path') + '" type="text"></div>' +
                             '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
@@ -72,7 +74,7 @@
                 obj_act = "SetDiffImageSavingPath";
                 $('.modal-title').text('Edit diff image path');
                 $('.modal-body').empty().append('<div class="form-group"><label>Diff image path</label>' +
-                    '<input class="form-control" name="diffImageSavingPath" type="text"></div>' +
+                    '<input class="form-control" name="diffImageSavingPath" value="' + $(this).attr('diff_img_path') + '" type="text"></div>' +
                             '<div class="alert alert-warning"></div>');
                 $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Save</button>');
                 break;
@@ -83,7 +85,7 @@
     //
     // Ajax call for modal popup
     //
-    function modal_ajax_call() {
+    function modalAjaxCall() {
         var url_parameters = obj_act + '?' + $('#modal_form').serialize();
         $.ajax({
             type: 'GET',

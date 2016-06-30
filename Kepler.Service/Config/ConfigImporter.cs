@@ -146,7 +146,7 @@ namespace Kepler.Service.Config
                 var project = mappedProjects[index];
 
                 var projectName = project.Name.Trim();
-                var projectsFromDb = ProjectRepository.Instance.Find(projectName);
+                var projectsFromDb = ProjectRepository.Instance.Find(new {Name = projectName});
 
                 if (projectsFromDb.Count() == 0 || projectsFromDb.Count() > 1)
                     throw new Exception(new ErrorMessage()
@@ -177,7 +177,7 @@ namespace Kepler.Service.Config
                     }.ToString());
 
 
-                var storedBranches = BranchRepository.Instance.Find(item => item.ProjectId == mappedProject.Id);
+                var storedBranches = BranchRepository.Instance.Find(new {ProjectId = mappedProject.Id});
                 var importedBranches = mapper.GetBranches(importedConfig.Projects
                     .First(project => project.Name == mappedProject.Name).Branches).ToList();
 
@@ -204,7 +204,7 @@ namespace Kepler.Service.Config
                         BaseLineRepository.Instance.Insert(baseline);
 
                         importedBranch.BaseLineId = baseline.Id;
-                        BranchRepository.Instance.UpdateAndFlashChanges(importedBranch);
+                        BranchRepository.Instance.Update(importedBranch);
 
                         CopyScreenShotsFromMainBranchBaselineToNewBaseline(baseline, mainBranchBaselineScreenShots);
                     }
@@ -258,7 +258,7 @@ namespace Kepler.Service.Config
                 branch.Builds.Add(build.Id, build);
                 branch.LatestBuildId = build.Id;
 
-                BranchRepository.Instance.UpdateAndFlashChanges(branch);
+                BranchRepository.Instance.Update(branch);
             }
 
             return builds;
@@ -330,7 +330,6 @@ namespace Kepler.Service.Config
                         }
 
                         currentAssembly.TestSuites = mappedSuites.ToDictionary(item => item.Id, item => item);
-                        TestAssemblyRepository.Instance.FlushChanges();
                     }
                 }
             }
@@ -375,7 +374,6 @@ namespace Kepler.Service.Config
                             }
 
                             currentSuite.Value.TestCases = mappedCases.ToDictionary(item => item.Id, item => item);
-                            TestSuiteRepository.Instance.FlushChanges();
                         }
                     }
                 }
@@ -435,7 +433,6 @@ namespace Kepler.Service.Config
                                 }
 
                                 currentCase.Value.ScreenShots = screenShots.ToDictionary(item => item.Id, item => item);
-                                TestCaseRepository.Instance.FlushChanges();
                             }
                         }
                     }
@@ -448,7 +445,7 @@ namespace Kepler.Service.Config
             foreach (var build in builds)
             {
                 build.Status = ObjectStatus.InQueue;
-                BuildRepository.Instance.UpdateAndFlashChanges(build);
+                BuildRepository.Instance.Update(build);
             }
         }
 
@@ -462,7 +459,7 @@ namespace Kepler.Service.Config
                 build.NumberTestCase = TestCaseRepository.Instance.FindByBuildId(build.Id).Count();
                 build.NumberScreenshots = ScreenShotRepository.Instance.FindByBuildId(build.Id).Count();
 
-                BuildRepository.Instance.UpdateAndFlashChanges(build);
+                BuildRepository.Instance.Update(build);
             }
         }
 

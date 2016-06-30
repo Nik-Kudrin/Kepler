@@ -1,21 +1,20 @@
-﻿using Kepler.Common.DB;
-using Kepler.Common.Models;
+﻿using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 
 namespace Kepler.Common.Repository
 {
-    public class BranchRepository : BaseRepository<Branch>
+    public class BranchRepository : BaseObjRepository<Branch>
     {
-        public static BranchRepository Instance => new BranchRepository(new KeplerDataContext());
+        public static BranchRepository Instance => new BranchRepository();
 
-        private BranchRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.Branches)
+        private BranchRepository()
         {
         }
 
         public Branch GetCompleteObject(long id)
         {
             var entity = Get(id);
-            (entity as IChildInit).InitChildObjectsFromDb();
+            (entity as IChildInit).InitChildObjectsFromDb<BuildRepository, Build>(BuildRepository.Instance);
 
             return entity;
         }

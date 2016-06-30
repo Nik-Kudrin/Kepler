@@ -71,66 +71,94 @@
 </table>
 
 <script type="text/javascript">
-    var intervalGetBranch = null;
-    var intervalUpdateProgressBar = null;
+    $('body').scrollTop(0);
+
+    var xhr;
+
+    if (xhr) {
+        xhr.abort();
+    }
+
+    var timerGetBranch = null;
+    var timerUpdateProgressBar = null;
+    var intervalBranch;
 
     //
     // Load branch info
     //
-    getBranch();
-    intervalGetBranch = setInterval(getBranch, 8000);
 
-    function getBranch() {
-        if (getParameterByName('branchId') != '') {
-            $.ajax({
-                url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
-                type: 'GET',
-                success: function (data) {
-                    $('.builds_table tbody tr').attr('remove_entity', '1');
-                    $.each(data, function (key, value) {
-                        var entityId = '';
-                        var entityStatus = '';
-                        var entityPredictedDuration = '';
-                        var entityStartTime = '';
+    var getBranch = function () {
+        clearInterval(intervalBranch);
 
-                        if (key == 'Name') {
-                            $('.panel-heading h3').html(value);
-                        } else if (key != 'Builds') {
-                            $('.panel-heading h3').attr(key, value);
-                        } else if (key == 'Builds') {
-                            $.each(value, function (key, value) {
-                                $.each(value, function (key, value) {
-                                    if (key == 'Value') {
-                                        $.each(value, function (key, value) {
-                                            if (key == 'Id') {
-                                                entityId = value;
-                                            } else if (key == 'Status') {
-                                                entityStatus = value;
-                                            } else if (key == 'PredictedDuration') {
-                                                if (value == null) {
-                                                    entityPredictedDuration = 0;
-                                                } else {
-                                                    entityPredictedDuration = value;
-                                                }
-                                            } else if (key == 'StartDate') {
-                                                if (value == null) {
-                                                    entityStartTime = 0;
-                                                } else {
-                                                    entityStartTime = value;
-                                                }
-                                            }
-                                        });
-                                        entityBuilt(entity = 'build', entityId, entityStatus, entityPredictedDuration, entityStartTime);
+        return $.Deferred(function () {
+            var selfBranch = this;
+            if (getParameterByName('branchId') != '') {
+                xhr = $.ajax({
+                    url: KeplerServiceUrl + 'GetBranch?id=' + getParameterByName('branchId'),
+                    type: 'GET',
+                    success: function (data) {
+                        $('.builds_table tbody tr').attr('remove_entity', '1');
+                        $.each(data, function (key, value) {
+                            var entityId = '';
+                            var entityStatus = '';
+                            var entityPredictedDuration = '';
+                            var entityStartTime = '';
+
+                            if (key == 'Name') {
+                                $('.panel-heading h3').html(value);
+                                var level_1_menu_item = $('#main-menu a[branch_name="' + value + '"].main-menu-item').parent().parent().parent();
+                                var level_2_menu_item = $('#main-menu a[branch_name="' + value + '"].main-menu-item');
+                                if (!level_2_menu_item.hasClass('main-menu-item-focus')) {
+                                    if (!level_1_menu_item.hasClass('active')) {
+                                        level_1_menu_item.children('.main-menu-item').click();
                                     }
+                                    $('.main-menu-item-focus').removeClass('main-menu-item-focus');
+                                    level_2_menu_item.addClass('main-menu-item-focus');
+                                    $('nav.navbar-default.navbar-side').animate({
+                                        scrollTop: $(level_2_menu_item).offset().top - 200
+                                    }, 500);
+                                }
+                            } else if (key != 'Builds') {
+                                $('.panel-heading h3').attr(key, value);
+                            } else if (key == 'Builds') {
+                                $.each(value, function (key, value) {
+                                    $.each(value, function (key, value) {
+                                        if (key == 'Value') {
+                                            $.each(value, function (key, value) {
+                                                if (key == 'Id') {
+                                                    entityId = value;
+                                                } else if (key == 'Status') {
+                                                    entityStatus = value;
+                                                } else if (key == 'PredictedDuration') {
+                                                    if (value == null) {
+                                                        entityPredictedDuration = 0;
+                                                    } else {
+                                                        entityPredictedDuration = value;
+                                                    }
+                                                } else if (key == 'StartDate') {
+                                                    if (value == null) {
+                                                        entityStartTime = 0;
+                                                    } else {
+                                                        entityStartTime = value;
+                                                    }
+                                                }
+                                            });
+                                            entityBuilt(entity = 'build', entityId, entityStatus, entityPredictedDuration, entityStartTime);
+                                        }
+                                    });
                                 });
-                            });
-                        }
-                    });
-                }
-            });
-        }
+                            }
+                        });
+                        selfBranch.resolve();
+                        intervalBranch = setInterval(getBranch, 10000);
+                    }
+                });
+            }
+        });
         $('.builds_table tbody tr[remove_entity="1"]').remove();
-    }
+    };
+
+    getBranch();
 
     //
     // Builder for build

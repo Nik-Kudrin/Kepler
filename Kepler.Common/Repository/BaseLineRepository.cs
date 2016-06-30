@@ -1,13 +1,12 @@
-﻿using Kepler.Common.DB;
-using Kepler.Common.Models;
+﻿using Kepler.Common.Models;
 
 namespace Kepler.Common.Repository
 {
-    public class BaseLineRepository : BaseRepository<BaseLine>
+    public class BaseLineRepository : BaseObjRepository<BaseLine>
     {
-        public static BaseLineRepository Instance => new BaseLineRepository(new KeplerDataContext());
+        public static BaseLineRepository Instance => new BaseLineRepository();
 
-        private BaseLineRepository(KeplerDataContext dbContext) : base(dbContext, dbContext.BaseLines)
+        private BaseLineRepository()
         {
         }
     }
