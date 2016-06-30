@@ -22,9 +22,10 @@ namespace Kepler.Service.Scheduler
         {
             base.CleanData(sender, eventArgs);
 
+
             var buildInBranches =
-                BuildRepository.Instance.Find(item => item.StartDate.HasValue &&
-                                                      item.StartDate < DateTime.Now - SchedulerInfo.SchedulePeriod)
+                BuildRepository.Instance.Find(string.Format("WHERE StartDate IS NOT NULL AND StartDate < {0}",
+                    DateTime.Now - SchedulerInfo.SchedulePeriod))
                     .GroupBy(item => item.BranchId);
 
             foreach (var builds in buildInBranches)

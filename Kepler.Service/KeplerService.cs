@@ -288,7 +288,7 @@ namespace Kepler.Service
 
         public IEnumerable<Build> GetBuilds(long branchId)
         {
-            return BuildRepository.Instance.Find(item => item.BranchId == branchId);
+            return BuildRepository.Instance.Find(new {BranchId = branchId});
         }
 
         public void DeleteBuild(long id)
@@ -308,7 +308,7 @@ namespace Kepler.Service
 
         public IEnumerable<ScreenShot> GetScreenShots(long testCaseId)
         {
-            return ScreenShotRepository.Instance.Find(item => item.ParentObjId == testCaseId);
+            return ScreenShotRepository.Instance.Find(new {ParentObjId = testCaseId});
         }
 
         #endregion
@@ -402,7 +402,7 @@ namespace Kepler.Service
         public void CreateProject(string name)
         {
             var projectRepo = ProjectRepository.Instance;
-            if (projectRepo.Find(name).Any())
+            if (projectRepo.Find(new {Name = name}).Any())
                 LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Project with name {name} already exist");
 
             try
@@ -429,7 +429,7 @@ namespace Kepler.Service
 
             if (project.Name != newName)
             {
-                if (projectRepo.Find(newName).Any())
+                if (projectRepo.Find(new {Name = newName}).Any())
                 {
                     LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Project with name {newName} already exist");
                 }
@@ -512,7 +512,7 @@ namespace Kepler.Service
 
 
             if (!project.MainBranchId.HasValue &&
-                BranchRepository.Instance.Find(branch => branch.ProjectId == project.Id).Any())
+                BranchRepository.Instance.Find(new {ProjectId = project.Id}).Any())
             {
                 LogErrorMessage(ErrorMessage.ErorCode.ProjectDontHaveMainBranch,
                     $"Project '{project.Name}' doesn't have main branch. Please, manually specify for project, which branch should be considered as main.");
@@ -521,7 +521,7 @@ namespace Kepler.Service
 
         private void IsBranchAlreadyExist(string branchName)
         {
-            if (BranchRepository.Instance.Find(branchName).Any())
+            if (BranchRepository.Instance.Find(new {Name = branchName}).Any())
             {
                 LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Branch with name {branchName} already exist");
             }
@@ -544,7 +544,7 @@ namespace Kepler.Service
             if (isMainBranch)
             {
                 var allProjectBranches =
-                    BranchRepository.Instance.Find(item => item.ProjectId == branch.ProjectId).ToList();
+                    BranchRepository.Instance.Find(new {ProjectId = branch.ProjectId}).ToList();
 
                 allProjectBranches.ForEach(item => item.IsMainBranch = false);
                 BranchRepository.Instance.Update(allProjectBranches);
@@ -570,7 +570,7 @@ namespace Kepler.Service
 
         public IEnumerable<Branch> GetBranches(long projectId)
         {
-            var branches = BranchRepository.Instance.Find(branch => branch.ProjectId == projectId);
+            var branches = BranchRepository.Instance.Find(new {ProjectId = projectId});
             branches.Each(branch => branch.InitChildObjectsFromDb<BuildRepository, Build>(BuildRepository.Instance));
 
             return branches.OrderBy(item => item.Name, StringComparer.InvariantCultureIgnoreCase);
@@ -599,7 +599,7 @@ namespace Kepler.Service
             imageWorkerServiceUrl = imageWorkerServiceUrl.Trim();
 
             var workerRepo = ImageWorkerRepository.Instance;
-            if (!workerRepo.Find(imageWorkerServiceUrl).Any())
+            if (!workerRepo.Find(new {Name = imageWorkerServiceUrl}).Any())
             {
                 workerRepo.Insert(new ImageWorker
                 {
@@ -620,7 +620,7 @@ namespace Kepler.Service
         public void UpdateImageWorker(string name, string newName, string newWorkerServiceUrl)
         {
             var workerRepo = ImageWorkerRepository.Instance;
-            var worker = workerRepo.Find(item => item.Name == name).FirstOrDefault();
+            var worker = workerRepo.Find(new {Name = name}).FirstOrDefault();
 
             if (worker == null)
             {
@@ -663,13 +663,13 @@ namespace Kepler.Service
             if (string.IsNullOrEmpty(propertyName))
                 LogErrorMessage(ErrorMessage.ErorCode.UndefinedError, "Kepler config property name must be not emtpy");
 
-            var property = KeplerSystemConfigRepository.Instance.Find(propertyName).FirstOrDefault();
+            var property = KeplerSystemConfigRepository.Instance.Find(new {Name = propertyName}).FirstOrDefault();
             return property == null ? "" : property.Value;
         }
 
         private void SetKeplerConfigProperty(string propertyName, string propertyValue)
         {
-            var property = KeplerSystemConfigRepository.Instance.Find(propertyName).FirstOrDefault();
+            var property = KeplerSystemConfigRepository.Instance.Find(new {Name = propertyName}).FirstOrDefault();
 
             if (property == null)
             {
@@ -737,7 +737,7 @@ namespace Kepler.Service
 
         public IEnumerable<ErrorMessage> GetErrors(DateTime fromTime)
         {
-            return ErrorMessageRepository.Instance.Find(item => item.Time >= fromTime)
+            return ErrorMessageRepository.Instance.Find(string.Format("WHERE Time >= {0}", fromTime))
                 .OrderByDescending(item => item.Id);
         }
 
@@ -745,14 +745,14 @@ namespace Kepler.Service
         {
             var errorRepo = ErrorMessageRepository.Instance;
 
-            var lastViewedError = errorRepo.Find(item => item.IsLastViewed).FirstOrDefault();
+            var lastViewedError = errorRepo.Find(new {IsLastViewed = true}).FirstOrDefault();
 
             if (lastViewedError == null)
             {
                 return errorRepo.FindAll().OrderByDescending(item => item.Id);
             }
 
-            return errorRepo.Find(item => item.Id > lastViewedError.Id)
+            return errorRepo.Find(string.Format("WHERE Id > {0}", lastViewedError.Id))
                 .OrderByDescending(item => item.Id);
         }
 
@@ -767,7 +767,7 @@ namespace Kepler.Service
                 }.ConvertToWebFaultException(HttpStatusCode.InternalServerError);
 
 
-            var allLastViewedItems = ErrorMessageRepository.Instance.Find(item => item.IsLastViewed);
+            var allLastViewedItems = ErrorMessageRepository.Instance.Find(new {IsLastViewed = true});
             allLastViewedItems.Each(item => item.IsLastViewed = false);
             ErrorMessageRepository.Instance.Update(allLastViewedItems);
 

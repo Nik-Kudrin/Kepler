@@ -1,4 +1,5 @@
 ﻿using System;
+using Kepler.Common.Error;
 using Kepler.Common.Models;
 using Kepler.Common.Models.Common;
 using Kepler.Common.Repository;
@@ -96,6 +97,18 @@ namespace Kepler.Tests.Test
         public void ProcessorsCount()
         {
             Console.WriteLine("Number Of Logical Processors: {0}", Environment.ProcessorCount);
+        }
+
+        [Test]
+        public void InserErrorMessage()
+        {
+            var repo = ErrorMessageRepository.Instance;
+            var errorMessage = new ErrorMessage()
+            {
+                Code = ErrorMessage.ErorCode.UndefinedError,
+                ExceptionMessage = "Some exception message",
+            };
+            repo.Insert(errorMessage);
         }
     }
 }

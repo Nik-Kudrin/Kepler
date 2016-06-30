@@ -33,18 +33,19 @@ namespace Kepler.Common.Repository
                 }
                 catch (Exception ex)
                 {
-                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
-                    {
-                        ExceptionMessage = $"DB error: {ex.Message}"
-                    });
-                    return null;
+                    LogErrorMessage(typeof (TEntity), ex);
                 }
             }
+
+            return null;
         }
 
 
         public virtual void Update(TEntity entity)
         {
+            if (entity == null)
+                return;
+
             using (var db = CreateConnection())
             {
                 db.Open();
@@ -58,10 +59,7 @@ namespace Kepler.Common.Repository
                     catch (Exception ex)
                     {
                         tran.Rollback();
-                        ErrorMessageRepository.Instance.Insert(new ErrorMessage()
-                        {
-                            ExceptionMessage = $"DB error: {ex.Message}"
-                        });
+                        LogErrorMessage(typeof (TEntity), ex);
                     }
                 }
             }
@@ -82,10 +80,7 @@ namespace Kepler.Common.Repository
                     catch (Exception ex)
                     {
                         tran.Rollback();
-                        ErrorMessageRepository.Instance.Insert(new ErrorMessage()
-                        {
-                            ExceptionMessage = $"DB error: {ex.Message}"
-                        });
+                        LogErrorMessage(typeof (TEntity), ex);
                     }
                 }
             }
@@ -94,7 +89,7 @@ namespace Kepler.Common.Repository
 
         public virtual void Insert(TEntity entity)
         {
-            if (entity != null)
+            if (entity == null)
                 return;
 
             using (var db = CreateConnection())
@@ -110,10 +105,7 @@ namespace Kepler.Common.Repository
                     catch (Exception ex)
                     {
                         tran.Rollback();
-                        ErrorMessageRepository.Instance.Insert(new ErrorMessage()
-                        {
-                            ExceptionMessage = $"DB error: {ex.Message}"
-                        });
+                        LogErrorMessage(typeof (TEntity), ex);
                     }
                 }
             }
@@ -134,10 +126,7 @@ namespace Kepler.Common.Repository
                     catch (Exception ex)
                     {
                         tran.Rollback();
-                        ErrorMessageRepository.Instance.Insert(new ErrorMessage()
-                        {
-                            ExceptionMessage = $"DB error: {ex.Message}"
-                        });
+                        LogErrorMessage(typeof (TEntity), ex);
                     }
                 }
             }
@@ -158,10 +147,7 @@ namespace Kepler.Common.Repository
                     catch (Exception ex)
                     {
                         tran.Rollback();
-                        ErrorMessageRepository.Instance.Insert(new ErrorMessage()
-                        {
-                            ExceptionMessage = $"DB error: {ex.Message}"
-                        });
+                        LogErrorMessage(typeof (TEntity), ex);
                     }
                 }
             }
@@ -178,38 +164,14 @@ namespace Kepler.Common.Repository
                 }
                 catch (Exception ex)
                 {
-                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
-                    {
-                        ExceptionMessage = $"DB error: {ex.Message}"
-                    });
+                    LogErrorMessage(typeof (TEntity), ex);
                 }
             }
 
-            return null;
+            return new List<TEntity>();
         }
 
-        public virtual IEnumerable<TEntity> Find(string name)
-        {
-            using (var db = CreateConnection())
-            {
-                db.Open();
-                try
-                {
-                    return db.GetList<TEntity>(new {Name = name});
-                }
-                catch (Exception ex)
-                {
-                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
-                    {
-                        ExceptionMessage = $"DB error: {ex.Message}"
-                    });
-                }
-            }
-
-            return null;
-        }
-
-        public virtual IEnumerable<TEntity> Find(Func<TEntity, bool> filterCondition)
+        public virtual IEnumerable<TEntity> Find(object filterCondition)
         {
             using (var db = CreateConnection())
             {
@@ -220,14 +182,37 @@ namespace Kepler.Common.Repository
                 }
                 catch (Exception ex)
                 {
-                    ErrorMessageRepository.Instance.Insert(new ErrorMessage()
-                    {
-                        ExceptionMessage = $"DB error: {ex.Message}"
-                    });
+                    LogErrorMessage(typeof (TEntity), ex);
                 }
             }
 
-            return null;
+            return new List<TEntity>();
+        }
+
+        public virtual IEnumerable<TEntity> Find(string filterCondition)
+        {
+            using (var db = CreateConnection())
+            {
+                db.Open();
+                try
+                {
+                    return db.GetList<TEntity>(filterCondition);
+                }
+                catch (Exception ex)
+                {
+                    LogErrorMessage(typeof (TEntity), ex);
+                }
+            }
+
+            return new List<TEntity>();
+        }
+
+        private void LogErrorMessage(Type entityType, Exception ex)
+        {
+            ErrorMessageRepository.Instance.Insert(new ErrorMessage()
+            {
+                ExceptionMessage = $"DB error: {entityType.FullName} {ex.Message} {ex.StackTrace}"
+            });
         }
     }
 }

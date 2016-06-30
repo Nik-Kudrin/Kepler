@@ -48,17 +48,21 @@ namespace Kepler.Common.Error
 
         [DataMember]
         [DataType(DataType.DateTime)]
+        [Editable(true)]
         public DateTime? Time { get; set; }
 
         [DataMember]
+        [Editable(true)]
         public ErorCode Code { get; set; }
 
         [DataMember]
+        [Editable(true)]
         public bool IsLastViewed { get; set; }
 
         private string _exceptionMessage;
 
         [DataMember]
+        [Editable(true)]
         public string ExceptionMessage
         {
             get { return ToString(); }

@@ -51,7 +51,7 @@ namespace Kepler.Service.Core
         {
             if (typeof (TEntityBase) == typeof (Project))
             {
-                var childObjects = BranchRepository.Instance.Find(branch => branch.ProjectId == objectId).ToList();
+                var childObjects = BranchRepository.Instance.Find(new {ProjectId = objectId}).ToList();
                 childObjects.ForEach(child => DeleteObjectsTreeRecursively<Branch>(child.Id));
 
                 var parentObjRepo = ProjectRepository.Instance;
@@ -142,7 +142,7 @@ namespace Kepler.Service.Core
             where T : BaseObjRepository<TEntityChild>
             where TEntityChild : BuildObject
         {
-            return childObjectRepository.Find(item => item.ParentObjId == parentObjId).ToList();
+            return childObjectRepository.Find(new {ParentObjId = parentObjId}).ToList();
         }
     }
 }

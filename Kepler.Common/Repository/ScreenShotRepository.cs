@@ -15,24 +15,22 @@ namespace Kepler.Common.Repository
 
         public IEnumerable<ScreenShot> GetInQueueScreenShotsForBuild(long buildId)
         {
-            return Find(screenShot => screenShot.BuildId == buildId &&
-                                      screenShot.Status == ObjectStatus.InQueue);
+            return Find(new {BuildId = buildId, Status = ObjectStatus.InQueue});
         }
 
         public IEnumerable<ScreenShot> GetAllInQueueScreenShots()
         {
-            return Find(screenShot => screenShot.Status == ObjectStatus.InQueue);
+            return Find(new {Status = ObjectStatus.InQueue});
         }
 
         public IEnumerable<ScreenShot> GetBaselineScreenShots(long baselineId)
         {
-            return Find(item => item.BaseLineId == baselineId && item.IsLastPassed);
+            return Find(new {BaseLineId = baselineId, IsLastPassed = true});
         }
 
         public ScreenShot GetBaselineScreenShot(long baselineId, string screenShotName)
         {
-            return Find(item => item.BaseLineId == baselineId &&
-                                item.IsLastPassed && item.Name == screenShotName)
+            return Find(new {BaseLineId = baselineId, IsLastPassed = true, Name = screenShotName})
                 .FirstOrDefault();
         }
     }

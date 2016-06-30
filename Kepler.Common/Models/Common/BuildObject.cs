@@ -29,7 +29,7 @@ namespace Kepler.Common.Models.Common
             where T : BaseObjRepository<TEntityChild>
             where TEntityChild : BuildObject
         {
-            return childObjectRepository.Find(item => item.ParentObjId == this.Id)
+            return childObjectRepository.Find(new { ParentObjId = this.Id})
                 .ToDictionary(item => item.Id, item => item);
         }
     }

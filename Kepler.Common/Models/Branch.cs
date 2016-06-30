@@ -38,7 +38,7 @@ namespace Kepler.Common.Models
             where T : BaseObjRepository<TEntityChild> where TEntityChild : BuildObject
         {
             Builds = (childObjectRepository as BuildRepository)
-                .Find(build => build.BranchId == Id)
+                .Find(new {BranchId = Id})
                 .ToDictionary(item => item.Id, item => item);
         }
     }

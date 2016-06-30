@@ -25,8 +25,9 @@ namespace Kepler.Service.Core
                     if (build.StartDate.HasValue) return;
                     SetBuildStartDate(build);
 
-                    var builds = BuildRepository.Instance.Find(
-                        item => item.BranchId == build.BranchId && item.Id != buildId);
+                    var builds = BuildRepository.Instance.Find(string.Format("WHERE BranchId = {0} AND Id <> {1}",
+                        build.BranchId, buildId));
+
 
                     var averagePredictedBuildRunTicks = 0.0;
 
@@ -44,9 +45,10 @@ namespace Kepler.Service.Core
                     if (build.StopDate.HasValue) return;
 
                     var numberNotProcessedScreenShots =
-                        ScreenShotRepository.Instance.Find(item => item.BuildId == buildId &&
-                                                                   (item.Status == ObjectStatus.InProgress ||
-                                                                    item.Status == ObjectStatus.InQueue)).Count();
+                        ScreenShotRepository.Instance.Find(
+                            string.Format("WHERE BuildId = {0} AND (Status = {1} OR Status = {2})",
+                                buildId, ObjectStatus.InProgress, ObjectStatus.InQueue)).Count();
+
                     // if build still in processing
                     if (numberNotProcessedScreenShots > 0) return;
 
@@ -122,12 +124,12 @@ namespace Kepler.Service.Core
             where TEntityChild : BuildObject
         {
             var baseItems =
-                baseObjectRepository.Find(item => item.Status == ObjectStatus.InQueue ||
-                                                  item.Status == ObjectStatus.InProgress);
+                baseObjectRepository.Find(string.Format("WHERE Status = {1} OR Status = {2}",
+                    ObjectStatus.InQueue, ObjectStatus.InProgress));
 
             foreach (var baseItem in baseItems)
             {
-                var childItems = childObjectRepository.Find(item => item.ParentObjId == baseItem.Id);
+                var childItems = childObjectRepository.Find(new {ParentObjId = baseItem.Id});
 
                 if (childItems.Any(item => item.Status == ObjectStatus.InProgress))
                 {
@@ -286,17 +288,17 @@ namespace Kepler.Service.Core
             if (typeof (TEntityChild) == typeof (ScreenShot) && newStatus == ObjectStatus.Passed)
             {
                 var screenShotRepo = ScreenShotRepository.Instance;
-                var childScreenShots = screenShotRepo.Find(item => item.ParentObjId == parentObjId);
+                var childScreenShots = screenShotRepo.Find(new {ParentObjId = parentObjId});
 
                 foreach (var screenShot in childScreenShots)
                 {
                     SetParentObjStatus<ScreenShotRepository, ScreenShot>(screenShotRepo, screenShot.Id, newStatus);
                 }
 
-                return childObjectRepository.Find(item => item.ParentObjId == parentObjId).ToList();
+                return childObjectRepository.Find(new {ParentObjId = parentObjId}).ToList();
             }
 
-            var childItems = childObjectRepository.Find(item => item.ParentObjId == parentObjId).ToList();
+            var childItems = childObjectRepository.Find(new {ParentObjId = parentObjId}).ToList();
 
             childItems.ForEach(item => item.Status = newStatus);
             childObjectRepository.Update(childItems);

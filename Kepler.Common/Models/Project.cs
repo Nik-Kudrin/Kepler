@@ -22,7 +22,7 @@ namespace Kepler.Common.Models
 
         public void InitChildObjectsFromDb()
         {
-            Branches = BranchRepository.Instance.Find(branch => branch.ProjectId == Id)
+            Branches = BranchRepository.Instance.Find(new {ProjectId = Id})
                 .ToDictionary(item => item.Id, item => item);
         }
     }

@@ -146,7 +146,7 @@ namespace Kepler.Service.Config
                 var project = mappedProjects[index];
 
                 var projectName = project.Name.Trim();
-                var projectsFromDb = ProjectRepository.Instance.Find(projectName);
+                var projectsFromDb = ProjectRepository.Instance.Find(new {Name = projectName});
 
                 if (projectsFromDb.Count() == 0 || projectsFromDb.Count() > 1)
                     throw new Exception(new ErrorMessage()
@@ -177,7 +177,7 @@ namespace Kepler.Service.Config
                     }.ToString());
 
 
-                var storedBranches = BranchRepository.Instance.Find(item => item.ProjectId == mappedProject.Id);
+                var storedBranches = BranchRepository.Instance.Find(new {ProjectId = mappedProject.Id});
                 var importedBranches = mapper.GetBranches(importedConfig.Projects
                     .First(project => project.Name == mappedProject.Name).Branches).ToList();
 

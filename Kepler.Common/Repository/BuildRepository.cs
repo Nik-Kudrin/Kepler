@@ -14,7 +14,7 @@ namespace Kepler.Common.Repository
 
         public IEnumerable<Build> GetBuildsByStatus(ObjectStatus status)
         {
-            return Find(build => build.Status == status);
+            return Find(new {Status = status});
         }
     }
 }
