@@ -11,19 +11,19 @@ namespace Kepler.Common.Models
     {
         [DataMember]
         [IgnoreDataMember]
-        [Editable(true)]
+        [Dapper.Editable(true)]
         public long? BaseLineId { get; set; }
 
         [DataMember]
-        [Editable(true)]
+        [Dapper.Editable(true)]
         public long? LatestBuildId { get; set; }
 
         [DataMember]
-        [Editable(true)]
+        [Dapper.Editable(true)]
         public long? ProjectId { get; set; }
 
         [DataMember]
-        [Editable(true)]
+        [Dapper.Editable(true)]
         public bool IsMainBranch { get; set; }
 
         public Dictionary<long, Build> Builds { get; set; }

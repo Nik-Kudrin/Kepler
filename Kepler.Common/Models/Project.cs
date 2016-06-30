@@ -12,7 +12,7 @@ namespace Kepler.Common.Models
         public Dictionary<long, Branch> Branches { get; set; }
 
         [DataMember]
-        [Editable(true)]
+        [Dapper.Editable(true)]
         public long? MainBranchId { get; set; }
 
         public Project()

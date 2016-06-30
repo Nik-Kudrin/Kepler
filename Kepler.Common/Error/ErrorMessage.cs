@@ -42,27 +42,27 @@ namespace Kepler.Common.Error
             Time = DateTime.Now;
         }
 
+        [Dapper.Key]
         [DataMember]
-        [Key]
         public long Id { get; set; }
 
         [DataMember]
         [DataType(DataType.DateTime)]
-        [Editable(true)]
+        [Dapper.Editable(true)]
         public DateTime? Time { get; set; }
 
         [DataMember]
-        [Editable(true)]
+        [Dapper.Editable(true)]
         public ErorCode Code { get; set; }
 
         [DataMember]
-        [Editable(true)]
+        [Dapper.Editable(true)]
         public bool IsLastViewed { get; set; }
 
         private string _exceptionMessage;
 
         [DataMember]
-        [Editable(true)]
+        [Dapper.Editable(true)]
         public string ExceptionMessage
         {
             get { return ToString(); }

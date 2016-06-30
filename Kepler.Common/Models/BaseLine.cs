@@ -8,7 +8,7 @@ namespace Kepler.Common.Models
     public class BaseLine : InfoObject
     {
         [DataMember]
-        [Editable(true)]
+        [Dapper.Editable(true)]
         public long BranchId { get; set; }
 
         public Dictionary<long?, ScreenShot> ScreenShots { get; set; }

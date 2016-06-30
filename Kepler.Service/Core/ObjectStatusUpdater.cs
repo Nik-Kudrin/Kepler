@@ -47,7 +47,7 @@ namespace Kepler.Service.Core
                     var numberNotProcessedScreenShots =
                         ScreenShotRepository.Instance.Find(
                             string.Format("WHERE BuildId = {0} AND (Status = {1} OR Status = {2})",
-                                buildId, ObjectStatus.InProgress, ObjectStatus.InQueue)).Count();
+                                buildId, (int) ObjectStatus.InProgress, (int) ObjectStatus.InQueue)).Count();
 
                     // if build still in processing
                     if (numberNotProcessedScreenShots > 0) return;
@@ -124,8 +124,8 @@ namespace Kepler.Service.Core
             where TEntityChild : BuildObject
         {
             var baseItems =
-                baseObjectRepository.Find(string.Format("WHERE Status = {1} OR Status = {2}",
-                    ObjectStatus.InQueue, ObjectStatus.InProgress));
+                baseObjectRepository.Find(string.Format("WHERE Status = {0} OR Status = {1}",
+                    (int) ObjectStatus.InQueue, (int) ObjectStatus.InProgress));
 
             foreach (var baseItem in baseItems)
             {
