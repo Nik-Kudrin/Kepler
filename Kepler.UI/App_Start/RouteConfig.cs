@@ -18,25 +18,25 @@ namespace Kepler.UI
             routes.MapRoute(
                 name: "Admin",
                 url: "admin/image-workers",
-                defaults: new {controller = "Admin", action = "Index", parameter = UrlParameter.Optional}
+                defaults: new {controller = "Kepler", action = "Index", parameter = UrlParameter.Optional}
                 );
 
             routes.MapRoute(
                 name: "Admin-Diff-Image",
                 url: "admin/source-image-path",
-                defaults: new {controller = "Admin", action = "Index", parameter = UrlParameter.Optional}
+                defaults: new {controller = "Kepler", action = "Index", parameter = UrlParameter.Optional}
                 );
 
             routes.MapRoute(
                 name: "Admin-Service-Url",
                 url: "admin/service-url",
-                defaults: new { controller = "Admin", action = "Index", parameter = UrlParameter.Optional }
+                defaults: new { controller = "Kepler", action = "Index", parameter = UrlParameter.Optional }
                 );
 
 			routes.MapRoute(
                 name: "Admin-Scheduler",
                 url: "admin/scheduler",
-                defaults: new { controller = "Admin", action = "Index", parameter = UrlParameter.Optional }
+                defaults: new { controller = "Kepler", action = "Index", parameter = UrlParameter.Optional }
                 );
 
             routes.MapRoute(
