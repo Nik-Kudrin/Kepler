@@ -225,9 +225,22 @@ namespace Kepler.Service.Config
                 var newBaselineScreenShot = new ScreenShot()
                 {
                     BaseLineId = newBaseLine.Id,
-                    ImagePath = mainBaselineScreenShot.ImagePath,
                     Name = mainBaselineScreenShot.Name,
-                    Status = mainBaselineScreenShot.Status
+                    Status = mainBaselineScreenShot.Status,
+                    IsLastPassed = true,
+                    ImagePath = mainBaselineScreenShot.ImagePath,
+                    ImagePathUrl = mainBaselineScreenShot.ImagePathUrl,
+                    PreviewImagePath = mainBaselineScreenShot.PreviewImagePath,
+                    PreviewImagePathUrl = mainBaselineScreenShot.PreviewImagePathUrl,
+                    BaseLineImagePath = mainBaselineScreenShot.BaseLineImagePath,
+                    BaseLineImagePathUrl = mainBaselineScreenShot.BaseLineImagePathUrl,
+                    BaseLinePreviewPath = mainBaselineScreenShot.BaseLinePreviewPath,
+                    BaseLinePreviewPathUrl = mainBaselineScreenShot.BaseLinePreviewPathUrl,
+                    DiffImagePath = mainBaselineScreenShot.DiffImagePath,
+                    DiffImagePathUrl = mainBaselineScreenShot.DiffImagePathUrl,
+                    DiffPreviewPath = mainBaselineScreenShot.DiffPreviewPath,
+                    DiffPreviewPathUrl = mainBaselineScreenShot.DiffPreviewPathUrl,
+                    Url = mainBaselineScreenShot.Url
                 };
 
                 ScreenShotRepository.Instance.Insert(newBaselineScreenShot);
