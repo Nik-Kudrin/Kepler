@@ -44,15 +44,10 @@ namespace Kepler.Service.Core
                     // if StopDate already set, just get out of here
                     if (build.StopDate.HasValue) return;
 
-                    var numberNotProcessedScreenShots =
-                        ScreenShotRepository.Instance.Find(
-                            string.Format("WHERE BuildId = {0} AND (Status = {1} OR Status = {2})",
-                                buildId, (int) ObjectStatus.InProgress, (int) ObjectStatus.InQueue)).Count();
-
-                    // if build still in processing
-                    if (numberNotProcessedScreenShots > 0) return;
-
                     UpdateBuildFailedScreenshotsNumber(build);
+
+                    build.StopDate = DateTime.Now;
+                    build.Duration = build.StopDate - build.StartDate;
                     break;
 
                 case ObjectStatus.Passed:
@@ -138,8 +133,21 @@ namespace Kepler.Service.Core
                     continue;
                 }
 
+                // because we should set correct "stop" time for failed build
                 if (childItems.Any(item => item.Status == ObjectStatus.Failed))
                 {
+                    if (typeof (TEntityBase) == typeof (Build))
+                    {
+                        var isSomeItemsInProgress = childItems.Any(item => item.Status == ObjectStatus.InQueue ||
+                                                                           item.Status == ObjectStatus.InProgress);
+                        if (!isSomeItemsInProgress)
+                        {
+                            baseItem.Status = ObjectStatus.Failed;
+                            baseObjectRepository.Update(baseItem);
+                            continue;
+                        }
+                    }
+
                     baseItem.Status = ObjectStatus.Failed;
                     baseObjectRepository.Update(baseItem);
                     continue;

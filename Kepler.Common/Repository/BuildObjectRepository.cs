@@ -27,11 +27,12 @@ namespace Kepler.Common.Repository
                 {
                     ErrorMessageRepository.Instance.Insert(new ErrorMessage()
                     {
-                        ExceptionMessage = $"DB error: {ex.Message}"
+                        ExceptionMessage = $"DB error: {ex.Message} {ex.StackTrace}"
                     });
-                    return null;
                 }
             }
+
+            return new List<TBuildObjEntity>();
         }
 
         public virtual IEnumerable<TBuildObjEntity> FindByBuildId(long buildId)
@@ -47,11 +48,12 @@ namespace Kepler.Common.Repository
                 {
                     ErrorMessageRepository.Instance.Insert(new ErrorMessage()
                     {
-                        ExceptionMessage = $"DB error: {ex.Message}"
+                        ExceptionMessage = $"DB error: {ex.Message} {ex.StackTrace}"
                     });
-                    return null;
                 }
             }
+
+            return new List<TBuildObjEntity>();
         }
 
         public virtual IEnumerable<TBuildObjEntity> FindFailedInBuild(long buildId)
@@ -61,19 +63,18 @@ namespace Kepler.Common.Repository
                 db.Open();
                 try
                 {
-                    return db.GetList<TBuildObjEntity>(
-                        new Func<TBuildObjEntity, bool>(
-                            item => item.BuildId == buildId && item.Status == ObjectStatus.Failed));
+                    return db.GetList<TBuildObjEntity>(new {BuildId = buildId, Status = (int) ObjectStatus.Failed});
                 }
                 catch (Exception ex)
                 {
                     ErrorMessageRepository.Instance.Insert(new ErrorMessage()
                     {
-                        ExceptionMessage = $"DB error: {ex.Message}"
+                        ExceptionMessage = $"DB error: {ex.Message} {ex.StackTrace}"
                     });
-                    return null;
                 }
             }
+
+            return new List<TBuildObjEntity>();
         }
     }
 }

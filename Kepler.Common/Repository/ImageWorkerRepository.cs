@@ -27,11 +27,12 @@ namespace Kepler.Common.Repository
                 {
                     ErrorMessageRepository.Instance.Insert(new ErrorMessage()
                     {
-                        ExceptionMessage = $"DB error: {ex.Message}"
+                        ExceptionMessage = $"DB error: {ex.Message} {ex.StackTrace}"
                     });
-                    return null;
                 }
             }
+
+            return new List<ImageWorker>();
         }
     }
 }
