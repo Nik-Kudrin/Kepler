@@ -120,22 +120,12 @@ namespace Kepler.Common.Repository
 
         public virtual void Delete(IEnumerable<TEntity> entities)
         {
-            using (var db = CreateConnection())
+            if (entities == null)
+                return;
+
+            foreach (var entity in entities)
             {
-                db.Open();
-                using (var tran = db.BeginTransaction())
-                {
-                    try
-                    {
-                        SimpleCRUD.Delete(db, entities, tran);
-                        tran.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        tran.Rollback();
-                        LogErrorMessage(typeof (TEntity), ex);
-                    }
-                }
+                Delete(entity);
             }
         }
 
