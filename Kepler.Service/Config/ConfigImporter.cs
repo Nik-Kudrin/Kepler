@@ -198,10 +198,10 @@ namespace Kepler.Service.Config
                     else // if branch don't exist in DB, copy a baseline from main branch and screenshots from baseline
                     {
                         importedBranch.ProjectId = mappedProject.Id;
-                        BranchRepository.Instance.Insert(importedBranch);
+                        importedBranch.Id = BranchRepository.Instance.Insert(importedBranch).Value;
 
                         var baseline = new BaseLine() {BranchId = importedBranch.Id};
-                        BaseLineRepository.Instance.Insert(baseline);
+                        baseline.Id = BaseLineRepository.Instance.Insert(baseline).Value;
 
                         importedBranch.BaseLineId = baseline.Id;
                         BranchRepository.Instance.Update(importedBranch);
@@ -252,7 +252,7 @@ namespace Kepler.Service.Config
                     ParentObjId = branch.Id
                 };
 
-                BuildRepository.Instance.Insert(build);
+                build.Id = BuildRepository.Instance.Insert(build).Value;
                 builds.Add(build);
 
                 branch.Builds.Add(build.Id, build);
@@ -290,7 +290,7 @@ namespace Kepler.Service.Config
                         mappedAssembly.BuildId = assemblyBranch.LatestBuildId;
                         mappedAssembly.Status = ObjectStatus.InQueue;
 
-                        TestAssemblyRepository.Instance.Insert(mappedAssembly);
+                        mappedAssembly.Id = TestAssemblyRepository.Instance.Insert(mappedAssembly).Value;
                     }
 
                     assemblies.AddRange(mappedAssemblies);
@@ -326,7 +326,7 @@ namespace Kepler.Service.Config
                             suite.ParentObjId = currentAssembly.Id;
                             suite.Status = ObjectStatus.InQueue;
 
-                            TestSuiteRepository.Instance.Insert(suite);
+                            suite.Id = TestSuiteRepository.Instance.Insert(suite).Value;
                         }
 
                         currentAssembly.TestSuites = mappedSuites.ToDictionary(item => item.Id, item => item);
@@ -370,7 +370,7 @@ namespace Kepler.Service.Config
                                 testCase.BuildId = currentAssembly.BuildId;
                                 testCase.ParentObjId = currentSuite.Key;
 
-                                TestCaseRepository.Instance.Insert(testCase);
+                                testCase.Id = TestCaseRepository.Instance.Insert(testCase).Value;
                             }
 
                             currentSuite.Value.TestCases = mappedCases.ToDictionary(item => item.Id, item => item);
@@ -429,7 +429,7 @@ namespace Kepler.Service.Config
                                     screenShot.DiffImagePath = pathToSaveScreenShotsDiffs.Item1;
                                     screenShot.DiffPreviewPath = pathToSaveScreenShotsDiffs.Item2;
 
-                                    ScreenShotRepository.Instance.Insert(screenShot);
+                                    screenShot.Id = ScreenShotRepository.Instance.Insert(screenShot).Value;
                                 }
 
                                 currentCase.Value.ScreenShots = screenShots.ToDictionary(item => item.Id, item => item);

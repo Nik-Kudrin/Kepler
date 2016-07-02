@@ -462,7 +462,7 @@ namespace Kepler.Service
             try
             {
                 var baseline = new BaseLine();
-                BaseLineRepository.Instance.Insert(baseline);
+                baseline.Id = BaseLineRepository.Instance.Insert(baseline).Value;
 
                 var branch = new Branch
                 {
@@ -470,7 +470,7 @@ namespace Kepler.Service
                     BaseLineId = baseline.Id,
                     ProjectId = projectId
                 };
-                BranchRepository.Instance.Insert(branch);
+                branch.Id = BranchRepository.Instance.Insert(branch).Value;
 
                 baseline.BranchId = branch.Id;
                 BaseLineRepository.Instance.Update(baseline);

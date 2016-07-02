@@ -36,7 +36,7 @@ namespace Kepler.Tests.Test
         {
             var buildConfigFile = File.ReadAllText(Path.Combine(BaseResourcePath, "test_config.json"));
 
-//            Console.WriteLine(JsonConvert.SerializeObject(buildConfigFile));
+            Console.WriteLine(JsonConvert.SerializeObject(buildConfigFile));
 
             var client = new RestClient("http://localhost:8733/Kepler.Service/");
             var request = new RestRequest("ImportTestConfig", Method.POST);
@@ -57,7 +57,7 @@ namespace Kepler.Tests.Test
             // Set diff image path
             var request = new RestRequest("SetDiffImageSavingPath", Method.GET);
             request.RequestFormat = DataFormat.Json;
-            request.AddQueryParameter("diffImageSavingPath", "\\\\NEON-PC\\ScreenCompareResult");
+            request.AddQueryParameter("diffImageSavingPath", "\\\\NEON-PC\\diff");
 
             var response = client.Execute(request);
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
@@ -65,7 +65,7 @@ namespace Kepler.Tests.Test
             // Set source image path
             request = new RestRequest("SetSourceImageSavingPath", Method.GET);
             request.RequestFormat = DataFormat.Json;
-            request.AddQueryParameter("sourceImageSavingPath", "\\\\NEON-PC\\ScreenSource");
+            request.AddQueryParameter("sourceImageSavingPath", "\\\\NEON-PC\\origin");
 
             response = client.Execute(request);
             response.Content.Replace("\"", "").ShouldBeEquivalentTo("");
