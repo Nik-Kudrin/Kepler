@@ -361,19 +361,6 @@ label.error {
 /*BUILD LIST PAGE END*/
 
 /*BUILD PAGE START*/
-.list-fixed-panel {
-    position: fixed;
-    top: 75px;
-    width: 75%;
-    z-index: 1;
-    padding: 10px 0px;
-    background: #f3f3f3;
-}
-
-.entity-list {
-    margin-top: 5px;
-}
-
 .icon-build-info {
     color: #337AB7;
     font-size: 21px;
