@@ -171,6 +171,8 @@
 </div>
 
 <script>
+    var firstPageOpen = 1;
+
     $(document).ready(function () {
         $('body').scrollTop(0);
 
@@ -409,11 +411,26 @@
                             });
                             selfBuild.resolve();
                             //intervalAssemblies = setInterval(getAssemblies, 20000);
+
+                            if (firstPageOpen == 1 && window.location.hash != '') {
+                                jumpToScreenshot();
+                            }
                         }
                     });
                 }
             });
         };
+
+        //
+        // Jump to screenshot(anchor)
+        //
+        function jumpToScreenshot() {
+            $('#' + window.location.hash.replace(/^#/, "")).parents('.panel-collapse:not(".in")').collapse('show');
+            $('html, body').animate({
+                scrollTop: $('#' + window.location.hash.replace(/^#/, "")).offset().top - 200
+            }, 1000);
+            firstPageOpen = 0;
+        }
 
         getAssemblies();
 
@@ -477,6 +494,7 @@
                     $('#' + entity + '-' + entityId + ' .screenShot-link').attr('href', Url).show();
                 }
             }
+
         }
 
         //
