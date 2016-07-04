@@ -6,7 +6,6 @@ namespace Kepler.Common.Models
 {
     public class ImageWorker : InfoObject
     {
-        [StringLength(600)]
         [DataMember]
         [Dapper.Editable(true)]
         public string WorkerServiceUrl { get; set; }
