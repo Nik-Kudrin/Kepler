@@ -69,7 +69,8 @@
   // that contain 'lightbox'. When these are clicked, start lightbox.
   Lightbox.prototype.enable = function() {
     var self = this;
-    $('body').on('click', 'a[rel^=lightbox], area[rel^=lightbox], a[data-lightbox], area[data-lightbox]', function(event) {
+    $('body').on('click', 'a[rel^=lightbox], area[rel^=lightbox], a[data-lightbox], area[data-lightbox]', function (event) {
+      location.hash = $(this).attr('data-parentid'); // add to hash screenshot ID
       self.start($(event.currentTarget));
       return false;
     });
@@ -132,7 +133,8 @@
     });
 
     this.$lightbox.find('.lb-loader, .lb-close').on('click', function() {
-      self.end();
+        self.end();
+        location.hash = '';// Clean hash in url
       return false;
     });
   };
@@ -204,7 +206,6 @@
     this.changeImage(imageNumber);
 
     $('.lightbox').scrollTop(0);
-    console.log('das');
 
   };
 
@@ -221,6 +222,12 @@
     this.$lightbox.find('.lb-image, .lb-nav, .lb-prev, .lb-next, .lb-dataContainer, .lb-numbers, .lb-caption').hide();
 
     this.$outerContainer.addClass('animating');
+
+    // Hash change
+    var hash = window.location.hash.replace(/^#/, "").split('&');
+    var currentImageNumber = imageNumber + 1;
+
+    location.hash = hash[0] + '&' + currentImageNumber;
 
     // When image to show is preloaded, we send the width and height to sizeContainer()
     var preloader = new Image();

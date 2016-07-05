@@ -122,7 +122,7 @@
             <i class="fa fa-link"></i>
         </a>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12 screenShot-container">
         <div class="col-md-4 screenShot-base">
             <span>Baseline</span>
             <a data-lightbox="multiimages" data-title="Base line" href="">
@@ -425,10 +425,14 @@
         // Jump to screenshot(anchor)
         //
         function jumpToScreenshot() {
-            $('#' + window.location.hash.replace(/^#/, "")).parents('.panel-collapse:not(".in")').collapse('show');
+            var hash = window.location.hash.replace(/^#/, "").split('&');
+            $('a[data-parentid=' + hash[0] + ']').parents('.panel-collapse:not(".in")').collapse('show');
             $('html, body').animate({
-                scrollTop: $('#' + window.location.hash.replace(/^#/, "")).offset().top - 200
-            }, 1000);
+                scrollTop: $('a[data-parentid=' + hash[0] + ']').offset().top - 200
+            }, 1000, function () {
+                console.log('a:nth-of-type(' + hash[1] + ')[data-parentid="' + hash[0] + '"]');
+                $('a[data-parentid="' + hash[0] + '"]').eq(hash[1]-1).click() //click on screenshot after scroll finished
+            });
             firstPageOpen = 0;
         }
 
@@ -468,6 +472,7 @@
                 $('.screenShot-splitter-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId).removeClass('screenShot-splitter-hidden').show();
                 $('#' + entity + '-' + entityId + ' img').attr('title', entityName);
                 $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-lightbox', entityName);
+                $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-parentId', entityId);
                 $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-title', function (i, val) {
                     return val + '&nbsp;' + entityName;
                 });
