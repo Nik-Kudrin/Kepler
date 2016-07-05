@@ -381,6 +381,13 @@ namespace Kepler.Service
             return ProjectRepository.Instance.GetCompleteObject(id);
         }
 
+        public Project GetProjectByName(string name)
+        {
+            var projectId = ProjectRepository.Instance.Find(new { Name = name }).FirstOrDefault().Id;
+            return ProjectRepository.Instance.GetCompleteObject(projectId);
+        }
+
+
         public IEnumerable<Project> GetProjects()
         {
             var projectRepo = ProjectRepository.Instance;

@@ -9,8 +9,7 @@ namespace Kepler.Common.Models.Common
         [Dapper.Key]
         [DataMember]
         public long Id { get; set; }
-
-        [StringLength(700)]
+        
         [DataMember]
         [Dapper.Editable(true)]
         public string Name { get; set; }

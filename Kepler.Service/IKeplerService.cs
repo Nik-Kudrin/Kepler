@@ -153,6 +153,10 @@ namespace Kepler.Service
         Project GetProject(long id);
 
         [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetProjectByName?name={name}")]
+        Project GetProjectByName(string name);
+
+        [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate = "GetProjects")]
         IEnumerable<Project> GetProjects();
 
