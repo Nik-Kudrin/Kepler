@@ -6,7 +6,7 @@ h3 {
 }
 
 .table > thead > tr > th {
-    border-bottom: 1px solid #ddd;
+
 }
 
 .table > tbody > tr > td {
@@ -59,10 +59,6 @@ label.error {
     font-size: 16px;
 }
 
-.navbar-brand {
-    border-bottom: 1px solid #2F2E31;
-}
-
 #modal_form .alert-warning {
     display: none;
 }
@@ -70,6 +66,10 @@ label.error {
 .progress {
     display: none;
     margin-bottom: 0px;
+}
+
+.table td {
+	border: 1px solid #ebeff2;
 }
 
 /*GLOBAL END*/
@@ -121,6 +121,12 @@ label.error {
 /*SCROLLBAR END*/
 
 /*PROGRESSBAR START*/
+#page-inner {
+    background: #f9f9f9;
+    border-radius: 4px;
+    box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
+}
+
 #page-inner .progress.progress_content, .progress.progress_modal_dialog {
     position: absolute;
     top: 50%;
@@ -148,11 +154,11 @@ label.error {
 .loading_label {
     display: none;
     position: fixed;
-    top: 0px;
+    top: 2px;
     left: 40%;
-    height: 35px;
-    width: 20%;
-    padding: 5px 20px 0px;
+    height: 25px;
+    width: 15%;
+    padding: 0px 20px 0px;
     z-index: 10000;
     -webkit-border-bottom-right-radius: 4px;
     -webkit-border-bottom-left-radius: 4px;
@@ -160,12 +166,12 @@ label.error {
     -moz-border-radius-bottomleft: 4px;
     border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px;
-    background: #d9edf7;
-    border: 1px solid #31708f;
+    background: #3b3e47;
+    border: 1px solid #71b6f9;
     border-top: none;
-    color: #31708f;
+    color: #ffffff;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 @-webkit-keyframes rotate {
@@ -303,12 +309,12 @@ label.error {
 .main-menu-conf {
     position: absolute;
     right: 30px;
-    top: 18px;
+    top: 12px;
 }
 
 .navbar-side .fa-cog {
     opacity: 0.3;
-    color: #FFF;
+    color: #71b6f9;
 }
 
 .navbar-side .fa.arrow {
@@ -323,6 +329,14 @@ label.error {
 .panel-default-testCase, .dropdown-btn-hidden,
 .screenShot-hidden, .screenShot-splitter-hidden {
     display: none;
+}
+
+.testAssembly_group .panel-default .panel-heading {
+    border: none;
+    background: #ebeff2;
+    border-radius: 0px;
+    padding: 5px 10px 5px 5px;
+    border-bottom: 2px solid #e4e4e4;
 }
 
 .panel-default .panel-heading {
@@ -393,20 +407,7 @@ label.error {
 .testAssembly_group .panel-default,
 .testSuite_group .panel-default,
 .testCase_group .panel-default {
-    padding: 10px 10px 10px 10px;
     background: none;
-}
-
-.testAssembly_group .panel-default {
-    border: 1px dotted #777;
-}
-
-.testSuite_group .panel-default {
-    border: 1px dotted #999;
-}
-
-.testCase_group .panel-default {
-    border: 1px dotted #CCC;
 }
 
 .screenShot .col-md-12:nth-of-type(2) {

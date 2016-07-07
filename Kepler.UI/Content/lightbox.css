@@ -46,7 +46,7 @@ body.lb-disable-scrolling {
 .lb-outerContainer {
   position: relative;
   top: 50px;
-  background-color: white;
+  background: #0f1013;
   *zoom: 1;
   width: 250px;
   height: 250px;
