@@ -35,7 +35,7 @@ body {
     display: inline-block;
     width: 100%;
     margin: 75px 20px 40px 0px;
-    padding: 20px 10px 10px 10px;
+    padding: 0px 0px 10px 0px;
 }
 
 .page-head-line {
@@ -75,7 +75,7 @@ nav.navbar.navbar-default.navbar-cls-top {
 .navbar-cls-top .navbar-brand {
     color: #69B08F;
     width: 260px;
-    text-align: center;
+    text-align: left;
     font-size: 20px;
     letter-spacing: 1px;
     text-transform:uppercase;

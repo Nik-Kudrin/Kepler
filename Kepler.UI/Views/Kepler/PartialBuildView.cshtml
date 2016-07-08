@@ -4,8 +4,8 @@
     });
 </script>
 
-<div class="col-md-12">
-    <div class="col-md-8">
+<div class="col-md-12 col-md-12-header">
+    <div class="col-md-11">
         <div class="col-md-1">
             <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
             <ul class="dropdown-menu build-info-popup">
@@ -13,6 +13,24 @@
                 <li class="build-info-duration">Duration: <span>1h23m</span></li>
                 <li class="build-info-tests">Tests: <span>2404</span></li>
                 <li class="build-info-failed">Tests failed: <span>45</span></li>
+            </ul>
+        </div>
+        <div class="col-md-1">
+            <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
+            <ul class="dropdown-menu build_action_menu">
+                <li>
+                    <a href="" data-act="run_obj" typeName="build">Run</a>
+                </li>
+                <li>
+                    <a href="" data-act="stop_obj" typeName="build">Stop</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="" data-act="set_passed_obj" typeName="build">Set passed</a>
+                </li>
+                <li>
+                    <a href="" data-act="set_failed_obj" typeName="build">Set failed</a>
+                </li>
             </ul>
         </div>
         <div id="build-info-block" class="col-md-4">
@@ -26,7 +44,7 @@
         </div>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-1">
         <button data-toggle="dropdown" class="btn dropdown-toggle">Filter <span class="caret"></span></button>
         <ul class="dropdown-menu">
             <li>
@@ -40,24 +58,6 @@
             </li>
             <li>
                 <a href="#" data-act="show_passed">Passed</a>
-            </li>
-        </ul>
-    </div>
-    <div class="col-md-2">
-        <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
-        <ul class="dropdown-menu build_action_menu">
-            <li>
-                <a href="" data-act="run_obj" typeName="build">Run</a>
-            </li>
-            <li>
-                <a href="" data-act="stop_obj" typeName="build">Stop</a>
-            </li>
-            <li class="divider"></li>
-            <li>
-                <a href="" data-act="set_passed_obj" typeName="build">Set passed</a>
-            </li>
-            <li>
-                <a href="" data-act="set_failed_obj" typeName="build">Set failed</a>
             </li>
         </ul>
     </div>
