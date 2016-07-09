@@ -36,11 +36,6 @@ h3 {
     float: right;
 }
 
-.dropdown-menu {
-    right: 0px;
-    left: auto;
-}
-
 span.fileupload-preview {
     padding: 0px 10px;
 }
@@ -74,7 +69,7 @@ label.error {
 
 .col-md-12-header {
     border-bottom: 1px solid #ebeff2;
-    padding: 10px 5px 10px 0px;
+    padding: 5px 10px 5px 10px;
     -webkit-border-top-left-radius: 4px;
     -webkit-border-top-right-radius: 4px;
     -moz-border-radius-topleft: 4px;
@@ -85,6 +80,14 @@ label.error {
 
     .col-md-12-header > div {
         padding-left: 0px;
+    }
+
+    .col-md-12-header .table-responsive {
+        overflow: visible;
+    }
+
+    .col-md-12-header table {
+        margin-bottom: 0px;
     }
 
 /*GLOBAL END*/
@@ -224,20 +227,26 @@ label.error {
     1 - offline
 */
 
+@keyframes pulse {
+    50% {
+        opacity: 0.5;
+    }
+}
+
 .status-1, .status-2, .status-3,
 .status-4, .status-5, .status-6,
 .status-7, .worker-status-0, .worker-status-1 {
     display: inline-block;
-    height: 16px;
-    width: 16px;
+    height: 10px;
+    width: 10px;
+    border-radius: 25px;
+    border: 1px solid #ebeff2;
 }
 
 .build-panel .status-1, .build-panel .status-2,
 .build-panel .status-3, .build-panel .status-4,
 .build-panel .status-5, .build-panel .status-6,
 .build-panel .status-7, .worker-status-0, .worker-status-1 {
-    width: 16px;
-    vertical-align: text-bottom;
     margin-left: 5px;
 }
 
@@ -246,12 +255,13 @@ label.error {
     .status-7::before, .worker-status-0:before, .worker-status-1:before {
         display: none;
         position: absolute;
-        margin: -2px 0px 0px 20px;
+        margin: -6px 0px 0px 10px;
         font-size: 12px;
         line-height: 12px;
         background: #E4E4E4;
         color: #000;
         border: 1px solid #CECECE;
+        border-radius: 3px;
         padding: 3px;
     }
 
@@ -263,7 +273,8 @@ label.error {
     }
 
 .status-3 {
-    background: url("../img/progress_inprogress.gif");
+    background: #0040ff;
+    animation: pulse 1s ease-out infinite;
 }
 
     .status-3::before {
@@ -271,7 +282,7 @@ label.error {
     }
 
 .status-4 {
-    background: url("../img/progress_inqueue.png");
+        background: #0040ff;
 }
 
     .status-4::before {
@@ -279,7 +290,7 @@ label.error {
     }
 
 .status-5 {
-    background: url("../img/progress_passed.png");
+    background: #4aff00;
 }
 
     .status-5::before {
@@ -287,7 +298,7 @@ label.error {
     }
 
 .status-6 {
-    background: url("../img/progress_failed.png");
+    background: #ff3737;
 }
 
     .status-6::before {
@@ -295,7 +306,7 @@ label.error {
     }
 
 .status-7 {
-    background: url("../img/progress_stoped.png");
+    background: #5c5c5c;
 }
 
     .status-7::before {
@@ -303,7 +314,7 @@ label.error {
     }
 
 .worker-status-0 {
-    background: url("../img/progress_passed.png");
+    background: #4aff00;
 }
 
     .worker-status-0::before {
@@ -311,7 +322,7 @@ label.error {
     }
 
 .worker-status-1 {
-    background: url("../img/progress_failed.png");
+    background: #ff3737;
 }
 
     .worker-status-1::before {
@@ -390,19 +401,42 @@ label.error {
 /*BUILD LIST PAGE END*/
 
 /*BUILD PAGE START*/
+#build-info-block {
+    position: relative;
+}
+
 .icon-build-info {
-    color: #337AB7;
-    font-size: 21px;
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    color: #333;
+    font-size: 14px;
     cursor: pointer;
 }
 
 .build-info-popup {
     padding-left: 10px;
     padding-right: 10px;
+    font-weight: normal;
 }
 
     .build-info-popup li {
         white-space: nowrap;
+    }
+
+.build-action-block, .build-filter-block {
+    position: relative;
+}
+
+.refresh_button i {
+    opacity: 0.5;
+    font-size: 18px;
+    cursor: pointer;
+    color: #000;
+}
+
+    .refresh_button i:hover {
+        opacity: 1;
     }
 
 .build-panel {
@@ -528,13 +562,13 @@ label.error {
 }
 
 .panel-title a.collapsed i.fa:before {
-    content: "\f196";
-    color: #337AB7;
+    content: "\f055";
+    color: #757779;
 }
 
 .panel-title a i.fa:before {
-    content: "\f147";
-    color: #337AB7;
+    content: "\f056";
+    color: #757779;
 }
 
 /*BUILD PAGE END*/

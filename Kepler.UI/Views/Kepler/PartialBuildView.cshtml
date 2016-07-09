@@ -5,61 +5,76 @@
 </script>
 
 <div class="col-md-12 col-md-12-header">
-    <div class="col-md-11">
-        <div class="col-md-1">
-            <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
-            <ul class="dropdown-menu build-info-popup">
-                <li class="build-info-start">Start: <span>27Jan</span></li>
-                <li class="build-info-duration">Duration: <span>1h23m</span></li>
-                <li class="build-info-tests">Tests: <span>2404</span></li>
-                <li class="build-info-failed">Tests failed: <span>45</span></li>
-            </ul>
-        </div>
-        <div class="col-md-1">
-            <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
-            <ul class="dropdown-menu build_action_menu">
-                <li>
-                    <a href="" data-act="run_obj" typeName="build">Run</a>
-                </li>
-                <li>
-                    <a href="" data-act="stop_obj" typeName="build">Stop</a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <a href="" data-act="set_passed_obj" typeName="build">Set passed</a>
-                </li>
-                <li>
-                    <a href="" data-act="set_failed_obj" typeName="build">Set failed</a>
-                </li>
-            </ul>
-        </div>
-        <div id="build-info-block" class="col-md-4">
-            <h3>
-                <div class=""></div>
-                Build <span></span>&nbsp;
-            </h3>
-        </div>
-        <div class="col-md-1 refresh_button">
-            <button type="button" class="btn btn-xs btn-primary"><i class="fa fa-refresh"></i></button>
-        </div>
-    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <div id="build-info-block">
+                            <h3>
+                                <div class=""></div>
+                                Build <span></span>&nbsp;
+                            </h3>
+                            <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
+                            <ul class="dropdown-menu build-info-popup">
+                                <li class="build-info-start">Start: <span>27Jan</span></li>
+                                <li class="build-info-duration">Duration: <span>1h23m</span></li>
+                                <li class="build-info-tests">Tests: <span>2404</span></li>
+                                <li class="build-info-failed">Tests failed: <span>45</span></li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th>
 
-    <div class="col-md-1">
-        <button data-toggle="dropdown" class="btn dropdown-toggle">Filter <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-            <li>
-                <a href="#" data-act="show_all">Show all</a>
-            </li>
-            <li>
-                <a href="#" data-act="hide_all">Hide all</a>
-            </li>
-            <li>
-                <a href="#" data-act="show_failed">Failed</a>
-            </li>
-            <li>
-                <a href="#" data-act="show_passed">Passed</a>
-            </li>
-        </ul>
+                    </th>
+                    <th>
+                        <div class="build-action-block">
+                            <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
+                            <ul class="dropdown-menu build_action_menu">
+                                <li>
+                                    <a href="" data-act="run_obj" typeName="build">Run</a>
+                                </li>
+                                <li>
+                                    <a href="" data-act="stop_obj" typeName="build">Stop</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="" data-act="set_passed_obj" typeName="build">Set passed</a>
+                                </li>
+                                <li>
+                                    <a href="" data-act="set_failed_obj" typeName="build">Set failed</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="refresh_button">
+                            <i class="fa fa-refresh"></i>
+                        </div>
+                    </th>
+                    <th width="100%"></th>
+                    <th>
+                        <div class="build-filter-block">
+                            <button data-toggle="dropdown" class="btn dropdown-toggle">Filter <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" data-act="show_all">Show all</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-act="hide_all">Hide all</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-act="show_failed">Failed</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-act="show_passed">Passed</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
@@ -187,7 +202,7 @@
             'disableScrolling': true
         });
 
-        $('.refresh_button button').click(function () {
+        $('.refresh_button i').click(function () {
             getBuild();
             getAssemblies();
         });
@@ -431,7 +446,7 @@
                 scrollTop: $('a[data-parentid=' + hash[0] + ']').offset().top - 200
             }, 1000, function () {
                 console.log('a:nth-of-type(' + hash[1] + ')[data-parentid="' + hash[0] + '"]');
-                $('a[data-parentid="' + hash[0] + '"]').eq(hash[1]-1).click() //click on screenshot after scroll finished
+                $('a[data-parentid="' + hash[0] + '"]').eq(hash[1] - 1).click() //click on screenshot after scroll finished
             });
             firstPageOpen = 0;
         }
