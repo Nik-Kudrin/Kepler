@@ -1,29 +1,34 @@
 ﻿<script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         document.title = 'Branch - Kepler';
     });
 </script>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <div>
-            <h3></h3>
-        </div>
+<div class="col-md-12 col-md-12-header">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <h3></h3>
+                    </th>
+                </tr>
+            </thead>
+        </table>
     </div>
-    <div class="panel-body">
-        <div class="table-responsive">
-            <table class="table table-hover builds_table">
-                <thead>
-                    <tr>
-                        <th>Build</th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
+</div>
+
+<div class="col-md-12">
+    <table class="table table-hover builds_table">
+        <thead>
+            <tr>
+                <th>Build</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
 
 <table style="display: none;">
@@ -105,7 +110,7 @@
                             var entityStartTime = '';
 
                             if (key == 'Name') {
-                                $('.panel-heading h3').html(value);
+                                $('h3').html(value);
                                 var level_1_menu_item = $('#main-menu a[branch_name="' + value + '"].main-menu-item').parent().parent().parent();
                                 var level_2_menu_item = $('#main-menu a[branch_name="' + value + '"].main-menu-item');
                                 if (!level_2_menu_item.hasClass('main-menu-item-focus')) {
@@ -119,7 +124,7 @@
                                     }, 500);
                                 }
                             } else if (key != 'Builds') {
-                                $('.panel-heading h3').attr(key, value);
+                                $('h3').attr(key, value);
                             } else if (key == 'Builds') {
                                 $.each(value, function (key, value) {
                                     $.each(value, function (key, value) {
@@ -168,7 +173,7 @@
         if ($('#' + entity + '-' + entityId).length) {
             $('#' + entity + '-' + entityId).attr('remove_entity', '0');
             if ($('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').attr('class') != 'status-' + entityStatus) {
-                $('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').removeClass().addClass('status-' + entityStatus);    
+                $('#' + entity + '-' + entityId + ' td:nth-of-type(2) div').removeClass().addClass('status-' + entityStatus);
             }
         } else if ($('#' + entity + '-' + entityId).length == 0) {
             $('tr.build_sample').clone(true, true).appendTo('.builds_table > tbody').removeClass('build_sample').attr('id', entity + '-' + entityId).show();
@@ -182,7 +187,7 @@
 
         updateProgressBar(entityId, entityStatus, entityPredictedDuration, entityStartTime);
     }
-    
+
     //
     // Update progress bar
     //
@@ -202,7 +207,7 @@
                 duration = moment.duration(timeDiff).asSeconds();
 
                 if (predictedDuration == 0) {
-                   predictedDuration = 1.2 * duration;
+                    predictedDuration = 1.2 * duration;
                 }
 
                 progressPercent = Math.round(duration / predictedDuration * 100 + 1);
