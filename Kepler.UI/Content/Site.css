@@ -360,10 +360,10 @@ label.error {
 
 .testAssembly_group .panel-default .panel-heading {
     border: none;
-    background: #ebeff2;
+    background: none;
     border-radius: 0px;
     padding: 5px 10px 5px 5px;
-    border-bottom: 2px solid #e4e4e4;
+    border-bottom: none;
 }
 
 .panel-default .panel-heading {
@@ -462,6 +462,8 @@ label.error {
 
 .screenShot-link {
     display: none;
+    position: absolute;
+    left: -5px;
     font-size: 18px;
 }
 
@@ -523,10 +525,6 @@ label.error {
     .panel-group .panel-heading + .panel-collapse > .panel-body, .panel-group .panel-heading + .panel-collapse > .list-group {
         border-top: none;
     }
-
-.testCase_group .panel-collapse {
-    border-top: 1px dotted #CCC;
-}
 
 .panel-collapse {
     clear: both;
