@@ -358,6 +358,22 @@ label.error {
     display: none;
 }
 
+.testAssembly_group, .testSuite_group, .testCase_group {
+	position: relative;
+  	border-top: 1px solid #ccc;
+  	border-left: 1px solid #ccc;
+}
+
+.testAssembly_group:before, .testSuite_group:before, .testCase_group:before {
+    position: absolute;
+  	content: "";
+  	background: #ccc;
+  	top: 0px;
+  	right: 0px;
+  	width: 1px;
+  	height: 35px;
+}
+
 .testAssembly_group .panel-default .panel-heading {
     border: none;
     background: none;
