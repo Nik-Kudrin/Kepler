@@ -5,17 +5,25 @@ h3 {
     font-size: 20px;
 }
 
-.table > thead > tr > th {
-
+.table td {
+	border: 1px solid #ebeff2;
 }
 
 .table > tbody > tr > td {
     vertical-align: middle;
 }
 
+.table th h3 {
+	display: inline;
+}
+
+.table th button {
+	float: right;
+}
+
 .btn {
     border: 1px solid #ccc;
-    padding: 3px 12px;
+    padding: 6px 12px;
     vertical-align: baseline;
 }
 
@@ -61,10 +69,6 @@ label.error {
 .progress {
     display: none;
     margin-bottom: 0px;
-}
-
-.table td {
-	border: 1px solid #ebeff2;
 }
 
 .col-md-12-header {
@@ -382,10 +386,6 @@ label.error {
 .panel-default .panel-heading {
     padding-bottom: 0px;
 }
-
-    .panel-default .panel-heading div button {
-        float: right;
-    }
 
 .panel-default .panel-body {
     padding: 0px;
@@ -739,3 +739,25 @@ label.error {
 }
 
 /*ERROR LOG PAGE END*/
+
+/*ADMIN PAGE START*/
+.source-service-url, .source-image-path,
+.build_schedule {
+    margin: 20px 0px;
+}
+
+    .build_schedule .table {
+        margin-bottom: 0px;
+    }
+
+    .source-service-url table td, .source-image-path table td,
+    .build_schedule table td, .log_schedule table td {
+        border: none;
+        line-height: 10px !important;
+    }
+
+    .build_schedule table th, .log_schedule table th {
+        color: #999;
+        font-weight: normal;
+    }
+/*ADMIN PAGE END*/
