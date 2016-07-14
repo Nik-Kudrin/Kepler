@@ -216,11 +216,14 @@ nav.navbar.navbar-default.navbar-cls-top {
 
 nav.navbar-default.navbar-side {
     position: fixed;
-    margin-top: 52px;
-    padding-bottom: 75px;
+    padding-top: 52px;
     overflow-y: scroll;
     height: 100%;
 }
+
+    nav.navbar-default.navbar-side > div {
+        padding-bottom: 150px;
+    }
 
 .navbar-default {
     border: 0px solid black;
