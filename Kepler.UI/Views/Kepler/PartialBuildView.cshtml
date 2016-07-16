@@ -21,10 +21,7 @@
                         <div class="build-info-container">
                             <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
                             <ul class="dropdown-menu build-info-popup">
-                                <li class="build-info-start">Start: <span>27Jan</span></li>
-                                <li class="build-info-duration">Duration: <span>1h23m</span></li>
-                                <li class="build-info-tests">Tests: <span>2404</span></li>
-                                <li class="build-info-failed">Tests failed: <span>45</span></li>
+
                             </ul>
                         </div>
                     </th>
@@ -53,6 +50,8 @@
                             <i class="fa fa-refresh"></i>
                         </div>
                     </th>
+                    <th class="th-build-info-numbers"></th>
+                    <th class="th-build-info-numbers"></th>
                     <th width="100%"></th>
                     <th>
                         <div class="build-filter-block">
@@ -289,6 +288,8 @@
             var numbertestassemblies = $('.icon-build-info').attr('numbertestassemblies');
             var numbertestcase = $('.icon-build-info').attr('numbertestcase');
             var numbertestsuites = $('.icon-build-info').attr('numbertestsuites');
+            var numberfailedscreenshots = $('.icon-build-info').attr('numberfailedscreenshots');
+            var numberscreenshots = $('.icon-build-info').attr('numberscreenshots');
 
             $('.build-info-popup').append($('<li class="divider">'));
 
@@ -297,6 +298,9 @@
             $('.build-info-popup').append($('<li>').text('Test assemblies: ' + numbertestassemblies));
             $('.build-info-popup').append($('<li>').text('Test cases: ' + numbertestcase));
             $('.build-info-popup').append($('<li>').text('Test suites: ' + numbertestsuites));
+
+            $('.col-md-12-header th:nth-of-type(5)').html('Total: ' + numberscreenshots);
+            $('.col-md-12-header th:nth-of-type(6)').html('Failed: ' + numberfailedscreenshots);
         }
 
         //

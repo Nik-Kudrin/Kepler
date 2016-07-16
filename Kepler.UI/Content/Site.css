@@ -11,6 +11,7 @@ h3 {
 
 .table > tbody > tr > td {
     vertical-align: middle;
+    color: #7c7c7c;
 }
 
 .table th h3 {
@@ -403,8 +404,8 @@ label.error {
         margin-left: 5px;
     }
 
-.builds_table tr > td:nth-of-type(3) {
-    min-width: 200px;
+.builds_table tr > td:nth-of-type(5) {
+    min-width: 300px;
 }
 /*BUILD LIST PAGE END*/
 
@@ -421,8 +422,15 @@ label.error {
 }
 
     .icon-build-info:hover {
-        opacity:1;
+        opacity: 1;
     }
+
+.th-build-info-numbers {
+    color: #666;
+    white-space: nowrap;
+    font-weight: normal;
+    font-size: 16px;
+}
 
 .build-info-popup {
     padding-left: 10px;
