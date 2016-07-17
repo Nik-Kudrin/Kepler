@@ -191,6 +191,7 @@
             $('tr.build_sample').clone(true, true).appendTo('.builds_table > tbody').removeClass('build_sample').attr('id', entity + '-' + entityId).show();
             $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').html(entityId);
             $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('linkurl', '/build?id=' + entityId);
+            $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('href', '/build?id=' + entityId);
             $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('entityPredictedDuration', entityPredictedDuration);
             $('#' + entity + '-' + entityId + ' td:nth-of-type(1) a').attr('entityStartTime', entityStartTime);
             $('#' + entity + '-' + entityId + ' td:nth-of-type(6) a').attr('obj_id', entityId);

@@ -28,7 +28,7 @@
 </li>
 
 <li class="main-menu-li-2-lvl" style="display: none;">
-    <a class="left-nav-link main-menu-item" href="" linkUrl="/branch?branchId=" linkBranch="master"></a>
+    <a class="left-nav-link main-menu-item" href="/branch?branchId=" linkUrl="/branch?branchId=" linkBranch="master"></a>
     <div class="main-menu-conf">
         <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
         <ul class="dropdown-menu">
@@ -80,6 +80,9 @@
                                                         $('#main-menu > li:last .nav-second-level > li:last > a').prepend(value);
                                                     } else if (key == "Id") {
                                                         $('#main-menu > li:last .nav-second-level > li:last > a').attr('linkUrl', function (index, currentvalue) {
+                                                            return currentvalue + value;
+                                                        });
+                                                        $('#main-menu > li:last .nav-second-level > li:last > a').attr('href', function (index, currentvalue) {
                                                             return currentvalue + value;
                                                         });
                                                     }

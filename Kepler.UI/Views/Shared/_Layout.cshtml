@@ -39,7 +39,7 @@
                 <a class="btn btn-default" href="/admin">
                     <i class="fa fa-gears" aria-hidden="true"></i>
                 </a>
-                <a class="btn btn-default header-log-btn" title="Error log" href="" linkUrl="/error-log">
+                <a class="btn btn-default header-log-btn" title="Error log" href="/error-log" linkUrl="/error-log">
                     <i class="fa fa-exclamation-circle fa-2x"></i>
                 </a>
             </div>
@@ -124,9 +124,7 @@
         //
         // Bind ajax loader on A with attr linkUrl
         //
-
-
-        $(document).on('click', 'a[href=""]', function (e) {
+        $(document).on('click', '[linkUrl]:not([linkUrl=""])', function (e) {
             e.preventDefault();
 
             var path = $(this).attr('linkUrl');
@@ -135,6 +133,8 @@
                 history.pushState(null, null, path);
                 ajax_loader();
             }
+
+            return false;
         });
 
         //
