@@ -33,7 +33,6 @@ namespace Kepler.UI
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
                       "~/Content/basic.css",
-					  "~/Content/lightbox.css",
                       "~/Content/custom.css",
                       "~/Content/bootstrap-fileupload.min.css",
                       "~/Content/font-awesome.css"));

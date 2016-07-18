@@ -92,6 +92,42 @@
         </div>
     </div>
 
+    <div class="modal fade" id="images-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel"></h4>
+            <button type="button" class="btn btn-info">Baseline</button>
+            <button type="button" class="btn btn-success"><i class="fa fa-balance-scale"></i></button>
+            <button type="button" class="btn btn-info">Difference</button>
+            <button type="button" class="btn btn-success"><i class="fa fa-balance-scale"></i></button>
+            <button type="button" class="btn btn-info">Original</button>
+            <ul class="nav nav-tabs">
+                <li class="">
+                    <a href="#home" data-toggle="tab">Home</a>
+                </li>
+                <li class="">
+                    <a href="#profile" data-toggle="tab">Profile</a>
+                </li>
+                <li class="active">
+                    <a href="#messages" data-toggle="tab">Messages</a>
+                </li>
+                <li class="">
+                    <a href="#settings" data-toggle="tab">Settings</a>
+                </li>
+            </ul>
+        </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="modal_form" action="javascript:void(null);" onsubmit="">
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="loading_label">
         <span><i class="fa fa-refresh"></i> Loading...</span>
     </div>
@@ -194,7 +230,6 @@
     </script>
 
     <script src="/Scripts/modal_win.js"></script>
-    <script src="/Scripts/lightbox.js"></script>
 
 </body>
 </html>

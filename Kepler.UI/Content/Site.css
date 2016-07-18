@@ -587,6 +587,35 @@ label.error {
     color: #757779;
 }
 
+#images-modal .modal-header {
+    padding: 5px 15px 5px 15px;
+    border-bottom: 1px solid #e5e5e5;
+    background: #ebeff2;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 1;
+}
+
+#images-modal .modal-header .close {
+    margin-top: 5px;
+}
+
+#images-modal h4.modal-title {
+    display: inline;
+    margin-right: 20px;
+}
+
+#images-modal .modal-dialog {
+	width: 90%;
+    margin-top: 60px;
+}
+
+#images-modal .modal-body img {
+	width: 100%;
+    display: none;
+}
+
 /*BUILD PAGE END*/
 
 /*ERROR LOG PAGE START*/

@@ -140,19 +140,19 @@
     <div class="col-md-12 screenShot-container">
         <div class="col-md-4 screenShot-base">
             <span>Baseline</span>
-            <a data-lightbox="multiimages" data-title="Base line" href="">
+            <a data-toggle="modal" data-target="#images-modal" data-act="view_image" data-title="Base line" href="">
                 <img src="">
             </a>
         </div>
         <div class="col-md-4 screenShot-dif">
             <span>Difference</span>
-            <a data-lightbox="multiimages" data-title="Difference" href="">
+            <a data-toggle="modal" data-target="#images-modal" data-act="view_image" data-title="Difference" href="">
                 <img src="">
             </a>
         </div>
         <div class="col-md-4 screenShot-curr">
             <span>Original</span>
-            <a data-lightbox="multiimages" data-title="Original" href="">
+            <a data-toggle="modal" data-target="#images-modal" data-act="view_image" data-title="Original" href="">
                 <img src="">
             </a>
         </div>
@@ -196,11 +196,6 @@
         if (xhr) {
             xhr.abort(); // Disable requests from previous view
         }
-
-        lightbox.option({
-            'fitImagesInViewport': false,
-            'disableScrolling': true
-        });
 
         $('.refresh_button i').click(function () {
             getBuild();
@@ -491,8 +486,8 @@
                 $('.screenShot-hidden').clone(true, true).appendTo('#panel-testCase-' + entityParentId + ' > .panel-body').attr('id', entity + '-' + entityId).attr('testscreenshot-status', entityStatus).removeClass('screenShot-hidden').show();
                 $('.screenShot-splitter-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId).removeClass('screenShot-splitter-hidden').show();
                 $('#' + entity + '-' + entityId + ' img').attr('title', entityName);
-                $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-lightbox', entityName);
                 $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-parentId', entityId);
+                $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('screenshot_name', entityName);
                 $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-title', function (i, val) {
                     return val + '&nbsp;' + entityName;
                 });
@@ -511,6 +506,7 @@
                 }
                 $('#' + entity + '-' + entityId + ' .screenShot-curr a').attr('href', ImagePathUrl);
                 $('#' + entity + '-' + entityId + ' .screenShot-curr img').attr('src', PreviewImagePathUrl);
+
                 if (ErrorMessage != null && ErrorMessage != '') {
                     $('#' + entity + '-' + entityId + ' .screenShot-error-log').show();
                     $('#' + entity + '-' + entityId + ' .screenShot-error-log textarea').text(ErrorMessage);
@@ -599,6 +595,19 @@
                     $(failed_status).parents('.panel-collapse:not(".in")').collapse('show');
                     $('div[testscreenshot-status="6"]').show();
                     $('div[testscreenshot-status="5"]').hide();
+                    break;
+                case 'view_image':
+                    var numberOfOpenedImage = $(this).parent().index() + 1;
+
+                    $('#images-modal .modal-title').text($(this).attr('screenshot_name'));
+
+                    $('#images-modal .modal-body').empty();
+                    $(this).closest('.screenShot-container').find('a').each(function () {
+                        $('#images-modal .modal-body').append('<img src="' + $(this).attr('href') + '">');
+                    });
+                    $('#images-modal .modal-body img:nth-of-type(' + numberOfOpenedImage + ')').show();
+
+                    $('#images-modal .modal-footer').show().empty().append('<button data-dismiss="modal" class="btn btn-danger">Close</button>');
                     break;
             }
         });
