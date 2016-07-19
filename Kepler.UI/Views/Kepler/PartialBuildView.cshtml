@@ -4,6 +4,8 @@
     });
 </script>
 
+<link rel="stylesheet" href="~/Content/cocoen.min.css" />
+
 <div class="col-md-12 col-md-12-header">
     <div class="table-responsive">
         <table class="table">
@@ -613,6 +615,50 @@
         });
 
         //
+        // Image modal viewer control
+        //
+        $(document).on('click', '#images-modal a', function (e) {
+            switch ($(this).attr('data-act')) {
+                case 'switch_baseline':
+                    $('#images-modal .modal-body img').hide();
+                    $('.cocoen').remove();
+
+                    $('#images-modal .modal-body img:nth-of-type(1)').show();
+                    break;
+                case 'switch_compare_1':
+                    $('#images-modal .modal-body img').hide();
+                    $('.cocoen').remove();
+
+                    $('#images-modal .modal-body').append('<div class="cocoen">');
+                    $('#images-modal .modal-body img:nth-of-type(1), #images-modal .modal-body img:nth-of-type(2)').clone().appendTo('.cocoen');
+                    $('.cocoen img').show();
+                    $('.cocoen').cocoen();
+                    break;
+                case 'switch_difference':
+                    $('#images-modal .modal-body img').hide();
+                    $('.cocoen').remove();
+
+                    $('#images-modal .modal-body img:nth-of-type(2)').show();
+                    break;
+                case 'switch_compare_2':
+                    $('#images-modal .modal-body img').hide();
+                    $('.cocoen').remove();
+
+                    $('#images-modal .modal-body').append('<div class="cocoen">');
+                    $('#images-modal .modal-body img:nth-of-type(2), #images-modal .modal-body img:nth-of-type(3)').clone().appendTo('.cocoen');
+                    $('.cocoen img').show();
+                    $('.cocoen').cocoen();
+                    break;
+                case 'switch_original':
+                    $('#images-modal .modal-body img').hide();
+                    $('.cocoen').remove();
+
+                    $('#images-modal .modal-body img:nth-of-type(3)').show();
+                    break;
+            }
+        });
+
+        //
         // Ajax call for operations and status change
         //
         function modal_ajax_call() {
@@ -640,3 +686,5 @@
         }
     });
 </script>
+
+<script src="~/Scripts/cocoen.min.js"></script>
