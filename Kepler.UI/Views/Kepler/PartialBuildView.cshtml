@@ -444,11 +444,10 @@
         function jumpToScreenshot() {
             var hash = window.location.hash.replace(/^#/, "").split('&');
             $('a[data-parentid=' + hash[0] + ']').parents('.panel-collapse:not(".in")').collapse('show');
-            $('html, body').animate({
+            $('body').animate({
                 scrollTop: $('a[data-parentid=' + hash[0] + ']').offset().top - 200
             }, 1000, function () {
-                console.log('a:nth-of-type(' + hash[1] + ')[data-parentid="' + hash[0] + '"]');
-                $('a[data-parentid="' + hash[0] + '"]').eq(hash[1] - 1).click() //click on screenshot after scroll finished
+                $('a[data-parentid="' + hash[0] + '"]').eq(1).trigger("click") //click on screenshot after scroll finished
             });
             firstPageOpen = 0;
         }
@@ -608,6 +607,7 @@
                         $('#images-modal .modal-body').append('<img src="' + $(this).attr('href') + '">');
                     });
                     $('#images-modal .modal-body img:nth-of-type(' + numberOfOpenedImage + ')').show();
+                    $('#images-modal .nav-tabs a').attr('data-parentid', $(this).attr('data-parentid'));
 
                     $('#images-modal .modal-footer').show().empty().append('<button data-dismiss="modal" class="btn btn-danger">Close</button>');
                     break;
@@ -624,6 +624,7 @@
                     $('.cocoen').remove();
 
                     $('#images-modal .modal-body img:nth-of-type(1)').show();
+                    updateHash(1);
                     break;
                 case 'switch_compare_1':
                     $('#images-modal .modal-body img').hide();
@@ -633,12 +634,14 @@
                     $('#images-modal .modal-body img:nth-of-type(1), #images-modal .modal-body img:nth-of-type(2)').clone().appendTo('.cocoen');
                     $('.cocoen img').show();
                     $('.cocoen').cocoen();
+                    updateHash(2);
                     break;
                 case 'switch_difference':
                     $('#images-modal .modal-body img').hide();
                     $('.cocoen').remove();
 
                     $('#images-modal .modal-body img:nth-of-type(2)').show();
+                    updateHash(3);
                     break;
                 case 'switch_compare_2':
                     $('#images-modal .modal-body img').hide();
@@ -648,15 +651,25 @@
                     $('#images-modal .modal-body img:nth-of-type(2), #images-modal .modal-body img:nth-of-type(3)').clone().appendTo('.cocoen');
                     $('.cocoen img').show();
                     $('.cocoen').cocoen();
+                    updateHash(4);
                     break;
                 case 'switch_original':
                     $('#images-modal .modal-body img').hide();
                     $('.cocoen').remove();
 
                     $('#images-modal .modal-body img:nth-of-type(3)').show();
+                    updateHash(5);
                     break;
             }
         });
+
+        //
+        // Update hash for image modal viewer
+        //
+        function updateHash(tabNumber) {
+            var hash = window.location.hash.replace(/^#/, "").split('&');
+            location.hash = $('#images-modal .active a').attr('data-parentid') + '&' + tabNumber;
+        }
 
         //
         // Ajax call for operations and status change
