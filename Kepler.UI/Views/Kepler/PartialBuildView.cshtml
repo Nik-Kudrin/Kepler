@@ -447,7 +447,7 @@
             $('body').animate({
                 scrollTop: $('a[data-parentid=' + hash[0] + ']').offset().top - 200
             }, 1000, function () {
-                $('a[data-parentid="' + hash[0] + '"]').eq(1).trigger("click") //click on screenshot after scroll finished
+                $('a[data-parentid="' + hash[0] + '"]').eq(1).trigger("click"); //click on screenshot after scroll finished
             });
             firstPageOpen = 0;
         }
@@ -598,20 +598,45 @@
                     $('div[testscreenshot-status="5"]').hide();
                     break;
                 case 'view_image':
-                    var numberOfOpenedImage = $(this).parent().index() + 1;
-
                     $('#images-modal .modal-title').text($(this).attr('screenshot_name'));
 
                     $('#images-modal .modal-body').empty();
                     $(this).closest('.screenShot-container').find('a').each(function () {
                         $('#images-modal .modal-body').append('<img src="' + $(this).attr('href') + '">');
                     });
-                    $('#images-modal .modal-body img:nth-of-type(' + numberOfOpenedImage + ')').show();
+
                     $('#images-modal .nav-tabs a').attr('data-parentid', $(this).attr('data-parentid'));
 
+                    var numberOfImageToOpen;
+                    if (window.location.hash == '') {
+                        if ($(this).parent().index() == '0') {
+                            numberOfImageToOpen = "1";
+                        } else if ($(this).parent().index() == '1') {
+                            numberOfImageToOpen = "3";
+                        } else if ($(this).parent().index() == '2') {
+                            numberOfImageToOpen = "5";
+                        }
+                    } else {
+                        var hash = window.location.hash.replace(/^#/, "").split('&');
+                        numberOfImageToOpen = hash[1];
+                    }
+                    
+                    $('#images-modal .nav-tabs li:nth-of-type(' + numberOfImageToOpen + ') a').click();
+
                     $('#images-modal .modal-footer').show().empty().append('<button data-dismiss="modal" class="btn btn-danger">Close</button>');
+                    
                     break;
             }
+        });
+
+        //
+        // Clean hash in url on modal viewer close
+        //
+        $("*[data-dismiss='modal'], #images-modal").on('click', function (e) {
+            if (e.target !== this)
+                return;
+
+            location.hash = '';
         });
 
         //
@@ -620,42 +645,46 @@
         $(document).on('click', '#images-modal a', function (e) {
             switch ($(this).attr('data-act')) {
                 case 'switch_baseline':
-                    $('#images-modal .modal-body img').hide();
                     $('.cocoen').remove();
-
+                    $('#images-modal .modal-body img').hide();
+                    
                     $('#images-modal .modal-body img:nth-of-type(1)').show();
                     updateHash(1);
                     break;
                 case 'switch_compare_1':
-                    $('#images-modal .modal-body img').hide();
                     $('.cocoen').remove();
+                    $('#images-modal .modal-body img').hide();
 
                     $('#images-modal .modal-body').append('<div class="cocoen">');
                     $('#images-modal .modal-body img:nth-of-type(1), #images-modal .modal-body img:nth-of-type(2)').clone().appendTo('.cocoen');
+                    setTimeout( function () {
+                          $('.cocoen').cocoen();
+                    }, 300);
                     $('.cocoen img').show();
-                    $('.cocoen').cocoen();
                     updateHash(2);
                     break;
                 case 'switch_difference':
-                    $('#images-modal .modal-body img').hide();
                     $('.cocoen').remove();
+                    $('#images-modal .modal-body img').hide();
 
                     $('#images-modal .modal-body img:nth-of-type(2)').show();
                     updateHash(3);
                     break;
                 case 'switch_compare_2':
-                    $('#images-modal .modal-body img').hide();
                     $('.cocoen').remove();
+                    $('#images-modal .modal-body img').hide();
 
                     $('#images-modal .modal-body').append('<div class="cocoen">');
                     $('#images-modal .modal-body img:nth-of-type(2), #images-modal .modal-body img:nth-of-type(3)').clone().appendTo('.cocoen');
-                    $('.cocoen img').show();
-                    $('.cocoen').cocoen();
+                    setTimeout(function () {
+                        $('.cocoen').cocoen();
+                    }, 300);
+                    $('.cocoen img').show();                    
                     updateHash(4);
                     break;
                 case 'switch_original':
-                    $('#images-modal .modal-body img').hide();
                     $('.cocoen').remove();
+                    $('#images-modal .modal-body img').hide();
 
                     $('#images-modal .modal-body img:nth-of-type(3)').show();
                     updateHash(5);
