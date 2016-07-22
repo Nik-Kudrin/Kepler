@@ -67,6 +67,14 @@ label.error {
     display: none;
 }
 
+.modal-backdrop.in {
+    opacity: 0.9;
+}
+
+.modal-content {
+    border-radius: 2px;
+}
+
 .progress {
     display: none;
     margin-bottom: 0px;
@@ -587,6 +595,95 @@ label.error {
     color: #757779;
 }
 
+#images-modal .modal-header {
+    padding: 5px 15px 5px 15px;
+    border-bottom: 1px solid #000000;
+    background: #151515;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    height: 37px;
+    z-index: 1;
+}
+
+#images-modal .btn {
+    border: 1px solid #3b3e47;
+}
+
+#images-modal .close {
+    margin-top: 1px;
+    color: #fff;
+    text-shadow: 0 1px 0 #4e4e4e;
+    opacity: 1;
+}
+
+    #images-modal .close:hover,
+    #images-modal .close:focus {
+        color: #71b6f9;
+    }
+
+#images-modal h4.modal-title {
+    display: inline;
+    color: #eaeaea;
+    margin-right: 20px;
+}
+
+#images-modal .modal-dialog {
+    width: 90%;
+    margin-top: 60px;
+}
+
+#images-modal .modal-content {
+    background-color: #151515;
+    border: 1px solid #000000;
+    border-radius: 0px;
+}
+
+#images-modal .modal-body {
+    padding: 0px;
+    min-height: 350px;
+    background: url(/img/loading.gif) no-repeat center;
+}
+
+    #images-modal .modal-body img {
+        width: 100%;
+        display: none;
+    }
+
+#images-modal ul.nav.nav-tabs {
+    display: block;
+    margin: -26px auto;
+    width: 520px;
+    border-bottom: none;
+}
+
+#images-modal .nav-tabs > li > a {
+    padding: 5px 15px 3px 15px;
+    color: #eaeaea;
+}
+
+#images-modal .nav > li > a:hover {
+    border: 1px solid transparent;
+    color: #71b6f9;
+}
+
+#images-modal .nav-tabs > li.active > a,
+#images-modal .nav-tabs > li.active > a:hover,
+#images-modal .nav-tabs > li.active > a:focus {
+    color: #000;
+}
+
+#images-modal .modal-footer {
+    border-top: 1px solid #000000;
+}
+
+#images-modal .cocoen__drag {
+    background: #71b6f9;
+}
+
+    #images-modal .cocoen__drag:before {
+        border: 3px solid #71b6f9;
+    }
 /*BUILD PAGE END*/
 
 /*ERROR LOG PAGE START*/
