@@ -85,7 +85,10 @@
                                                         $('#main-menu > li:last .nav-second-level > li:last > a').attr('href', function (index, currentvalue) {
                                                             return currentvalue + value;
                                                         });
+                                                    } else if (key == "Status") {
+                                                        $('<span class="status-' + value + '">').insertBefore('#main-menu > li:last .nav-second-level > li:last > a');
                                                     }
+
                                                     $('#main-menu > li:last .nav-second-level > li:last > a').attr("branch_" + key, value);
                                                     $('#main-menu > li:last .nav-second-level > li:last .dropdown-menu a').attr("branch_" + key, value);
                                                 });

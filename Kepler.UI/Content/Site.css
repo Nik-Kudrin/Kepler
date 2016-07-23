@@ -246,8 +246,8 @@ label.error {
     }
 }
 
-.status-1, .status-2, .status-3,
-.status-4, .status-5, .status-6,
+.status-0, .status-1, .status-2, 
+.status-3, .status-4, .status-5, .status-6,
 .status-7, .worker-status-0, .worker-status-1 {
     display: inline-block;
     height: 16px;
@@ -255,6 +255,23 @@ label.error {
     border-radius: 25px;
     border: 1px solid #ebeff2;
 }
+
+#main-menu > li .nav-second-level > li > span {
+    position: relative;
+    display: block;
+    z-index: 1;
+    top: 20px;
+    left: 30px;
+    width: 5px;
+    height: 5px;
+    margin-bottom: -5px;
+    border-radius: 25px;
+    border: none;
+}
+
+    #main-menu > li .nav-second-level > li > span:before {
+        margin: -7px 0px 0px 10px;
+    }
 
 .build-panel .status-1, .build-panel .status-2,
 .build-panel .status-3, .build-panel .status-4,
@@ -264,9 +281,10 @@ label.error {
     margin-bottom: -2px;
 }
 
-    .status-1::before, .status-2::before, .status-3::before,
-    .status-4::before, .status-5::before, .status-6::before,
-    .status-7::before, .worker-status-0:before, .worker-status-1:before {
+    .status-0::before, .status-1::before, .status-2::before, 
+    .status-3::before, .status-4::before, .status-5::before, 
+    .status-6::before, .status-7::before, 
+    .worker-status-0:before, .worker-status-1:before {
         display: none;
         position: absolute;
         margin: -3px 0px 0px 20px;
@@ -279,11 +297,20 @@ label.error {
         padding: 3px;
     }
 
-    .status-1:hover::before, .status-2:hover::before, .status-3:hover::before,
-    .status-4:hover::before, .status-5:hover::before, .status-6:hover::before,
-    .status-7:hover::before, .worker-status-0:hover::before, .worker-status-1:hover::before {
+    .status-0:hover::before, .status-1:hover::before, .status-2:hover::before, 
+    .status-3:hover::before, .status-4:hover::before, .status-5:hover::before, 
+    .status-6:hover::before, .status-7:hover::before, 
+    .worker-status-0:hover::before, .worker-status-1:hover::before {
         display: block;
-        z-index: 100;
+        z-index: 1000;
+    }
+
+.status-0 {
+    background: #5c5c5c;
+}
+
+    .status-0::before {
+        content: 'Undefined';
     }
 
 .status-3 {
