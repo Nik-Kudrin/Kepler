@@ -4,13 +4,11 @@
     rules: {
         name: {
             required: true,
-            minlength: 4,
-            maxlength: 25,
+            minlength: 4
         },
         newName: {
             required: true,
-            minlength: 4,
-            maxlength: 25,
+            minlength: 4
         },
         image_worker_name: {
             required: true,
@@ -31,12 +29,10 @@
         name: {
             required: "This field is required",
             minlength: "Minimum length of 4 symbol",
-            maxlength: "Maximum length of 25 symbol",
         },
         newName: {
             required: "This field is required",
             minlength: "Minimum length of 4 symbol",
-            maxlength: "Maximum length of 25 symbol",
         },
         image_worker_name: {
             required: "This field is required",
