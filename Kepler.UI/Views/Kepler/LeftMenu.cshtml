@@ -160,10 +160,10 @@
                 break;
             case 'delete_branch':
                 obj_act = "DeleteBranch";
-                $('#images-modal .modal-title').text('Delete branch ' + $(this).attr('branch_name'));
-                $('#images-modal .modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('branch_id') + '">' +
+                $('.modal-title').text('Delete branch ' + $(this).attr('branch_name'));
+                $('.modal-body').empty().append('<input class="form-control" name="id" type="hidden" value="' + $(this).attr('branch_id') + '">' +
                     'Are you sure?');
-                $('#images-modal .modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Yes</button>');
+                $('.modal-footer').show().empty().append('<button type="submit" class="btn btn-success">Yes</button>');
                 break;
         }
     });
