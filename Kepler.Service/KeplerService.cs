@@ -508,7 +508,7 @@ namespace Kepler.Service
 
         private void ValidateBranchBeforeCreation(string branchName, long projectId)
         {
-            IsBranchAlreadyExist(branchName);
+            IsBranchAlreadyExist(branchName, projectId);
 
             var project = ProjectRepository.Instance.Get(projectId);
             if (project == null)
@@ -526,11 +526,11 @@ namespace Kepler.Service
             }
         }
 
-        private void IsBranchAlreadyExist(string branchName)
+        private void IsBranchAlreadyExist(string branchName, long projectId)
         {
-            if (BranchRepository.Instance.Find(new {Name = branchName}).Any())
+            if (BranchRepository.Instance.Find(new {Name = branchName, ProjectId = projectId}).Any())
             {
-                LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Branch with name {branchName} already exist");
+                LogErrorMessage(ErrorMessage.ErorCode.NotUniqueObjects, $"Branch with name '{branchName}' already exist");
             }
         }
 
@@ -545,7 +545,7 @@ namespace Kepler.Service
 
             if (branch.Name != newName)
             {
-                IsBranchAlreadyExist(newName);
+                IsBranchAlreadyExist(newName, branch.ProjectId.Value);
             }
 
             if (isMainBranch)
