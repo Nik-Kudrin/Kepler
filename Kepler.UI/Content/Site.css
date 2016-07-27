@@ -628,7 +628,7 @@ label.error {
 }
 
 #images-modal .modal-header {
-    padding: 5px 15px 5px 15px;
+    padding: 0px 15px 5px 15px;
     border-bottom: 1px solid #000000;
     background: #151515;
     position: fixed;
@@ -643,7 +643,7 @@ label.error {
 }
 
 #images-modal .close {
-    margin-top: 1px;
+    margin-top: 8px;
     color: #fff;
     text-shadow: 0 1px 0 #4e4e4e;
     opacity: 1;
@@ -654,11 +654,44 @@ label.error {
         color: #71b6f9;
     }
 
-#images-modal h4.modal-title {
-    display: inline;
-    color: #eaeaea;
-    margin-right: 20px;
-}
+    #images-modal h4.modal-title {
+        position: relative;
+        display: inline-block;
+        width: 200px;
+        margin-right: 20px;
+        overflow: hidden;
+        color: #eaeaea;
+        line-height: 36px;
+        white-space: nowrap;
+    }
+
+        #images-modal h4.modal-title:before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 36px;
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            background: -moz-linear-gradient(left, rgba(21,21,21,0) -1%, rgba(21,21,21,0.02) 0%, rgba(21,21,21,1) 50%);
+            background: -webkit-linear-gradient(left, rgba(21,21,21,0) -1%,rgba(21,21,21,0.02) 0%,rgba(21,21,21,1) 50%);
+            background: linear-gradient(to right, rgba(21,21,21,0) -1%,rgba(21,21,21,0.02) 0%,rgba(21,21,21,1) 50%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00151515', endColorstr='#151515',GradientType=1 );
+        }
+
+        #images-modal h4.modal-title:hover {
+            width: auto;
+            z-index: 100;
+            padding: 0px 40px 0px 0px;
+            background: -moz-linear-gradient(left, rgba(21,21,21,1) 0%, rgba(21,21,21,1) 90%, rgba(255,255,255,0) 100%);
+            background: -webkit-linear-gradient(left, rgba(21,21,21,1) 0%,rgba(21,21,21,1) 90%,rgba(255,255,255,0) 100%);
+            background: linear-gradient(to right, rgba(21,21,21,1) 0%,rgba(21,21,21,1) 90%,rgba(255,255,255,0) 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#151515', endColorstr='#00ffffff',GradientType=1 );
+        }
+
+            #images-modal h4.modal-title:hover:before {
+                display: none;
+            }
 
 #images-modal .modal-dialog {
     display: none;
@@ -684,7 +717,7 @@ label.error {
 
 #images-modal ul.nav.nav-tabs {
     display: block;
-    margin: -26px auto;
+    margin: -39px auto;
     width: 520px;
     border-bottom: none;
 }
