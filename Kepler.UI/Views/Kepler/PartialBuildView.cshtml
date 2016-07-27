@@ -191,6 +191,7 @@
     var firstPageOpen = 1;
 
     $(document).ready(function () {
+
         $('body').scrollTop(0);
 
         var xhr;
@@ -621,8 +622,13 @@
                         numberOfImageToOpen = hash[1];
                     }
                     
-                    $('#images-modal .nav-tabs li:nth-of-type(' + numberOfImageToOpen + ') a').click();
-                    
+                    $('#images-modal .modal-body img').on('load', function () {
+                        $('#images-modal').css('background', 'none');
+                        $('#images-modal .modal-dialog').css('display', 'inline-block');
+
+                        $('#images-modal .nav-tabs li:nth-of-type(' + numberOfImageToOpen + ') a').click();
+                    });
+                                        
                     break;
             }
         });
@@ -655,10 +661,11 @@
 
                     $('#images-modal .modal-body').append('<div class="cocoen">');
                     $('#images-modal .modal-body img:nth-of-type(1), #images-modal .modal-body img:nth-of-type(2)').clone().appendTo('.cocoen');
-                    setTimeout( function () {
-                          $('.cocoen').cocoen();
+                    setTimeout(function () {
+                        $('.cocoen img').show();
+                        $('.cocoen').cocoen();
                     }, 300);
-                    $('.cocoen img').show();
+                    
                     updateHash(2);
                     break;
                 case 'switch_difference':
@@ -675,9 +682,9 @@
                     $('#images-modal .modal-body').append('<div class="cocoen">');
                     $('#images-modal .modal-body img:nth-of-type(2), #images-modal .modal-body img:nth-of-type(3)').clone().appendTo('.cocoen');
                     setTimeout(function () {
+                        $('.cocoen img').show();
                         $('.cocoen').cocoen();
-                    }, 300);
-                    $('.cocoen img').show();                    
+                    }, 300);                  
                     updateHash(4);
                     break;
                 case 'switch_original':
