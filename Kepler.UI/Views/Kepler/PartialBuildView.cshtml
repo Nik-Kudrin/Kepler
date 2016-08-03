@@ -653,6 +653,8 @@
                     $('#images-modal .modal-body img').hide();
                     
                     $('#images-modal .modal-body img:nth-of-type(1)').show();
+
+                    updateViewerHeight();
                     updateHash(1);
                     break;
                 case 'switch_compare_1':
@@ -666,6 +668,7 @@
                         $('.cocoen').cocoen();
                     }, 300);
                     
+                    updateViewerHeight();
                     updateHash(2);
                     break;
                 case 'switch_difference':
@@ -673,6 +676,8 @@
                     $('#images-modal .modal-body img').hide();
 
                     $('#images-modal .modal-body img:nth-of-type(2)').show();
+
+                    updateViewerHeight();
                     updateHash(3);
                     break;
                 case 'switch_compare_2':
@@ -684,7 +689,9 @@
                     setTimeout(function () {
                         $('.cocoen img').show();
                         $('.cocoen').cocoen();
-                    }, 300);                  
+                    }, 300);
+
+                    updateViewerHeight();
                     updateHash(4);
                     break;
                 case 'switch_original':
@@ -692,10 +699,19 @@
                     $('#images-modal .modal-body img').hide();
 
                     $('#images-modal .modal-body img:nth-of-type(3)').show();
+
+                    updateViewerHeight();
                     updateHash(5);
                     break;
             }
         });
+
+        //
+        // Update viewer height
+        //
+        function updateViewerHeight() {
+            $('#images-modal .modal-dialog').css('height', $('#images-modal .modal-body').find('img').height());
+        }
 
         //
         // Update hash for image modal viewer
