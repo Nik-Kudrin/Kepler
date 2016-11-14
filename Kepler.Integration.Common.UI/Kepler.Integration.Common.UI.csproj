@@ -1,0 +1,271 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7C40ADB9-2F2C-4D94-A957-791D6824B71B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Kepler.Integration.Common.UI</RootNamespace>
+    <AssemblyName>Kepler.Integration.Common.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AE.Net.Mail, Version=1.7.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AE.Net.Mail.1.7.10.0\lib\net45\AE.Net.Mail.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions, Version=4.12.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.12.0\lib\net45\FluentAssertions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions.Core, Version=4.12.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.12.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.3.5\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture, Version=3.49.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.3.49.0\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TestStack.Seleno, Version=0.9.61.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TestStack.Seleno.0.9.61\lib\NET40\TestStack.Seleno.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebDriver, Version=2.53.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Selenium.WebDriver.2.53.1\lib\net40\WebDriver.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebDriver.Support, Version=2.53.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Selenium.Support.2.53.1\lib\net40\WebDriver.Support.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Config.cs" />
+    <Compile Include="DataGenerator\CarInfoModel.cs" />
+    <Compile Include="DataGenerator\CarInfoModelDataGenerator.cs" />
+    <Compile Include="DataGenerator\ClientInfoDataGenerator.cs" />
+    <Compile Include="DataGenerator\ClientInfoModel.cs" />
+    <Compile Include="DataGenerator\DriverInfoGenerator.cs" />
+    <Compile Include="DataGenerator\DriverInfoModel.cs" />
+    <Compile Include="DataGenerator\KaskoOrderInfo.cs" />
+    <Compile Include="Page\Bank\AutoCredit\AutoCreditListingPage.cs" />
+    <Compile Include="Page\Bank\AutoCredit\AutoCreditDetailsPage.cs" />
+    <Compile Include="Page\Bank\BankPage\BankPage.cs" />
+    <Compile Include="Page\Bank\BankPage\BankProductBlockInfo.cs" />
+    <Compile Include="Page\Bank\BankPage\BankProductsBlockComponent.cs" />
+    <Compile Include="Page\Bank\BankPage\BankSidebarContactsBlockComponent.cs" />
+    <Compile Include="Page\Bank\BankPage\BankSidebarReviewBlockComponent.cs" />
+    <Compile Include="Page\Bank\CreditCard\CardAdditionalFilterComponent.cs" />
+    <Compile Include="Page\Bank\CreditCard\CardCalculatorTabComponent.cs" />
+    <Compile Include="Page\Bank\CreditCard\CardCalculatorComponent.cs" />
+    <Compile Include="Page\Bank\CreditCard\CardListingPage.cs" />
+    <Compile Include="Page\Bank\CreditCard\CardPropositionDetailsPage.cs" />
+    <Compile Include="Page\Bank\CreditCard\CardPropositionComponent.cs" />
+    <Compile Include="Page\Bank\CreditCard\CreditCardPropositionComponent.cs" />
+    <Compile Include="Page\Bank\CreditCard\CardPropositionItem.cs" />
+    <Compile Include="Page\Bank\CreditCard\CreditCardListingPage.cs" />
+    <Compile Include="Page\Bank\CreditCard\CreditCardSpecialPropositionListingComponent.cs" />
+    <Compile Include="Page\Bank\CreditCard\CreditCardStandardPropositionListingComponent.cs" />
+    <Compile Include="Page\Bank\CreditCard\CreditCardDetailsPage.cs" />
+    <Compile Include="Page\Bank\Credit\CreditDetailsPage.cs" />
+    <Compile Include="Page\Bank\Credit\CreditListingPage.cs" />
+    <Compile Include="Page\Bank\DebitCard\DebitCardSpecialPropositionListingComponent.cs" />
+    <Compile Include="Page\Bank\DebitCard\DebitCardStandardPropositionListingComponent.cs" />
+    <Compile Include="Page\Bank\DebitCard\DebitCardPropositionComponent.cs" />
+    <Compile Include="Page\Bank\DebitCard\DebitCardPropositionItem.cs" />
+    <Compile Include="Page\Bank\DebitCard\DebitCardListingPage.cs" />
+    <Compile Include="Page\Bank\DebitCard\DebitCardDetailsPage.cs" />
+    <Compile Include="Page\Bank\Deposit\DepositDetailsPage.cs" />
+    <Compile Include="Page\Bank\Deposit\DepositListingPage.cs" />
+    <Compile Include="Page\Bank\FilterPropositionTabComponent.cs" />
+    <Compile Include="Page\Bank\Mortgage\MortgageListingPage.cs" />
+    <Compile Include="Page\Bank\PixelComponent.cs" />
+    <Compile Include="Page\Bank\Product\BankAdditionalFilterComponent.cs" />
+    <Compile Include="Page\Bank\Product\BankCalculatorComponent.cs" />
+    <Compile Include="Page\Bank\Product\BankProductModel.cs" />
+    <Compile Include="Page\Bank\Product\BankPropositionComponent.cs" />
+    <Compile Include="Page\Bank\Product\BankPropositionDetailsPage.cs" />
+    <Compile Include="Page\Bank\Product\BankListingPage.cs" />
+    <Compile Include="Page\Bank\Product\BankTopListingPage.cs" />
+    <Compile Include="Page\Bank\Product\BankTopPropositionComponent.cs" />
+    <Compile Include="Page\Bank\Product\ProductDetailsPage\BaseBlockAtDetailsPageComponent.cs" />
+    <Compile Include="Page\Bank\Product\ProductDetailsPage\DepositRatesBlockAtDetailsPageComponent.cs" />
+    <Compile Include="Page\Bank\Product\ProductDetailsPage\RateAndPaymentBlockAtDetailsPageComponent.cs" />
+    <Compile Include="Page\Bank\Product\ProductDetailsPage\DocumentsBlockAtDetailsPageComponent.cs" />
+    <Compile Include="Page\Bank\Product\ProductDetailsPage\ConditionsBlockAtDetailsPageComponent.cs" />
+    <Compile Include="Page\Bank\Product\IBankProductFilter.cs" />
+    <Compile Include="Page\Bank\Product\BasePropositionListingComponent.cs" />
+    <Compile Include="Page\Bank\Product\SidebarComponent.cs" />
+    <Compile Include="Page\Bank\Product\SpecialPropositionTopListingComponent.cs" />
+    <Compile Include="Page\Bank\Product\SpecialPropositionListingComponent.cs" />
+    <Compile Include="Page\Bank\Product\StandardPropositionTopListingComponent.cs" />
+    <Compile Include="Page\Bank\Product\StandardPropositionListingComponent.cs" />
+    <Compile Include="Page\Organization\OrganizationMenuComponent.cs" />
+    <Compile Include="Page\Bank\Product\PixelItem.cs" />
+    <Compile Include="Page\Bank\Product\PropositionItem.cs" />
+    <Compile Include="Page\Common\AccountMenuComponent.cs" />
+    <Compile Include="Page\Common\BasePage.cs" />
+    <Compile Include="Page\Common\CommonComponent.cs" />
+    <Compile Include="Page\Common\CommonPage.cs" />
+    <Compile Include="Page\Common\DatePickerComponent.cs" />
+    <Compile Include="Page\Common\LocationSelectCommonComponent.cs" />
+    <Compile Include="Page\Common\LocationSelectInCalcComponent.cs" />
+    <Compile Include="Page\Common\LocationSelectInMenuComponent.cs" />
+    <Compile Include="Page\Common\Login\ChangePasswordPage.cs" />
+    <Compile Include="Page\Common\Login\ILoginFieldFiller.cs" />
+    <Compile Include="Page\Common\Login\LoginComponent.cs" />
+    <Compile Include="Page\Common\Login\LoginFormPage.cs" />
+    <Compile Include="Page\Common\Login\RegisterFormPage.cs" />
+    <Compile Include="Page\Common\ModelProperties.cs" />
+    <Compile Include="Page\Organization\OrganizationPage.cs" />
+    <Compile Include="Page\Common\RatingComponent.cs" />
+    <Compile Include="Page\Common\UiPopupComponent.cs" />
+    <Compile Include="Page\Insurance\InsuranceCompaniesPage.cs" />
+    <Compile Include="Page\Insurance\InsuranceCompanyPage.cs" />
+    <Compile Include="Page\Insurance\InsuranceListingComponent.cs" />
+    <Compile Include="Page\Insurance\InsuranceListingPage.cs" />
+    <Compile Include="Page\Insurance\InsuranceOrderPage.cs" />
+    <Compile Include="Page\Insurance\InsuranceResultComponent.cs" />
+    <Compile Include="Page\Insurance\VZR\Companies\AlphaStrakhovaniePage.cs" />
+    <Compile Include="Page\Insurance\VZR\Companies\BaseInsurancePage.cs" />
+    <Compile Include="Page\Insurance\VZR\Companies\UralSibPage.cs" />
+    <Compile Include="Page\Insurance\VZR\VzrListingPage.cs" />
+    <Compile Include="Page\Insurance\VZR\VzrOrderPage.cs" />
+    <Compile Include="Page\Insurance\VZR\VzrResultsComponent.cs" />
+    <Compile Include="Page\Insurance\VZR\VzrWizardPage.cs" />
+    <Compile Include="Page\Kasko\BrandsListComponent.cs" />
+    <Compile Include="Page\Kasko\CarPriceAndMileageComponent.cs" />
+    <Compile Include="Page\Kasko\DriverInfoPage.cs" />
+    <Compile Include="Page\Kasko\KaskoFilterComponent.cs" />
+    <Compile Include="Page\Kasko\KaskoPage.cs" />
+    <Compile Include="Page\Kasko\PopUps\ConfirmEmailPopupComponent.cs" />
+    <Compile Include="Page\Kasko\PopUps\ConfirmPopupComponent.cs" />
+    <Compile Include="Page\Kasko\PopUps\OrderInfoPopupComponent.cs" />
+    <Compile Include="Page\Kasko\RadioControlComponent.cs" />
+    <Compile Include="Page\Kasko\ResultCard.cs" />
+    <Compile Include="Page\MainPage.cs" />
+    <Compile Include="Page\Organization\OrganizationRatingComponent.cs" />
+    <Compile Include="Page\Publication\PublicationListPage.cs" />
+    <Compile Include="Page\Rating\RatingPage.cs" />
+    <Compile Include="Page\Search\SearchComponent.cs" />
+    <Compile Include="Page\Search\SearchResultPage.cs" />
+    <Compile Include="Page\UserAccount\BaseUserAccountTabPage.cs" />
+    <Compile Include="Page\UserAccount\UserActivityTabPage.cs" />
+    <Compile Include="Page\UserAccount\UserInsuranceTabPage.cs" />
+    <Compile Include="Page\UserAccount\UserPasswordTabPage.cs" />
+    <Compile Include="Page\UserAccount\UserProfileTabPage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelenoExtension\ScrollComponent.cs" />
+    <Compile Include="SelenoExtension\SliderComponent.cs" />
+    <Compile Include="SelenoExtension\WebDriverExtension.cs" />
+    <Compile Include="SelenoExtension\WebElementExtension.cs" />
+    <Compile Include="Validator\BankPageValidator\Card\CardListingValidator.cs" />
+    <Compile Include="Validator\BankPageValidator\Card\CreditCardListingValidator.cs" />
+    <Compile Include="Validator\BankPageValidator\Card\DebitCardListingValidator.cs" />
+    <Compile Include="Validator\BankPageValidator\BankPageValidator.cs" />
+    <Compile Include="Validator\BankPageValidator\Product\BankPropositionListingPageValidator.cs" />
+    <Compile Include="Validator\BankPageValidator\Product\CreditListingPageValidator.cs" />
+    <Compile Include="Validator\BankPageValidator\Product\IValidateCard.cs" />
+    <Compile Include="Validator\BasePageValidator.cs" />
+    <Compile Include="Validator\ExternalPageValidator.cs" />
+    <Compile Include="Validator\InsuranceCompaniesPageValidator.cs" />
+    <Compile Include="Validator\InsurancePageValidator.cs" />
+    <Compile Include="Validator\BankPageValidator\IValidateOrganizationPage.cs" />
+    <Compile Include="Validator\MailValidator.cs" />
+    <Compile Include="Validator\OrganizationPageValidator.cs" />
+    <Compile Include="Validator\PublicationPageValidator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RelevantCodes.ExtentReports\RelevantCodes.ExtentReports.csproj">
+      <Project>{48FAC3CF-9E50-4CF1-B898-C2A54ADEC5F7}</Project>
+      <Name>RelevantCodes.ExtentReports</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
