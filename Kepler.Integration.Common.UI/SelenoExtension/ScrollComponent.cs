@@ -34,7 +34,7 @@ namespace Kepler.Integration.Common.UI.SelenoExtension
 
             ICoordinates coordinates = ((ILocatable) element).Coordinates;
 
-            var verticalOffsetForDynamicHeaderPopUp = 400;
+            var verticalOffsetForDynamicHeaderPopUp = 0; // in case of 'toolbars' in head of page
             var yCoordinate = coordinates.LocationInViewport.Y - verticalOffsetForDynamicHeaderPopUp;
 
             ((IJavaScriptExecutor) _driver).ExecuteScript(String.Format("window.scrollBy({0}, {1})", 0, yCoordinate));

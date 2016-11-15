@@ -55,10 +55,6 @@ namespace Kepler.Integration.Common
                 case "chrome":
                     capabilities = DesiredCapabilities.Chrome();
                     break;
-                case "chrome_deposit_pixel":
-                    capabilities = DesiredCapabilities.Chrome();
-                    capabilities.SetCapability("version", "chrome_deposit_pixel");
-                    break;
                 default:
                     throw new NotSupportedException("Unsupported browser type");
             }
