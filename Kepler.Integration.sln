@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Integration.Common", "Kepler.Integration.Common\Kepler.Integration.Common.csproj", "{053E79F5-7742-401A-B656-A5A5D368A427}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Integration.Common.UI", "Kepler.Integration.Common.UI\Kepler.Integration.Common.UI.csproj", "{7C40ADB9-2F2C-4D94-A957-791D6824B71B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Integration.Example", "Kepler.Integration.Example\Kepler.Integration.Example.csproj", "{BAEBA7F6-E51A-4FC6-AA76-91CD8A65F478}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Advertising Test|Any CPU = Advertising Test|Any CPU
+		Advertising|Any CPU = Advertising|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{053E79F5-7742-401A-B656-A5A5D368A427}.Advertising Test|Any CPU.ActiveCfg = Advertising Test|Any CPU
+		{053E79F5-7742-401A-B656-A5A5D368A427}.Advertising Test|Any CPU.Build.0 = Advertising Test|Any CPU
+		{053E79F5-7742-401A-B656-A5A5D368A427}.Advertising|Any CPU.ActiveCfg = Advertising|Any CPU
+		{053E79F5-7742-401A-B656-A5A5D368A427}.Advertising|Any CPU.Build.0 = Advertising|Any CPU
+		{053E79F5-7742-401A-B656-A5A5D368A427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{053E79F5-7742-401A-B656-A5A5D368A427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{053E79F5-7742-401A-B656-A5A5D368A427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{053E79F5-7742-401A-B656-A5A5D368A427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C40ADB9-2F2C-4D94-A957-791D6824B71B}.Advertising Test|Any CPU.ActiveCfg = Release|Any CPU
+		{7C40ADB9-2F2C-4D94-A957-791D6824B71B}.Advertising Test|Any CPU.Build.0 = Release|Any CPU
+		{7C40ADB9-2F2C-4D94-A957-791D6824B71B}.Advertising|Any CPU.ActiveCfg = Release|Any CPU
+		{7C40ADB9-2F2C-4D94-A957-791D6824B71B}.Advertising|Any CPU.Build.0 = Release|Any CPU
+		{7C40ADB9-2F2C-4D94-A957-791D6824B71B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C40ADB9-2F2C-4D94-A957-791D6824B71B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C40ADB9-2F2C-4D94-A957-791D6824B71B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C40ADB9-2F2C-4D94-A957-791D6824B71B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAEBA7F6-E51A-4FC6-AA76-91CD8A65F478}.Advertising Test|Any CPU.ActiveCfg = Release|Any CPU
+		{BAEBA7F6-E51A-4FC6-AA76-91CD8A65F478}.Advertising Test|Any CPU.Build.0 = Release|Any CPU
+		{BAEBA7F6-E51A-4FC6-AA76-91CD8A65F478}.Advertising|Any CPU.ActiveCfg = Release|Any CPU
+		{BAEBA7F6-E51A-4FC6-AA76-91CD8A65F478}.Advertising|Any CPU.Build.0 = Release|Any CPU
+		{BAEBA7F6-E51A-4FC6-AA76-91CD8A65F478}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAEBA7F6-E51A-4FC6-AA76-91CD8A65F478}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAEBA7F6-E51A-4FC6-AA76-91CD8A65F478}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAEBA7F6-E51A-4FC6-AA76-91CD8A65F478}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
