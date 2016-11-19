@@ -1,4 +1,5 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
 using System.ServiceProcess;
 using Kepler.Service;
 
@@ -18,14 +19,34 @@ namespace Kepler.ServiceInstaller
             if (serviceHost != null) serviceHost.Close();
 
             serviceHost = new ServiceHost(typeof (KeplerService));
+            serviceHost.Faulted += new EventHandler(myHost_Faulted);
             serviceHost.Open();
+        }
+
+        private void myHost_Faulted(object sender, EventArgs e)
+        {
+            EventLog.WriteEntry($"Kepler.Service host faulted.  {e.ToString()} ");
         }
 
         protected override void OnStop()
         {
             if (serviceHost != null)
             {
-                serviceHost.Close();
+                try
+                {
+                    serviceHost.Close();
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        serviceHost.Abort();
+                    }
+                    catch
+                    {
+                    }
+                }
+
                 serviceHost = null;
             }
         }
