@@ -1,7 +1,7 @@
 USE [master]
 GO
 
-DECLARE @DbName varchar(60) = 'KeplerNew'
+DECLARE @DbName varchar(60) = 'Kepler'
 DECLARE @COMMAND_TEMPLATE VARCHAR(MAX)
 DECLARE @SQL_SCRIPT VARCHAR(MAX)
 DECLARE @USE_DB_TEMPLATE varchar(60) 
