@@ -11,3 +11,4 @@ _Build/**
 **/bin/Debug/**
 **/obj/Debug/**
 Kepler.UI/bin/**
+**/$RANDOM_SEED$
