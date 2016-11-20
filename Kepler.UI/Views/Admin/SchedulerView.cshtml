@@ -4,163 +4,193 @@
     });
 </script>
 
+<div class="col-md-12 col-md-12-header">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <h3>Clean Scheduler</h3>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
 <div class="col-md-12 build_schedule">
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            Build schedule
-            <small></small>
-        </div>
-        <div class="panel-body">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Items to preserve</label>
-                    <select class="form-control select_items_preserve">
-                        <option value="0">0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">25</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Schedule period (days)</label>
-                    <select class="form-control select_period">
-                        <option value="P0D">0</option>
-                        <option value="P1D">1</option>
-                        <option value="P2D">2</option>
-                        <option value="P3D">3</option>
-                        <option value="P4D">4</option>
-                        <option value="P5D">5</option>
-                        <option value="P6D">6</option>
-                        <option value="P7D">7</option>
-                        <option value="P8D">8</option>
-                        <option value="P9D">9</option>
-                        <option value="P10D">10</option>
-                        <option value="P11D">11</option>
-                        <option value="P12D">12</option>
-                        <option value="P13D">13</option>
-                        <option value="P14D">14</option>
-                        <option value="P15D">15</option>
-                        <option value="P16D">16</option>
-                        <option value="P17D">17</option>
-                        <option value="P18D">18</option>
-                        <option value="P19D">19</option>
-                        <option value="P20D">20</option>
-                        <option value="P21D">21</option>
-                        <option value="P22D">22</option>
-                        <option value="P23D">23</option>
-                        <option value="P24D">24</option>
-                        <option value="P25D">25</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <button class="btn btn-info" data-act="set_build_scheduler">Set</button>
-            </div>
-        </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Clean Build schedule
+                        <small></small>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <label>Items to preserve</label>
+                            <select class="form-control select_items_preserve">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <label>Schedule period (days)</label>
+                            <select class="form-control select_period">
+                                <option value="P0D">0</option>
+                                <option value="P1D">1</option>
+                                <option value="P2D">2</option>
+                                <option value="P3D">3</option>
+                                <option value="P4D">4</option>
+                                <option value="P5D">5</option>
+                                <option value="P6D">6</option>
+                                <option value="P7D">7</option>
+                                <option value="P8D">8</option>
+                                <option value="P9D">9</option>
+                                <option value="P10D">10</option>
+                                <option value="P11D">11</option>
+                                <option value="P12D">12</option>
+                                <option value="P13D">13</option>
+                                <option value="P14D">14</option>
+                                <option value="P15D">15</option>
+                                <option value="P16D">16</option>
+                                <option value="P17D">17</option>
+                                <option value="P18D">18</option>
+                                <option value="P19D">19</option>
+                                <option value="P20D">20</option>
+                                <option value="P21D">21</option>
+                                <option value="P22D">22</option>
+                                <option value="P23D">23</option>
+                                <option value="P24D">24</option>
+                                <option value="P25D">25</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" data-act="set_build_scheduler">Set</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
 <div class="col-md-12 log_schedule">
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            Log schedule
-            <small></small>
-        </div>
-        <div class="panel-body">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Items to preserve</label>
-                    <select class="form-control select_items_preserve">
-                        <option value="0">0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">25</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Schedule period (days)</label>
-                    <select class="form-control select_period">
-                        <option value="P0D">0</option>
-                        <option value="P1D">1</option>
-                        <option value="P2D">2</option>
-                        <option value="P3D">3</option>
-                        <option value="P4D">4</option>
-                        <option value="P5D">5</option>
-                        <option value="P6D">6</option>
-                        <option value="P7D">7</option>
-                        <option value="P8D">8</option>
-                        <option value="P9D">9</option>
-                        <option value="P10D">10</option>
-                        <option value="P11D">11</option>
-                        <option value="P12D">12</option>
-                        <option value="P13D">13</option>
-                        <option value="P14D">14</option>
-                        <option value="P15D">15</option>
-                        <option value="P16D">16</option>
-                        <option value="P17D">17</option>
-                        <option value="P18D">18</option>
-                        <option value="P19D">19</option>
-                        <option value="P20D">20</option>
-                        <option value="P21D">21</option>
-                        <option value="P22D">22</option>
-                        <option value="P23D">23</option>
-                        <option value="P24D">24</option>
-                        <option value="P25D">25</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <button class="btn btn-info" data-act="set_log_scheduler">Set</button>
-            </div>
-        </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                       Clean Log schedule
+                        <small></small>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <label>Items to preserve</label>
+                            <select class="form-control select_items_preserve">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <label>Schedule period (days)</label>
+                            <select class="form-control select_period">
+                                <option value="P0D">0</option>
+                                <option value="P1D">1</option>
+                                <option value="P2D">2</option>
+                                <option value="P3D">3</option>
+                                <option value="P4D">4</option>
+                                <option value="P5D">5</option>
+                                <option value="P6D">6</option>
+                                <option value="P7D">7</option>
+                                <option value="P8D">8</option>
+                                <option value="P9D">9</option>
+                                <option value="P10D">10</option>
+                                <option value="P11D">11</option>
+                                <option value="P12D">12</option>
+                                <option value="P13D">13</option>
+                                <option value="P14D">14</option>
+                                <option value="P15D">15</option>
+                                <option value="P16D">16</option>
+                                <option value="P17D">17</option>
+                                <option value="P18D">18</option>
+                                <option value="P19D">19</option>
+                                <option value="P20D">20</option>
+                                <option value="P21D">21</option>
+                                <option value="P22D">22</option>
+                                <option value="P23D">23</option>
+                                <option value="P24D">24</option>
+                                <option value="P25D">25</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" data-act="set_log_scheduler">Set</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -192,7 +222,7 @@
                                 if (value == null) {
                                     value = moment().subtract(1, 'months').toASP();
                                 }
-                                $('.build_schedule .panel-heading small').empty().append('(last clean: ' + moment(value).format(formatDateString) + ' / ');
+                                $('.build_schedule th small').empty().append('(last clean: ' + moment(value).format(formatDateString) + ' / ');
                                 BuildLastStartTime = value;
                             } else if (key == 'SchedulePeriod') {
                                 $('.build_schedule .select_period:not(.changed)').val(value);
@@ -207,7 +237,7 @@
                                 if (value == null) {
                                     value = moment().subtract(1, 'months').toASP();
                                 }
-                                $('.log_schedule .panel-heading small').empty().append('(last clean: ' + moment(value).format(formatDateString) + ' / ');
+                                $('.log_schedule th small').empty().append('(last clean: ' + moment(value).format(formatDateString) + ' / ');
                                 LogLastStartTime = value;
                             } else if (key == 'SchedulePeriod') {
                                 $('.log_schedule .select_period:not(.changed)').val(value);

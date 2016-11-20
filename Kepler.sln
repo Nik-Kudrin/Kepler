@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.Tests", "Kepler.Tests\Kepler.Tests.csproj", "{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}"
 EndProject
@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kepler.ImageProcessor.Insta
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Advertising Test|Any CPU = Advertising Test|Any CPU
+		Advertising Test|x86 = Advertising Test|x86
+		Advertising|Any CPU = Advertising|Any CPU
+		Advertising|x86 = Advertising|x86
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
 		NEONDebug|Any CPU = NEONDebug|Any CPU
@@ -31,6 +35,14 @@ Global
 		WalsashDebug|x86 = WalsashDebug|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Advertising Test|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Advertising Test|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Advertising Test|x86.ActiveCfg = WalsashDebug|Any CPU
+		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Advertising Test|x86.Build.0 = WalsashDebug|Any CPU
+		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Advertising|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Advertising|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Advertising|x86.ActiveCfg = WalsashDebug|Any CPU
+		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Advertising|x86.Build.0 = WalsashDebug|Any CPU
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -51,6 +63,14 @@ Global
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.WalsashDebug|Any CPU.Build.0 = WalsashDebug|Any CPU
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.WalsashDebug|x86.ActiveCfg = WalsashDebug|Any CPU
 		{8A218E77-4B9D-47CF-92B0-FDE6BB0250A4}.WalsashDebug|x86.Build.0 = WalsashDebug|Any CPU
+		{6C80A420-6AB0-4172-93E1-C44974187669}.Advertising Test|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{6C80A420-6AB0-4172-93E1-C44974187669}.Advertising Test|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{6C80A420-6AB0-4172-93E1-C44974187669}.Advertising Test|x86.ActiveCfg = WalsashDebug|Any CPU
+		{6C80A420-6AB0-4172-93E1-C44974187669}.Advertising Test|x86.Build.0 = WalsashDebug|Any CPU
+		{6C80A420-6AB0-4172-93E1-C44974187669}.Advertising|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{6C80A420-6AB0-4172-93E1-C44974187669}.Advertising|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{6C80A420-6AB0-4172-93E1-C44974187669}.Advertising|x86.ActiveCfg = WalsashDebug|Any CPU
+		{6C80A420-6AB0-4172-93E1-C44974187669}.Advertising|x86.Build.0 = WalsashDebug|Any CPU
 		{6C80A420-6AB0-4172-93E1-C44974187669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6C80A420-6AB0-4172-93E1-C44974187669}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C80A420-6AB0-4172-93E1-C44974187669}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -71,6 +91,14 @@ Global
 		{6C80A420-6AB0-4172-93E1-C44974187669}.WalsashDebug|Any CPU.Build.0 = WalsashDebug|Any CPU
 		{6C80A420-6AB0-4172-93E1-C44974187669}.WalsashDebug|x86.ActiveCfg = WalsashDebug|Any CPU
 		{6C80A420-6AB0-4172-93E1-C44974187669}.WalsashDebug|x86.Build.0 = WalsashDebug|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Advertising Test|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Advertising Test|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Advertising Test|x86.ActiveCfg = WalsashDebug|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Advertising Test|x86.Build.0 = WalsashDebug|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Advertising|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Advertising|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Advertising|x86.ActiveCfg = WalsashDebug|Any CPU
+		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Advertising|x86.Build.0 = WalsashDebug|Any CPU
 		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -91,6 +119,14 @@ Global
 		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.WalsashDebug|Any CPU.Build.0 = WalsashDebug|Any CPU
 		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.WalsashDebug|x86.ActiveCfg = WalsashDebug|Any CPU
 		{B91FE5F2-03D8-46EE-B02E-DBFC7F584D0C}.WalsashDebug|x86.Build.0 = WalsashDebug|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Advertising Test|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Advertising Test|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Advertising Test|x86.ActiveCfg = WalsashDebug|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Advertising Test|x86.Build.0 = WalsashDebug|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Advertising|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Advertising|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Advertising|x86.ActiveCfg = WalsashDebug|Any CPU
+		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Advertising|x86.Build.0 = WalsashDebug|Any CPU
 		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -111,6 +147,14 @@ Global
 		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.WalsashDebug|Any CPU.Build.0 = WalsashDebug|Any CPU
 		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.WalsashDebug|x86.ActiveCfg = WalsashDebug|Any CPU
 		{D2EFBCFB-3A44-4B81-BE66-57F87E2D3DAA}.WalsashDebug|x86.Build.0 = WalsashDebug|Any CPU
+		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Advertising Test|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Advertising Test|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Advertising Test|x86.ActiveCfg = WalsashDebug|Any CPU
+		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Advertising Test|x86.Build.0 = WalsashDebug|Any CPU
+		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Advertising|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Advertising|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Advertising|x86.ActiveCfg = WalsashDebug|Any CPU
+		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Advertising|x86.Build.0 = WalsashDebug|Any CPU
 		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -131,6 +175,14 @@ Global
 		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.WalsashDebug|Any CPU.Build.0 = WalsashDebug|Any CPU
 		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.WalsashDebug|x86.ActiveCfg = WalsashDebug|Any CPU
 		{CBFFD8AF-CEED-4F04-B7E0-AADC854906D4}.WalsashDebug|x86.Build.0 = WalsashDebug|Any CPU
+		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Advertising Test|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Advertising Test|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Advertising Test|x86.ActiveCfg = WalsashDebug|Any CPU
+		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Advertising Test|x86.Build.0 = WalsashDebug|Any CPU
+		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Advertising|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Advertising|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Advertising|x86.ActiveCfg = WalsashDebug|Any CPU
+		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Advertising|x86.Build.0 = WalsashDebug|Any CPU
 		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -151,6 +203,14 @@ Global
 		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.WalsashDebug|Any CPU.Build.0 = WalsashDebug|Any CPU
 		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.WalsashDebug|x86.ActiveCfg = WalsashDebug|Any CPU
 		{7D87D3B3-E03C-47C7-9B5B-2FBD6099C0DF}.WalsashDebug|x86.Build.0 = WalsashDebug|Any CPU
+		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Advertising Test|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Advertising Test|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Advertising Test|x86.ActiveCfg = WalsashDebug|Any CPU
+		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Advertising Test|x86.Build.0 = WalsashDebug|Any CPU
+		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Advertising|Any CPU.ActiveCfg = WalsashDebug|Any CPU
+		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Advertising|Any CPU.Build.0 = WalsashDebug|Any CPU
+		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Advertising|x86.ActiveCfg = WalsashDebug|Any CPU
+		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Advertising|x86.Build.0 = WalsashDebug|Any CPU
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7384930F-B85D-484E-B83A-0BCF1CB1BDAB}.Debug|x86.ActiveCfg = Debug|Any CPU

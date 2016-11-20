@@ -15,6 +15,12 @@
 
     @RenderSection("scripts", required: false)
 
+    <style>
+        #page-inner {
+            min-height: 400px;
+        }
+    </style>
+
 </head>
 <body>
     <script type="text/javascript">
@@ -23,12 +29,17 @@
     <div id="wrapper">
         <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/">KEPLER</a>
+                <a class="navbar-brand" href="/">
+                    <img src="~/img/logo.png">
+                    KEPLER
+                </a>
             </div>
 
             <div class="header-right">
-                <a class="btn btn-default" href="/admin">Admin</a>
-                <a class="btn btn-default header-log-btn" title="Error log" href="" linkUrl="/error-log">
+                <a class="btn btn-default" href="/admin">
+                    <i class="fa fa-gears" aria-hidden="true"></i>
+                </a>
+                <a class="btn btn-default header-log-btn" title="Error log" href="/error-log" linkUrl="/error-log">
                     <i class="fa fa-exclamation-circle fa-2x"></i>
                 </a>
             </div>
@@ -81,6 +92,38 @@
         </div>
     </div>
 
+    <div class="modal fade" id="images-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel"></h4>
+            <ul class="nav nav-tabs">
+                <li class="">
+                    <a href="#baseline" data-act="switch_baseline" data-toggle="tab">Baseline</a>
+                </li>
+                <li class="">
+                    <a href="#compare" data-act="switch_compare_1" data-toggle="tab">Compare <i class="fa fa-exchange" aria-hidden="true"></i></a>
+                </li>
+                <li class="active">
+                    <a href="#difference" data-act="switch_difference" data-toggle="tab">Difference</a>
+                </li>
+                <li class="">
+                    <a href="#compare" data-act="switch_compare_2" data-toggle="tab">Compare <i class="fa fa-exchange" aria-hidden="true"></i></a>
+                </li>
+                <li class="">
+                    <a href="#original" data-act="switch_original" data-toggle="tab">Original</a>
+                </li>
+            </ul>
+        </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="modal_form" action="javascript:void(null);" onsubmit="">
+                    <div class="modal-body">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="loading_label">
         <span><i class="fa fa-refresh"></i> Loading...</span>
     </div>
@@ -113,9 +156,7 @@
         //
         // Bind ajax loader on A with attr linkUrl
         //
-
-
-        $(document).on('click', 'a[href=""]', function (e) {
+        $(document).on('click', '[linkUrl]:not([linkUrl=""])', function (e) {
             e.preventDefault();
 
             var path = $(this).attr('linkUrl');
@@ -124,6 +165,8 @@
                 history.pushState(null, null, path);
                 ajax_loader();
             }
+
+            return false;
         });
 
         //
@@ -183,7 +226,6 @@
     </script>
 
     <script src="/Scripts/modal_win.js"></script>
-    <script src="/Scripts/lightbox.js"></script>
 
 </body>
 </html>

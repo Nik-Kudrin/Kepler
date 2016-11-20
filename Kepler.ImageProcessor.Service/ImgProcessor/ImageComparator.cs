@@ -27,7 +27,8 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
             {
                 ImageComparisonInfo.IsImagesDifferent = false;
                 var previewSuffix = "_preview.png";
-                var diffFileName = $"{ImageComparisonInfo.ScreenShotName}_{Guid.NewGuid()}";
+                var randomId = Guid.NewGuid().ToString().Substring(0, 8);
+                var diffFileName = $"{ImageComparisonInfo.ScreenShotName}_{randomId}";
 
                 // in case - rerun build just use old generated paths
                 if (!ImageComparisonInfo.DiffImagePath.Contains(ImageComparisonInfo.ScreenShotName))
@@ -97,8 +98,7 @@ namespace Kepler.ImageProcessor.Service.ImgProcessor
             }
             catch (Exception ex)
             {
-                var errorMessage =
-                    $"Attempt to write file with diff screenshot failed. '{pathToSave}'. {ex.Message} {ex.StackTrace}";
+                var errorMessage = $"Attempt to write file failed. '{pathToSave}'. {ex.Message} {ex.StackTrace}";
                 new RestKeplerServiceClient().LogError(errorMessage);
 
                 return errorMessage;

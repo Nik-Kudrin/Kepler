@@ -1,0 +1,9 @@
+FROM microsoft/aspnet
+
+SHELL ["powershell"]
+
+COPY Kepler.UI C:\\inetpub\\wwwroot\\Kepler.UI\\
+
+RUN New-Website -Name 'Kepler' -Port 8899 -PhysicalPath 'C:\inetpub\wwwroot\Kepler.UI' -ApplicationPool '.NET v4.5'
+
+EXPOSE 8899

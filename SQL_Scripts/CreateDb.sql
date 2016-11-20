@@ -1,7 +1,7 @@
 USE [master]
 GO
 
-DECLARE @DbName varchar(60) = 'KeplerNew'
+DECLARE @DbName varchar(60) = 'Kepler'
 DECLARE @COMMAND_TEMPLATE VARCHAR(MAX)
 DECLARE @SQL_SCRIPT VARCHAR(MAX)
 DECLARE @USE_DB_TEMPLATE varchar(60) 
@@ -139,7 +139,7 @@ SET QUOTED_IDENTIFIER ON
 CREATE TABLE {DBNAME}.[dbo].[BaseLine](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[BranchId] [bigint] NOT NULL,
-	[Name] [nvarchar](700) NULL,
+	[Name] [nvarchar](max) NULL,
 	[Status] [int] NOT NULL,
  CONSTRAINT [PK_dbo.BaseLine] PRIMARY KEY CLUSTERED 
 (
@@ -161,7 +161,7 @@ CREATE TABLE [dbo].[Branch](
 	[LatestBuildId] [bigint] NULL,
 	[ProjectId] [bigint] NULL,
 	[IsMainBranch] [bit] NOT NULL,
-	[Name] [nvarchar](700) NULL,
+	[Name] [nvarchar](max) NULL,
 	[Status] [int] NOT NULL,
  CONSTRAINT [PK_dbo.Branch] PRIMARY KEY CLUSTERED 
 (
@@ -193,7 +193,7 @@ CREATE TABLE {DBNAME}.[dbo].[Build](
 	[NumberFailedScreenshots] [bigint] NOT NULL,
 	[BuildId] [bigint] NULL,
 	[ParentObjId] [bigint] NULL,
-	[Name] [nvarchar](700) NULL,
+	[Name] [nvarchar](max) NULL,
 	[Status] [int] NOT NULL,
  CONSTRAINT [PK_dbo.Build] PRIMARY KEY CLUSTERED 
 (
@@ -235,7 +235,7 @@ CREATE TABLE {DBNAME}.[dbo].[ImageWorker](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[WorkerServiceUrl] [nvarchar](600) NULL,
 	[WorkerStatus] [int] NOT NULL,
-	[Name] [nvarchar](700) NULL,
+	[Name] [nvarchar](max) NULL,
 	[Status] [int] NOT NULL,
  CONSTRAINT [PK_dbo.ImageWorker] PRIMARY KEY CLUSTERED 
 (
@@ -254,8 +254,8 @@ SET QUOTED_IDENTIFIER ON
 
 CREATE TABLE {DBNAME}.[dbo].[KeplerSystemConfig](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](500) NULL,
-	[Value] [nvarchar](500) NULL,
+	[Name] [nvarchar](max) NULL,
+	[Value] [nvarchar](max) NULL,
  CONSTRAINT [PK_dbo.KeplerSystemConfig] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -275,7 +275,7 @@ SET QUOTED_IDENTIFIER ON
 CREATE TABLE {DBNAME}.[dbo].[Project](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[MainBranchId] [bigint] NULL,
-	[Name] [nvarchar](700) NULL,
+	[Name] [nvarchar](max) NULL,
 	[Status] [int] NOT NULL,
  CONSTRAINT [PK_dbo.Project] PRIMARY KEY CLUSTERED 
 (
@@ -295,25 +295,25 @@ SET QUOTED_IDENTIFIER ON
 
 CREATE TABLE {DBNAME}.[dbo].[ScreenShot](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
-	[ImagePath] [nvarchar](700) NULL,
-	[ImagePathUrl] [nvarchar](700) NULL,
-	[PreviewImagePath] [nvarchar](700) NULL,
-	[PreviewImagePathUrl] [nvarchar](700) NULL,
-	[DiffImagePath] [nvarchar](1000) NULL,
-	[DiffImagePathUrl] [nvarchar](1000) NULL,
-	[DiffPreviewPath] [nvarchar](1000) NULL,
-	[DiffPreviewPathUrl] [nvarchar](1000) NULL,
-	[BaseLineImagePath] [nvarchar](700) NULL,
-	[BaseLineImagePathUrl] [nvarchar](700) NULL,
-	[BaseLinePreviewPath] [nvarchar](700) NULL,
-	[BaseLinePreviewPathUrl] [nvarchar](700) NULL,
-	[Url] [nvarchar](500) NULL,
+	[ImagePath] [nvarchar](max) NULL,
+	[ImagePathUrl] [nvarchar](max) NULL,
+	[PreviewImagePath] [nvarchar](max) NULL,
+	[PreviewImagePathUrl] [nvarchar](max) NULL,
+	[DiffImagePath] [nvarchar](max) NULL,
+	[DiffImagePathUrl] [nvarchar](max) NULL,
+	[DiffPreviewPath] [nvarchar](max) NULL,
+	[DiffPreviewPathUrl] [nvarchar](max) NULL,
+	[BaseLineImagePath] [nvarchar](max) NULL,
+	[BaseLineImagePathUrl] [nvarchar](max) NULL,
+	[BaseLinePreviewPath] [nvarchar](max) NULL,
+	[BaseLinePreviewPathUrl] [nvarchar](max) NULL,
+	[Url] [nvarchar](max) NULL,
 	[BaseLineId] [bigint] NOT NULL,
 	[IsLastPassed] [bit] NOT NULL,
 	[ErrorMessage] [nvarchar](max) NULL,
 	[BuildId] [bigint] NULL,
 	[ParentObjId] [bigint] NULL,
-	[Name] [nvarchar](700) NULL,
+	[Name] [nvarchar](max) NULL,
 	[Status] [int] NOT NULL,
  CONSTRAINT [PK_dbo.ScreenShot] PRIMARY KEY CLUSTERED 
 (
@@ -335,7 +335,7 @@ CREATE TABLE {DBNAME}.[dbo].[TestAssembly](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[BuildId] [bigint] NULL,
 	[ParentObjId] [bigint] NULL,
-	[Name] [nvarchar](700) NULL,
+	[Name] [nvarchar](max) NULL,
 	[Status] [int] NOT NULL,
  CONSTRAINT [PK_dbo.TestAssembly] PRIMARY KEY CLUSTERED 
 (
@@ -357,7 +357,7 @@ CREATE TABLE {DBNAME}.[dbo].[TestCase](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[BuildId] [bigint] NULL,
 	[ParentObjId] [bigint] NULL,
-	[Name] [nvarchar](700) NULL,
+	[Name] [nvarchar](max) NULL,
 	[Status] [int] NOT NULL,
  CONSTRAINT [PK_dbo.TestCase] PRIMARY KEY CLUSTERED 
 (
@@ -379,7 +379,7 @@ CREATE TABLE {DBNAME}.[dbo].[TestSuite](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[BuildId] [bigint] NULL,
 	[ParentObjId] [bigint] NULL,
-	[Name] [nvarchar](700) NULL,
+	[Name] [nvarchar](max) NULL,
 	[Status] [int] NOT NULL,
  CONSTRAINT [PK_dbo.TestSuite] PRIMARY KEY CLUSTERED 
 (

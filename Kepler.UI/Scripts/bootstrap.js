@@ -933,6 +933,7 @@ if (typeof jQuery === 'undefined') {
     this.originalBodyPad     = null
     this.scrollbarWidth      = 0
     this.ignoreBackdropClick = false
+    this.options.remote = false
 
     if (this.options.remote) {
       this.$element

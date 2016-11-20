@@ -4,28 +4,50 @@
     });
 </script>
 
-<div class="col-md-12 source-image-path">
-    <div class="col-md-12">
-        <div class="col-md-10">
-            <div class="form-group">
-                <input id="img_saving_path" class="form-control" type="text" readonly>
-                <p class="help-block">Image path</p>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <button type="button" class="btn btn-lg edit_img_path" data-toggle="modal" data-target="#crud-modal" data-act="image_path_edit">Edit</button>
-        </div>
+<div class="col-md-12 col-md-12-header">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <h3>Source Image Path</h3>
+                    </th>
+                </tr>
+            </thead>
+        </table>
     </div>
-    <div class="col-md-12">
-        <div class="col-md-10">
-            <div class="form-group">
-                <input id="diff_img_saving_path" class="form-control" type="text" readonly>
-                <p class="help-block">Diff image path</p>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <button type="button" class="btn btn-lg edit_diff_img_path" data-toggle="modal" data-target="#crud-modal" data-act="diff_path_edit">Edit</button>
-        </div>
+</div>
+
+<div class="col-md-12 source-image-path">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <label>Image path (Original images)</label>
+                            <input id="img_saving_path" class="form-control" type="text" readonly>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary edit_img_path" data-toggle="modal" data-target="#crud-modal" data-act="image_path_edit">Edit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <label>Diff image path (Generated diff's for images)</label>
+                            <input id="diff_img_saving_path" class="form-control" type="text" readonly>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary edit_diff_img_path" data-toggle="modal" data-target="#crud-modal" data-act="diff_path_edit">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 

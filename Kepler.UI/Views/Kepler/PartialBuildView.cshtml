@@ -4,66 +4,83 @@
     });
 </script>
 
-<div class="col-md-12 list-fixed-panel">
-    <div class="col-md-8">
-        <div class="col-md-1">
-            <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
-            <ul class="dropdown-menu build-info-popup">
-                <li class="build-info-start">Start: <span>27Jan</span></li>
-                <li class="build-info-duration">Duration: <span>1h23m</span></li>
-                <li class="build-info-tests">Tests: <span>2404</span></li>
-                <li class="build-info-failed">Tests failed: <span>45</span></li>
-            </ul>
-        </div>
-        <div id="build-info-block" class="col-md-4">
-            <h3>
-                <div class=""></div>
-                Build <span></span>&nbsp;
-            </h3>
-        </div>
-        <div class="col-md-1 refresh_button">
-            <button type="button" class="btn btn-xs btn-primary"><i class="fa fa-refresh"></i></button>
-        </div>
-    </div>
+<link rel="stylesheet" href="~/Content/cocoen.min.css" />
 
-    <div class="col-md-2">
-        <button data-toggle="dropdown" class="btn dropdown-toggle">Filter <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-            <li>
-                <a href="#" data-act="show_all">Show all</a>
-            </li>
-            <li>
-                <a href="#" data-act="hide_all">Hide all</a>
-            </li>
-            <li>
-                <a href="#" data-act="show_failed">Failed</a>
-            </li>
-            <li>
-                <a href="#" data-act="show_passed">Passed</a>
-            </li>
-        </ul>
-    </div>
-    <div class="col-md-2">
-        <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
-        <ul class="dropdown-menu build_action_menu">
-            <li>
-                <a href="" data-act="run_obj" typeName="build">Run</a>
-            </li>
-            <li>
-                <a href="" data-act="stop_obj" typeName="build">Stop</a>
-            </li>
-            <li class="divider"></li>
-            <li>
-                <a href="" data-act="set_passed_obj" typeName="build">Set passed</a>
-            </li>
-            <li>
-                <a href="" data-act="set_failed_obj" typeName="build">Set failed</a>
-            </li>
-        </ul>
+<div class="col-md-12 col-md-12-header">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <div id="build-info-block">
+                            <h3>
+                                <div class=""></div>
+                                Build <span></span>&nbsp;
+                            </h3>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="build-info-container">
+                            <span data-toggle="dropdown" class="glyphicon glyphicon-info-sign icon-build-info" aria-hidden="true"></span>
+                            <ul class="dropdown-menu build-info-popup">
+
+                            </ul>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="build-action-block">
+                            <i class="fa fa-cog" data-toggle="dropdown" aria-hidden="true"></i>
+                            <ul class="dropdown-menu build_action_menu">
+                                <li>
+                                    <a href="" data-act="run_obj" typeName="build">Run</a>
+                                </li>
+                                <li>
+                                    <a href="" data-act="stop_obj" typeName="build">Stop</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="" data-act="set_passed_obj" typeName="build">Set passed</a>
+                                </li>
+                                <li>
+                                    <a href="" data-act="set_failed_obj" typeName="build">Set failed</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="refresh_button">
+                            <i class="fa fa-refresh"></i>
+                        </div>
+                    </th>
+                    <th class="th-build-info-numbers"></th>
+                    <th class="th-build-info-numbers"></th>
+                    <th width="100%"></th>
+                    <th>
+                        <div class="build-filter-block">
+                            <button data-toggle="dropdown" class="btn dropdown-toggle">Filter <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" data-act="show_all">Show all</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-act="hide_all">Hide all</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-act="show_failed">Failed</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-act="show_passed">Passed</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
-<div class="col-md-12 entity-list">
+<div class="col-md-12">
     <div class="panel panel-default build-panel">
         <div class="panel-body">
             <div class="panel-group testAssembly_group" id="testAssembly_group">
@@ -122,22 +139,22 @@
             <i class="fa fa-link"></i>
         </a>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12 screenShot-container">
         <div class="col-md-4 screenShot-base">
             <span>Baseline</span>
-            <a data-lightbox="multiimages" data-title="Base line" href="">
+            <a data-toggle="modal" data-target="#images-modal" data-act="view_image" data-title="Base line" href="">
                 <img src="">
             </a>
         </div>
         <div class="col-md-4 screenShot-dif">
             <span>Difference</span>
-            <a data-lightbox="multiimages" data-title="Difference" href="">
+            <a data-toggle="modal" data-target="#images-modal" data-act="view_image" data-title="Difference" href="">
                 <img src="">
             </a>
         </div>
         <div class="col-md-4 screenShot-curr">
             <span>Original</span>
-            <a data-lightbox="multiimages" data-title="Original" href="">
+            <a data-toggle="modal" data-target="#images-modal" data-act="view_image" data-title="Original" href="">
                 <img src="">
             </a>
         </div>
@@ -171,7 +188,10 @@
 </div>
 
 <script>
+    var firstPageOpen = 1;
+
     $(document).ready(function () {
+
         $('body').scrollTop(0);
 
         var xhr;
@@ -180,12 +200,7 @@
             xhr.abort(); // Disable requests from previous view
         }
 
-        lightbox.option({
-            'fitImagesInViewport': false,
-            'disableScrolling': true
-        });
-
-        $('.refresh_button button').click(function () {
+        $('.refresh_button i').click(function () {
             getBuild();
             getAssemblies();
         });
@@ -271,6 +286,8 @@
             var numbertestassemblies = $('.icon-build-info').attr('numbertestassemblies');
             var numbertestcase = $('.icon-build-info').attr('numbertestcase');
             var numbertestsuites = $('.icon-build-info').attr('numbertestsuites');
+            var numberfailedscreenshots = $('.icon-build-info').attr('numberfailedscreenshots');
+            var numberscreenshots = $('.icon-build-info').attr('numberscreenshots');
 
             $('.build-info-popup').append($('<li class="divider">'));
 
@@ -279,6 +296,9 @@
             $('.build-info-popup').append($('<li>').text('Test assemblies: ' + numbertestassemblies));
             $('.build-info-popup').append($('<li>').text('Test cases: ' + numbertestcase));
             $('.build-info-popup').append($('<li>').text('Test suites: ' + numbertestsuites));
+
+            $('.col-md-12-header th:nth-of-type(5)').html('Total: ' + numberscreenshots);
+            $('.col-md-12-header th:nth-of-type(6)').html('Failed: ' + numberfailedscreenshots);
         }
 
         //
@@ -409,11 +429,29 @@
                             });
                             selfBuild.resolve();
                             //intervalAssemblies = setInterval(getAssemblies, 20000);
+
+                            if (firstPageOpen == 1 && window.location.hash != '') {
+                                jumpToScreenshot();
+                            }
                         }
                     });
                 }
             });
         };
+
+        //
+        // Jump to screenshot(anchor)
+        //
+        function jumpToScreenshot() {
+            var hash = window.location.hash.replace(/^#/, "").split('&');
+            $('a[data-parentid=' + hash[0] + ']').parents('.panel-collapse:not(".in")').collapse('show');
+            $('body').animate({
+                scrollTop: $('a[data-parentid=' + hash[0] + ']').offset().top - 200
+            }, 1000, function () {
+                $('a[data-parentid="' + hash[0] + '"]').eq(1).trigger("click"); //click on screenshot after scroll finished
+            });
+            firstPageOpen = 0;
+        }
 
         getAssemblies();
 
@@ -450,7 +488,8 @@
                 $('.screenShot-hidden').clone(true, true).appendTo('#panel-testCase-' + entityParentId + ' > .panel-body').attr('id', entity + '-' + entityId).attr('testscreenshot-status', entityStatus).removeClass('screenShot-hidden').show();
                 $('.screenShot-splitter-hidden').clone(true, true).appendTo('#' + entity + '-' + entityId).removeClass('screenShot-splitter-hidden').show();
                 $('#' + entity + '-' + entityId + ' img').attr('title', entityName);
-                $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-lightbox', entityName);
+                $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-parentId', entityId);
+                $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('screenshot_name', entityName);
                 $('#' + entity + '-' + entityId + ' > div:nth-of-type(2) a').attr('data-title', function (i, val) {
                     return val + '&nbsp;' + entityName;
                 });
@@ -469,6 +508,7 @@
                 }
                 $('#' + entity + '-' + entityId + ' .screenShot-curr a').attr('href', ImagePathUrl);
                 $('#' + entity + '-' + entityId + ' .screenShot-curr img').attr('src', PreviewImagePathUrl);
+
                 if (ErrorMessage != null && ErrorMessage != '') {
                     $('#' + entity + '-' + entityId + ' .screenShot-error-log').show();
                     $('#' + entity + '-' + entityId + ' .screenShot-error-log textarea').text(ErrorMessage);
@@ -477,6 +517,7 @@
                     $('#' + entity + '-' + entityId + ' .screenShot-link').attr('href', Url).show();
                 }
             }
+
         }
 
         //
@@ -557,8 +598,128 @@
                     $('div[testscreenshot-status="6"]').show();
                     $('div[testscreenshot-status="5"]').hide();
                     break;
+                case 'view_image':
+                    $('#images-modal .modal-title').text($(this).attr('screenshot_name'));
+
+                    $('#images-modal .modal-body').empty();
+                    $(this).closest('.screenShot-container').find('a').each(function () {
+                        $('#images-modal .modal-body').append('<img src="' + $(this).attr('href') + '">');
+                    });
+
+                    $('#images-modal .nav-tabs a').attr('data-parentid', $(this).attr('data-parentid'));
+
+                    var numberOfImageToOpen;
+                    if (window.location.hash == '') {
+                        if ($(this).parent().index() == '0') {
+                            numberOfImageToOpen = "1";
+                        } else if ($(this).parent().index() == '1') {
+                            numberOfImageToOpen = "3";
+                        } else if ($(this).parent().index() == '2') {
+                            numberOfImageToOpen = "5";
+                        }
+                    } else {
+                        var hash = window.location.hash.replace(/^#/, "").split('&');
+                        numberOfImageToOpen = hash[1];
+                    }
+                    
+                    $('#images-modal .modal-body img').on('load', function () {
+                        $('#images-modal').css('background', 'none');
+                        $('#images-modal .modal-dialog').css('display', 'inline-block');
+
+                        $('#images-modal .nav-tabs li:nth-of-type(' + numberOfImageToOpen + ') a').click();
+                    });
+                                        
+                    break;
             }
         });
+
+        //
+        // Clean hash in url on modal viewer close
+        //
+        $("*[data-dismiss='modal'], #images-modal").on('click', function (e) {
+            if (e.target !== this)
+                return;
+
+            location.hash = '';
+        });
+
+        //
+        // Image modal viewer control
+        //
+        $(document).on('click', '#images-modal a', function (e) {
+            switch ($(this).attr('data-act')) {
+                case 'switch_baseline':
+                    $('.cocoen').remove();
+                    $('#images-modal .modal-body img').hide();
+                    
+                    $('#images-modal .modal-body img:nth-of-type(1)').show();
+
+                    updateViewerHeight();
+                    updateHash(1);
+                    break;
+                case 'switch_compare_1':
+                    $('.cocoen').remove();
+                    $('#images-modal .modal-body img').hide();
+
+                    $('#images-modal .modal-body').append('<div class="cocoen">');
+                    $('#images-modal .modal-body img:nth-of-type(1), #images-modal .modal-body img:nth-of-type(2)').clone().appendTo('.cocoen');
+                    setTimeout(function () {
+                        $('.cocoen img').show();
+                        $('.cocoen').cocoen();
+                    }, 300);
+                    
+                    updateViewerHeight();
+                    updateHash(2);
+                    break;
+                case 'switch_difference':
+                    $('.cocoen').remove();
+                    $('#images-modal .modal-body img').hide();
+
+                    $('#images-modal .modal-body img:nth-of-type(2)').show();
+
+                    updateViewerHeight();
+                    updateHash(3);
+                    break;
+                case 'switch_compare_2':
+                    $('.cocoen').remove();
+                    $('#images-modal .modal-body img').hide();
+
+                    $('#images-modal .modal-body').append('<div class="cocoen">');
+                    $('#images-modal .modal-body img:nth-of-type(2), #images-modal .modal-body img:nth-of-type(3)').clone().appendTo('.cocoen');
+                    setTimeout(function () {
+                        $('.cocoen img').show();
+                        $('.cocoen').cocoen();
+                    }, 300);
+
+                    updateViewerHeight();
+                    updateHash(4);
+                    break;
+                case 'switch_original':
+                    $('.cocoen').remove();
+                    $('#images-modal .modal-body img').hide();
+
+                    $('#images-modal .modal-body img:nth-of-type(3)').show();
+
+                    updateViewerHeight();
+                    updateHash(5);
+                    break;
+            }
+        });
+
+        //
+        // Update viewer height
+        //
+        function updateViewerHeight() {
+            $('#images-modal .modal-dialog').css('height', $('#images-modal .modal-body').find('img').height());
+        }
+
+        //
+        // Update hash for image modal viewer
+        //
+        function updateHash(tabNumber) {
+            var hash = window.location.hash.replace(/^#/, "").split('&');
+            location.hash = $('#images-modal .active a').attr('data-parentid') + '&' + tabNumber;
+        }
 
         //
         // Ajax call for operations and status change
@@ -588,3 +749,5 @@
         }
     });
 </script>
+
+<script src="~/Scripts/cocoen.min.js"></script>

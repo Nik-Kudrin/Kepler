@@ -10,7 +10,7 @@ namespace Kepler.Service.Core
     public class ObjectStatusUpdater
     {
         /// <summary>
-        /// Update StartDate, StopDate, Duration, PredictedDuration, based on changed build status
+        ///     Update StartDate, StopDate, Duration, PredictedDuration, based on changed build status
         /// </summary>
         /// <param name="buildId"></param>
         public static void UpdateBuildDurationFields(long buildId)
@@ -36,6 +36,7 @@ namespace Kepler.Service.Core
 
                     var longAverageTicks = Convert.ToInt64(averagePredictedBuildRunTicks);
                     build.PredictedDuration = TimeSpan.FromTicks(longAverageTicks);
+                    build.PredictedDuration = new TimeSpan(build.PredictedDuration.Value.Days, build.PredictedDuration.Value.Hours, build.PredictedDuration.Value.Minutes, build.PredictedDuration.Value.Seconds);
                     break;
 
                 case ObjectStatus.Failed:
@@ -53,6 +54,12 @@ namespace Kepler.Service.Core
                     if (numberNotProcessedScreenShots > 0) return;
 
                     UpdateBuildFailedScreenshotsNumber(build);
+
+                    build.StopDate = DateTime.Now;
+                    var duration = build.StopDate - build.StartDate;
+                    build.Duration = new TimeSpan(duration.Value.Days, duration.Value.Hours, duration.Value.Minutes,
+                        duration.Value.Seconds);
+
                     break;
 
                 case ObjectStatus.Passed:
@@ -61,7 +68,11 @@ namespace Kepler.Service.Core
                     if (build.StopDate.HasValue) return;
 
                     build.StopDate = DateTime.Now;
+                    duration = build.StopDate - build.StartDate;
+                    build.Duration = new TimeSpan(duration.Value.Days, duration.Value.Hours, duration.Value.Minutes,
+                        duration.Value.Seconds);
                     build.Duration = build.StopDate - build.StartDate;
+
                     break;
 
                 case ObjectStatus.Stopped:
@@ -138,8 +149,21 @@ namespace Kepler.Service.Core
                     continue;
                 }
 
+                // because we should set correct "stop" time for failed build
                 if (childItems.Any(item => item.Status == ObjectStatus.Failed))
                 {
+                    if (typeof (TEntityBase) == typeof (Build))
+                    {
+                        var isSomeItemsInProgress = childItems.Any(item => item.Status == ObjectStatus.InQueue ||
+                                                                           item.Status == ObjectStatus.InProgress);
+                        if (!isSomeItemsInProgress)
+                        {
+                            baseItem.Status = ObjectStatus.Failed;
+                            baseObjectRepository.Update(baseItem);
+                            continue;
+                        }
+                    }
+
                     baseItem.Status = ObjectStatus.Failed;
                     baseObjectRepository.Update(baseItem);
                     continue;
@@ -164,7 +188,7 @@ namespace Kepler.Service.Core
 
 
         /// <summary>
-        /// Set status for all objects in sub tree of element with provided ObjectId and Type
+        ///     Set status for all objects in sub tree of element with provided ObjectId and Type
         /// </summary>
         /// <typeparam name="TEntityBase"></typeparam>
         /// <param name="objectId"></param>
@@ -237,7 +261,7 @@ namespace Kepler.Service.Core
             {
                 SetParentObjStatus<ScreenShotRepository, ScreenShot>(ScreenShotRepository.Instance, objectId, newStatus);
 
-                return new List<ScreenShot>() {ScreenShotRepository.Instance.Get(objectId)};
+                return new List<ScreenShot> {ScreenShotRepository.Instance.Get(objectId)};
             }
 
             return new List<ScreenShot>();
